@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<constant name="struts-devModel" value="true" />
+	<constant name="struts.action.extension" value="action,do,api" />
+	<constant name="struts.multipart.maxSize" value="100000000"/> 
+	<constant name="struts.i18n.encoding" value="UTF-8"></constant>
+<constant name="struts.multipart.saveDir" value="/tmp"/>
+<constant name="struts.multipart.parser" value="jakarta"/>
+  <package name="admin" extends="struts-default" namespace="/admin">
+        <action name="session_*" class="com.farsunset.ichat.admin.action.SessionAction" method="{1}">
+		  <result name="list" type="dispatcher">/console/session/manage.jsp</result>
+		</action>
+	</package> 
+	 
+	<package name="cgi" extends="struts-default" namespace="/cgi">
+		<action name="message_*" class="com.farsunset.ichat.api.action.MessageAction" method="{1}"></action>
+	</package> 
+</struts>

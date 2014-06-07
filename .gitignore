@@ -1,0 +1,10 @@
+*.class
+
+*.dex
+
+*.bak
+
+*.apk
+
+
+bin/
