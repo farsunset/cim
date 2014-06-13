@@ -1,3 +1,4 @@
+ 
 package com.farsunset.cim.nio.handle;
 
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import org.apache.mina.core.session.IoSession;
 import com.farsunset.cim.nio.constant.CIMConstant;
 import com.farsunset.cim.nio.mutual.ReplyBody;
 import com.farsunset.cim.nio.mutual.SentBody;
+import com.farsunset.cim.nio.session.CIMSession;
 
 /**
  *  
@@ -18,7 +20,7 @@ import com.farsunset.cim.nio.mutual.SentBody;
  */
 public class MainIOHandler extends IoHandlerAdapter {
 
-	protected final Logger logger = Logger.getLogger(HeartbeatHandler.class);
+	protected final Logger logger = Logger.getLogger(MainIOHandler.class);
 
 	private HashMap<String, CIMRequestHandler> handlers = new HashMap<String, CIMRequestHandler>();
 
@@ -26,7 +28,6 @@ public class MainIOHandler extends IoHandlerAdapter {
 	 
 	public void sessionCreated(IoSession session) throws Exception {
 		logger.warn("sessionCreated()... from "+session.getRemoteAddress().toString());
-		
 	}
 
 	 
@@ -35,10 +36,11 @@ public class MainIOHandler extends IoHandlerAdapter {
 	}
 
 	 
-	public void messageReceived(IoSession session, Object message)
+	public void messageReceived(IoSession ios, Object message)
 			throws Exception {
 		logger.debug("message: " + message.toString());
 
+		CIMSession cimSession =new  CIMSession(ios);
 		ReplyBody reply = new ReplyBody();
 		SentBody body = (SentBody) message;
 		String key = body.getKey();
@@ -46,30 +48,34 @@ public class MainIOHandler extends IoHandlerAdapter {
 		CIMRequestHandler handler = handlers.get(key);
 		if (handler == null) {
 			reply.setCode(CIMConstant.ReturnCode.CODE_405);
-			reply.setMessage("KEY ["+key+"] 服务端未定义");
+			reply.setCode("KEY ["+key+"] 服务端未定义");
 		} else {
-			reply = handler.process(session, body);
+			reply = handler.process(cimSession, body);
 		}
 		
         if(reply!=null)
         {
         	reply.setKey(key);
-    		session.write(reply);
+        	cimSession.write(reply);
     		logger.debug("-----------------------process done. reply: " + reply.toString());
         }
-		
-
+        
+        
+        //设置心跳时间 
+        cimSession.setAttribute(CIMConstant.HEARTBEAT_KEY, System.currentTimeMillis());
 	}
 
 	/**
 	 */
-	public void sessionClosed(IoSession session) throws Exception {
+	public void sessionClosed(IoSession ios) throws Exception {
+		
+		CIMSession cimSession =new  CIMSession(ios);
 		try{
-			logger.warn("sessionClosed()... from "+session.getRemoteAddress());
+			logger.warn("sessionClosed()... from "+cimSession.getRemoteAddress());
 			CIMRequestHandler handler = handlers.get("sessionClosedHander");
-			if(handler!=null && session.containsAttribute("account"))
+			if(handler!=null && cimSession.containsAttribute(CIMConstant.SESSION_KEY))
 			{
-				handler.process(session, null);
+				handler.process(cimSession, null);
 			}
 		}
 		catch(Exception e)
@@ -83,9 +89,17 @@ public class MainIOHandler extends IoHandlerAdapter {
 	public void sessionIdle(IoSession session, IdleStatus status)
 			throws Exception {
 		logger.warn("sessionIdle()... from "+session.getRemoteAddress().toString());
-		if(!session.containsAttribute("account"))
+		if(!session.containsAttribute(CIMConstant.SESSION_KEY))
 		{
 			session.close(true);
+		}else
+		{
+			//如果5分钟之内客户端没有发送心态，则可能客户端断网，关闭连接
+			Object heartbeat = session.getAttribute(CIMConstant.HEARTBEAT_KEY);
+			if(heartbeat!=null && System.currentTimeMillis()-Long.valueOf(heartbeat.toString()) >= 300000)
+			{
+				session.close(false);
+			}
 		}
 	}
 
@@ -95,11 +109,15 @@ public class MainIOHandler extends IoHandlerAdapter {
 			throws Exception {
 		logger.error("exceptionCaught()... from "+session.getRemoteAddress());
 		logger.error(cause);
+		cause.printStackTrace();
 	}
 
 	/**
 	 */
 	public void messageSent(IoSession session, Object message) throws Exception {
+		
+		 //设置心跳时间 
+        session.setAttribute(CIMConstant.HEARTBEAT_KEY, System.currentTimeMillis());
 	}
 
 

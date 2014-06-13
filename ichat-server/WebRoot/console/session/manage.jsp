@@ -1,14 +1,14 @@
 <%@ page language="java" pageEncoding="utf-8"%>
 <%@ page import="java.util.Collection"%>
 <%@ page import="com.farsunset.ichat.common.util.StringUtil"%>
-<%@ page import="org.apache.mina.core.session.IoSession"%>
+<%@ page import="com.farsunset.cim.nio.session.CIMSession"%>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
 			+ request.getServerName() + ":" + request.getServerPort()
 			+ path;
 			 
-	Collection<IoSession> sessionList  = (Collection<IoSession>)request.getAttribute("sessionList");
+	Collection<CIMSession> sessionList  = (Collection<CIMSession>)request.getAttribute("sessionList");
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -91,40 +91,43 @@
 
 							<thead>
 								<tr class="tableHeader">
-									<th width="20%">账号</th>
-									<th width="20%">终端</th>
-									<th width="20%">在线时长</th>
-									<th width="20%">心跳时间</th>
-									<th width="40%">操作</th>
+									<th width="15%">账号</th>
+									<th width="15%">终端来源</th>
+									<th width="15%">终端ID</th>
+									<th width="15%">终端型号</th>
+									<th width="15%">在线时长</th>
+									<th width="10%">操作</th>
 								</tr>
 								 
 							</thead>
 							<tbody id="checkPlanList">
 
                                 <%
-                                  for(IoSession ios:sessionList)
+                                  for(CIMSession ios:sessionList)
                                   {
                                 
                                  %>
-                                 	<tr id="<%=ios.getAttribute("account") %>">
+                                 	<tr id="<%=ios.getAccount()%>">
 										<td>
-											<%=ios.getAttribute("account") %>
+											<%=ios.getAccount() %>
 										</td>
 										<td>
-											<%=ios.getAttribute("channel") %>
+											<%=ios.getChannel() %>
 										</td>
 										<td>
-										    <%=(System.currentTimeMillis()-Long.valueOf(ios.getAttribute("loginTime").toString()))/1000 %>秒
+											<%=ios.getDeviceId() %>
 										</td>
 										<td>
-										    <%if(ios.getAttribute("heartbeat")!=null){ %>
-										    <%=StringUtil.transformDateTime(Long.valueOf(ios.getAttribute("heartbeat").toString())) %>
-										    <%} %>
+											<%=ios.getDeviceModel() %>
 										</td>
+										<td>
+										    <%=(System.currentTimeMillis()-ios.getBindTime())/1000 %>秒
+										</td>
+										 
 										<td>
 											<div class="btn-group btn-group-xs">
-											  <button type="button" class="btn btn-primary" style="padding: 5px;" onclick="showMessageDialog('<%=ios.getAttribute("account") %>')">发送消息</button>
-											  <button type="button" class="btn btn-danger"  style="padding: 5px;" onclick="doOffLine('<%=ios.getAttribute("account") %>')">强制下线</button>
+											  <button type="button" class="btn btn-primary" style="padding: 5px;" onclick="showMessageDialog('<%=ios.getAccount() %>')">发送消息</button>
+											  <button type="button" class="btn btn-danger"  style="padding: 5px;" onclick="doOffLine('<%=ios.getAccount()  %>')">强制下线</button>
 											</div>
 										</td>
 									</tr>	

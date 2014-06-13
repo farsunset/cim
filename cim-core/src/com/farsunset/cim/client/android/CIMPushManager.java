@@ -89,13 +89,15 @@ public class CIMPushManager  {
 	}
     
     protected static  void setAccount(Context context){
-		
     	
     	String account = CIMDataConfig.getString(context,CIMDataConfig.KEY_ACCOUNT);
     	setAccount(context,account);
 	}
 
-
+    protected static  void clearAccount(Context context){
+    	
+    	CIMDataConfig.putString(context,CIMDataConfig.KEY_ACCOUNT, null);
+	}
     
     /**
 	 * 发送一个CIM请求

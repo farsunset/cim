@@ -3,9 +3,9 @@ package com.farsunset.ichat.cim.push;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.mina.core.session.IoSession;
 
 import com.farsunset.cim.nio.mutual.Message;
+import com.farsunset.cim.nio.session.CIMSession;
 import com.farsunset.cim.nio.session.DefaultSessionManager;
 
 /**
@@ -30,9 +30,15 @@ public class DefaultMessagePusher implements  CIMMessagePusher {
      * @param msg
      */
 	public void pushMessageToUser(Message msg) {
-		IoSession session = sessionManager.getSession(msg.getReceiver());
+		CIMSession session = sessionManager.getSession(msg.getReceiver());
 		
-	   //服务器集群时，可以在此 判断当前session是否连接于本台服务器，如果是，继续往下走，如果不是，将此消息发往当前session连接的服务器并 return
+		/*服务器集群时，可以在此 判断当前session是否连接于本台服务器，如果是，继续往下走，如果不是，将此消息发往当前session连接的服务器并 return
+		if(!session.isLocalhost()){//判断当前session是否连接于本台服务器，如不是
+			
+			MessageDispatcher.execute(msg, session.getHost());
+			return;
+		}
+		*/
 		
 		if (session != null && session.isConnected()) {
 			

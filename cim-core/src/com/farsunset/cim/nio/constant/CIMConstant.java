@@ -30,6 +30,12 @@ public   interface  CIMConstant  {
 	
 	public static int  CIM_DEFAULT_MESSAGE_ORDER=1;
 	
+	
+    public static final String SESSION_KEY ="account";
+	
+	public static final String HEARTBEAT_KEY ="heartbeat";
+	
+	
 	/**
 	 * 对应ichat 中 spring-cim.xml  > bean:mainIoHandler >handlers
 	 * 为 服务端处理对应的handlers，应该继承与com.farsunset.cim.nio.handle.AbstractHandler
