@@ -2,12 +2,7 @@
 package com.farsunset.ichat.cim.session;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.mina.core.session.IoSession;
-
-import com.farsunset.cim.nio.constant.CIMConstant;
 import com.farsunset.cim.nio.session.CIMSession;
 import com.farsunset.cim.nio.session.SessionManager;
 
@@ -19,10 +14,9 @@ import com.farsunset.cim.nio.session.SessionManager;
 public class ClusterSessionManager implements SessionManager{
 
 
-    private static HashMap<String,IoSession> sessions =new  HashMap<String,IoSession>();
+  //  private static HashMap<String,IoSession> sessions =new  HashMap<String,IoSession>();
     
     
-    private static final AtomicInteger connectionsCounter = new AtomicInteger(0);
  
    
 
@@ -30,12 +24,7 @@ public class ClusterSessionManager implements SessionManager{
      *  
      */
     public void addSession(String account,CIMSession session) {
-        if(session!=null)
-        {
-        	session.setAttribute(CIMConstant.SESSION_KEY, account);
-        	sessions.put(account, session.getIoSession());
-        	connectionsCounter.incrementAndGet();
-        }
+         
         
         /**
          * 下面 将session 存入数据库
@@ -46,10 +35,9 @@ public class ClusterSessionManager implements SessionManager{
      
     public CIMSession getSession(String account) {
     	
-    	/*//这里查询数据库 
-    	 CIMSession session = database.getSession(account);
-    	 session.setIoSession(sessions.get(account));
-    	
+    	//这里查询数据库 
+    	 /*CIMSession session = database.getSession(account);
+    	 session.setIoSession(((NioSocketAcceptor) ContextHolder.getBean("serverAcceptor")).getManagedSessions().get(session.getNid()));
          return session;*/
     	return null;
     }
@@ -65,7 +53,6 @@ public class ClusterSessionManager implements SessionManager{
     public void  removeSession(CIMSession session) {
         
     	 
-    	sessions.remove(session.getAccount());
     	//database.removeSession(session.getAttribute(CIMConstant.SESSION_KEY));*/
     }
 
@@ -73,7 +60,6 @@ public class ClusterSessionManager implements SessionManager{
     public void  removeSession(String account) {
         
     	//database.removeSession(account);*/
-    	sessions.remove(account);
     	
     }
     
@@ -81,7 +67,8 @@ public class ClusterSessionManager implements SessionManager{
     public boolean containsCIMSession(CIMSession ios)
     {
     	//return database.containsCIMSession(session.getAccount());
-    	return sessions.containsKey(ios.getAttribute(CIMConstant.SESSION_KEY)) || sessions.containsValue(ios);
+    	
+    	return false;
     }
 
     

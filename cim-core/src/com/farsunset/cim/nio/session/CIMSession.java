@@ -27,7 +27,8 @@ public class CIMSession  implements Serializable{
 
 	private IoSession session;
 	
-	private String id;//session全局ID
+	private String gid;//session全局ID
+	private Long nid;//session在本台服务器上的ID
 	private String deviceId;//客户端设备ID
 	private String host;//session绑定的服务器IP
 	private String account;//session绑定的账号
@@ -40,6 +41,7 @@ public class CIMSession  implements Serializable{
 	
 	public CIMSession(IoSession session) {
 		this.session = session;
+		this.nid = session.getId();
 	}
  
 	public CIMSession()
@@ -63,11 +65,25 @@ public class CIMSession  implements Serializable{
 	}
 
 	 
-	public String getId() {
-		return id;
+	
+	 
+
+
+	public String getGid() {
+		return gid;
 	}
 
+	public void setGid(String gid) {
+		this.gid = gid;
+	}
 
+	public Long getNid() {
+		return nid;
+	}
+
+	public void setNid(Long nid) {
+		this.nid = nid;
+	}
 
 	public String getDeviceId() {
 		return deviceId;
@@ -95,12 +111,7 @@ public class CIMSession  implements Serializable{
 	}
 
 
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-
+   
 
 	public String getHost() {
 		return host;

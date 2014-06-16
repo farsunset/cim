@@ -34,7 +34,7 @@ public class BindHandler implements CIMRequestHandler {
 			
 			newSession.setAccount(account);
 			newSession.setDeviceId(message.get("deviceId"));
-			newSession.setId(UUID.randomUUID().toString());
+			newSession.setGid(UUID.randomUUID().toString());
 			newSession.setHost(InetAddress.getLocalHost().getHostAddress());
 			newSession.setChannel( message.get("channel"));
 			newSession.setDeviceModel(message.get("device"));
