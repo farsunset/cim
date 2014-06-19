@@ -75,7 +75,7 @@ public class DefaultSessionManager implements SessionManager{
     	 {
     		for(String key:sessions.keySet())
     		{
-    			if(sessions.get(key).equals(ios) || sessions.get(key).getId()==ios.getId())
+    			if(sessions.get(key).equals(ios) || sessions.get(key).getNid()==ios.getNid())
     			{
     				return key;
     			}
