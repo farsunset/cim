@@ -174,7 +174,7 @@ public class CIMPushManager  {
      * 异步获取与服务端连接状态,将会在广播中收到onConnectionStatus（boolean f）
      * @param context
      */
-    public void detectIsConnected(Context context){
+    public static void detectIsConnected(Context context){
     	Intent serviceIntent  = new Intent(context, CIMPushService.class);
 		serviceIntent.putExtra(SERVICE_ACTION, ACTION_CONNECTION_STATUS);
 		context.startService(serviceIntent);
