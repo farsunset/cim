@@ -65,7 +65,10 @@ public class CIMPushManager  {
 	 */
     public static  void setAccount(Context context,String account){
 		
-    	
+    	if(account==null || account.trim().length()==0)
+        {
+    		return ;
+    	}
     	CIMDataConfig.putString(context,CIMDataConfig.KEY_ACCOUNT, account);
     	
     	
