@@ -1,6 +1,6 @@
 #说明：此开源版本为基础功能版本，只有消息推送的基础功能！
 
-#基于netty版本的下载地址：http://pan.baidu.com/s/1o6sNKRg！
+#基于netty版本的下载地址：http://pan.baidu.com/s/1sjyhpAd
 
 
 #前言：
