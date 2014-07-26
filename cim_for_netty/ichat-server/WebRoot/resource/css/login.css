@@ -1,0 +1,90 @@
+html,body,div,p,span,a,strong,form,table,th,td,ul,li,ol,dl,dt,dd,h1,h2,h3,h4,h5,h6,fieldset,iframe,object,pre,img,b,i{border: 0 none; margin: 0; outline: 0 none; padding: 0;}
+ul,ol,li{ list-style: none;}
+table{border-collapse: collapse;border-spacing: 0;}
+fieldset,img { border: 0 none;}
+h1, h2, h3, h4, h5, h6 {font-size: 100%; font-weight: normal;}
+body, table, input, textarea, button, select {font-family: "\5FAE\8F6F\96C5\9ED1"; font-size: 12px;}
+body{ background: #29497b;}
+a{ color: #406a97; text-decoration: none;}
+a:hover{ color: #406a97;text-decoration: underline;}
+
+.header{ height: 150px; width: 980px; margin: auto; position: relative; color: #fff;}
+.wrapper{ background: #233e69; width: 100%; height: 400px;}
+.content{ width: 980px; margin: auto; position: relative; height: 100%;}
+.footer{ width: 980px; margin: auto; line-height: 24px; text-align: center; color: #546d95; font-family: arial; padding: 45px 0 15px;}
+.footer .c{ background: url(../img/footer-line.png?9DDB98A8A1C25E62453700D9CB56A910) center no-repeat; height: 24px;}
+
+.logo-box{ position: absolute; top: 40px; left: 20px; background: url(../img/beta.png?D4ED1387287BF8DBB2E2959A42A079C1) right top no-repeat; width: 320px;}
+.logo-box h2{ font-size: 20px; height: 26px; line-height: 26px;}
+h1{ font-size: 40px; height: 50px; line-height: 50px;}
+.q-links{ position: absolute; top: 50px; right: 40px; font-size: 14px;}
+.q-links a{ color: #fff;}
+
+.msg-box{ width: 480px; height: 100%; text-align: center;}
+.msg-box img{ vertical-align: middle;}
+.msg-box i{ display: inline-block; height: 100%; vertical-align: middle;}
+.login-box{ position: absolute; top: -61px; right: 33px; width: 398px; height: 428px; padding: 4px 7px 10px 8px; background: url(../img/login-box.png?54D58910CCE14CE563C45829AAF309B0) no-repeat;}
+
+.tab-bar{ height: 57px; text-align: center; font-size: 16px; line-height: 56px;}
+.tab-bar a{ float: left; color: #000; height: 56px; border-bottom: 1px solid #ccc; border-right: 1px solid #ccc;}
+.tab-bar a:hover{ color: #406a97; text-decoration: none;}
+.tab-bar a.current{ background: transparent; border-bottom-color: #fff;}
+.tab-bar .last{ border-right: none;}
+.tab-qq,.tab-qr{ background:#ededee url(../img/tab-bg.png?751F4AFC2C0F39FD0A27C68AE1BEE071) no-repeat;}
+.tab-qq{ width: 101px;}
+.tab-tel{ width: 100px; background: #ededee;}
+.tab-qr{ width: 195px; background-position: -101px 0;}
+
+#qqLogin,#txlLogin,#telLogin,#yunLogin{ height: 331px;}
+
+#telLogin{width: 360px; margin: 0 auto;}
+
+#yunLogin{ text-align: center;}
+#yunLogin img{ display: inline-block; margin-top: 10px;}
+
+.status{ background: url(../img/qr-status.png?28C3C61024B77F9D2495BCE9C7099350) 0 -60px no-repeat; width: 266px; height: 51px; padding-top: 9px; line-height: 50px; font-size: 14px; color: #969696; margin: -10px auto 0;}
+.status.succ{ background-position: 0 0; color: #fff;}
+
+.b-bar{height: 40px; line-height: 40px; text-indent: 35px; color: #969696;}
+
+.qr-p{ display: none; position: absolute; left: 28px; top: 39px; }
+
+input:focus{outline: none;}
+
+.text{ border:1px solid #bdbdbd; padding: 1px 2px; font-size: 14px; height: 20px; margin: 1px; padding: 5px;  color: #000;
+background: #fff url(../img/text-bg.png?AD837CF0018869516795F7EDF65ACD67) repeat-x left top; width: 290px;}
+.text-focus,.text:focus{ border: 2px solid #7eb808; margin: 0;}
+.psw-error-tips{ color: #b10000; height: 16px;}
+
+.login-btn{ background: url(../img/login-btn.png?D2858CF1DF3662DFDD2896BD07B9073B) 0 -39px no-repeat;
+border: 0 none; cursor: pointer; height: 39px;width: 310px; color: #fff; font-weight: bold;
+}
+.btn-dis{ color: gray;}
+
+/*******txl login*****/
+.user-info{ padding: 30px 20px 20px 20px; border-bottom: 1px solid #e0e4e9; margin: 0 auto 5px; width: 310px;}
+.user-info .avatar{ float: left; margin-right: 25px;}
+.user-info p{ width: 240px; overflow: hidden; margin-bottom: 5px;}
+
+.txl-pwd{ width: 310px; margin: auto;}
+.txl-pwd p{ margin-bottom: 10px; overflow: hidden;zoom:1;}
+.txl-pwd p strong{ font-size: 16px; float: left;}
+.txl-pwd p a{ float: right;}
+.txl-pwd p.psw-error-tips{ margin-bottom: 5px;}
+.txl-pwd .text{ width: 296px;}
+
+/***********/
+
+/****tel login****/
+.tel-login{ zoom: 1; padding-top: 10px;}
+.tel-login li{ float: left; padding-bottom: 10px; width: 100%;}
+.tel-login li label{ display: inline-block; width: 70px; color: #535353;}
+#real_image{ display: inline-block; vertical-align: middle;}
+.tel-login .last{ margin-top: 10px; text-indent: 70px;}
+.tel-login .login-btn{ margin-left: 70px; background-position: 0 0; }
+/********/
+.noscript-box{ height: 300px; padding-top: 31px;}
+.noscript-tips{ width: 310px; margin: 0 auto; background: #c19202; color: #fff; font-size: 14px; padding: 3px 10px; line-height: 24px; border-radius: 5px;}
+
+.fuck-ie6{  position: absolute; left: 0; text-align: center; width: 100%; display: none; background: #c19202; color: #fff; font-size: 14px; line-height: 34px;}
+.fuck-ie6 a{ color: #0478c1;}

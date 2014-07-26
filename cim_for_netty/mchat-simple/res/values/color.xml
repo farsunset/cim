@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+<color name="orange">#f89636</color>
+<color name="white">#ffffff</color>
+<color name="blue">#3399CC</color>
+<color name="green">#A5CD4E</color>
+<color name="gray">#ff789089</color> 
+<color name="black">#000000</color>
+<color name="red">#E20C0C</color>
+ <color name="theme_setting_item_text_pressed">#fff4f6f8</color>
+<color name="light_white">#c8ffffff</color>
+<color name="window_bg">#ffeef1f3</color>
+<color name="transparent">#00000000</color>
+
+<color name="theme_night_bg">#050917</color>
+<color name="theme_night_text_color">#59687C</color>
+
+<color name="theme_text_color">#050917</color>
+
+<color name="gray_blue">#DDDDFF</color>
+  <color name="darkgray">#AAAAAA</color>
+    <color name="alpha">#00000000</color>
+    <color name="chat_myself">#0D3EDE</color>
+    <color name="chat_other">#519A2D</color>
+    
+    <drawable name="silver">#00ffffff</drawable>   <!-- 透明色 -->
+</resources>

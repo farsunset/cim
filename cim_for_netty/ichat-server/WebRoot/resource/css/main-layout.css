@@ -1,0 +1,137 @@
+﻿@CHARSET "UTF-8";
+
+/*                 left nav                  */
+.ui-vnav {
+position: fixed;
+top: 50px;
+left: 0;
+width: 170px;
+min-height: 560px;
+height: 960px;
+background: #d8dce5;
+_overflow: hidden;
+}
+
+
+.ui-vnav .ui-bar {
+height: 20px;
+overflow: hidden;
+}
+
+.ui-vnav .ui-bd {
+display: block;
+margin: 9px 0;
+width: 100%;
+height: 0px;
+line-height: 0px;
+border-top: 1px solid #afb1b2;
+border-bottom: 1px solid #eaeaea;
+}
+
+.ui-vnav .ui-item {
+height: 36px;
+margin-bottom: 3px;
+line-height: 36px;
+padding: 0 10px;
+text-align: center;
+cursor: pointer;
+}
+.ui-vnav .ui-item:hover {
+background-color: #C8CCD5;
+color: white;
+}
+
+.ui-vnav .current,.ui-vnav .current:hover {
+/*border-left: solid 3px #14A7D4;
+background-color: #7b7b7b;*/
+background:url(../img/nav_selected_bg.png) no-repeat	;
+color: white;
+}
+
+
+.ui-vnav .ui-item a {
+position: relative;
+display: block;
+height: 36px;
+line-height: 36px;
+font-family: "\5FAE\8F6F\96C5\9ED1","\534E\6587\7EC6\9ED1";
+font-size: 18px;
+color: #666;
+text-decoration:none;
+}
+.ui-vnav .ui-bg, .ui-vnav .current a, .ui-vnav a:active {
+background-position: -999px -999px;
+background-repeat: no-repeat;
+color: white;
+}
+.ui-vnav .ui-shd {
+position: absolute;
+right: 0;
+top: 0;
+width: 4px;
+height: 100%;
+overflow: hidden;
+border-right: 1px solid #b5b5b6;
+background-image: -webkit-linear-gradient(left, transparent, rgba(0,0,0,.1));
+background-image: -moz-linear-gradient(left, transparent, rgba(0,0,0,.1));
+background-image: -o-linear-gradient(left, transparent, rgba(0,0,0,.1));
+background-image: linear-gradient(top right,transparent, #c9cacb);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#00DBDCDD', EndColorStr='#B5B5B6', gradientType=1);
+}
+
+/*                 left nav                  */
+
+/*                header             */
+
+
+ 
+
+ 
+.user-avatar-hover {
+background: #fff url(../img/avatar-hover-bg.png?t=1) no-repeat left top;
+}
+.user-avatar {
+display: block;
+width: 70px;
+padding: 0 5px;
+height: 50px;
+}
+
+.user-avatar .ui-arr {
+width: 16px;
+height: 16px;
+display: inline-block;
+vertical-align: middle;
+background: url(../img/disk-spr.png) -105px -171px no-repeat;
+cursor: pointer;
+_background-image: url(../img/disk-spr-ie6.png);
+}
+
+.ui-pop-user {
+width: 168px;
+right: 0;
+top: 50px;
+background: #FFF;
+border-color: #abb0bb;
+border-top: none;
+border-radius: 0;
+color: #666;
+z-index: 10;
+}
+.ui-pop-user .ui-pop-head {
+padding: 0 15px;
+}
+.ui-pop-user .user-nick {
+display: inline-block;
+width: 138px;
+line-height: 38px;
+color: #333333;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+-ms-text-overflow: ellipsis;
+-o-text-overflow: ellipsis;
+-moz-binding: url("ellipsis.xml#ellipsis");
+}
+ 
+ 

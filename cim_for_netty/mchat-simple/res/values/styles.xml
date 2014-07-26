@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+  <style name="DialogStyle"
+    parent="android:style/Theme.Dialog">
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:windowBackground">@color/white</item>
+  </style>
+    
+  
+  <style name="GlobeEditText" parent="@android:style/Widget.EditText">
+        <item name="android:textSize">15.0sp</item>
+        <item name="android:textColor">#ff333333</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">@drawable/input_box_bg</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">44.0dip</item>
+        <item name="android:singleLine">true</item>
+   </style>
+ 
+  <style name="GlobeTextView" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">16.0sp</item>
+   </style>
+ 
+  <style name="AnimationActivity" parent="@android:style/Animation.Activity" mce_bogus="1">  
+		  <item name="android:activityOpenEnterAnimation">@anim/activity_new</item>
+        <item name="android:activityOpenExitAnimation">@anim/activity_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/activity_back</item>
+        <item name="android:activityCloseExitAnimation">@anim/activity_finish</item>
+        <item name="android:taskOpenEnterAnimation">@anim/activity_new</item>
+        <item name="android:taskOpenExitAnimation">@anim/activity_out</item>
+        <item name="android:taskCloseEnterAnimation">@anim/activity_back</item>
+        <item name="android:taskCloseExitAnimation">@anim/activity_finish</item>
+   </style>  
+	<style name="GlobeTheme" parent="@android:style/Theme">
+      <item name="android:windowNoTitle">true</item>
+      <item name="android:scrollbarThumbVertical">@drawable/scrollbar</item>
+      <item name="android:textViewStyle">@style/GlobeTextView</item>
+      <item name="android:editTextStyle">@style/GlobeEditText</item>
+      <item name="android:windowAnimationStyle">@style/AnimationActivity</item>  
+      
+   </style>
+	  
+    
+	 <style name="Animations_PopUpMenu_BottomToTop">
+        <item name="android:windowEnterAnimation">@anim/extension_appear_from_bottom_to_top</item>
+        <item name="android:windowExitAnimation">@anim/extension_disappear_from_top_to_bottom</item>
+    </style>
+    
+      <style name="ChatMsgContentStyle" >
+        <item name="android:autoLink">web|email</item>
+        <item name="android:clickable">true</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">10.0px</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#ff373737</item>
+        <item name="android:textColorLink">#ff6faddd</item>
+        <item name="android:shadowColor">#ffffffff</item>
+        <item name="android:shadowRadius">2.0</item>
+    </style>
+     
+      
+      
+</resources>
