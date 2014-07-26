@@ -1,0 +1,29 @@
+/*-----------------------------------------------------dialog------------------------*/
+ 
+.gdialog {
+
+	-webkit-box-shadow: 0 0 20px -2px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0 0 20px -2px rgba(0,0,0,0.5);
+	-ms-box-shadow: 0 0 20px -2px rgba(0,0,0,0.5);
+	box-shadow: 0 0 20px -2px rgba(0, 0, 0, 0.5);
+	border: 1px solid #6D7A89;
+	border-radius: 0px;
+}
+
+.gdialog div{
+
+  border-radius: 0px;
+}
+
+.gdialog .close{
+
+  background-color: white;
+  border-radius: 99px;
+  opacity: .5;
+  filter: alpha(opacity=50);
+}
+
+.gdialog .close:hover, .gdialog .close:focus{
+  opacity: .93;
+  filter: alpha(opacity=93);
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<declare-styleable name="SegmentedControlView">
+		<attr name="firstButtonBackground" format="reference|color" />
+	    <attr name="lastButtonBackground" format="reference|color" />
+	    <attr name="middleButtonBackground" format="reference|color" />
+	    <attr name="uniqueButtonBackground" format="reference|color" />
+	</declare-styleable>	
+</resources>
