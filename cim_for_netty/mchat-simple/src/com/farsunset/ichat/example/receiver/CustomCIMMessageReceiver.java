@@ -99,6 +99,11 @@ public final class CustomCIMMessageReceiver extends CIMEnventListenerReceiver {
 			CIMListenerManager.getCIMListeners().get(index).onConnectionStatus(arg0);
 		}
 	}
-
+	@Override
+	public void onConnectionClosed() {
+		for (int index = 0 ;index<CIMListenerManager.getCIMListeners().size();index++) {
+			CIMListenerManager.getCIMListeners().get(index).onConnectionClosed();
+		}
+	}
  
 }

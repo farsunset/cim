@@ -38,7 +38,7 @@ public  abstract  class CIMEnventListenerReceiver extends BroadcastReceiver impl
 		
           if(it.getAction().equals(CIMConnectorManager.ACTION_CONNECTION_CLOSED))
           {
-        	  onConnectionClosed();
+        	  dispatchConnectionClosed();
           }
           
           if(it.getAction().equals(CIMConnectorManager.ACTION_CONNECTION_FAILED))
@@ -48,7 +48,7 @@ public  abstract  class CIMEnventListenerReceiver extends BroadcastReceiver impl
           
           if(it.getAction().equals(CIMConnectorManager.ACTION_CONNECTION_SUCCESS))
           {
-        	  onDispatchConnectionSucceed();
+        	  dispatchConnectionSucceed();
           }
           
           if(it.getAction().equals(CIMConnectorManager.ACTION_MESSAGE_RECEIVED))
@@ -84,6 +84,18 @@ public  abstract  class CIMEnventListenerReceiver extends BroadcastReceiver impl
           
 	}
 
+	
+	private void dispatchConnectionClosed() {
+		
+		if(CIMConnectorManager.netWorkAvailable(context))
+		{
+			CIMPushManager.init(context);
+		}
+		
+		onConnectionClosed();
+	}
+
+
 	protected boolean isInBackground(Context context) {
 		List<RunningTaskInfo> tasksInfo = ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE)).getRunningTasks(1);
 		if (tasksInfo.size() > 0) {
@@ -97,27 +109,23 @@ public  abstract  class CIMEnventListenerReceiver extends BroadcastReceiver impl
 		return true;
 	}
 
-	private  void onConnectionClosed(){
-		
-		
-		boolean  isManualStop  = CIMDataConfig.getBoolean(context,CIMDataConfig.KEY_MANUAL_STOP);
-		
-		boolean  isManualDestory  = CIMDataConfig.getBoolean(context,CIMDataConfig.KEY_CIM_DESTORYED);
-		
-		if(CIMConnectorManager.netWorkAvailable(context) && !isManualStop && !isManualDestory)
-		{
-			CIMPushManager.init(context);
-		}
-	}
-
 	private   void onConnectionFailed(Exception e){
+		
 		if(CIMConnectorManager.netWorkAvailable(context))
 		{
 			CIMPushManager.init(context);
 		}
 	}
+	
+	private void dispatchConnectionSucceed() {
+		
+		CIMPushManager.setAccount(context);
+		onConnectionSucceed();
+		
+	}
 
-	 
+ 
+
 	private void onUncaughtException(Throwable arg0) {}
 
 	
@@ -155,16 +163,6 @@ public  abstract  class CIMEnventListenerReceiver extends BroadcastReceiver impl
 		}
 		
 	}
-
-	
-    private  void  onDispatchConnectionSucceed(){
-		
-		CIMPushManager.setAccount(context);
-		CIMDataConfig.putBoolean(context,CIMDataConfig.KEY_MANUAL_STOP,false);
-		
-		onConnectionSucceed();
-	}
-
 
 	private  void onSentSucceed(SentBody body){}
 	

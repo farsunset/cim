@@ -100,5 +100,14 @@ public final class CustomCIMMessageReceiver extends CIMEnventListenerReceiver {
 		}
 	}
 
+
+	@Override
+	public void onConnectionClosed() {
+		// TODO Auto-generated method stub
+		for (int index = 0 ;index<CIMListenerManager.getCIMListeners().size();index++) {
+			CIMListenerManager.getCIMListeners().get(index).onConnectionClosed();
+		}
+	}
+
  
 }

@@ -56,7 +56,17 @@ public  abstract  class CIMMonitorActivity extends Activity implements OnCIMMess
 	
 	
 	 
-
+	/**
+     * 与服务端断开连接时回调,不要在里面做连接服务端的操作
+     */
+	
+	@Override
+	public void onConnectionClosed() {}
+	
+	 /**
+     * 连接服务端成功时回调
+     */
+	
 	@Override
 	public void onConnectionSucceed() {}
 	@Override
