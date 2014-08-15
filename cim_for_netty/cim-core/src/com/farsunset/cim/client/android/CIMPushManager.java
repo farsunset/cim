@@ -2,6 +2,7 @@ package com.farsunset.cim.client.android;
 import android.content.Context;
 import android.content.Intent;
 import android.telephony.TelephonyManager;
+
 import com.farsunset.cim.nio.constant.CIMConstant;
 import com.farsunset.cim.nio.mutual.SentBody;
 
@@ -38,6 +39,7 @@ public class CIMPushManager  {
 	public static  void init(Context context,String ip,int port){
 		
 		CIMDataConfig.putBoolean(context,CIMDataConfig.KEY_CIM_DESTORYED, false);
+		CIMDataConfig.putBoolean(context,CIMDataConfig.KEY_MANUAL_STOP, false);
 		
 		Intent serviceIntent  = new Intent(context, CIMPushService.class);
 		serviceIntent.putExtra(CIMDataConfig.KEY_CIM_SERVIER_HOST, ip);
@@ -49,6 +51,14 @@ public class CIMPushManager  {
 	}
 	
 	protected static  void init(Context context){
+		
+		boolean  isManualStop  = CIMDataConfig.getBoolean(context,CIMDataConfig.KEY_MANUAL_STOP);
+		boolean  isManualDestory  = CIMDataConfig.getBoolean(context,CIMDataConfig.KEY_CIM_DESTORYED);
+		
+		if(isManualStop || isManualDestory)
+		{
+			return ;
+		}
 		
 		String host = CIMDataConfig.getString(context, CIMDataConfig.KEY_CIM_SERVIER_HOST);
     	int port =CIMDataConfig.getInt(context, CIMDataConfig.KEY_CIM_SERVIER_PORT);
@@ -64,6 +74,9 @@ public class CIMPushManager  {
 	 */
     public static  void setAccount(Context context,String account){
 		
+    	
+    	CIMDataConfig.putBoolean(context,CIMDataConfig.KEY_MANUAL_STOP, false);
+    	
     	if(account==null || account.trim().length()==0)
     	{
     		return ;
@@ -91,15 +104,14 @@ public class CIMPushManager  {
 	}
     
     protected static  void setAccount(Context context){
+		
+    	
     	
     	String account = CIMDataConfig.getString(context,CIMDataConfig.KEY_ACCOUNT);
     	setAccount(context,account);
 	}
 
-    protected static  void clearAccount(Context context){
-    	
-    	CIMDataConfig.putString(context,CIMDataConfig.KEY_ACCOUNT, null);
-	}
+
     
     /**
 	 * 发送一个CIM请求
@@ -126,12 +138,12 @@ public class CIMPushManager  {
 	 */
     public static  void stop(Context context){
     	
+    	CIMDataConfig.putBoolean(context,CIMDataConfig.KEY_MANUAL_STOP, true);
+    	
     	boolean  isManualDestory  = CIMDataConfig.getBoolean(context,CIMDataConfig.KEY_CIM_DESTORYED);
     	if(isManualDestory){
     		return ;
     	}
-
-    	CIMDataConfig.putBoolean(context,CIMDataConfig.KEY_MANUAL_STOP, true);
     	
     	Intent serviceIntent  = new Intent(context, CIMPushService.class);
 		serviceIntent.putExtra(SERVICE_ACTION, ACTION_DISCONNECTION);
@@ -171,11 +183,6 @@ public class CIMPushManager  {
     	setAccount(context);
 	}
     
-    
-    /**
-     * 异步获取与服务端连接状态,将会在广播中收到onConnectionStatus（boolean f）
-     * @param context
-     */
     public void detectIsConnected(Context context){
     	Intent serviceIntent  = new Intent(context, CIMPushService.class);
 		serviceIntent.putExtra(SERVICE_ACTION, ACTION_CONNECTION_STATUS);

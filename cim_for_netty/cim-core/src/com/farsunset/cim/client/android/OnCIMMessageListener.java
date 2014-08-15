@@ -50,5 +50,11 @@ public interface OnCIMMessageListener
      * 连接服务端成功
      */
 	public abstract void onConnectionSucceed();
+	
+	
+	/**
+     * 连接断开
+     */
+	public abstract void onConnectionClosed();
 }
 

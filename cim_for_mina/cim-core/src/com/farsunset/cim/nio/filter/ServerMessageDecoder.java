@@ -1,8 +1,6 @@
 package com.farsunset.cim.nio.filter;
 
 import java.io.ByteArrayInputStream;
-import java.nio.charset.Charset;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -23,7 +21,6 @@ import com.farsunset.cim.nio.mutual.SentBody;
  */
 public class ServerMessageDecoder extends CumulativeProtocolDecoder {
 
-	private final Charset charset = Charset.forName("UTF-8");
     private IoBuffer buff = IoBuffer.allocate(320).setAutoExpand(true);
 	@Override
 	public boolean doDecode(IoSession iosession, IoBuffer iobuffer, ProtocolDecoderOutput out) throws Exception {
@@ -46,14 +43,14 @@ public class ServerMessageDecoder extends CumulativeProtocolDecoder {
 			buff.flip();
 	        byte[] bytes = new byte[buff.limit()];
 	        buff.get(bytes);
-	        String message = new String(bytes, charset);
+	        String message = new String(bytes, "UTF-8");
 	        buff.clear();
 			
 			SentBody body = new SentBody();
 			
 	    	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();   
 	        DocumentBuilder builder = factory.newDocumentBuilder();  
-	        Document doc = builder.parse(new ByteArrayInputStream(message.getBytes(charset)));
+	        Document doc = builder.parse(new ByteArrayInputStream(message.getBytes("UTF-8")));
 	        body.setKey(doc.getElementsByTagName("key").item(0).getTextContent());
 	        NodeList items = doc.getElementsByTagName("data").item(0).getChildNodes();  
 	        for (int i = 0; i < items.getLength(); i++) {  
