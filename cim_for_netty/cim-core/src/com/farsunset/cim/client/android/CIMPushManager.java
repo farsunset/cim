@@ -13,8 +13,8 @@ import com.farsunset.cim.nio.mutual.SentBody;
  */
 public class CIMPushManager  {
 
-	
-	static String  ACTION_CONNECTION ="ACTION_CONNECTION";
+    
+    static String  ACTION_CONNECTION ="ACTION_CONNECTION";
 	
 	static String  ACTION_CONNECTION_STATUS ="ACTION_CONNECTION_STATUS";
 	
@@ -75,20 +75,14 @@ public class CIMPushManager  {
     public static  void setAccount(Context context,String account){
 		
     	
-    	CIMDataConfig.putBoolean(context,CIMDataConfig.KEY_MANUAL_STOP, false);
-    	
-    	if(account==null || account.trim().length()==0)
+    	boolean  isManualDestory  = CIMDataConfig.getBoolean(context,CIMDataConfig.KEY_CIM_DESTORYED);
+    	if(isManualDestory || account==null || account.trim().length()==0)
     	{
     		return ;
     	}
+    	
+    	CIMDataConfig.putBoolean(context,CIMDataConfig.KEY_MANUAL_STOP, false);
     	CIMDataConfig.putString(context,CIMDataConfig.KEY_ACCOUNT, account);
-    	
-    	
-    	boolean  isManualDestory  = CIMDataConfig.getBoolean(context,CIMDataConfig.KEY_CIM_DESTORYED);
-    	if(isManualDestory || account==null){
-    		return ;
-    	}
-    	
     	
     	String imei = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
     	SentBody sent = new SentBody();
@@ -120,10 +114,13 @@ public class CIMPushManager  {
 	 */
     public static  void sendRequest(Context context,SentBody body){
 		
-    	boolean  isManualDestory  = CIMDataConfig.getBoolean(context,CIMDataConfig.KEY_CIM_DESTORYED);
-    	if(isManualDestory){
-    		return ;
-    	}
+    	boolean  isManualStop  = CIMDataConfig.getBoolean(context,CIMDataConfig.KEY_MANUAL_STOP);
+		boolean  isManualDestory  = CIMDataConfig.getBoolean(context,CIMDataConfig.KEY_CIM_DESTORYED);
+		
+		if(isManualStop || isManualDestory)
+		{
+			return ;
+		}
  
     	Intent serviceIntent  = new Intent(context, CIMPushService.class);
 		serviceIntent.putExtra(KEY_SEND_BODY, body);
@@ -138,13 +135,13 @@ public class CIMPushManager  {
 	 */
     public static  void stop(Context context){
     	
-    	CIMDataConfig.putBoolean(context,CIMDataConfig.KEY_MANUAL_STOP, true);
-    	
     	boolean  isManualDestory  = CIMDataConfig.getBoolean(context,CIMDataConfig.KEY_CIM_DESTORYED);
     	if(isManualDestory){
     		return ;
     	}
     	
+    	CIMDataConfig.putBoolean(context,CIMDataConfig.KEY_MANUAL_STOP, true);
+
     	Intent serviceIntent  = new Intent(context, CIMPushService.class);
 		serviceIntent.putExtra(SERVICE_ACTION, ACTION_DISCONNECTION);
 		context.startService(serviceIntent);
