@@ -124,13 +124,23 @@ class CIMConnectorManager  {
 			
 			return;
 		}
-		
-		executor.execute(new Runnable() {
-			@Override
+	 
+        Future<?> future = executor.submit(new Runnable() {
+    		@Override
 			public void run() {
 				syncConnection(cimServerHost, cimServerPort);
 			}
 		});
+		try {
+			if(future.get()!=null)
+			{
+				connect(cimServerHost,cimServerPort);
+			}
+		} catch (Exception e) {
+			
+			connect(cimServerHost,cimServerPort);
+			e.printStackTrace();
+		}  
 	}
 
 	public void send(final SentBody body) {
