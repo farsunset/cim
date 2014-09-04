@@ -9,7 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-
+import android.os.Handler;
 import com.farsunset.cim.nio.constant.CIMConstant;
 import com.farsunset.cim.nio.mutual.Message;
 import com.farsunset.cim.nio.mutual.ReplyBody;
@@ -109,13 +109,25 @@ public  abstract  class CIMEnventListenerReceiver extends BroadcastReceiver impl
 		return true;
 	}
 
-	private   void onConnectionFailed(Exception e){
+    private   void onConnectionFailed(Exception e){
 		
 		if(CIMConnectorManager.netWorkAvailable(context))
 		{
-			CIMPushManager.init(context);
+			//间隔30秒后重连
+			connectionHandler.sendMessageDelayed(connectionHandler.obtainMessage(), 30*1000);
 		}
 	}
+
+	 
+	Handler connectionHandler = new Handler()
+	{
+		@Override
+		public void handleMessage(android.os.Message message){
+			
+			CIMPushManager.init(context);
+		}
+		
+	};
 	
 	private void dispatchConnectionSucceed() {
 		
