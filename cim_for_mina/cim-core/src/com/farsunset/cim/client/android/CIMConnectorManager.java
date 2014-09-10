@@ -203,7 +203,7 @@ class CIMConnectorManager  {
 
 	public void deliverIsConnected() {
 		Intent intent = new Intent();
-		intent.setAction(ACTION_CONNECTION_FAILED);
+		intent.setAction(ACTION_CONNECTION_STATUS);
 		intent.putExtra(CIMPushManager.KEY_CIM_CONNECTION_STATUS, isConnected());
 		context.sendBroadcast(intent);
 	}
