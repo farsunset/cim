@@ -36,14 +36,14 @@ public class ServerMessageDecoder extends FrameDecoder  {
 			
 			byte[] data = new byte[length-1];
 			buffer.readBytes(data);
-			String messsage = new String(new String(data,CIMConstant.ENCODE_UTF8));
-			
+			String message = new String(new String(data,CIMConstant.ENCODE_UTF8));
+			System.out.println("[ServerMessageDecoder]:"+message);
 			buffer.readByte();
 			
 			SentBody body = new SentBody();
 	    	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();   
 	        DocumentBuilder builder = factory.newDocumentBuilder();  
-	        Document doc = builder.parse(new ByteArrayInputStream(messsage.toString().getBytes()));
+	        Document doc = builder.parse(new ByteArrayInputStream(message.toString().getBytes()));
 	        body.setKey(doc.getElementsByTagName("key").item(0).getTextContent());
 	        NodeList items = doc.getElementsByTagName("data").item(0).getChildNodes();  
 	        for (int i = 0; i < items.getLength(); i++) {  
@@ -52,11 +52,28 @@ public class ServerMessageDecoder extends FrameDecoder  {
 	        }
 	        
 	        data = null;
-	        messsage = null;
+	        message = null;
 	        return body;
 		}
 		
-		
+		/**
+		 * CIMConstant.FLEX_DATA_SEPARATE 为FLEX客户端socket验证消息界限
+		 * 
+		 */
+		if (buffer.readable()&& length > 0 &&  CIMConstant.FLEX_DATA_SEPARATE == buffer.getByte(length-1)) {
+			
+			byte[] data = new byte[length-1];
+			buffer.readBytes(data);
+			String message = new String(new String(data,CIMConstant.ENCODE_UTF8));
+			
+			System.out.println("[ServerMessageDecoder]:"+message);
+			
+			//将末尾的消息分隔符读取掉
+			buffer.readByte();
+			data = null;
+			
+			return message;
+		}
         
 		return null;
 	}

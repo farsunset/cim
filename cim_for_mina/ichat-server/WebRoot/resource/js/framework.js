@@ -117,9 +117,49 @@ function prepareShowDialog(dialog)
 	 var w = $(document).width();
 	 var mheight = dialog.height();
 	 var mwidth = dialog.width();
-     dialog.css({top:(h-mheight)/3,left:(w-mwidth)/2});
+     dialog.css({top:150,left:(w-mwidth)/2});
      $('#global_mask').css('height',h);
      $('#global_mask').fadeIn();
+     $("body").attr("unselectable","no");
+     $("body").attr("onselectstart","return false;");
+     dialog.find(".panel-heading").mousedown(function(e) 
+            {  
+                var offset = $(this).offset(); 
+                var x = e.pageX - offset.left; 
+                var y = e.pageY - offset.top; 
+                $(document).bind("mousemove",function(ev) 
+                {  
+                    var _x = ev.pageX - x; 
+                    var _y = ev.pageY - y; 
+                   if(_x<=0)
+                   {
+                       _x=0;
+                   }  
+                   if(_y <=0 )
+                   {
+                       _y=0;
+                   }
+                   if(_x >= (w - mwidth))
+                   {
+                       _x=(w - mwidth);
+                   } 
+                   if( _y >= (h - mheight))
+                   {
+                      _y = (h - mheight);
+                   } 
+                   
+                   dialog.css({left:_x+"px",top:_y+"px"});  
+                });  
+                  
+            });  
+              
+            $(document).mouseup(function()  
+            {  
+                dialog.css("cursor","default");  
+                $(this).unbind("mousemove");  
+            })  
+            
+            
 }
 
 
@@ -128,7 +168,6 @@ function doShowDialog(dialogId,animate){
      
      var dialog = $('#'+dialogId);
      prepareShowDialog(dialog);
-     
      if(animate==undefined)
      {
         /*$('#'+dialogId).fadeIn();
@@ -261,6 +300,6 @@ function gotoPage(number)
 
 function getDateTime(t) {     
     //return new Date(parseInt(t)).toLocaleString().substr(0,17)
-    var tt=new Date(parseInt(t)).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ")
-    return tt;
+    //return new Date(parseInt(t)).pattern("yyyy-MM-dd HH:mm:ss");
+    return new Date(parseInt(t)).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
 }   

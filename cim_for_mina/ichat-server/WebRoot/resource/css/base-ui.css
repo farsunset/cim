@@ -1,4 +1,4 @@
-
+﻿
 /* golabe */
  
 
@@ -234,10 +234,10 @@
 
 .icon_success{
 	background: url(../img/icon_success.png) no-repeat;
-	width: 32px;
-	height: 32px;
+	width: 38px;
+	height: 38px;
 	left:10px;
-	top:9px;
+	top:6px;
 	position: absolute;
 }
 .icon_hint{
@@ -274,3 +274,27 @@
 	position: absolute;
 }
  
+ 
+.form-group label {
+width: 60px;
+text-align: right;
+}
+
+.lay-main-toolbar {
+height: 60px;
+border-radius: 0px;
+background-color: #f5f6f9;
+border-bottom: 1px solid #B5BBBF;
+border-right: 1px solid #B5BBBF;
+position: relative;
+width: 100%;
+padding: 7px;
+}
+
+.btn i {
+font-size: 24px;
+margin-right: 4px;
+font-style: normal;
+vertical-align: text-top;
+line-height: 18px;
+}

@@ -32,6 +32,7 @@ public   interface  CIMConstant  {
 	
 	public static byte  MESSAGE_SEPARATE='\b';
 	
+	public static byte  FLEX_DATA_SEPARATE='\0';
 	
 	public static int  CIM_DEFAULT_MESSAGE_ORDER=1;
 	
@@ -39,6 +40,17 @@ public   interface  CIMConstant  {
     public static final String SESSION_KEY ="account";
 	
 	public static final String HEARTBEAT_KEY ="heartbeat";
+	
+	
+
+	/**
+	 * FLEX 客户端socket请求发的安全策略请求，需要特殊处理，返回安全验证报文
+	 */
+	public static final String FLEX_POLICY_REQUEST ="<policy-file-request/>";
+	
+	public static final String FLEX_POLICY_RESPONSE ="<?xml version=\"1.0\"?><cross-domain-policy><site-control permitted-cross-domain-policies=\"all\"/><allow-access-from domain=\"*\" to-ports=\"*\"/></cross-domain-policy>\0"; 
+
+	
 	
 	
 	/**

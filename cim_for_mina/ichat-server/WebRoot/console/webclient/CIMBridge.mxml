@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   width="0" height="0"
+			   backgroundColor="#FEFEFE"
+			   creationComplete="init(event)"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			    >
+	<fx:Script>
+		<![CDATA[
+			import com.farsunset.webcim.bean.Message;
+			import com.farsunset.webcim.bean.ReplyBody;
+			
+			import mx.events.FlexEvent;
+			private var CIM_HOST:String = "127.0.0.1";
+			private var CIM_PORT:String = "23456";
+			private var socket:Socket; 
+			private var heartbeat_timer:Timer=new Timer(180 * 1000);;
+			
+			var froceOffline :Boolean = false;
+			protected function init(event:FlexEvent):void
+			{
+			
+				ExternalInterface.call("bridgeCreationComplete");
+				ExternalInterface.addCallback("connect",connect);
+				ExternalInterface.addCallback("setAccount",setAccount);
+				ExternalInterface.addCallback("getOfflineMessage",getOfflineMessage);
+				ExternalInterface.addCallback("logout",logout);
+				heartbeat_timer.addEventListener(TimerEvent.TIMER,doSendHeartbeat);
+
+				
+			}
+			public function connect(host:String):void
+			{	
+			 
+				CIM_HOST = host;
+				var policyfile:String="xmlsocket://"+CIM_HOST+":"+CIM_PORT;
+				Security.loadPolicyFile(policyfile);
+				socket=new Socket();
+				socket.addEventListener(Event.CONNECT,sessionCreated);//监听是否连接上服务器
+				socket.addEventListener(Event.CLOSE,sessionClosed);//监听套接字连接是否关闭
+				socket.addEventListener(IOErrorEvent.IO_ERROR,exceptionCaught);
+				socket.addEventListener(SecurityErrorEvent.SECURITY_ERROR,securityErrorFun);
+				//监听服务器新信息
+				socket.addEventListener(ProgressEvent.SOCKET_DATA,messageReceived); 
+				
+				socket.connect(CIM_HOST,parseInt(CIM_PORT));//连接服务器    
+			 
+			}
+			
+			public function setAccount(account:String,deviceId:String):void
+			{
+				var xml:String="<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+				xml+="<sent>";
+				xml+="<key>client_bind</key>";   
+				xml+="<data>";
+				   xml+="<account>"+account+"</account>";
+				   xml+="<deviceId>"+deviceId+"</deviceId>";
+				   xml+="<channel>web</channel>";
+				   xml+="<device>browser</device>";
+				xml+="</data>";
+				xml+="</sent>";
+				
+				send(xml);
+				
+			}
+			 
+			public function getOfflineMessage(account:String):void
+			{
+				
+				var xml:String="<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+				xml+="<sent>";
+				xml+="<key>client_get_offline_message</key>";   
+				xml+="<data>";
+				xml+="<account>"+account+"</account>";
+				xml+="</data>";
+				xml+="</sent>";
+				send(xml);
+				
+			}
+			
+			public function logout():void
+			{
+				
+				socket.close();
+				
+			}
+			
+			private function sessionCreated(event:Event):void
+			{
+				
+				ExternalInterface.call("sessionCreated");
+				heartbeat_timer.start();
+				froceOffline = false;
+			}
+			
+			
+			private function doSendHeartbeat(e:TimerEvent):void
+			{
+				var xml:String="<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+				xml+="<sent>";
+				xml+="<key>client_heartbeat</key>";   
+				xml+="</sent>";
+				send(xml);
+			}
+			
+			private function sessionClosed(event:Event):void
+			{
+				ExternalInterface.call("sessionClosed");
+				
+				if(!froceOffline)
+				{
+				  connect(CIM_HOST);
+				}
+				//heartbeat_timer.stop();
+			}
+			private function exceptionCaught(event:Event):void{
+				 
+				//Alert.show("exceptionCaught","提示");
+			}
+			
+			private function securityErrorFun(event:Event):void{
+				 
+				//Alert.show("securityErrorFun"+event.toString(),"提示");
+			}
+			
+		 
+			
+			/**接受服务器信息*/
+			internal function messageReceived(event:ProgressEvent):void
+			{
+				var msg:String="";
+				//循环读取数据
+				while(socket.bytesAvailable)
+				{
+					msg+=socket.readUTFBytes(socket.bytesAvailable);
+				}
+				 
+				var index:int = msg.indexOf("\b");
+				if(msg.indexOf("\b")>=0)
+				{
+					msg = msg.substring(0,index);
+				}
+				
+				var xml:XML=XML(msg);
+				var data:Object = xml as Object;
+				if(xml.name()=="reply"){
+					ExternalInterface.call("onReplyReceived",ReplyBody.mappingToJSON(xml));
+				}
+				if(xml.name()=="message"){
+					
+					
+					if(xml["type"]=="999")
+					{
+						froceOffline = true;
+					}
+					 
+					ExternalInterface.call("onMessageReceived",Message.mappingToJSON(xml),xml["content"].toString());
+				}
+			 
+			}
+			
+			
+			/**发送数据到服务器*/
+			internal function send(msg:String):void 
+			{
+				//新建一个ByteArray来存放数据
+				socket.writeUTFBytes(msg+"\b");
+				//调用flush方法发送信息
+				socket.flush();
+			} 
+		 
+			
+			
+		]]>
+	</fx:Script>
+</s:Application>

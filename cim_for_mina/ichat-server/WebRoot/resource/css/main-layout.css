@@ -3,13 +3,14 @@
 /*                 left nav                  */
 .ui-vnav {
 position: fixed;
-top: 50px;
+top: 100px;
 left: 0;
-width: 170px;
+width: 180px;
 min-height: 560px;
 height: 960px;
-background: #d8dce5;
+background: #eaedf4;
 _overflow: hidden;
+border-right: 1px solid #d8dce5;
 }
 
 
@@ -29,41 +30,41 @@ border-bottom: 1px solid #eaeaea;
 }
 
 .ui-vnav .ui-item {
-height: 36px;
-margin-bottom: 3px;
-line-height: 36px;
+height: 45px;
+line-height: 45px;
 padding: 0 10px;
 text-align: center;
 cursor: pointer;
+border-bottom: 1px #eaedf4 solid;
+border-top: 1px #eaedf4 solid;
 }
 .ui-vnav .ui-item:hover {
-background-color: #C8CCD5;
 color: white;
+background-color: #e0e4ed;
+border-bottom: 1px #d8dce5 solid;
+border-top: 1px #d8dce5 solid;
+
 }
 
 .ui-vnav .current,.ui-vnav .current:hover {
-/*border-left: solid 3px #14A7D4;
-background-color: #7b7b7b;*/
-background:url(../img/nav_selected_bg.png) no-repeat	;
-color: white;
+background-color: #ced4e0;
+border-bottom: 1px #c8ccd5 solid;
+border-top: 1px #c8ccd5 solid;
+border-left: 5px #5FA0D3 solid;
 }
 
 
 .ui-vnav .ui-item a {
 position: relative;
 display: block;
-height: 36px;
-line-height: 36px;
+height: 45px;
+line-height: 45px;
 font-family: "\5FAE\8F6F\96C5\9ED1","\534E\6587\7EC6\9ED1";
 font-size: 18px;
 color: #666;
 text-decoration:none;
 }
-.ui-vnav .ui-bg, .ui-vnav .current a, .ui-vnav a:active {
-background-position: -999px -999px;
-background-repeat: no-repeat;
-color: white;
-}
+ 
 .ui-vnav .ui-shd {
 position: absolute;
 right: 0;

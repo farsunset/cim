@@ -36,6 +36,17 @@ public   interface  CIMConstant  {
 	public static final String HEARTBEAT_KEY ="heartbeat";
 	
 	
+	
+	/**
+	 * FLEX 客户端socket请求发的安全策略请求，需要特殊处理，返回安全验证报文
+	 */
+	public static final String FLEX_POLICY_REQUEST ="<policy-file-request/>";
+	
+	public static final String FLEX_POLICY_RESPONSE ="<?xml version=\"1.0\"?><cross-domain-policy><site-control permitted-cross-domain-policies=\"all\"/><allow-access-from domain=\"*\" to-ports=\"*\"/></cross-domain-policy>\0"; 
+
+	
+	
+	
 	/**
 	 * 对应ichat 中 spring-cim.xml  > bean:mainIoHandler >handlers
 	 * 为 服务端处理对应的handlers，应该继承与com.farsunset.cim.nio.handle.AbstractHandler

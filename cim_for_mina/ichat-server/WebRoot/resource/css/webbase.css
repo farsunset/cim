@@ -23,7 +23,7 @@ body .hide,.app-web .hide,.app-qplus .hide,.app-appbox .hide{display:none}
 body .ellipsis{overflow:hidden;-o-text-overflow:ellipsis;text-overflow:ellipsis;white-space:nowrap;_width:100%;word-wrap:normal}
 body{color:#666;background:#F1F1F1}
 a{color:#1D719E}
-#mainWrapper{ width: auto; margin-left: 170px; min-height: 600px;padding-top: 65px;padding-left: 10px;;padding-bottom: 50px; padding-right: 10px;}
+#mainWrapper{ width: auto; margin-left: 180px; min-height: 600px;padding-top:100px; 10px;;padding-bottom: 50px; }
 .mb{margin-bottom:15px}
 .float_right{float:right}
 .text_right{text-align:right}
@@ -65,10 +65,12 @@ a:focus {
 /* header */
 .header{
 	position: relative;
-    height:50px;
+    height:100px;
     margin:0 auto;
-    background:url(../img/top-bg.png) repeat-x left top;
-    box-shadow: 0 1px 5px #ccc;
+    width:100%;
+    -webkit-box-shadow: 0 0 10px -2px #0B203A;
+    box-shadow: 0 0 10px -2px #0B203A;
+    background: #0B203A;
     z-index: 10;
 }
 .app-appbox .header{
@@ -551,14 +553,13 @@ a:focus {
     background:#d8d638;
 }
 /* ui-pop */
-.ui-pop{
-    position:absolute;
-    border:1px solid #CEC754;
-    border-radius:3px;
-    background:#FFFAAB;
-    box-shadow:1px 1px 2px #CCC;
-    color:#9D9A69;
-    font-size:12px;
+.ui-pop {
+position: absolute;
+border: 1px solid #CEC754;
+background: #FFFAAB;
+box-shadow: 0px 1px 2px #CCC;
+color: #9D9A69;
+font-size: 12px;
 }
 .ui-pop-text{
     padding:13px 15px 13px;
@@ -1296,16 +1297,15 @@ a:focus {
 	background:#fff url(../img/avatar-hover-bg.png?t=1) no-repeat left top;
 }
 /* 用户浮层 */
-.ui-pop-user{
-	width:168px;
-	right:0;
-	top:50px;
-	background:#FFF;
-	border-color:#abb0bb;
-	border-top:none;
-	border-radius:0;
-	color:#666;
-	z-index:10;
+.ui-pop-user {
+width: 168px;
+right: 10px;
+top: 45px;
+background: #FFF;
+border-color: #c8ccd5;
+border-radius: 0;
+color: #666;
+z-index: 10;
 }
 .ui-pop-user .ui-pop-head{
 	padding:0 15px;
@@ -1466,3 +1466,4 @@ a:focus {
  
 /* photo */ 
 /* vnav *//*  |xGv00|ca7570ffdcf2d601f22a688ce458168d */
+
