@@ -2,7 +2,7 @@
 import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
+import java.util.concurrent.Future;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
@@ -136,12 +136,22 @@ class CIMConnectorManager  {
 			return;
 		}
 		
-		executor.execute(new Runnable() {
+    	Future<?> future = executor.submit(new Runnable() {
 			@Override
 			public void run() {
 				syncConnection(cimServerHost, cimServerPort);
 			}
 		});
+		try {
+			if(future.get()!=null)
+			{
+				connect(cimServerHost,cimServerPort);
+			}
+		} catch (Exception e) {
+			
+			connect(cimServerHost,cimServerPort);
+			e.printStackTrace();
+		}  
 	}
 
 	public void send(final SentBody body) {
@@ -196,7 +206,7 @@ class CIMConnectorManager  {
 
 	public void deliverIsConnected() {
 		Intent intent = new Intent();
-		intent.setAction(ACTION_CONNECTION_FAILED);
+		intent.setAction(ACTION_CONNECTION_STATUS);
 		intent.putExtra(CIMPushManager.KEY_CIM_CONNECTION_STATUS, isConnected());
 		context.sendBroadcast(intent);
 	}

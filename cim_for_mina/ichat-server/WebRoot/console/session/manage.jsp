@@ -1,6 +1,5 @@
 <%@ page language="java" pageEncoding="utf-8"%>
 <%@ page import="java.util.Collection"%>
-<%@ page import="com.farsunset.ichat.common.util.StringUtil"%>
 <%@ page import="com.farsunset.cim.nio.session.CIMSession"%>
 <%
 	String path = request.getContextPath();
@@ -27,33 +26,18 @@
 		<script type="text/javascript" src="<%=basePath%>/resource/bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="<%=basePath%>/resource/js/framework.js"></script>
 		<script>
-		
-		  function doOffLine(account)
-		  {
-		     var setting = {hint:"确定让这个用户强制下线吗?",
-		                    onConfirm:function(){
-		                      $.post("<%=basePath%>/admin/session_offline.action", {account:account},
-							  function(data){
-							      showSTip("下线成功");
-					              $('#'+account).fadeOut().fadeIn().fadeOut();
-					              doHideConfirm();
-						      });
-		                     
-		                    }};
-		     
-		     doShowConfirm(setting);
-		  }
+	 
 		  
 		  function showMessageDialog(account)
 			{
 			   doShowDialog("messageDialog");
-			   $('#account').val(account);
+			   $('#Saccount').val(account);
 			   
 			}
 		 function doSendMessage()
 		  {
 		    var message = $('#message').val();
-		    var account = $('#account').val();
+		    var account = $('#Saccount').val();
 		    if($.trim(message)=='')
 		    {
 		       return;
@@ -69,6 +53,20 @@
 		     });
 		  }
 		  
+		  
+		  function onImageError(obj)
+			{
+			    obj.src="<%=basePath%>/webclient/images/icon_head_default.png";   
+			}
+			
+		  function  openWebclient(){
+		  
+		     var height = $(document).height();
+		     var width = $(document).width();
+		     window.open ("<%=basePath%>/console/webclient/main.jsp", "","height="+height+", width="+width+", top=0, left=0, toolbar=no,menubar=no, scrollbars=no, resizable=no,location=no, status=no");
+		  }
+
+
 		</script>
 	</head>
 	<body class="web-app ui-selectable">
@@ -79,24 +77,28 @@
 		<%@include file="../nav.jsp"%>
 
 		<div id="mainWrapper">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					在线用户
-				</div>
-				<div class="panel-body" style="padding: 5px;">
+		
+		<div class="lay-main-toolbar">
+                   
+           </div>
+           
+           
+		 
+				<div>
 					<form action="<%=basePath%>/admin/user_manage.action" method="post"
 						id="searchForm" style="padding: 0px;">
 						<input type="hidden" name="currentPage" id="currentPage" />
-						<table style="margin: 5px;width: 100%" class="utable">
+						<table style="width: 100%" class="utable">
 
 							<thead>
 								<tr class="tableHeader">
+                                    <th width="4%">头像</th>
 									<th width="15%">账号</th>
-									<th width="15%">终端来源</th>
-									<th width="15%">终端ID</th>
-									<th width="15%">终端型号</th>
-									<th width="15%">在线时长</th>
-									<th width="10%">操作</th>
+									<th width="10%">终端</th>
+									<th width="10%">设备型号</th>
+									<th width="10%">在线时长</th>
+									<th width="28%">位置</th>
+									<th width="12%">操作</th>
 								</tr>
 								 
 							</thead>
@@ -105,39 +107,41 @@
                                 <%
                                   for(CIMSession ios:sessionList)
                                   {
-                                
+                                    if(ios.getAccount()!=null)
+                                    {
                                  %>
-                                 	<tr id="<%=ios.getAccount()%>">
+                                 	<tr id="<%=ios.getAccount() %>" style=" height: 50px;">
+                                        <td>
+											<img width="40px" height="40px" onerror='onImageError(this)' src="http://cim.oss-cn-hangzhou.aliyuncs.com/UI_<%=ios.getAccount() %>"/>
+										</td>
 										<td>
 											<%=ios.getAccount() %>
 										</td>
 										<td>
-											<%=ios.getChannel() %>
+											<%=ios.getChannel()%>
 										</td>
 										<td>
-											<%=ios.getDeviceId() %>
-										</td>
-										<td>
-											<%=ios.getDeviceModel() %>
+											<%=ios.getDeviceModel()==null?"":ios.getDeviceModel()%>
 										</td>
 										<td>
 										    <%=(System.currentTimeMillis()-ios.getBindTime())/1000 %>秒
 										</td>
-										 
+										<td>
+										   <%=ios.getAttribute("location")==null?"":ios.getAttribute("location") %>
+										</td>
 										<td>
 											<div class="btn-group btn-group-xs">
-											  <button type="button" class="btn btn-primary" style="padding: 5px;" onclick="showMessageDialog('<%=ios.getAccount() %>')">发送消息</button>
-											  <button type="button" class="btn btn-danger"  style="padding: 5px;" onclick="doOffLine('<%=ios.getAccount()  %>')">强制下线</button>
+											  <button type="button" class="btn btn-primary" style="padding: 5px;" 
+onclick="showMessageDialog('<%=ios.getAccount() %>')">发送消息</button>
+											   
 											</div>
 										</td>
 									</tr>	
-								<%} %>		
+								<%}} %>		
 								 
 						 
 							</tbody>
-							<tfoot>
-								 
-							</tfoot>
+							 
 						</table>
 					</form>
 
@@ -153,22 +157,29 @@
 		   <form role="form">
 		      <div class="form-groupBuy">
 			    <label for="Amobile">
-					接收者账号:
+					接收账号:
 				</label>
-				<input type="text" class="form-control" id="account" name="account"
+				<input type="text" class="form-control" id="Saccount" name="account"
 					  style="  width: 100%;font-size: 20px;font-weight: bold;" disabled="disabled" />
 			  </div>
 			  <div class="form-groupBuy" style="margin-top: 20px;">
-			    <label for="exampleInputFile" style="padding-left: 7px;">消 息 内 容:</label>
+			    <label for="exampleInputFile">消息内容:</label>
 			    <textarea rows="10" style="width: 100%;height: 120px;" id="message" name="message"  class="form-control"></textarea>
 			  </div>
-			   <div class="form-groupBuy" style="margin-top: 20px;">
-			      <center>
-				     <button type="button" style="width: 150px;"  class="btn btn-success btn-lg" onclick="doSendMessage()">发 送</button>
-			      </center>
-			   </div>
-			   
 			</form>
+		  </div>
+		  <div class="panel-footer" style="padding:5px 10px;text-align: center;">
+						     <a type="button" class="btn btn-success btn-lg" onclick="doSendMessage()"  style="width: 200px;"> 发送</a>
+		  </div>
+		</div>
+
+
+                <div class="panel panel-primary gdialog" id="scanDownloadDialog" style="display: none;width: 300px;position: absolute;z-index: 1001;">
+		  <div class="panel-heading">二维码下载
+		  <a class="close"  onclick="doHideDialog('scanDownloadDialog'),$('#scanDownloadDialog').css('z-index',1000);">&times;</a>
+		  </div>
+		  <div class="panel-body">
+		    <img src = "<%=basePath%>/resource/img/scan_download.png"/>
 		  </div>
 		</div>
 

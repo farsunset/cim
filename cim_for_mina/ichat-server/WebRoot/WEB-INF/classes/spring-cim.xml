@@ -26,7 +26,7 @@
 			</map>
 		</property>
 	</bean>
-	<bean id="mainIoHandler" class="com.farsunset.cim.nio.handle.MainIOHandler" >
+	<bean id="mainIoHandler" class="com.farsunset.cim.nio.handler.MainIOHandler" >
 	   <property name="handlers">
 	                   
 			<map>
@@ -37,7 +37,7 @@
 					<bean class="com.farsunset.ichat.cim.handler.LogoutHandler" />
 				</entry>
 				<entry key="client_heartbeat">
-					<bean class="com.farsunset.cim.nio.handle.HeartbeatHandler"/>
+					<bean class="com.farsunset.cim.nio.handler.HeartbeatHandler"/>
 				</entry>
 				<entry key="sessionClosedHander">
 					<bean class="com.farsunset.ichat.cim.handler.SessionClosedHandler"/>

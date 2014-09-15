@@ -26,6 +26,7 @@ public class ServerMessageEncoder extends OneToOneEncoder {
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();//(2)
 		buf.writeBytes(message.toString().getBytes(CIMConstant.ENCODE_UTF8));
 		buf.writeByte(CIMConstant.MESSAGE_SEPARATE);
+		System.out.println("[ServerMessageEncoder]:"+message);
 		return buf;
 	}
 	

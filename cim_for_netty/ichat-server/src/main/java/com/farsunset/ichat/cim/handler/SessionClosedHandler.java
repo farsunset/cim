@@ -4,7 +4,7 @@ package com.farsunset.ichat.cim.handler;
 import org.apache.log4j.Logger;
 
 import com.farsunset.cim.nio.constant.CIMConstant;
-import com.farsunset.cim.nio.handle.CIMRequestHandler;
+import com.farsunset.cim.nio.handler.CIMRequestHandler;
 import com.farsunset.cim.nio.mutual.ReplyBody;
 import com.farsunset.cim.nio.mutual.SentBody;
 import com.farsunset.cim.nio.session.CIMSession;
