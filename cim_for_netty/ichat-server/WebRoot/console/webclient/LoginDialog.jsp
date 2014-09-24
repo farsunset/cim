@@ -4,8 +4,7 @@
 			+ request.getServerName() + ":" + request.getServerPort()
 			+ request.getContextPath();
 			
-%>
-	
+   %>
 	<script type="text/javascript">
      function doLogin()
 	{

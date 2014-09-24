@@ -25,12 +25,18 @@
 <script type="text/javascript"> 
 
 
-   /**CIMBridge.swf提供的接口,源码是CIMBridge.mxml , ReplyBody.as ,Message.as  用flahs builder 工具 导入开发。
+   /**CIMBridge.swf提供的接口,源码是CIMBridge工程  用flahs builder 工具 导入开发。
        connect(host);连接服务端 host:服务器IP
        setAccount(account) 绑定客户端账号到服务端 account账号
        logout()  退出连接
        getOfflineMessage(account) 拉取离线消息，需要服务端实现 请求key  client_get_offline_message
        
+       CIMBridge.swf回调的接口
+       bridgeCreationComplete()
+       sessionCreated()
+       sessionClosed()
+       onReplyReceived()
+       onMessageReceived()
    **/
    
    
@@ -56,7 +62,8 @@
      {
         hideProcess();
         doHideDialog('LoginDialog');
-        doShowDialog('MessageDialog');
+        $("#MessageDialog").fadeIn();
+        $("#global_mask").fadeIn();
         $("#current_account").text("当前账号:"+ACCOUNT);
         
      }
@@ -71,6 +78,7 @@
         
         if(message.type=='2')
         {
+            document.getElementById("CIMBridge").playSound();
             message.content = content;
             $("#messageList").append("<div class='alert alert-info' >"+content+"</div>");
         }
@@ -123,7 +131,7 @@
   }   
   </script>
 
-<body style="background-color: rgb(190, 209, 216);">
+<body style="background-color: rgb(190, 209, 216);width: 600px;">
 <object type="application/x-shockwave-flash" data="CIMBridge.swf" id="CIMBridge"  width="0" height="0"> 
 				<param name="quality" value="low"/>
 				<param name="allowScriptAccess" value="always"/>

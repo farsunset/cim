@@ -45,12 +45,15 @@ public class ServerMessageDecoder extends FrameDecoder  {
 	        DocumentBuilder builder = factory.newDocumentBuilder();  
 	        Document doc = builder.parse(new ByteArrayInputStream(message.toString().getBytes()));
 	        body.setKey(doc.getElementsByTagName("key").item(0).getTextContent());
-	        NodeList items = doc.getElementsByTagName("data").item(0).getChildNodes();  
-	        for (int i = 0; i < items.getLength(); i++) {  
-	            Node node = items.item(i);  
-	            body.getData().put(node.getNodeName(), node.getTextContent());
+	        NodeList dataNodeList = doc.getElementsByTagName("data");
+	        if(dataNodeList!=null && dataNodeList.getLength()>0)
+	        {
+		        NodeList items = dataNodeList.item(0).getChildNodes();  
+		        for (int i = 0; i < items.getLength(); i++) {  
+		            Node node = items.item(i);  
+		            body.getData().put(node.getNodeName(), node.getTextContent());
+		        }
 	        }
-	        
 	        data = null;
 	        message = null;
 	        return body;

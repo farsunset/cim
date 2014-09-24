@@ -1,5 +1,5 @@
 
-package com.farsunset.webcim.bean
+package  
 {
 	import com.adobe.serialization.json.JSON;
 
