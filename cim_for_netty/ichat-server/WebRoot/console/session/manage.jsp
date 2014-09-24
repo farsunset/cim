@@ -60,10 +60,7 @@
 			}
 			
 		  function  openWebclient(){
-		  
-		     var height = $(document).height();
-		     var width = $(document).width();
-		     window.open ("<%=basePath%>/console/webclient/main.jsp", "","height="+height+", width="+width+", top=0, left=0, toolbar=no,menubar=no, scrollbars=no, resizable=no,location=no, status=no");
+		     window.open ("<%=basePath%>/console/webclient/main.jsp", "","height="+800+", width="+600+", top=0, left=0, toolbar=no,menubar=no, scrollbars=no, resizable=no,location=no, status=no");
 		  }
 
 

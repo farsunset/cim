@@ -65,21 +65,20 @@ public class ServerMessageDecoder extends CumulativeProtocolDecoder {
 		        Document doc = builder.parse(new ByteArrayInputStream(bytes));
 		        body.setKey(doc.getElementsByTagName("key").item(0).getTextContent());
 		        
-		        NodeList datas = doc.getElementsByTagName("data");
-		        if(datas!=null&&datas.getLength()>0)
-		        {
-			        NodeList items = datas.item(0).getChildNodes();  
-			        for (int i = 0; i < items.getLength(); i++) {  
-			            Node node = items.item(i);  
-			            body.getData().put(node.getNodeName(), node.getTextContent());
-			        }
-		        }
+				
+				NodeList dataNodeList = doc.getElementsByTagName("data");
+				if(dataNodeList!=null && dataNodeList.getLength()>0)
+				{
+					NodeList items = dataNodeList.item(0).getChildNodes();  
+					for (int i = 0; i < items.getLength(); i++) {  
+						Node node = items.item(i);  
+						body.getData().put(node.getNodeName(), node.getTextContent());
+					}
+				}
 		        
 		        out.write(body);
 	        }catch(Exception e){
-	        	//e.printStackTrace();
 	        	logger.warn(e.getMessage());
-	        	
 	        	out.write(message);
 	        }
 		}
