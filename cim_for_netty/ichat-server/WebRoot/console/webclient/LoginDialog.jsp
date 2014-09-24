@@ -1,4 +1,10 @@
 	<%@ page language="java" pageEncoding="utf-8"%>
+	<%
+	String lbasePath = request.getScheme() + "://"
+			+ request.getServerName() + ":" + request.getServerPort()
+			+ request.getContextPath();
+			
+   %>
 	<script type="text/javascript">
      function doLogin()
 	{
@@ -18,7 +24,7 @@
 							登录
 						</div>
 						 <div style="text-align: center;background: #5FA0D3;height: 150px;">
-									<img src="<%=basePath%>/resource/img/icon.png" style="margin-top: 35px;height: 80px;height: 80px;"/>
+									<img src="<%=lbasePath%>/resource/img/icon.png" style="margin-top: 35px;height: 80px;height: 80px;"/>
 								</div>
 						
 						<div class="panel-body">
