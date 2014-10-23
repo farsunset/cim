@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
+
 import org.apache.mina.core.future.WriteFuture;
 import org.apache.mina.core.session.IoSession;
 
@@ -18,25 +19,23 @@ import com.farsunset.cim.nio.constant.CIMConstant;
 
 public class CIMSession  implements Serializable{
 
-	/**
+    /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
-	public static String ID = "ID";
-	public static String HOST = "HOST";
-
-	private IoSession session;
+	private transient static final long serialVersionUID = 1L;
+	public  transient  static String ID = "ID";
+	public  transient static String HOST = "HOST";
+    
+	private transient IoSession session;
 	
 	private String gid;//session全局ID
 	private Long nid;//session在本台服务器上的ID
-	private String deviceId;//客户端设备ID
+	private String deviceId;//客户端ID  (设备号码+应用包名)
 	private String host;//session绑定的服务器IP
 	private String account;//session绑定的账号
 	private String channel;//终端设备类型
 	private String deviceModel;//终端设备型号
-	
 	private Long bindTime;//登录时间
-	
 	private Long heartbeat;//心跳时间
 	
 	public CIMSession(IoSession session) {
@@ -57,11 +56,9 @@ public class CIMSession  implements Serializable{
 	}
 
 	public void setAccount(String account) {
-		if(session!=null)
-		{
-			session.setAttribute(CIMConstant.SESSION_KEY, account);
-		}
 		this.account = account;
+		
+		setAttribute(CIMConstant.SESSION_KEY, account);
 	}
 
 	 
@@ -74,7 +71,10 @@ public class CIMSession  implements Serializable{
 	}
 
 	public void setGid(String gid) {
+		
 		this.gid = gid;
+		
+		setAttribute("gid", gid);
 	}
 
 	public Long getNid() {
@@ -96,6 +96,8 @@ public class CIMSession  implements Serializable{
 
 	public void setChannel(String channel) {
 		this.channel = channel;
+		
+		setAttribute("channel", channel);
 	}
 
 	public String getDeviceModel() {
@@ -104,10 +106,14 @@ public class CIMSession  implements Serializable{
 
 	public void setDeviceModel(String deviceModel) {
 		this.deviceModel = deviceModel;
+		
+		setAttribute("deviceModel", deviceModel);
 	}
 
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
+		
+		setAttribute("deviceId", deviceId);
 	}
 
 
@@ -125,6 +131,7 @@ public class CIMSession  implements Serializable{
 
 	public void setBindTime(Long bindTime) {
 		this.bindTime = bindTime;
+	    setAttribute("bindTime", bindTime);
 	}
 
 	public Long getHeartbeat() {
@@ -133,18 +140,26 @@ public class CIMSession  implements Serializable{
 
 	public void setHeartbeat(Long heartbeat) {
 		this.heartbeat = heartbeat;
-		if(session!=null)
-		{
-			session.setAttribute(CIMConstant.HEARTBEAT_KEY, heartbeat);
-		}
+		setAttribute(CIMConstant.HEARTBEAT_KEY, heartbeat);
 	}
 
 	public void setHost(String host) {
 		this.host = host;
+		 
+		setAttribute("host", host);
 	}
 
 
+	public void setIoSession(IoSession session) {
+		this.session = session;
+	}
 
+	public IoSession getIoSession() {
+		return session;
+	}
+	
+	
+	
 	public void setAttribute(String key, Object value) {
 		if(session!=null)
 		session.setAttribute(key, value);
@@ -195,7 +210,7 @@ public class CIMSession  implements Serializable{
 		
 		try {
 			String ip = InetAddress.getLocalHost().getHostAddress();
-			return ip.equals(host) && session!=null;
+			return ip.equals(host);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
@@ -215,29 +230,14 @@ public class CIMSession  implements Serializable{
 		if (o instanceof CIMSession) {
 			
 			CIMSession t = (CIMSession) o;
-			if(!t.isLocalhost())
+			if(t.deviceId!=null && deviceId!=null &&  t.nid!=null && nid!=null)
 			{
-				return false;
-			}
-			if (t.session.getId() == session.getId()&& t.host.equals(host)) {
-				return true;
-			}
-			return false;
-		} else {
-			return false;
-		}
-
+				return t.deviceId.equals(deviceId) && t.nid.longValue()==nid.longValue() && t.host.equals(host);
+			} 
+		}  
+		return false;
 	}
 
-	public void setIoSession(IoSession session) {
-		this.session = session;
-	}
-
-	public IoSession getIoSession() {
-		return session;
-	}
-	
-	
-  
+ 
 
 }
