@@ -1,4 +1,3 @@
- 
 package com.farsunset.ichat.cim.handler;
 
 import java.net.InetAddress;
@@ -38,17 +37,15 @@ public class BindHandler implements CIMRequestHandler {
 			newSession.setHost(InetAddress.getLocalHost().getHostAddress());
 			newSession.setChannel( message.get("channel"));
 			newSession.setDeviceModel(message.get("device"));
+            //第一次设置心跳时间为登录时间
+    		newSession.setBindTime(System.currentTimeMillis());
+			newSession.setHeartbeat(System.currentTimeMillis());
 			/**
 			 * 由于客户端断线服务端可能会无法获知的情况，客户端重连时，需要关闭旧的连接
 			 */
-			CIMSession oldSession  = sessionManager.getSession(account);
-			if(oldSession!=null)
+		    //如果是账号已经在另一台终端登录。则让另一个终端下线
+    		if(oldSession!=null&&!oldSession.equals(newSession))
 			{
-				
-				//如果是账号已经在另一台终端登录。则让另一个终端下线
-				if((oldSession.getDeviceId()!=null&&!oldSession.getDeviceId().equals(newSession.getDeviceId())
-						||!oldSession.equals(newSession)))
-				{
 					
 					
 					oldSession.removeAttribute(CIMConstant.SESSION_KEY);
@@ -70,15 +67,11 @@ public class BindHandler implements CIMRequestHandler {
 						oldSession = null;
 					}
 					oldSession = null;
-				}
+				
 				
 			}
 			if(oldSession==null)
 			{
-				//第一次设置心跳时间为登录时间
-				newSession.setBindTime(System.currentTimeMillis());
-				newSession.setHeartbeat(System.currentTimeMillis());
-				
 				sessionManager.addSession(account, newSession);
 				 
 			}
