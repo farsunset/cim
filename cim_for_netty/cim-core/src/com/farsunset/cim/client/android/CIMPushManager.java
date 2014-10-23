@@ -2,7 +2,7 @@ package com.farsunset.cim.client.android;
 import android.content.Context;
 import android.content.Intent;
 import android.telephony.TelephonyManager;
-
+import java.util.UUID;
 import com.farsunset.cim.nio.constant.CIMConstant;
 import com.farsunset.cim.nio.mutual.SentBody;
 
@@ -85,10 +85,11 @@ public class CIMPushManager  {
     	CIMDataConfig.putString(context,CIMDataConfig.KEY_ACCOUNT, account);
     	
     	String imei = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+        imei += context.getPackageName();
     	SentBody sent = new SentBody();
 		sent.setKey(CIMConstant.RequestKey.CLIENT_BIND);
 		sent.put("account", account);
-		sent.put("deviceId",imei);
+		sent.put("deviceId",UUID.nameUUIDFromBytes(imei.getBytes()).toString().replaceAll("-", ""));
 		sent.put("channel", "android");
 		sent.put("device",android.os.Build.MODEL);
 		
