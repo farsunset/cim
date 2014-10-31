@@ -40,9 +40,10 @@ public class BindHandler implements CIMRequestHandler {
             //第一次设置心跳时间为登录时间
     		newSession.setBindTime(System.currentTimeMillis());
 			newSession.setHeartbeat(System.currentTimeMillis());
-			/**
-			 * 由于客户端断线服务端可能会无法获知的情况，客户端重连时，需要关闭旧的连接
+		   /**
+    		 * 由于客户端断线服务端可能会无法获知的情况，客户端重连时，需要关闭旧的连接
 			 */
+			CIMSession oldSession  = sessionManager.getSession(account);
 		    //如果是账号已经在另一台终端登录。则让另一个终端下线
     		if(oldSession!=null&&!oldSession.equals(newSession))
 			{
