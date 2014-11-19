@@ -13,7 +13,8 @@ import com.farsunset.cim.nio.mutual.SentBody;
  */
 public class CIMPushManager  {
 
-    
+	static String  ACTION_CONNECTION_KEEPALIVE ="ACTION_CONNECTION_KEEPALIVE";
+	
     static String  ACTION_CONNECTION ="ACTION_CONNECTION";
 	
 	static String  ACTION_CONNECTION_STATUS ="ACTION_CONNECTION_STATUS";

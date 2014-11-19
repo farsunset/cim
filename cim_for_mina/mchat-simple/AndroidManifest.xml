@@ -51,8 +51,10 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
 
+        <!--推送服务-->  
         <service  android:name="com.farsunset.cim.client.android.CIMPushService" android:process=":cimpush"   />
-
+        <!--保持长连接广播-->  
+        <receiver  android:name="com.farsunset.cim.client.android.KeepAliveReceiver" android:process=":cimpush"/>
          <!--消息接受广播注册-->  
         <receiver android:name="com.farsunset.ichat.example.receiver.CustomCIMMessageReceiver" android:exported="false">  
             <intent-filter >  
