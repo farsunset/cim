@@ -1,0 +1,72 @@
+/*-----------------------------------------------------dialog------------------------*/
+ 
+.gdialog {
+
+	-webkit-box-shadow: 0 0 20px -2px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0 0 20px -2px rgba(0,0,0,0.5);
+	-ms-box-shadow: 0 0 20px -2px rgba(0,0,0,0.5);
+	box-shadow: 0 0 20px -2px rgba(0, 0, 0, 0.5);
+	border: 1px solid #6D7A89;
+	border-radius: 0px;
+}
+
+.gdialog div{
+
+  border-radius: 0px;
+}
+
+.gdialog .close{
+
+  background-color: white;
+  border-radius: 99px;
+  opacity: .5;
+  filter: alpha(opacity=50);
+}
+
+.gdialog .close:hover, .gdialog .close:focus{
+  opacity: .93;
+  filter: alpha(opacity=93);
+}
+
+
+.gdialog .panel-heading{
+   cursor: move;
+}
+
+.tip_process {
+	zoom: 1;
+	color:#394A5E;
+	text-align: center;
+	line-height: 50px;
+	height: 50px;
+	-webkit-box-shadow: 0 0 20px -2px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0 0 20px -2px rgba(0,0,0,0.5);
+	-ms-box-shadow: 0 0 20px -2px rgba(0,0,0,0.5);
+	box-shadow: 0 0 20px -2px rgba(0, 0, 0, 0.5);
+	border: 1px solid #6D7A89;
+	z-index: 9999;
+	background-color: white;
+	min-width: 300px;
+	position: absolute;
+	z-index:9999;; 
+	font-size: 16px;
+    font-weight: bold;
+}
+
+.icon_loading_mid{
+	background: url(../img/icon_loading_mid.gif) no-repeat;
+	width: 31px;
+	height: 31px;
+	left:10px;
+	top:10px;
+	position: absolute;
+}
+.icon_loading_small{
+	background: url(../img/icon_loading_small.gif) no-repeat;
+	width: 22px;
+	height: 22px;
+	left:10px;
+	top:15px;
+	position: absolute;
+}
+ 

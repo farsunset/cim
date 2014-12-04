@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/log4j.jar"/>
+	<classpathentry kind="lib" path="D:/android-eclipse/adt-bundle-windows-x86_64-20131030/sdk/platforms/android-19/android.jar"/>
+	<classpathentry kind="lib" path="lib/netty-3.6.5.Final.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

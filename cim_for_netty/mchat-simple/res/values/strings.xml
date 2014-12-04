@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">ichat</string>
+	<string name="minuteago">分钟前</string>
+    <string name="hourago">小时前</string>
+    <string name="dayago">天前</string>
+    <string name="refresh_release">松开获取更多</string>
+    <string name="refresh_pull">下拉可以刷新</string>
+    <string name="refresh_lasttime">上次更新:</string>
+    <string name="tip_reload">重新加载</string>
+    <string name="tip_network_busy">网络连接失败</string>
+    <string name="tip_look_more">查看更多</string>
+    <string name="check_update_tips">正在检查更新......</string>
+    <string name="no_new_verson_tips">当前已是最新版本</string>
+    <string name="find_new_verson_tips">发现新版本</string>
+    <string name="at_now">刚刚</string> 
+</resources>
