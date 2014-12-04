@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿<%@ page language="java" pageEncoding="UTF-8"%>
+=======
+<%@ page language="java" pageEncoding="UTF-8"%>
+>>>>>>> 47c3658fccd644e13de7f3b4c25ea7be50e880fa
 
 <%
 	String headerBasePath = request.getScheme() + "://"
@@ -35,7 +39,34 @@
  
   });
    
+<<<<<<< HEAD
  
+=======
+   
+    function doLogin()
+	{
+		    var account = $('#account').val();
+		    var password = $('#password').val();
+		    if($.trim(account)=='' || $.trim(password)=='')
+		    {
+		       return;
+		    }
+		    
+		    showProcess('正在登录请稍后......');
+		    $.post("<%=headerBasePath%>/system/system_login.action", {account:account,password:password},
+			   function(data){
+			      hideProcess();
+			      if(data == 403)
+			      {
+			         showETip("账号或者密码错误");
+			         return ;
+			      }
+			      doHideDialog('LoginDialog');
+			      $("#loginButton").text("系统管理员");
+			      $("#loginButton").removeAttr("onclick");
+		     });
+		}
+>>>>>>> 47c3658fccd644e13de7f3b4c25ea7be50e880fa
 		  
 </script>
 
