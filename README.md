@@ -21,7 +21,8 @@
 1.客户端登录时将不在是固定的服务器IP 而是先通过http接口获取到当前空闲的服务器IP，然后登录
      
 #成功案例
-#http://www.eoeandroid.com/thread-300586-1-1.html
+#http://blog.csdn.net/xx753277/article/details/17512255
+#http://blog.csdn.net/xx753277/article/details/45535981
 
 
  
