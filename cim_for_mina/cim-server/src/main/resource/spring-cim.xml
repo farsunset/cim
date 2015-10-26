@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+	  http://www.springframework.org/schema/beans 
+	  http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	  http://www.springframework.org/schema/tx 
+	  http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+	  http://www.springframework.org/schema/aop 
+	  http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+	"
+	>
+	
+ <!-- =============================================================== -->
+	<!-- MINA                                                            -->
+	<!-- =============================================================== -->
+
+	<bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+		<property name="customEditors">
+			<map>
+				<entry key="java.net.SocketAddress">
+					<bean class="org.apache.mina.integration.beans.InetSocketAddressEditor" />
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="cimIoHandler" class="com.farsunset.cim.server.handler.CIMIoHandler" >
+	   <property name="handlers">
+	                   
+			<map>
+				 
+				<entry key="client_bind">
+					<bean class="com.farsunset.cim.handler.BindHandler" />
+				</entry>
+				<entry key="client_logout">
+					<bean class="com.farsunset.cim.handler.LogoutHandler" />
+				</entry>
+				<entry key="client_cimsession_closed">
+					<bean class="com.farsunset.cim.handler.SessionClosedHandler"/>
+				</entry>
+				<entry key="client_get_offline_message">
+					<bean class="com.farsunset.cim.handler.PushOfflineMessageHandler"/>
+				</entry>
+				 
+			</map>
+		</property>
+	</bean>
+  
+    
+   
+	<bean id="CIMNioAcceptor" class="com.farsunset.cim.server.handler.CIMNioSocketAcceptor"
+		init-method="bind" destroy-method="unbind">
+		<property name="port" value="23456" />
+		<property name="ioHandler" ref="cimIoHandler" />
+	</bean>
+	
+	<bean id="CIMSessionManager" class="com.farsunset.cim.server.session.DefaultSessionManager"/>
+	
+	<!-- 集群服务器时  CIMSessionManager 配置
+	<bean id="CIMSessionManager" class="com.farsunset.lvxin.cim.session.ClusterSessionManager">
+	    <property name="CIMSessionDao" ref="CIMSessionDaoImpl" />
+	</bean>
+	  -->
+	  
+</beans>
+ 
