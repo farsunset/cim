@@ -1,16 +1,23 @@
+/**
+ * probject:cim
+ * @version 2.0
+ * 
+ * @author 3979434@qq.com
+ */ 
 package com.farsunset.cim.api.action;
 
 import java.util.HashMap;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.web.bind.ServletRequestBindingException;
 
 import com.farsunset.cim.push.DefaultMessagePusher;
 import com.farsunset.cim.push.SystemMessagePusher;
-import com.farsunset.cim.server.mutual.Message;
+import com.farsunset.cim.sdk.server.model.Message;
 import com.farsunset.cim.util.Constants;
 import com.farsunset.cim.util.ContextHolder;
+import com.farsunset.cim.util.StringUtil;
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
@@ -43,15 +50,15 @@ public class MessageAction  extends  ActionSupport  implements ModelDriven<Messa
 		try{
 	        
 			checkParams();
-	        
+			message.setMid(StringUtil.getUUID());
 			if(Constants.MessageType.TYPE_2.equals(message.getType()))
 			{
 				  //向客户端 发送消息
-		        ContextHolder.getBean(SystemMessagePusher.class).pushMessageToUser(message);
+		        ContextHolder.getBean(SystemMessagePusher.class).push(message);
 			}else
 			{
 				  //向客户端 发送消息
-		        ((DefaultMessagePusher)ContextHolder.getBean("messagePusher")).pushMessageToUser(message);
+		        ((DefaultMessagePusher)ContextHolder.getBean("messagePusher")).push(message);
 			}
 	              
 	        data.put("id", message.getMid());

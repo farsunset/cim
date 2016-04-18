@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.GET_TASKS" />
-
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-sdk
         android:minSdkVersion="10"
         android:targetSdkVersion="19" />
@@ -52,7 +52,7 @@
             android:screenOrientation="portrait" />
 
         <!--推送服务-->  
-        <service  android:name="com.farsunset.cim.client.android.CIMPushService" android:process=":cimpush"   />
+        <service  android:name="com.farsunset.cim.sdk.android.CIMPushService" android:process=":cimpush"   />
         
         <!--消息接受广播注册-->  
         <receiver android:name="com.farsunset.ichat.example.receiver.CustomCIMMessageReceiver" android:exported="false">  
@@ -60,12 +60,12 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>  <!-- 网络变化广播 -->
                 <action android:name="com.farsunset.cim.MESSAGE_RECEIVED"/><!-- 消息广播action -->
                 <action android:name="com.farsunset.cim.SENT_FAILED"/> <!-- 发送sendbody失败广播-->
-                <action android:name="com.farsunset.cim.SENT_SUCCESS"/> <!-- 发送sendbody成功广播 -->
+                <action android:name="com.farsunset.cim.SENT_SUCCESSED"/> <!-- 发送sendbody成功广播 -->
+                <action android:name="com.farsunset.cim.CONNECTION_RECOVERY"/> <!--重新连接 -->
                 <action android:name="com.farsunset.cim.CONNECTION_CLOSED"/> <!-- 链接意外关闭广播 -->
                 <action android:name="com.farsunset.cim.CONNECTION_FAILED"/> <!-- 链接失败广播 -->
-                <action android:name="com.farsunset.cim.CONNECTION_SUCCESS"/> <!-- 链接成功广播-->
+                <action android:name="com.farsunset.cim.CONNECTION_SUCCESSED"/> <!-- 链接成功广播-->
                 <action android:name="com.farsunset.cim.REPLY_RECEIVED"/> <!-- 发送sendbody成功后获得replaybody回应广播 -->
-                <action android:name="com.farsunset.cim.CONNECTION_STATUS"/> <!-- 获取到与服务端连接状态广播 -->
                 
                 <!-- 【可选】 一些常用的系统广播，增强pushservice的复活机会-->
                 <action android:name="android.intent.action.USER_PRESENT" />

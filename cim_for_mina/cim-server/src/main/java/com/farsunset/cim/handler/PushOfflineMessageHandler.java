@@ -1,9 +1,9 @@
 /**
  * probject:cim
- * @version 1.1.0
+ * @version 2.0
  * 
  * @author 3979434@qq.com
- */  
+ */   
 package com.farsunset.cim.handler;
 
 import java.util.ArrayList;
@@ -11,12 +11,12 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.farsunset.cim.server.constant.CIMConstant;
-import com.farsunset.cim.server.handler.CIMRequestHandler;
-import com.farsunset.cim.server.model.Message;
-import com.farsunset.cim.server.model.ReplyBody;
-import com.farsunset.cim.server.model.SentBody;
-import com.farsunset.cim.server.session.CIMSession;
+import com.farsunset.cim.sdk.server.constant.CIMConstant;
+import com.farsunset.cim.sdk.server.handler.CIMRequestHandler;
+import com.farsunset.cim.sdk.server.model.Message;
+import com.farsunset.cim.sdk.server.model.ReplyBody;
+import com.farsunset.cim.sdk.server.model.SentBody;
+import com.farsunset.cim.sdk.server.session.CIMSession;
 /**
  * 推送离线消息
  */

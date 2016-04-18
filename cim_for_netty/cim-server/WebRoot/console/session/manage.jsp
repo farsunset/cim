@@ -1,13 +1,13 @@
 <%@ page language="java" pageEncoding="utf-8"%>
-<%@ page import="java.util.Collection"%>
-<%@ page import="com.farsunset.cim.server.session.CIMSession"%>
+<%@ page import="java.util.List"%>
+<%@ page import="com.farsunset.cim.sdk.server.session.CIMSession"%>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
 			+ request.getServerName() + ":" + request.getServerPort()
 			+ path;
 			 
-	Collection<CIMSession> sessionList  = (Collection<CIMSession>)request.getAttribute("sessionList");
+	List<CIMSession> sessionList  = (List<CIMSession> )request.getAttribute("sessionList");
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -92,6 +92,7 @@
                                     <th width="4%">头像</th>
 									<th width="15%">账号</th>
 									<th width="10%">终端</th>
+									<th width="10%">终端版本</th>
 									<th width="10%">应用版本</th>
 									<th width="10%">设备型号</th>
 									<th width="10%">在线时长</th>
@@ -119,7 +120,10 @@
 											<%=ios.getChannel()%>
 										</td>
 										<td>
-											<%=ios.getAppVersion()==null?"":ios.getAppVersion()%>
+											<%=ios.getSystemVersion()==null?"":ios.getSystemVersion()%>
+										</td>
+										<td>
+											<%=ios.getClientVersion()==null?"":ios.getClientVersion()%>
 										</td>
 										<td>
 											<%=ios.getDeviceModel()==null?"":ios.getDeviceModel()%>
@@ -128,7 +132,7 @@
 										    <%=(System.currentTimeMillis()-ios.getBindTime())/1000 %>秒
 										</td>
 										<td>
-										   <%=ios.getTag("location")==null?"":ios.getTag("location") %>
+										   <%=ios.getAttribute("location")==null?"":ios.getAttribute("location") %>
 										</td>
 										<td>
 											<div class="btn-group btn-group-xs">

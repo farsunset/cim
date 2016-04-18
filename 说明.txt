@@ -1,0 +1,4 @@
+1.cim-android-sdk 是android客户端封装的的jar包
+2.cim-server是 java web工程，用myeclipse开发工具，如果用eclipse注意修改下编译环境
+3.cim-server-sdk 是cim-server 用到的封装的jar
+4.client-mchat-android 是android客户端

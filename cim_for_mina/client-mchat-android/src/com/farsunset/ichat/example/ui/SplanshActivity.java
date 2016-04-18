@@ -1,3 +1,9 @@
+/**
+ * probject:cim
+ * @version 2.0
+ * 
+ * @author 3979434@qq.com
+ */ 
 package com.farsunset.ichat.example.ui;
 
 
@@ -7,7 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 
-import com.farsunset.cim.client.android.CIMPushManager;
+import com.farsunset.cim.sdk.android.CIMPushManager;
 import com.farsunset.ichat.example.R;
 import com.farsunset.ichat.example.app.CIMMonitorActivity;
 import com.farsunset.ichat.example.app.Constant;
@@ -23,7 +29,7 @@ public class SplanshActivity extends CIMMonitorActivity{
 		
 		//连接服务端
 		
-		CIMPushManager.init(SplanshActivity.this,Constant.CIM_SERVER_HOST, Constant.CIM_SERVER_PORT);
+		CIMPushManager.connect(SplanshActivity.this,Constant.CIM_SERVER_HOST, Constant.CIM_SERVER_PORT);
 		
 		
 		final View view = View.inflate(this, R.layout.activity_splansh, null);
@@ -35,7 +41,7 @@ public class SplanshActivity extends CIMMonitorActivity{
 		
 	}
 	@Override
-	public void onCIMConnectionSucceed() {
+	public void onConnectionSuccessed(boolean autoBind) {
 		
 		Intent intent = new Intent(SplanshActivity.this,LoginActivity.class);  
 		startActivity(intent);
@@ -44,8 +50,12 @@ public class SplanshActivity extends CIMMonitorActivity{
 	 
 	
 	 @Override
-		public void onBackPressed() {
+	public void onBackPressed() {
 		  finish();
-		  CIMPushManager.destory(this);
-		}
+		  CIMPushManager.destroy(this);
+	}
+	 public  void onConnectionFailed(Exception e){
+		 
+		 showToask("连接服务器失败，请检查当前设备是否能连接上服务器IP和端口");
+	 }
 }

@@ -14,10 +14,10 @@
 	>
 	
 	<bean id="messagePusher" class="com.farsunset.cim.push.DefaultMessagePusher">
-		<property name="sessionManager" ref="defaultSessionManager"/>
+		<property name="sessionManager" ref="CIMSessionManager"/>
 	</bean>
 	 
 	<bean id="systemMessagePusher" class="com.farsunset.cim.push.SystemMessagePusher">
-		<property name="sessionManager" ref="defaultSessionManager"/>
+		<property name="sessionManager" ref="CIMSessionManager"/>
 	 </bean>
 </beans>

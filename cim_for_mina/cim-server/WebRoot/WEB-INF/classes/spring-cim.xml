@@ -12,21 +12,8 @@
 	  http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
 	"
 	>
-	
- <!-- =============================================================== -->
-	<!-- MINA                                                            -->
-	<!-- =============================================================== -->
-
-	<bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">
-		<property name="customEditors">
-			<map>
-				<entry key="java.net.SocketAddress">
-					<bean class="org.apache.mina.integration.beans.InetSocketAddressEditor" />
-				</entry>
-			</map>
-		</property>
-	</bean>
-	<bean id="cimIoHandler" class="com.farsunset.cim.server.handler.CIMIoHandler" >
+ 
+	<bean id="cimIoHandler" class="com.farsunset.cim.sdk.server.handler.CIMIoHandler" >
 	   <property name="handlers">
 	                   
 			<map>
@@ -50,13 +37,13 @@
   
     
    
-	<bean id="CIMNioAcceptor" class="com.farsunset.cim.server.handler.CIMNioSocketAcceptor"
+	<bean id="CIMNioAcceptor" class="com.farsunset.cim.sdk.server.handler.CIMNioSocketAcceptor"
 		init-method="bind" destroy-method="unbind">
 		<property name="port" value="23456" />
 		<property name="ioHandler" ref="cimIoHandler" />
 	</bean>
 	
-	<bean id="CIMSessionManager" class="com.farsunset.cim.server.session.DefaultSessionManager"/>
+	<bean id="CIMSessionManager" class="com.farsunset.cim.sdk.server.session.DefaultSessionManager"/>
 	
 	<!-- 集群服务器时  CIMSessionManager 配置
 	<bean id="CIMSessionManager" class="com.farsunset.lvxin.cim.session.ClusterSessionManager">

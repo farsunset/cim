@@ -1,4 +1,9 @@
- 
+/**
+ * probject:cim
+ * @version 2.0
+ * 
+ * @author 3979434@qq.com
+ */  
 package com.farsunset.cim.util;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +22,8 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
-import com.farsunset.cim.server.model.Message;
+import com.farsunset.cim.sdk.server.model.Message;
+
 
  
 public class MessageDispatcher  {

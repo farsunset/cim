@@ -1,10 +1,13 @@
- 
+/**
+ * probject:cim
+ * @version 2.0
+ * 
+ * @author 3979434@qq.com
+ */  
 package com.farsunset.ichat.example.network;
 import java.io.File;
-import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -20,18 +23,13 @@ import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.util.EntityUtils;
-
 import android.os.Handler;
 import android.os.Message;
-
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 
  
 public class HttpAPIRequester  {
     HttpAPIResponser responser;
-    Type dataType;
-    Type dataListType;
     private static BlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>();
 	private static ThreadPoolExecutor executor =  new ThreadPoolExecutor(3, 5, 20,	TimeUnit.SECONDS,queue);;
     
@@ -72,41 +70,20 @@ public class HttpAPIRequester  {
      * @exception
      * @since 1.0.0
      */
-	public void  execute( Type dtype , Type dltype, final String url)
+	public void  execute(  final String url)
 	{
 		
-		this.dataType = dtype;
-		this.dataListType = dltype;
 		responser.onRequest();
 	    executor.execute(new Runnable() {
 			@Override
 			public void run() {
 				
 				Message message = handler.obtainMessage();
-                HashMap<String,Object> data = new HashMap<String,Object>();
+				message.getData().putString("url", url);
 				try {
 					String dataString = httpPost(url,responser.getRequestParams());
-					JSONObject json = JSON.parseObject(dataString);
-					data.put("code", json.getString("code"));
-					data.put("url", url);
-				    if(json.containsKey("data") && dataType!=null)
-					{
-				    	    dataString = json.getJSONObject("data").toJSONString();
-			    		    data.put("data", JSON.parseObject(dataString, dataType));
-					} 
-					if(json.containsKey("dataList") &&dataListType!=null )
-					{
-					    	dataString = json.getJSONArray("dataList").toJSONString();
-					    	data.put("list", JSON.parseObject(dataString, dataListType));
-					} 
-					    
-					if(json.containsKey("page") &&json.getJSONObject("page")!=null)
-				    {
-					    	dataString = json.getJSONObject("page").toJSONString();
-					    	data.put("page", JSON.parseObject(dataString, Page.class));
-				    }
 					
-				    message.getData().putSerializable("data", data);
+				    message.getData().putString("data", dataString);
 					message.what = 0;
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -157,18 +134,16 @@ public class HttpAPIRequester  {
 	 Handler handler = new Handler(){
 		public void handleMessage(Message message)
 		{
-		switch(message.what)
+			String url = message.getData().getString("url");
+		    switch(message.what)
 			{
 				case   0:
-					HashMap<String,Object> data =(HashMap<String, Object>) message.getData().getSerializable("data");
-					Page page = (Page) data.get("page");
-					List<Object> list = (List<Object>) data.get("list");
-					String code = String.valueOf(data.get("code"));
-				    responser.onSuccess(data.get("data"),list,page,String.valueOf(data.get("code")),data.get("url").toString());
+					String data = message.getData().getString("data");
+				    responser.onSuccess(data,url);
 
 					break;
 				case   1:
-					responser.onFailed((Exception) message.getData().get("exception"));
+					responser.onFailed((Exception) message.getData().get("exception"),url);
 					break;
 			}
 				

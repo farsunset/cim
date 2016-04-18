@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="/cim-server/WebRoot/WEB-INF/lib/commons-lang3-3.1.jar"/>
 	<classpathentry kind="lib" path="/cim-server/WebRoot/WEB-INF/lib/log4j.jar"/>
-	<classpathentry kind="lib" path="/cim-server/WebRoot/WEB-INF/lib/netty-all-5.0.0.Alpha2.jar" sourcepath="C:/Users/Administrator/Desktop/netty-all-5.0.0.Alpha2-sources.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_80"/>
+	<classpathentry kind="lib" path="/cim-server/WebRoot/WEB-INF/lib/netty-buffer-4.1.0.CR7.jar"/>
+	<classpathentry kind="lib" path="/cim-server/WebRoot/WEB-INF/lib/netty-codec-4.1.0.CR7.jar"/>
+	<classpathentry kind="lib" path="/cim-server/WebRoot/WEB-INF/lib/netty-common-4.1.0.CR7.jar"/>
+	<classpathentry kind="lib" path="/cim-server/WebRoot/WEB-INF/lib/netty-handler-4.1.0.CR7.jar"/>
+	<classpathentry kind="lib" path="/cim-server/WebRoot/WEB-INF/lib/netty-transport-4.1.0.CR7.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

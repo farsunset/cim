@@ -2,6 +2,7 @@ package com.farsunset.cim.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 
 public class StringUtil {
@@ -44,6 +45,11 @@ public class StringUtil {
 	public static String getCurrentlyDate() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 		return dateFormat.format(new Date());
+	}
+
+	public static String getUUID() {
+		// TODO Auto-generated method stub
+		return UUID.randomUUID().toString().replaceAll("-", "");
 	}
 	 
 		

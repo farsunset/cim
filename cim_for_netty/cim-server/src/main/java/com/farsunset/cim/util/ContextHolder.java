@@ -1,13 +1,14 @@
+/**
+ * probject:cim
+ * @version 2.0
+ * 
+ * @author 3979434@qq.com
+ */ 
 package com.farsunset.cim.util;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-/**
- * spring 动态获取bean 实现
- * @author 3979434
- *
- */
 public class ContextHolder  implements ApplicationContextAware{
 
     private static  ApplicationContext context;

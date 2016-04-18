@@ -1,31 +1,21 @@
- 
+ /**
+ * probject:cim
+ * @version 2.0
+ * 
+ * @author 3979434@qq.com
+ */ 
 package com.farsunset.cim.push;
 
-import com.farsunset.cim.server.mutual.Message;
-
-
-
-
-/**
- * 
- * @author farsunset (3979434@qq.com)
- */
+import com.farsunset.cim.sdk.server.model.Message;
+ 
 public class SystemMessagePusher  extends DefaultMessagePusher{
 
-
- 
-	/**
-	 * Constructor.
-	 */
-	public SystemMessagePusher() {
-		super();
-	}
 	
 	@Override
-	public void pushMessageToUser(Message MessageMO){
+	public void push(Message messsage){
 		
-		MessageMO.setSender("system");
-		super.pushMessageToUser(MessageMO);
+		messsage.setSender("system");
+		super.push(messsage);
 		
 	}
 }

@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="/cim-server/WebRoot/WEB-INF/lib/log4j.jar"/>
-	<classpathentry kind="lib" path="/cim-server/WebRoot/WEB-INF/lib/mina-core-2.0.9.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/cim-server/WebRoot/WEB-INF/lib/mina-core-2.0.13.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

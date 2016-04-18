@@ -1,17 +1,22 @@
+/**
+ * probject:cim
+ * @version 2.0
+ * 
+ * @author 3979434@qq.com
+ */ 
 package com.farsunset.ichat.example.app;
 
 
+import com.farsunset.cim.sdk.android.CIMEventListener;
+import com.farsunset.cim.sdk.android.CIMListenerManager;
+import com.farsunset.cim.sdk.android.model.Message;
+import com.farsunset.cim.sdk.android.model.ReplyBody;
 
 import android.app.Activity;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 
-import com.farsunset.cim.client.android.CIMEventListener;
-import com.farsunset.cim.client.android.CIMListenerManager;
-import com.farsunset.cim.client.model.Message;
-import com.farsunset.cim.client.model.ReplyBody;
-
-public  abstract  class CIMMonitorActivity extends Activity implements CIMEventListener{
+public   abstract  class CIMMonitorActivity extends Activity implements CIMEventListener{
 	
 	
 	CommonBaseControl commonBaseControl;
@@ -56,28 +61,30 @@ public  abstract  class CIMMonitorActivity extends Activity implements CIMEventL
 	
 	
 	 
+
+	@Override
+	public  void onMessageReceived(Message arg0){};
+	 
+	@Override
+	public   void onNetworkChanged(NetworkInfo info){}
+
 	/**
      * 与服务端断开连接时回调,不要在里面做连接服务端的操作
      */
-	
 	@Override
-	public void onCIMConnectionSucceed() {}
+	public void onConnectionClosed() {}
+
 	
 	 /**
-     * 连接服务端成功时回调
-     */
+    * 连接服务端成功时回调
+    */
 	
 	@Override
-	public void onCIMConnectionClosed() {}
-	@Override
-	public void onConnectionStatus(boolean  isConnected){}
+	public void onConnectionSuccessed(boolean arg0) {}
+
 	
 	@Override
-	public void onReplyReceived(ReplyBody reply) {}
-	
+	public void onReplyReceived(ReplyBody arg0) {}
 	@Override
-	public void onMessageReceived(Message arg0) {}
-	 
-	@Override
-	public   void onNetworkChanged(NetworkInfo info){};
+	public  void onConnectionFailed(Exception e){};
 }

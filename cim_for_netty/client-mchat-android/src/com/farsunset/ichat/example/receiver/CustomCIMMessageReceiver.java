@@ -1,3 +1,9 @@
+/**
+ * probject:cim
+ * @version 2.0
+ * 
+ * @author 3979434@qq.com
+ */ 
 package com.farsunset.ichat.example.receiver;
 
 
@@ -7,12 +13,11 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.NetworkInfo;
-import android.util.Log;
 
-import com.farsunset.cim.client.android.CIMEventBroadcastReceiver;
-import com.farsunset.cim.client.android.CIMListenerManager;
-import com.farsunset.cim.client.model.Message;
-import com.farsunset.cim.client.model.ReplyBody;
+import com.farsunset.cim.sdk.android.CIMEventBroadcastReceiver;
+import com.farsunset.cim.sdk.android.CIMListenerManager;
+import com.farsunset.cim.sdk.android.model.Message;
+import com.farsunset.cim.sdk.android.model.ReplyBody;
 import com.farsunset.ichat.example.R;
 import com.farsunset.ichat.example.ui.SystemMessageActivity;
  
@@ -29,45 +34,22 @@ public final class CustomCIMMessageReceiver extends CIMEventBroadcastReceiver {
 	
 	//当收到消息时，会执行onMessageReceived，这里是消息第一入口
 	@Override
-	public void onMessageReceived(com.farsunset.cim.client.model.Message message) {
+	public void onMessageReceived(Message message) {
 		
-        
-		for (int index = 0 ;index<CIMListenerManager.getCIMListeners().size();index++) {
-			
-			Log.i(this.getClass().getSimpleName(), "########################"+ (CIMListenerManager.getCIMListeners().get(index).getClass().getName() + ".onMessageReceived################"));
-			
-			CIMListenerManager.getCIMListeners().get(index).onMessageReceived(message);
-		}
+        //调用分发消息监听
+		CIMListenerManager.notifyOnMessageReceived(message);
 		
 		//以开头的为动作消息，无须显示,如被强行下线消息Constant.TYPE_999
 		if(message.getType().startsWith("9"))
 		{
 			return ;
 		}
-		if(isInBackground(context))
-		{
-			showNotify(context,message);
-		}
+		
+		showNotify(context,message);
 	}
 
 
-	//当手机网络连接状态变化时，会执行onNetworkChanged 
-	@Override
-	public void onNetworkChanged(NetworkInfo info) {
-		for (int index = 0 ;index<CIMListenerManager.getCIMListeners().size();index++) {
-			CIMListenerManager.getCIMListeners().get(index).onNetworkChanged(info);
-		}
-	}
-
-	//当收到sendbody的响应时，会执行onReplyReceived 
-	@Override
-	public void onReplyReceived(ReplyBody body) {
-		for (int index = 0 ;index<CIMListenerManager.getCIMListeners().size();index++) {
-			CIMListenerManager.getCIMListeners().get(index).onReplyReceived(body);
-		}
-	}
 	 
-	
 	private void  showNotify(Context context , Message msg)
 	{
 				
@@ -86,25 +68,34 @@ public final class CustomCIMMessageReceiver extends CIMEventBroadcastReceiver {
 
 	}
 
-
-	public void onCIMConnectionSucceed() {
-		for (int index = 0 ;index<CIMListenerManager.getCIMListeners().size();index++) {
-			CIMListenerManager.getCIMListeners().get(index).onCIMConnectionSucceed();
-		}
+	@Override
+	public void onNetworkChanged(NetworkInfo info) {
+		CIMListenerManager.notifyOnNetworkChanged(info);
 	}
 
 
 	@Override
-	public void onConnectionStatus(boolean arg0) {
-		for (int index = 0 ;index<CIMListenerManager.getCIMListeners().size();index++) {
-			CIMListenerManager.getCIMListeners().get(index).onConnectionStatus(arg0);
-		}
+	public void onConnectionSuccessed(boolean hasAutoBind) {
+		CIMListenerManager.notifyOnConnectionSuccessed(hasAutoBind);
 	}
+
 	@Override
-	public void onCIMConnectionClosed() {
-		for (int index = 0 ;index<CIMListenerManager.getCIMListeners().size();index++) {
-			CIMListenerManager.getCIMListeners().get(index).onCIMConnectionClosed();
-		}
+	public void onConnectionClosed() {
+		CIMListenerManager.notifyOnConnectionClosed();
+	}
+
+
+	@Override
+	public void onReplyReceived(ReplyBody body) {
+		CIMListenerManager.notifyOnReplyReceived(body);
+	}
+
+
+
+	@Override
+	public void onConnectionFailed(Exception arg0) {
+		// TODO Auto-generated method stub
+		CIMListenerManager.notifyOnConnectionFailed(arg0);
 	}
  
 }

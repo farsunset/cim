@@ -18,9 +18,18 @@ package
 		internal var CIM_HOST:String = "127.0.0.1";
 		internal var CIM_PORT:String = "23456";
 		internal var socket:Socket; 
-		internal var heartbeat_timer:Timer=new Timer(180 * 1000);
 		internal var froceOffline :Boolean = false;
 		internal var _sound:Sound = new Sound(new URLRequest("dingdong.mp3"));
+		
+		/**
+		 * 服务端心跳请求命令  cmd_server_hb_request
+		 */
+		internal  const CMD_HEARTBEAT_REQUEST:String="S_H_RQ";
+		/**
+		 * 客户端心跳响应命令  cmd_client_hb_response
+		 */
+		internal const  CMD_HEARTBEAT_RESPONSE:String ="C_H_RS"; 
+		
 		public function CIMBridge()
 		{
 			
@@ -29,7 +38,6 @@ package
 			ExternalInterface.addCallback("getOfflineMessage",getOfflineMessage);
 			ExternalInterface.addCallback("logout",logout);
 			ExternalInterface.addCallback("playSound",playSound);
-			heartbeat_timer.addEventListener(TimerEvent.TIMER,doSendHeartbeat);
 			
 			ExternalInterface.call("bridgeCreationComplete");
 			
@@ -61,7 +69,9 @@ package
 			xml+="<account>"+account+"</account>";
 			xml+="<deviceId>"+deviceId+"</deviceId>";
 			xml+="<channel>web</channel>";
-			xml+="<device>browser</device>";
+			xml+="<device>flash</device>";
+			xml+="<version>2.0.0</version>";
+			xml+="<osVersion>"+flash.system.Capabilities.version+"</osVersion>";
 			xml+="</data>";
 			xml+="</sent>";
 			
@@ -94,19 +104,10 @@ package
 		{
 			
 			ExternalInterface.call("sessionCreated");
-			heartbeat_timer.start();
 			froceOffline = false;
 		}
 		
-		
-		private function doSendHeartbeat(e:TimerEvent):void
-		{
-			var xml:String="<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-			xml+="<sent>";
-			xml+="<key>client_heartbeat</key>";   
-			xml+="</sent>";
-			send(xml);
-		}
+		 
 		
 		private function sessionClosed(event:Event):void
 		{
@@ -116,7 +117,6 @@ package
 			{
 				connect(CIM_HOST);
 			}
-			heartbeat_timer.stop();
 		}
 		private function exceptionCaught(event:Event):void{
 			
@@ -145,6 +145,14 @@ package
 			{
 				msg = msg.substring(0,index);
 			}
+			
+			
+			if(msg.toUpperCase() == CMD_HEARTBEAT_REQUEST)
+			{
+				send(CMD_HEARTBEAT_RESPONSE);
+				return;
+			}
+			
 			
 			var xml:XML=XML(msg);
 			var data:Object = xml as Object;

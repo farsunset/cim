@@ -1,26 +1,33 @@
+/**
+ * probject:cim
+ * @version 2.0
+ * 
+ * @author 3979434@qq.com
+ */ 
 package com.farsunset.ichat.example.app;
 
 
+import com.farsunset.cim.sdk.android.CIMEventListener;
+import com.farsunset.cim.sdk.android.CIMListenerManager;
+import com.farsunset.cim.sdk.android.model.Message;
+import com.farsunset.cim.sdk.android.model.ReplyBody;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.widget.Toast;
 
-import com.farsunset.cim.client.android.CIMEventListener;
-import com.farsunset.cim.client.android.CIMListenerManager;
-import com.farsunset.cim.client.model.Message;
-import com.farsunset.cim.client.model.ReplyBody;
-
-public  abstract  class CIMMonitorActivity extends Activity implements CIMEventListener{
+public   abstract  class CIMMonitorActivity extends Activity implements CIMEventListener{
 	
 	
-	private ProgressDialog progressDialog;  
+	CommonBaseControl commonBaseControl;
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		CIMListenerManager.registerMessageListener(this,this);
+		
+		commonBaseControl = new CommonBaseControl(this);
+		
+		
 	}
 
 	@Override
@@ -37,59 +44,47 @@ public  abstract  class CIMMonitorActivity extends Activity implements CIMEventL
 	}
 	
 	
-	public void showProgressDialog(String title,String message)
+	public void showProgressDialog(String title,String content)
 	{
-		if(progressDialog==null)
-		{
-			
-			 progressDialog = ProgressDialog.show(this, title, message, true, true);
-		}else if(progressDialog.isShowing())
-		{
-			progressDialog.setTitle(title);
-			progressDialog.setMessage(message);
-		}
-	
-		progressDialog.show();
-		
+		commonBaseControl.showProgressDialog(title, content);
 	}
 	
 	public void hideProgressDialog()
 	{
-	
-		if(progressDialog!=null&&progressDialog.isShowing())
-		{
-			progressDialog.dismiss();
-		}
-		
+		commonBaseControl.hideProgressDialog();
 	}
 	
 	public void showToask(String hint){
 		
-		   Toast toast=Toast.makeText(this,hint,Toast.LENGTH_SHORT);
-		   toast.show();
+		commonBaseControl.showToask(hint);
 	}
- 
 	
-	/**
-	 * 与服务端断开连接时回调，不要再里面做连接服务端的操作
-	 */
-	@Override 
-	public void onCIMConnectionClosed(){};
 	
-	/**
-	 * 与服务端断开连接时成功时回调 
-	 */
+	 
+
 	@Override
-	public void onCIMConnectionSucceed() {}
-	@Override
-	public void onConnectionStatus(boolean  isConnected){}
-	
-	@Override
-	public void onReplyReceived(ReplyBody reply) {}
-	
-	@Override
-	public void onMessageReceived(Message arg0) {}
+	public  void onMessageReceived(Message arg0){};
 	 
 	@Override
-	public   void onNetworkChanged(NetworkInfo info){};
+	public   void onNetworkChanged(NetworkInfo info){}
+
+	/**
+     * 与服务端断开连接时回调,不要在里面做连接服务端的操作
+     */
+	@Override
+	public void onConnectionClosed() {}
+
+	
+	 /**
+    * 连接服务端成功时回调
+    */
+	
+	@Override
+	public void onConnectionSuccessed(boolean arg0) {}
+
+	
+	@Override
+	public void onReplyReceived(ReplyBody arg0) {}
+	@Override
+	public  void onConnectionFailed(Exception e){};
 }

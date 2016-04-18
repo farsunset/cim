@@ -1,17 +1,22 @@
+/**
+ * probject:cim
+ * @version 2.0
+ * 
+ * @author 3979434@qq.com
+ */ 
 package com.farsunset.ichat.example.adapter;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.farsunset.cim.client.model.Message;
+import com.farsunset.cim.sdk.android.model.Message;
 import com.farsunset.ichat.example.R;
 import com.farsunset.ichat.example.ui.SystemMessageActivity;
 
@@ -48,11 +53,11 @@ public class SystemMsgListViewAdapter extends BaseAdapter {
 	{
 		//Collections.sort(list, new MessageTimeDescComparator());
 	}
+	@SuppressLint("ViewHolder")
 	@Override
 	public View getView(int position, View chatItemView, ViewGroup parent) {
 		
 		final Message msg = getItem(position);
-		
 		
 		chatItemView =LayoutInflater.from(scactivity).inflate(R.layout.item_chat_sysmsg, null);
 		

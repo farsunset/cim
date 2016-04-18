@@ -1,3 +1,9 @@
+/**
+ * probject:cim
+ * @version 2.0
+ * 
+ * @author 3979434@qq.com
+ */ 
 package com.farsunset.cim.admin.action;
 
 
@@ -6,15 +12,15 @@ import java.io.IOException;
 import org.apache.struts2.ServletActionContext;
 
 import com.farsunset.cim.push.SystemMessagePusher;
-import com.farsunset.cim.server.mutual.Message;
-import com.farsunset.cim.server.session.DefaultSessionManager;
+import com.farsunset.cim.sdk.server.model.Message;
+import com.farsunset.cim.sdk.server.session.DefaultSessionManager;
 import com.farsunset.cim.util.ContextHolder;
 import com.opensymphony.xwork2.ActionSupport;
 public class SessionAction extends ActionSupport {
 
 	/**
 	 * 
-	 */
+	 */ 
 	private static final long serialVersionUID = 1L;
 	 
 	 
@@ -23,7 +29,7 @@ public class SessionAction extends ActionSupport {
 	   
 	 public String list()  
 	 {  
-		 ServletActionContext.getRequest().setAttribute("sessionList", ((DefaultSessionManager) ContextHolder.getBean("defaultSessionManager")).getSessions());
+		 ServletActionContext.getRequest().setAttribute("sessionList", ((DefaultSessionManager) ContextHolder.getBean("CIMSessionManager")).queryAll());
 		  
 		  return "list";
 	}
@@ -37,7 +43,7 @@ public class SessionAction extends ActionSupport {
 		  msg.setReceiver(account);
 		  
 		 //向客户端 发送消息
-	     ContextHolder.getBean(SystemMessagePusher.class).pushMessageToUser(msg);
+	     ContextHolder.getBean(SystemMessagePusher.class).push(msg);
 	 
 	}
 }

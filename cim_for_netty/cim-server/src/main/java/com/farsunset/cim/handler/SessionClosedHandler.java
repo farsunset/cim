@@ -1,20 +1,24 @@
- 
+/**
+ * probject:cim
+ * @version 2.0
+ * 
+ * @author 3979434@qq.com
+ */ 
 package com.farsunset.cim.handler;
 
 import org.apache.log4j.Logger;
 
-import com.farsunset.cim.server.constant.CIMConstant;
-import com.farsunset.cim.server.handler.CIMRequestHandler;
-import com.farsunset.cim.server.mutual.ReplyBody;
-import com.farsunset.cim.server.mutual.SentBody;
-import com.farsunset.cim.server.session.CIMSession;
-import com.farsunset.cim.server.session.DefaultSessionManager;
+import com.farsunset.cim.sdk.server.constant.CIMConstant;
+import com.farsunset.cim.sdk.server.handler.CIMRequestHandler;
+import com.farsunset.cim.sdk.server.model.ReplyBody;
+import com.farsunset.cim.sdk.server.model.SentBody;
+import com.farsunset.cim.sdk.server.session.CIMSession;
+import com.farsunset.cim.sdk.server.session.DefaultSessionManager;
 import com.farsunset.cim.util.ContextHolder;
 
 /**
  * 断开连接，清除session
  * 
- * @author
  */
 public class SessionClosedHandler implements CIMRequestHandler {
 
@@ -22,15 +26,15 @@ public class SessionClosedHandler implements CIMRequestHandler {
 
 	public ReplyBody process(CIMSession ios, SentBody message) {
 
-		DefaultSessionManager sessionManager  =  ((DefaultSessionManager) ContextHolder.getBean("defaultSessionManager"));
+		DefaultSessionManager sessionManager  =  ((DefaultSessionManager) ContextHolder.getBean("CIMSessionManager"));
 
-		if(ios.getTag(CIMConstant.SESSION_KEY)==null)
+		if(ios.getAttribute(CIMConstant.SESSION_KEY)==null)
 		{
 			return null;
 		}
 		
-	    String account = ios.getTag(CIMConstant.SESSION_KEY).toString();
-	    sessionManager.removeSession(account);
+	    String account = ios.getAttribute(CIMConstant.SESSION_KEY).toString();
+	    sessionManager.remove(account);
 	    
 		return null;
 	}

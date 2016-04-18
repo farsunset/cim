@@ -1,3 +1,9 @@
+/**
+ * probject:cim
+ * @version 2.0
+ * 
+ * @author 3979434@qq.com
+ */ 
 package com.farsunset.ichat.example.ui;
 
 import android.content.Intent;
@@ -7,12 +13,12 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.farsunset.cim.client.android.CIMPushManager;
-import com.farsunset.cim.client.constant.CIMConstant;
-import com.farsunset.cim.client.model.ReplyBody;
 import com.farsunset.ichat.example.R;
 import com.farsunset.ichat.example.app.CIMMonitorActivity;
-
+import com.farsunset.ichat.example.app.Constant;
+import com.farsunset.cim.sdk.android.CIMPushManager;
+import com.farsunset.cim.sdk.android.constant.CIMConstant;
+import com.farsunset.cim.sdk.android.model.ReplyBody;
 public class LoginActivity extends CIMMonitorActivity implements
 		OnClickListener {
 
@@ -37,14 +43,28 @@ public class LoginActivity extends CIMMonitorActivity implements
 	private void doLogin() {
 
 		if (!"".equals(accountEdit.getText().toString().trim())) {
-			showProgressDialog("提示", "正在登陆，请稍后......");
+			showProgressDialog("提示", "正在登录，请稍候......");
+			if(CIMPushManager.getState(this) == CIMPushManager.STATE_NORMAL )
+			{
+				CIMPushManager.bindAccount(this, accountEdit.getText().toString().trim());
+				return;
+			}
+			if(CIMPushManager.getState(this) == CIMPushManager.STATE_STOPED )
+			{
+				CIMPushManager.connect(this,Constant.CIM_SERVER_HOST, Constant.CIM_SERVER_PORT);
+			}
 			
-			
-			CIMPushManager.bindAccount(this, accountEdit.getText().toString().trim());
 		}
 
 	}
 
+	@Override
+	public void onConnectionSuccessed(boolean autoBind) {
+		if(!autoBind)
+		CIMPushManager.bindAccount(this, accountEdit.getText().toString().trim());
+	}
+	
+	
 	@Override
 	public void onReplyReceived(final ReplyBody reply) {
 
@@ -80,7 +100,7 @@ public class LoginActivity extends CIMMonitorActivity implements
 	@Override
 	public void onBackPressed() {
 
-		CIMPushManager.destory(this);
+		CIMPushManager.destroy(this);
 		this.finish();
 	}
 

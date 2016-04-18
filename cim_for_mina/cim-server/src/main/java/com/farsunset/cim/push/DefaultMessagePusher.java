@@ -1,17 +1,23 @@
- 
+ /**
+ * probject:cim
+ * @version 2.0
+ * 
+ * @author 3979434@qq.com
+ */ 
 package com.farsunset.cim.push;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.farsunset.cim.server.model.Message;
-import com.farsunset.cim.server.session.CIMSession;
-import com.farsunset.cim.server.session.DefaultSessionManager;
+import com.farsunset.cim.sdk.server.model.Message;
+import com.farsunset.cim.sdk.server.session.CIMSession;
+import com.farsunset.cim.sdk.server.session.DefaultSessionManager;
+
+
 
 /**
  * 消息发送实现类
  * 
- * @author farsunset (3979434@qq.com)
  */
 public class DefaultMessagePusher implements  CIMMessagePusher {
 
@@ -29,8 +35,8 @@ public class DefaultMessagePusher implements  CIMMessagePusher {
      * 向用户发送消息
      * @param msg
      */
-	public void pushMessageToUser(Message msg) {
-		CIMSession session = sessionManager.getSession(msg.getReceiver());
+	public void push(Message msg) {
+		CIMSession session = sessionManager.get(msg.getReceiver());
 		
 		/*服务器集群时，可以在此 判断当前session是否连接于本台服务器，如果是，继续往下走，如果不是，将此消息发往当前session连接的服务器并 return
 		if(!session.isLocalhost()){//判断当前session是否连接于本台服务器，如不是

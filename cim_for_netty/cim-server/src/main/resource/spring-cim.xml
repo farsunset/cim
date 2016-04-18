@@ -14,7 +14,7 @@
 	>
 	
  
-	<bean id="mainIoHandler" class="com.farsunset.cim.launcher.CIMNioSocketAcceptor" init-method="bind" >
+	<bean id="mainIoHandler" class="com.farsunset.cim.sdk.server.launcher.CIMNioSocketAcceptor" init-method="bind" >
 	   <property name="port" value="23456" />
 	   <property name="handlers">
 			<map>
@@ -24,14 +24,17 @@
 				<entry key="client_logout">
 					<bean class="com.farsunset.cim.handler.LogoutHandler" />
 				</entry>
-				<entry key="client_heartbeat">
-					<bean class="com.farsunset.cim.server.handler.HeartbeatHandler"/>
-				</entry>
 				<entry key="client_cimsession_closed">
 					<bean class="com.farsunset.cim.handler.SessionClosedHandler"/>
 				</entry>
 				 <entry key="client_get_offline_message">
 					<bean class="com.farsunset.cim.handler.PushOfflineMessageHandler"/>
+				</entry>
+				<entry key="client_heartbeat">
+					<bean class="com.farsunset.cim.sdk.server.handler.HeartbeatHandler"/>
+				</entry>
+				<entry key="client_flash_policy">
+					<bean class="com.farsunset.cim.sdk.server.handler.FlashPolicyHandler"/>
 				</entry>
 			</map>
 		</property>
@@ -39,5 +42,5 @@
  
 	
 	<!-- 这里可以自行实现com.farsunset.cim.nio.session.SessionManager接口，实现自己的session管理器 -->
-	<bean id="defaultSessionManager" class="com.farsunset.cim.server.session.DefaultSessionManager"/>
+	<bean id="CIMSessionManager" class="com.farsunset.cim.sdk.server.session.DefaultSessionManager"/>
 </beans>

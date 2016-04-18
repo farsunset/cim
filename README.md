@@ -49,10 +49,10 @@ com.farsunset.cim.client.android.CIMPushManager
 	 * @param ip
 	 * @param port
 	 */
-	public static  void init(Context context,String ip,int port)
+	public static  void connect(Context context,String ip,int port)
 
 示例
-CIMPushManager.init(context,"125.12.35.231",28888);
+CIMPushManager.connect(context,"125.12.35.231",28888);
 
 
 
@@ -120,54 +120,74 @@ public static  void sendRequest(Context context,SentBody body)
 	 * 完全销毁CIM，一般用于完全退出程序，调用resume将不能恢复
 	 * @param context
 	 */
-    public static  void destory(Context context)
+    public static  void destroy(Context context)
      示例：
-     CIMPushManager.destory(context);    
+     CIMPushManager.destroy(context);    
 
 
 
 1.7获取是否与服务端连接正常
 
     /**
-     * 异步获取与服务端连接状态,将会在广播中收到onConnectionStatus（boolean f）
+     *  
      * @param context
      */
-    public void detectIsConnected(Context context)   
+    public boolean isConnected(Context context)   
 
    示例：
-   CIMPushManager.detectIsConnected(context);   
+   CIMPushManager.isConnected(context);   
 
+1.8获取PushManager状态
+    //被销毁的destroy()
+	CIMPushManager.STATE_DESTROYED = 0x0000DE;
+	//被销停止的 stop()
+	CIMPushManager.STATE_STOPED = 0x0000EE;
+	
+	CIMPushManager.STATE_NORMAL = 0x000000;
+	
+    public int getState(Context context)   
 
+   示例：
+   CIMPushManager.getState(context);   
 
-1.8推送消息以及相关事件的接收
+1.9推送消息以及相关事件的接收
 
 首先注册一个广播，并监听以下action 参照 后面androidManifest.xml配置
 
 参考CustomCIMMessageReceiver的实现
     /**
-	 * 当收到消息时调用此方法
-	 */
-	public void onMessageReceived(message){}
-	
-    /**
-     * 当手机网络变化时调用此方法
-     * @param info
+     * 当收到服务端推送过来的消息时调用
+     * @param message
      */
-	public void onNetworkChanged(NetworkInfo info)
-
+    public abstract void onMessageReceived(Message message);
 
     /**
-     * 当调用CIMPushManager.sendRequest()获得相应时 调用此方法
-     * ReplyBody.key 将是对应的 SentBody.key 
-     * @param info
+     * 当调用CIMPushManager.sendRequest()向服务端发送请求，获得相应时调用
+     * @param replybody
      */
-	public void onReplyReceived(ReplyBody body)
+    public abstract void onReplyReceived(ReplyBody replybody);
 
-	
-	/**
-     * 获取到是否连接到服务端
-     * 通过调用CIMPushManager.detectIsConnected()来异步获取
+    /**
+     * 当手机网络发生变化时调用
+     * @param networkinfo
+     */
+    public abstract void onNetworkChanged(NetworkInfo networkinfo);
+    
+    
+    /**
+     * 当连接服务器成功时回调
+     * @param hasAutoBind  : true 已经自动绑定账号到服务器了，不需要再手动调用bindAccount
+     */
+    public abstract void onConnectionSuccessed(boolean hasAutoBind);
+    
+    /**
+     * 当断开服务器连接的时候回调
+     */
+    public abstract void onConnectionClosed();
+    
+    /**
+     * 当服务器连接失败的时候回调
      * 
      */
-    public abstract void onConnectionStatus(boolean  isConnected)
+    public abstract void onConnectionFailed(Exception e);
 ```

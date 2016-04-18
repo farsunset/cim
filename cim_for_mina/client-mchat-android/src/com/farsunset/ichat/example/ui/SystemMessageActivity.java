@@ -1,10 +1,14 @@
+/**
+ * probject:cim
+ * @version 2.0
+ * 
+ * @author 3979434@qq.com
+ */ 
 package com.farsunset.ichat.example.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.NetworkInfo;
@@ -13,20 +17,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
-import com.farsunset.cim.client.android.CIMPushManager;
-import com.farsunset.cim.client.constant.CIMConstant;
-import com.farsunset.cim.client.model.Message;
-import com.farsunset.cim.client.model.SentBody;
+import com.farsunset.cim.sdk.android.CIMPushManager;
+import com.farsunset.cim.sdk.android.constant.CIMConstant;
+import com.farsunset.cim.sdk.android.model.Message;
+import com.farsunset.cim.sdk.android.model.SentBody;
 import com.farsunset.ichat.example.R;
 import com.farsunset.ichat.example.adapter.SystemMsgListViewAdapter;
 import com.farsunset.ichat.example.app.CIMMonitorActivity;
 import com.farsunset.ichat.example.app.Constant;
 import com.farsunset.ichat.example.network.HttpAPIRequester;
 import com.farsunset.ichat.example.network.HttpAPIResponser;
-import com.farsunset.ichat.example.network.Page;
 
 public class SystemMessageActivity extends CIMMonitorActivity implements OnClickListener, HttpAPIResponser{
 
@@ -71,7 +71,7 @@ public class SystemMessageActivity extends CIMMonitorActivity implements OnClick
 	
 	//收到消息
 	@Override
-	public void onMessageReceived(com.farsunset.cim.client.model.Message message) {
+	public void onMessageReceived(Message message) {
 		 
 		if(message.getType().equals(Constant.MessageType.TYPE_999))
 		{
@@ -121,18 +121,14 @@ public class SystemMessageActivity extends CIMMonitorActivity implements OnClick
 	private void  sendMessage() throws Exception
 	{
 		
-		requester.execute(new TypeReference<JSONObject>(){}.getType(), null, SEND_MESSAGE_API_URL);
+		requester.execute(SEND_MESSAGE_API_URL);
 	}
 
 	@Override
-	public void onSuccess(Object data, List<?> list, Page page, String code,String url) {
+	public void onSuccess(String data,String url) {
 		hideProgressDialog();
-		 
-		if(CIMConstant.ReturnCode.CODE_200.equals(code))
-    	{
-    		showToask("发送成功");
-    	}
 		
+		showToask("发送成功");
 	}
 
 	
@@ -163,7 +159,7 @@ public class SystemMessageActivity extends CIMMonitorActivity implements OnClick
 	}
 
 	@Override
-	public void onFailed(Exception e) {}
+	public void onFailed(Exception e,String url) {}
 
 	@Override
 	public void onBackPressed() {
