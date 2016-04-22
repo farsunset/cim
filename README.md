@@ -86,7 +86,7 @@ public static  void sendRequest(Context context,SentBody body)
 	sent.put("account", "xiyang");
 	CIMPushManager.sendRequest(context, sent);
 
-该功能需要服务端实现，详情参考CIM服务端及辅助文档.doc > 1.2.3
+该功能需要服务端实现，详情参考服务端PullOflineMessageHandler.java
 
 
 
