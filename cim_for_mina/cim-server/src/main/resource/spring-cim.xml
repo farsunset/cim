@@ -37,19 +37,13 @@
   
     
    
-	<bean id="CIMNioAcceptor" class="com.farsunset.cim.sdk.server.handler.CIMNioSocketAcceptor"
+	<bean id="CIMNioAcceptor" class="com.farsunset.cim.sdk.server.launcher.CIMNioSocketAcceptor"
 		init-method="bind" destroy-method="unbind">
 		<property name="port" value="23456" />
 		<property name="ioHandler" ref="cimIoHandler" />
 	</bean>
 	
 	<bean id="CIMSessionManager" class="com.farsunset.cim.sdk.server.session.DefaultSessionManager"/>
-	
-	<!-- 集群服务器时  CIMSessionManager 配置
-	<bean id="CIMSessionManager" class="com.farsunset.lvxin.cim.session.ClusterSessionManager">
-	    <property name="CIMSessionDao" ref="CIMSessionDaoImpl" />
-	</bean>
-	  -->
-	  
+ 
 </beans>
  
