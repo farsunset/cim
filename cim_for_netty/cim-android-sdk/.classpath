@@ -7,6 +7,6 @@
 	<classpathentry kind="lib" path="/cim-server/WebRoot/WEB-INF/lib/netty-buffer-4.1.0.CR7.jar"/>
 	<classpathentry kind="lib" path="/cim-server/WebRoot/WEB-INF/lib/netty-transport-4.1.0.CR7.jar"/>
 	<classpathentry kind="lib" path="/cim-server/WebRoot/WEB-INF/lib/netty-common-4.1.0.CR7.jar"/>
-	<classpathentry kind="lib" path="D:/dev/Android-SDK-Windows/platforms/android-21/android.jar"/>
+	<classpathentry kind="lib" path="C:/dev/android-sdk-windows/platforms/android-22/android.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,6 +1,6 @@
 /**
  * probject:cim-android-sdk
- * @version 2.0.0
+ * @version 2.1.0
  * 
  * @author 3979434@qq.com
  */ 

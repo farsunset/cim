@@ -39,6 +39,8 @@ public class ClientMessageDecoder extends ObjectDecoder {
 	public Object decode(ChannelHandlerContext arg0, ByteBuf  buffer) throws Exception   {
 		 
 		int length = buffer.readableBytes();
+		buffer.markReaderIndex();
+		
 		/**
 		 * CIMConstant.MESSAGE_SEPARATE 为消息界限
 		 * 当一次收到多个消息时，以此分隔解析多个消息
@@ -58,7 +60,8 @@ public class ClientMessageDecoder extends ObjectDecoder {
 			message = null;
 			return msg;
 		}
-
+		
+		buffer.resetReaderIndex();
 		return null;
 	}
 

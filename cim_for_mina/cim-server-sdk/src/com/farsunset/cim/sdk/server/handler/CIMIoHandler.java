@@ -81,20 +81,10 @@ public class CIMIoHandler extends IoHandlerAdapter {
 	/**
 	 */
 	public void sessionClosed(IoSession ios) throws Exception {
-		
+		logger.warn(ios.getRemoteAddress());
 		CIMSession cimSession =new  CIMSession(ios);
-		try{
-			logger.warn("sessionClosed()... from "+cimSession.getRemoteAddress());
-			CIMRequestHandler handler = handlers.get(CIMSESSION_CLOSED_HANDLER_KEY);
-			if(handler!=null && cimSession.containsAttribute(CIMConstant.SESSION_KEY))
-			{
-				handler.process(cimSession, null);
-			}
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
+		CIMRequestHandler handler = handlers.get(CIMSESSION_CLOSED_HANDLER_KEY);
+		handler.process(cimSession, null);
 	}
 
 	/**

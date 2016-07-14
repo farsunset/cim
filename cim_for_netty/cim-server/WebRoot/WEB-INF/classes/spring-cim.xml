@@ -21,9 +21,7 @@
 				<entry key="client_bind">
 					<bean class="com.farsunset.cim.handler.BindHandler" />
 				</entry>
-				<entry key="client_logout">
-					<bean class="com.farsunset.cim.handler.LogoutHandler" />
-				</entry>
+				 
 				<entry key="client_cimsession_closed">
 					<bean class="com.farsunset.cim.handler.SessionClosedHandler"/>
 				</entry>

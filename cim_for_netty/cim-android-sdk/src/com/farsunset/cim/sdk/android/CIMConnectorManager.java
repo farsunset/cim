@@ -94,7 +94,7 @@ class CIMConnectorManager  extends SimpleChannelInboundHandler<Object> {
 	
 	private CIMConnectorManager(Context ctx) {
 		context = ctx;
-		executor = Executors.newFixedThreadPool(3);
+		executor = Executors.newCachedThreadPool();
 		bootstrap = new Bootstrap();
 		loopGroup = new NioEventLoopGroup();
 		bootstrap.group(loopGroup);
@@ -104,7 +104,7 @@ class CIMConnectorManager  extends SimpleChannelInboundHandler<Object> {
              @Override
              public void initChannel(SocketChannel ch) throws Exception {
                  ChannelPipeline pipeline = ch.pipeline();
-                 pipeline.addLast(new ClientMessageDecoder(ClassResolvers.cacheDisabled(null)));
+                 pipeline.addLast(new ClientMessageDecoder(ClassResolvers.cacheDisabled(CIMConnectorManager.class.getClassLoader())));
             	 pipeline.addLast(new ClientMessageEncoder());
             	 pipeline.addLast(new IdleStateHandler(READ_IDLE_TIME,0,0));
             	 pipeline.addLast(CIMConnectorManager.this);

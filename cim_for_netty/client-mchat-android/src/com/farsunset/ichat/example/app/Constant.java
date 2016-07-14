@@ -9,7 +9,7 @@ package com.farsunset.ichat.example.app;
 public interface Constant { 
 	
 	    //服务端IP地址
-        public static final String CIM_SERVER_HOST = "192.168.2.3";
+        public static final String CIM_SERVER_HOST = "192.168.191.1";
     
 	    //服务端web地址
         public static final String SERVER_URL = "http://"+CIM_SERVER_HOST+":8080/cim-server";

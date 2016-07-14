@@ -1,6 +1,6 @@
  /**
  * probject:cim-android-sdk
- * @version 2.0.0
+ * @version 2.1.0
  * 
  * @author 3979434@qq.com
  */ 
@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.util.Log;
 
 import com.farsunset.cim.sdk.android.model.SentBody;
 
@@ -20,7 +21,7 @@ import com.farsunset.cim.sdk.android.model.SentBody;
  *
  */
   public class CIMPushService extends Service {
-
+	final static String TAG = CIMPushService.class.getSimpleName();
 	protected final  static int DEF_CIM_PORT = 28888;
 	CIMConnectorManager manager;
 	WakeLock wakeLock;
@@ -67,13 +68,21 @@ import com.farsunset.cim.sdk.android.model.SentBody;
     		android.os.Process.killProcess(android.os.Process.myPid());
     	}
      
-    	if(CIMPushManager.ACTION_ACTIVATE_PUSH_SERVICE.equals(action) && !manager.isConnected())
+    	if(CIMPushManager.ACTION_ACTIVATE_PUSH_SERVICE.equals(action) )
     	{
+    		if(!manager.isConnected()){
+    			
+    			boolean  isManualStop  = CIMCacheToolkit.getInstance(this).getBoolean(CIMCacheToolkit.KEY_MANUAL_STOP);
+    	    	Log.d(TAG, "CIM.isConnected() == false, isManualStop == " + isManualStop);
+    	    	CIMPushManager.connect(this);
+				
+    		}else
+    		{
+    			Log.d(TAG, "CIM.isConnected() == true");
+    		}
     		
-    		String host = CIMCacheToolkit.getInstance(this).getString(CIMCacheToolkit.KEY_CIM_SERVIER_HOST);
-	    	int port =CIMCacheToolkit.getInstance(this).getInt( CIMCacheToolkit.KEY_CIM_SERVIER_PORT);
-	    	manager.connect(host,port);
     	}
+    	
     	
     	try{
     		if(!wakeLock.isHeld())

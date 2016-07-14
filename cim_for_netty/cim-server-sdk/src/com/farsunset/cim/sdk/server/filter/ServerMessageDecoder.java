@@ -35,7 +35,7 @@ public class ServerMessageDecoder extends ObjectDecoder  {
 		
 		 
 		int length = buffer.readableBytes();
-		
+		buffer.markReaderIndex();
 		/**
 		 * CIMConstant.MESSAGE_SEPARATE 为消息界限
 		 * 当一次收到多个消息时，以此分隔解析多个消息
@@ -81,6 +81,8 @@ public class ServerMessageDecoder extends ObjectDecoder  {
 			return message;
 		}
         
+		
+		buffer.resetReaderIndex();
 		return null;
 	}
 	

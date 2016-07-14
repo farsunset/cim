@@ -1,6 +1,6 @@
 /**
  * probject:cim-android-sdk
- * @version 2.0.0
+ * @version 2.1.0
  * 
  * @author 3979434@qq.com
  */  
@@ -52,7 +52,6 @@ public   interface  CIMConstant  {
 	   
 	    public static String CLIENT_BIND ="client_bind";
 		
-		public static String CLIENT_LOGOUT ="client_logout";
 		
 		public static String CLIENT_OFFLINE_MESSAGE ="client_get_offline_message";
 		

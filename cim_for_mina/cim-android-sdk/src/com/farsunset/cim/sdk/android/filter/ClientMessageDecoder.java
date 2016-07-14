@@ -1,6 +1,6 @@
 /**
  * probject:cim-android-sdk
- * @version 2.0.0
+ * @version 2.1.0
  * 
  * @author 3979434@qq.com
  */ 
@@ -31,13 +31,14 @@ public class ClientMessageDecoder extends CumulativeProtocolDecoder {
 
 	final static String TAG = ClientMessageDecoder.class.getSimpleName();
 	
-	private IoBuffer buff = IoBuffer.allocate(320).setAutoExpand(true);
 
 	@Override
-	public boolean doDecode(IoSession iosession, IoBuffer iobuffer,
-			ProtocolDecoderOutput out) throws Exception {
+	public boolean doDecode(IoSession iosession, IoBuffer iobuffer,ProtocolDecoderOutput out) throws Exception {
+		
 		boolean complete = false;
-
+		IoBuffer tBuffer = IoBuffer.allocate(320).setAutoExpand(true);
+		iobuffer.mark();
+		
 		while (iobuffer.hasRemaining()) {
 			byte b = iobuffer.get();
 			/**
@@ -49,16 +50,16 @@ public class ClientMessageDecoder extends CumulativeProtocolDecoder {
 				complete = true;
 				break;
 			} else {
-				buff.put(b);
+				tBuffer.put(b);
 			}
 		}
 
 		if (complete) {
-			buff.flip();
-			byte[] bytes = new byte[buff.limit()];
-			buff.get(bytes);
+			tBuffer.flip();
+			byte[] bytes = new byte[tBuffer.limit()];
+			tBuffer.get(bytes);
 			String message = new String(bytes, CIMConstant.UTF8);
-			buff.clear();
+			tBuffer.clear();
 			
 			try
 			{
@@ -68,6 +69,9 @@ public class ClientMessageDecoder extends CumulativeProtocolDecoder {
 			{
 				e.printStackTrace();
 			}
+		}else
+		{
+			iobuffer.reset();//如果消息没有接收完整，对buffer进行重置，下次继续读取
 		}
 
 		return complete;
@@ -96,7 +100,7 @@ public class ClientMessageDecoder extends CumulativeProtocolDecoder {
 			NodeList items = doc.getElementsByTagName("data").item(0).getChildNodes();  
 		     for (int i = 0; i < items.getLength(); i++) {  
 		            Node node = items.item(i);  
-		            reply.getData().put(node.getNodeName(), node.getTextContent());
+		            reply.put(node.getNodeName(), node.getTextContent());
 		    }  
 			return reply;
 		}

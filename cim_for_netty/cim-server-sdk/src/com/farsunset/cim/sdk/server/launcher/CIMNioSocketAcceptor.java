@@ -62,7 +62,7 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody>{
 			                 public void initChannel(SocketChannel ch) throws Exception {
 			                	 ChannelPipeline pipeline = ch.pipeline();
 
-			                	 pipeline.addLast(new ServerMessageDecoder(ClassResolvers.cacheDisabled(null)));
+			                	 pipeline.addLast(new ServerMessageDecoder(ClassResolvers.cacheDisabled(CIMNioSocketAcceptor.class.getClassLoader())));
 			                	 pipeline.addLast(new ServerMessageEncoder());
 			                	 pipeline.addLast(new IdleStateHandler(READ_IDLE_TIME,WRITE_IDLE_TIME,0));
 			                	 pipeline.addLast(CIMNioSocketAcceptor.this);
@@ -93,10 +93,8 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody>{
 	 */
 	public void exceptionCaught( ChannelHandlerContext ctx, Throwable cause)
 			throws Exception {
-		logger.error("exceptionCaught()... from "+ctx.channel().remoteAddress());
-		ctx.channel().close();
-  	    CIMRequestHandler handler = handlers.get(CIMConstant.RequestKey.KEY_CLIENT_CIMSESSION_CLOSED);
-  	    handler.process(new CIMSession(ctx.channel()), null);
+		logger.error(ctx.channel().remoteAddress());
+  	    
 	}
 
 	
@@ -163,7 +161,9 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody>{
 	 
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-		logger.debug("channelInactive-----------"+ctx.channel().remoteAddress());
+		logger.warn(ctx.channel().remoteAddress());
+		CIMRequestHandler handler = handlers.get(CIMConstant.RequestKey.KEY_CLIENT_CIMSESSION_CLOSED);
+  	    handler.process(new CIMSession(ctx.channel()), null);
 	}
 
 	 

@@ -28,10 +28,14 @@ import com.farsunset.cim.sdk.server.model.SentBody;
 public class ServerMessageDecoder extends CumulativeProtocolDecoder {
 	
 	protected final Logger logger = Logger.getLogger(ServerMessageDecoder.class);
-    private IoBuffer buff = IoBuffer.allocate(320).setAutoExpand(true);
 	@Override
 	public boolean doDecode(IoSession iosession, IoBuffer iobuffer, ProtocolDecoderOutput out) throws Exception {
+		
 		boolean complete = false;
+	    IoBuffer tBuffer = IoBuffer.allocate(320).setAutoExpand(true);
+	    
+	    iobuffer.mark();
+	    
 		while (iobuffer.hasRemaining()) {
             byte b = iobuffer.get();
             /**
@@ -48,19 +52,19 @@ public class ServerMessageDecoder extends CumulativeProtocolDecoder {
                 break;
             }
             else {
-                buff.put(b);
+                tBuffer.put(b);
             }
         }
 		if (complete) {
-			buff.flip();
-	        byte[] bytes = new byte[buff.limit()];
-	        buff.get(bytes);
+			tBuffer.flip();
+	        byte[] bytes = new byte[tBuffer.limit()];
+	        tBuffer.get(bytes);
 	        
 	        String message = new String(bytes, CIMConstant.UTF8);
 	        
 	        logger.debug(message);
 	        
-	        buff.clear();
+	        tBuffer.clear();
 	        try{
 	        	 
 				Object body = getSentBody(message);
@@ -70,6 +74,9 @@ public class ServerMessageDecoder extends CumulativeProtocolDecoder {
 	        	e.printStackTrace();
 	        	logger.warn(e.getMessage());
 	        }
+		}else
+		{
+			iobuffer.reset();//如果消息没有接收完整，对buffer进行重置，下次继续读取
 		}
 	    return complete;
 	}
