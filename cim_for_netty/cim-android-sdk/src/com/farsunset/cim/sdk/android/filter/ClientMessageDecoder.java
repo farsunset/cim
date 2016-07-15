@@ -7,6 +7,8 @@
 package com.farsunset.cim.sdk.android.filter;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.serialization.ClassResolver;
 import io.netty.handler.codec.serialization.ObjectDecoder;
@@ -38,31 +40,35 @@ public class ClientMessageDecoder extends ObjectDecoder {
 	@Override
 	public Object decode(ChannelHandlerContext arg0, ByteBuf  buffer) throws Exception   {
 		 
-		int length = buffer.readableBytes();
-		buffer.markReaderIndex();
+		final ByteBuf  tBuffer = PooledByteBufAllocator.DEFAULT.buffer(640);
 		
-		/**
-		 * CIMConstant.MESSAGE_SEPARATE 为消息界限
-		 * 当一次收到多个消息时，以此分隔解析多个消息
-		 */
-		if (buffer.isReadable()&& length > 0 &&  CIMConstant.MESSAGE_SEPARATE == buffer.getByte(length-1)) {
-			
-			byte[] data = new byte[length-1];
-			buffer.readBytes(data);
-			String message = new String(new String(data,CIMConstant.UTF8));
-			Log.i(ClientMessageDecoder.class.getSimpleName(), message.toString());
-			//将末尾的消息分隔符读取掉
-			buffer.readByte();
-			
-			Object msg = mappingMessageObject(message);
-			
-			data = null;
-			message = null;
-			return msg;
+		buffer.markReaderIndex();
+		boolean complete = false;  
+		
+		while(buffer.isReadable()){
+			byte b = buffer.readByte();
+			if (b == CIMConstant.MESSAGE_SEPARATE) {
+				complete = true;
+				break;
+			} else {
+				tBuffer.writeByte(b);
+			}
 		}
 		
-		buffer.resetReaderIndex();
-		return null;
+
+		if(complete){
+			
+			String message = new String(new String(ByteBufUtil.getBytes(tBuffer),CIMConstant.UTF8));
+			Log.i("ClientMessageDecoder", message);
+			Object msg = mappingMessageObject(message);
+			return msg;
+			
+		}else{
+			
+			buffer.resetReaderIndex();
+			return null;
+			
+		}
 	}
 
       private Object mappingMessageObject(String  message) throws Exception {

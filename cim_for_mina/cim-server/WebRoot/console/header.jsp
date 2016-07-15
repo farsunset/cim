@@ -72,15 +72,21 @@
 									<img src="<%=headerBasePath%>/resource/img/icon.png" style="margin-top: 35px;height: 80px;height: 80px;"/>
 		</div>
 		<ul class="list-group">
-			<li class="list-group-item">
-				CIM即时通讯后台管理系统
+			<li class="list-group-item" style="border-radius: 0px;">
+				CIM是一个提供于二次开发的即时通信解决方案，可实现基于移动应用，桌面端应用或者系统应用之间的实时消息推送。
+				<p/><p/>项目主页地址<br/><a  target="_blank" href="http://git.oschina.net/farsunset/cim">http://git.oschina.net/farsunset/cim</a>
 			</li>
-			<li class="list-group-item">
-				Email:3979434@qq.com
+			 
+			<li class="list-group-item" style="border-radius: 0px;">
+				作者:远方夕阳
 			</li>
-			<li class="list-group-item">
-				QQ:3979434
+			<li class="list-group-item" style="border-radius: 0px;">
+				Q Q:3979434
 			</li>
+			<li class="list-group-item" style="border-radius: 0px;">
+				微信:farbluesky
+			</li>
+
 		</ul>
 	</div>
 </div>

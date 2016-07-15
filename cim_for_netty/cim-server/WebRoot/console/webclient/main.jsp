@@ -4,7 +4,6 @@
 	String basePath = request.getScheme() + "://"
 			+ request.getServerName() + ":" + request.getServerPort()
 			+ path;
-			
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -13,13 +12,13 @@
 <head>
 <meta charset="utf-8"/>
 <title>ICHAT for  web(beta)  </title>
-		<link charset="utf-8" rel="stylesheet" 	href="<%=basePath%>/resource/bootstrap/css/bootstrap.min.css" />
-		<link charset="utf-8" rel="stylesheet" href="<%=basePath%>/resource/css/dialog.css" />
-		<script type="text/javascript" 	src="<%=basePath%>/resource/js/jquery-1.8.3.min.js"></script>
-		<script type="text/javascript" src="<%=basePath%>/resource/bootstrap/js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="<%=basePath%>/resource/js/framework.js"></script>
-		<script type="text/javascript" src="cim.js"></script>
-</head>
+<link charset="utf-8" rel="stylesheet" 	href="<%=basePath%>/resource/bootstrap/css/bootstrap.min.css" />
+<link charset="utf-8" rel="stylesheet" href="<%=basePath%>/resource/css/dialog.css" />
+<script type="text/javascript" 	src="<%=basePath%>/resource/js/jquery-2.2.3.min.js"></script>
+<script type="text/javascript" src="<%=basePath%>/resource/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="<%=basePath%>/resource/js/framework.js"></script>
+<script type="text/javascript" src="cim.js"></script>
+
 
 
 <script type="text/javascript"> 
@@ -41,11 +40,11 @@
    
    
    
-   
    /**  当socket连接成功回调 **/
    function sessionCreated()
    {
-      document.getElementById("CIMBridge").setAccount(ACCOUNT,ACCOUNT);
+      //使用session id作为唯一标示，区分同一设备的多个用户
+      document.getElementById("CIMBridge").bindAccount(ACCOUNT,"<%=session.getId()%>");
    }
 
    /**  当socket断开是回调   **/
@@ -71,16 +70,16 @@
    
    /** 当收到消息时候回调  **/
    
-   function onMessageReceived(data,content)
+   function onMessageReceived(data)
    { 
-        
+       
         var message = JSON.parse(data);
-        
         if(message.type=='2')
         {
-            document.getElementById("CIMBridge").playSound();
-            message.content = content;
-            $("#messageList").append("<div class='alert alert-info' >"+content+"</div>");
+            document.getElementById("CIMBridge").playSound("dingdong.mp3");
+            var line = "<div class='alert alert-info' id ="+message.timestamp+" STYLE='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'></div>";
+            $("#messageList").append(line);
+            $("#"+message.timestamp).text(message.content);
         }
         
         
@@ -101,36 +100,27 @@
     });
     
     
-   
-</script>
-<script   language="Javascript">   
    document.oncontextmenu = function   (){   
       return   false;   
-  }  
+   }  
   
-  
-  window.onload=function()
-{
+   window.onload=function()
+   {
 	 window.onkeydown=function(e)
 	 {
-		   if(e.which)
+		   if(e.which && e.which==116)
 		   {
-		     if(e.which==116)
-		     {       
-		       return false;       
-		     }
+		     return false;      
 		   }
-		   else if(event.keyCode)
+		   if(event.keyCode && event.keyCode==116)
 		   {
-			  if(event.keyCode==116)
-			  {
-			    return false;   
-			  }
+			  return false;   
 		   }
 	}
-  }   
-  </script>
-
+  }     
+</script>
+ 
+</head>
 <body style="background-color: rgb(190, 209, 216);width: 600px;">
 <object type="application/x-shockwave-flash" data="CIMBridge.swf" id="CIMBridge"  width="0" height="0"> 
 				<param name="quality" value="low"/>

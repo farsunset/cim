@@ -12,8 +12,7 @@
 		<li style="height: 50px; text-align: center; margin-top: 10px;">
 			<div class="btn-group" style="margin-top: 5px;">
 				<a type="button" class="btn btn-danger" target="_blank"
-					href="javascript:openWebclient();">CIM for
-					Web(测试版)</a>
+					href="javascript:openWebclient();">CIM for Web</a>
 			</div>
 
 		</li>

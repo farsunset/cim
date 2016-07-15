@@ -180,13 +180,10 @@ class CIMConnectorManager  extends SimpleChannelInboundHandler<Object> {
 		executor.execute(new Runnable() {
 			@Override
 			public void run() {
-
-				android.os.Message msg = new android.os.Message();
-				msg.getData().putSerializable("body", body);
 				
 				if(channel!=null && channel.isActive())
 				{
-					boolean  isDone = channel.writeAndFlush(body).awaitUninterruptibly(5000);
+					boolean  isDone = channel.writeAndFlush(body).awaitUninterruptibly(10000);
 					if (!isDone) {
 
 						Intent intent = new Intent();

@@ -43,6 +43,7 @@ public   interface  CIMConstant  {
 	public static final String HEARTBEAT_KEY ="heartbeat";
 	
 	
+	
 	/**
 	 * FLEX 客户端socket请求发的安全策略请求，需要特殊处理，返回安全验证报文
 	 */

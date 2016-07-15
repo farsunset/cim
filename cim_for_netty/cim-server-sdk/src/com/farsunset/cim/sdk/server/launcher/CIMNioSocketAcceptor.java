@@ -43,7 +43,7 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody>{
 	
 	public static final int PING_TIME_OUT = 30;//心跳响应 超时为30秒
 	
-	public static final String HEARTBEAT_PINGED ="HEARTBEAT_PINGED";
+	
 	 
 	public void bind()  
 	{
@@ -94,7 +94,7 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody>{
 	public void exceptionCaught( ChannelHandlerContext ctx, Throwable cause)
 			throws Exception {
 		logger.error(ctx.channel().remoteAddress());
-  	    
+		logger.error(cause);
 	}
 
 	
@@ -118,20 +118,19 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody>{
 	 
 	 
 	 private void onWriterIdeled(Channel channel){
-		 channel.attr(AttributeKey.valueOf(HEARTBEAT_PINGED)).set(System.currentTimeMillis());
+		 channel.attr(AttributeKey.valueOf(CIMConstant.HEARTBEAT_KEY)).set(System.currentTimeMillis());
 		 channel.writeAndFlush(CIMConstant.CMD_HEARTBEAT_REQUEST);
 	 }
 	
 	 private void onReaderIdeled(Channel channel){
-		Long lastTime = (Long) channel.attr(AttributeKey.valueOf(HEARTBEAT_PINGED)).get();
-     	if(lastTime == null || System.currentTimeMillis() - lastTime >= PING_TIME_OUT)
+		Long lastTime = (Long) channel.attr(AttributeKey.valueOf(CIMConstant.HEARTBEAT_KEY)).get();
+     	if(lastTime != null && System.currentTimeMillis() - lastTime >= PING_TIME_OUT)
      	{
      	   channel.close();
-     	   CIMRequestHandler handler = handlers.get(CIMConstant.RequestKey.KEY_CLIENT_CIMSESSION_CLOSED);
-     	   handler.process(new CIMSession(channel), null);
      	}
      	
-     	channel.attr(AttributeKey.valueOf(HEARTBEAT_PINGED)).set(null);
+        channel.attr(AttributeKey.valueOf(CIMConstant.HEARTBEAT_KEY)).set(null);
+
 	 }
 	 
 	

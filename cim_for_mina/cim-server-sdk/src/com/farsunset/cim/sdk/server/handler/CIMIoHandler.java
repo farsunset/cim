@@ -98,7 +98,6 @@ public class CIMIoHandler extends IoHandlerAdapter {
 	 */
 	public void exceptionCaught(IoSession session, Throwable cause)
 			throws Exception {
-		logger.error("exceptionCaught()... from "+session.getRemoteAddress());
 		logger.error(cause);
 		cause.printStackTrace();
 	}

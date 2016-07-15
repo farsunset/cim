@@ -22,7 +22,7 @@
 		<link charset="utf-8" rel="stylesheet" href="<%=basePath%>/resource/css/table.css" />
 		<link charset="utf-8" rel="stylesheet" 	href="<%=basePath%>/resource/bootstrap/css/bootstrap.min.css" />
 		<link charset="utf-8" rel="stylesheet" href="<%=basePath%>/resource/css/dialog.css" />
-		<script type="text/javascript" 	src="<%=basePath%>/resource/js/jquery-1.8.3.min.js"></script>
+		<script type="text/javascript" 	src="<%=basePath%>/resource/js/jquery-2.2.3.min.js"></script>
 		<script type="text/javascript" src="<%=basePath%>/resource/bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="<%=basePath%>/resource/js/framework.js"></script>
 		<script>
@@ -169,7 +169,7 @@ onclick="showMessageDialog('<%=ios.getAccount() %>')">发送消息</button>
 			  </div>
 			  <div class="form-groupBuy" style="margin-top: 20px;">
 			    <label for="exampleInputFile">消息内容:</label>
-			    <textarea rows="10" style="width: 100%;height: 120px;" id="message" name="message"  class="form-control"></textarea>
+			    <textarea rows="10" style="width: 100%;height: 200px;resize: none;" id="message" name="message"  class="form-control"></textarea>
 			  </div>
 			</form>
 		  </div>
@@ -178,15 +178,6 @@ onclick="showMessageDialog('<%=ios.getAccount() %>')">发送消息</button>
 		  </div>
 		</div>
 
-
-                <div class="panel panel-primary gdialog" id="scanDownloadDialog" style="display: none;width: 300px;position: absolute;z-index: 1001;">
-		  <div class="panel-heading">二维码下载
-		  <a class="close"  onclick="doHideDialog('scanDownloadDialog'),$('#scanDownloadDialog').css('z-index',1000);">&times;</a>
-		  </div>
-		  <div class="panel-body">
-		    <img src = "<%=basePath%>/resource/img/scan_download.png"/>
-		  </div>
-		</div>
 
 		<script>
 		       $('#sessionMenu').addClass('current');

@@ -175,19 +175,15 @@ class CIMConnectorManager extends IoHandlerAdapter implements KeepAliveMessageFa
 			@Override
 			public void run() {
 
-				android.os.Message msg = new android.os.Message();
-				msg.getData().putSerializable("body", body);
-				
 				IoSession session = getCurrentSession();
 				if(session!=null && session.isConnected())
 				{
 					WriteFuture wf = session.write(body);
 					// 消息发送超时 10秒
-					wf.awaitUninterruptibly(5, TimeUnit.SECONDS);
+					wf.awaitUninterruptibly(10, TimeUnit.SECONDS);
 					
 					if (!wf.isWritten()) {
 
-						
 						Intent intent = new Intent();
 						intent.setAction(ACTION_SENT_FAILED);
 						intent.putExtra("exception", new WriteToClosedSessionException());

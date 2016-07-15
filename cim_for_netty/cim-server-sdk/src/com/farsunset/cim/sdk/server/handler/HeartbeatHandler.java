@@ -6,7 +6,6 @@
  */  
 package com.farsunset.cim.sdk.server.handler;
 
-import com.farsunset.cim.sdk.server.constant.CIMConstant;
 import com.farsunset.cim.sdk.server.model.ReplyBody;
 import com.farsunset.cim.sdk.server.model.SentBody;
 import com.farsunset.cim.sdk.server.session.CIMSession;
@@ -22,8 +21,8 @@ public class HeartbeatHandler implements CIMRequestHandler {
 
 	public ReplyBody process(CIMSession session, SentBody message) {
 
-		//收到心跳响应，清除发送心跳请求标记
-		session.removeAttribute(CIMConstant.RequestKey.CLIENT_HEARTBEAT);
+		//收到心跳响应，设置心跳时间
+		session.setHeartbeat(System.currentTimeMillis());
 		return null;
 	}
 	

@@ -62,7 +62,7 @@ public class ServerMessageDecoder extends CumulativeProtocolDecoder {
 	        
 	        String message = new String(bytes, CIMConstant.UTF8);
 	        
-	        logger.debug(message);
+	        logger.info(message);
 	        
 	        tBuffer.clear();
 	        try{
@@ -72,7 +72,7 @@ public class ServerMessageDecoder extends CumulativeProtocolDecoder {
 	        }catch(Exception e){
 	        	out.write(message);//解析xml失败 是返回原始的xml数据到上层处理,比如flex sokcet的 安全验证请求xml
 	        	e.printStackTrace();
-	        	logger.warn(e.getMessage());
+	        	logger.error(e);
 	        }
 		}else
 		{
@@ -87,6 +87,11 @@ public class ServerMessageDecoder extends CumulativeProtocolDecoder {
 		if(CIMConstant.CMD_HEARTBEAT_RESPONSE.equalsIgnoreCase(message))
 		{
 			return CIMConstant.CMD_HEARTBEAT_RESPONSE;
+		}
+		
+		if(CIMConstant.FLEX_POLICY_REQUEST.equalsIgnoreCase(message))
+		{
+			return CIMConstant.FLEX_POLICY_REQUEST;
 		}
 		
 		SentBody body = new SentBody();
