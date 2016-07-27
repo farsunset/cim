@@ -1,28 +1,26 @@
 
  
-function showTips( css,message)
+function showTips(icon, css,message)
  {
  
          if($('#GTip').length==0)
 	    {  
-	         var tip = "<div id='GTip' style=''><a id='tip_icon'/><label style='margin-left:40px;'>"+message+"</label></div>"
+	         var tip = "<div id='GTip' style='display:none;'><span class='glyphicon "+icon+"' style='top:2px;' ></span> "+message+"</label></div>"
 	         var h = $(document).height();
 			 var w = $(document).width();
 		     $('body').append($(tip));
-		     $('#GTip').css({top:(h-40)/3,left:(w-300)/2});
+		     $('#GTip').css({top:25,left:(w-300)/2});
 		     
 	    }else
 	    {
 	         $('#GTip').removeAttr('class');
-	         $('#tip_icon').removeAttr('class');
 	    
 	    }
 	    
-	         $('#GTip').addClass(css.tip);
-		     $('#tip_icon').addClass(css.icon);
-		     $('#GTip').fadeIn("slow",function(){
+	         $('#GTip').addClass(css);
+		     $('#GTip').fadeIn(500,function(){
 		      window.setTimeout(function(){
-		         $('#GTip').fadeOut("slow",function(){$('#GTip').remove()});
+		         $('#GTip').fadeOut(1000,function(){$('#GTip').remove()});
 		      },2000);
 		    });
  
@@ -32,13 +30,13 @@ function prepareShowProcess(css,message)
  {
         if($('#ProcessDialog').length==0)
 	    { 
-	     var tip = "<div id='ProcessDialog' style=''><a id='ProcessIcon'/><label style='margin-left:40px;'>"+message+"</label></div>"
+	     var tip = "<div id='ProcessDialog' style=''><a id='ProcessIcon'/><label style='margin-left:10px;'>"+message+"</label></div>"
          var h = $(document).height();
 		 var w = $(document).width();
 	     $('body').append($(tip));
 	     $('#ProcessDialog').addClass(css.tip);
 	     $('#ProcessIcon').addClass(css.icon);
-	     $('#ProcessDialog').css({top:(h-40)/3,left:(w-300)/2});
+	     $('#ProcessDialog').css({top:25,left:(w-300)/2});
 	     $('#ProcessDialog').fadeIn("slow");
 	    }else
 	    {
@@ -60,11 +58,11 @@ function hideProcess()
 }
 function showSTip(message)
  {
-        showTips({tip:'tip_green',icon:'icon_success'},message);
+        showTips("glyphicon-ok-sign","tip_green",message);
 }
 function showHTip(message)
 {
-        showTips({tip:'tip_blue',icon:'icon_hint'},message);
+        showTips("glyphicon-info-sign","tip_blue",message);
 }
 function showProcess(message)
 {        
@@ -75,8 +73,8 @@ function showProcess(message)
         $('#global_mask').fadeIn("slow");
 }
 function showETip(message)
- {
-        showTips({tip:'tip_red',icon:'icon_error'},message);
+{
+        showTips("glyphicon-remove-sign","tip_red",message);
 }
 
 function fadeInTips( css,message)
@@ -113,16 +111,18 @@ function checkImageType(filename)
 
 function prepareShowDialog(dialog)
  {
+     var windowHeight = $(window).height();
+     var scrollTop = $(document).scrollTop();
      var h = $(document).height();
 	 var w = $(document).width();
 	 var mheight = dialog.height();
 	 var mwidth = dialog.width();
-     dialog.css({top:150,left:(w-mwidth)/2});
+     dialog.css({top:(windowHeight-mheight)/2+scrollTop,left:(w-mwidth)/2});
      $('#global_mask').css('height',h);
      $('#global_mask').fadeIn();
      $("body").attr("unselectable","no");
      $("body").attr("onselectstart","return false;");
-     dialog.find(".panel-heading").mousedown(function(e) 
+     dialog.find(".modal-header").mousedown(function(e) 
             {  
                 var offset = $(this).offset(); 
                 var x = e.pageX - offset.left; 
@@ -165,37 +165,13 @@ function prepareShowDialog(dialog)
 
 function doShowDialog(dialogId,animate){
      
+     $('#'+dialogId).modal({/*keyboard: false,backdrop:'static',*/show:true});
      
-     var dialog = $('#'+dialogId);
-     prepareShowDialog(dialog);
-     if(animate==undefined)
-     {
-        /*$('#'+dialogId).fadeIn();
-        return;*/
-        animate  ='slide_in_left';
-     }
-     
-     startDialogAnimation(dialog,animate);
    
 }
 
 function doHideDialog(dialogId,animate){
-
-    var dialog = $('#'+dialogId);
-    
-    if($('.gdialog:visible').length==1)
-	{
-		 $('#global_mask').fadeOut();
-	}
-    if(animate==undefined)
-     {
-        /*dialog.fadeOut();
-        return;*/
-        animate  ='slide_out_right';
-     }
-     
-     startDialogAnimation(dialog,animate);
-   
+    $('#'+dialogId).modal('hide');
    
 }
 
@@ -211,14 +187,14 @@ function startDialogAnimation(dialog,animate)
      
           var top = dialog.css('top');
 	      dialog.css('top',"0px");
-	      dialog.animate({top:top,opacity: 'toggle'}, 500 );
+	      dialog.animate({top:top,opacity: 'toggle'}, 300 );
           break;
 
      case 'slide_in_left':
      
           var left = dialog.css('left');
 	      dialog.css('left',"0px");
-	      dialog.animate({left:left,opacity: 'toggle'}, 500 );
+	      dialog.animate({left:left,opacity: 'toggle'}, 300 );
           break;
 
      case 'size_in_size':
@@ -235,12 +211,12 @@ function startDialogAnimation(dialog,animate)
      case 'slide_out_top':
      
           var height = dialog.css('height');
-	      dialog.animate({top:'-'+height,opacity: 'toggle'}, 500 ,function(){dialog.css({top:'0px',left:'0px'});});
+	      dialog.animate({top:'-'+height,opacity: 'toggle'}, 300 ,function(){dialog.css({top:'0px',left:'0px'});});
           break;
 
      case 'slide_out_right':
      
-          dialog.animate({left:$(document).width(),opacity: 'toggle'}, 500,function(){dialog.css({top:'0px',left:'0px'});});
+          dialog.animate({left:$(document).width(),opacity: 'toggle'}, 300,function(){dialog.css({top:'0px',left:'0px'});});
           break;
 
      case 'slide_out_size':
@@ -257,28 +233,31 @@ function doShowConfirm(setting){
 
      if($('#ConfirmDialog').length==0)
 	 {
-	     var dialog = "<div class='panel panel-primary gdialog' id='ConfirmDialog' style='display: none;position: absolute;min-width:400px;' ><div>";
-	     var head = "<div class='panel-heading'><b>提示</b><a class='close'  onclick='doHideConfirm()'>&times;</a></div>";
-	     var body = "<div class='panel-body'></div>";
-	     var foot = "<div class='panel-footer' style='padding:5px 10px;'><div  style='text-align: right;'><button type='button' class='btn btn-default confirm-cancel' >取消</button><button type='button' class='btn btn-success confirm-ok' style='margin-left: 15px;' >确定</button></div></div>";
+	 
+	 
+			
+	     var dialog = "<div class='modal fade' id='ConfirmDialog' tabindex='-1' role='dialog'><div class='modal-dialog' style='width:400px;z-index:100000;' ><div id='ConfirmDialogContent'   class='modal-content'></div></div></div>";
+	     var head = "<div class='modal-header'><button type='button' class='close' data-dismiss='modal' aria-label='Close'> <span aria-hidden='true'>&times;</span></button><h4 class='modal-title' id='ConfirmDialogTitle'>提示</h4></div>";
+	     var body = "<div class='modal-body' style='padding:25px;'></div>";
+	     var foot = "<div class='modal-footer' style='padding:5px 10px;'><div  style='text-align: right;'><button type='button' class='btn btn-default confirm-cancel' ><span class='glyphicon glyphicon-remove-circle' style='top:2px;'></span>取消</button><button type='button' class='btn btn-success confirm-ok' style='margin-left: 15px;' ><span style='top:2px;' class='glyphicon glyphicon-ok-circle'></span>确定</button></div></div>";
 	     $('body').append($(dialog));
-	     $(head).appendTo($('#ConfirmDialog'));
-	     $(body).appendTo($('#ConfirmDialog'));
-	     $(foot).appendTo($('#ConfirmDialog'));
+	     $(head).appendTo($('#ConfirmDialogContent'));
+	     $(body).appendTo($('#ConfirmDialogContent'));
+	     $(foot).appendTo($('#ConfirmDialogContent'));
      }
-     $('#ConfirmDialog').find('.panel-body').html(setting.hint);
+     $('#ConfirmDialogContent').find('.modal-body').html(setting.hint);
      
      if(setting.onCancel!=undefined && jQuery.isFunction(setting.onCancel))
      {
-       $('#ConfirmDialog').find('.panel-footer').find(".confirm-cancel").one('click',setting.onCancel);
+       $('#ConfirmDialogContent').find('.modal-footer').find(".confirm-cancel").one('click',setting.onCancel);
      }else
      {
-        $('#ConfirmDialog').find('.panel-footer').find(".confirm-cancel").one('click',function(){doHideConfirm();});
+        $('#ConfirmDialogContent').find('.modal-footer').find(".confirm-cancel").one('click',doHideConfirm);
      }
      
-     $('#ConfirmDialog').find('.panel-footer').find(".confirm-ok").one('click',setting.onConfirm);
+     $('#ConfirmDialogContent').find('.modal-footer').find(".confirm-ok").one('click',setting.onConfirm);
      
-     doShowDialog('ConfirmDialog','slide_in_top');
+     doShowDialog('ConfirmDialog');
 }
 
 function doHideConfirm(){

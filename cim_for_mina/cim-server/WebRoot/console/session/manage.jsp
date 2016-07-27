@@ -16,14 +16,10 @@
 		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 		<title>CIM管理系统</title>
 
-		<link charset="utf-8" rel="stylesheet" href="<%=basePath%>/resource/css/webbase.css" />
-		<link charset="utf-8" rel="stylesheet" href="<%=basePath%>/resource/css/main-layout.css" />
+		<link charset="utf-8" rel="stylesheet" 	href="<%=basePath%>/resource/bootstrap-3.3.6-dist/css/bootstrap.min.css" />
 		<link charset="utf-8" rel="stylesheet" href="<%=basePath%>/resource/css/base-ui.css" />
-		<link charset="utf-8" rel="stylesheet" href="<%=basePath%>/resource/css/table.css" />
-		<link charset="utf-8" rel="stylesheet" 	href="<%=basePath%>/resource/bootstrap/css/bootstrap.min.css" />
-		<link charset="utf-8" rel="stylesheet" href="<%=basePath%>/resource/css/dialog.css" />
 		<script type="text/javascript" 	src="<%=basePath%>/resource/js/jquery-2.2.3.min.js"></script>
-		<script type="text/javascript" src="<%=basePath%>/resource/bootstrap/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="<%=basePath%>/resource/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="<%=basePath%>/resource/js/framework.js"></script>
 		<script>
 	 
@@ -137,7 +133,7 @@
 										<td>
 											<div class="btn-group btn-group-xs">
 											  <button type="button" class="btn btn-primary" style="padding: 5px;" 
-onclick="showMessageDialog('<%=ios.getAccount() %>')">发送消息</button>
+onclick="showMessageDialog('<%=ios.getAccount() %>')"><span class="glyphicon glyphicon-send" style="top:2px;"></span>  发送消息</button>
 											   
 											</div>
 										</td>
@@ -154,29 +150,40 @@ onclick="showMessageDialog('<%=ios.getAccount() %>')">发送消息</button>
 			</div>
 			
 			
-		<div class="panel panel-primary gdialog" id="messageDialog" style="display: none;width: 420px;position: absolute;z-index: 1001;">
-		  <div class="panel-heading">发送消息
-		  <a class="close"  onclick="doHideDialog('messageDialog'),$('#messageDialog').css('z-index',1000);">&times;</a>
-		  </div>
-		  <div class="panel-body">
-		   <form role="form">
-		      <div class="form-groupBuy">
-			    <label for="Amobile">
-					接收账号:
-				</label>
-				<input type="text" class="form-control" id="Saccount" name="account"
-					  style="  width: 100%;font-size: 20px;font-weight: bold;" disabled="disabled" />
-			  </div>
-			  <div class="form-groupBuy" style="margin-top: 20px;">
-			    <label for="exampleInputFile">消息内容:</label>
-			    <textarea rows="10" style="width: 100%;height: 200px;resize: none;" id="message" name="message"  class="form-control"></textarea>
-			  </div>
-			</form>
-		  </div>
-		  <div class="panel-footer" style="padding:5px 10px;text-align: center;">
-						     <a type="button" class="btn btn-success btn-lg" onclick="doSendMessage()"  style="width: 200px;"> 发送</a>
-		  </div>
+<div class="modal fade" id="messageDialog" tabindex="-1" role="dialog" >
+		<div class="modal-dialog" style="width: 420px;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	                <h4 class="modal-title">发送消息</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-groupBuy">
+							<label for="Amobile">
+								接收账号:
+							</label>
+							<input type="text" class="form-control" id="Saccount"
+								name="account"
+								style="width: 100%; font-size: 20px; font-weight: bold;height:40px;"
+								disabled="disabled" />
+						</div>
+						<div class="form-groupBuy" style="margin-top: 20px;">
+							<label for="exampleInputFile">
+								消息内容:
+							</label>
+							<textarea rows="10" style="width: 100%; height: 200px;"
+								id="message" name="message" class="form-control"></textarea>
+						</div>
+				</div>
+				<div class="modal-footer" style="padding: 5px 10px; text-align: center;">
+					<button type="button" class="btn btn-success btn-lg" style="width: 200px;" onclick="doSendMessage()">
+						<span class="glyphicon glyphicon-send" style="top:2px;"></span> 发送
+					</button>
+				</div>
+			</div>
 		</div>
+</div>
+
 
 
 		<script>
