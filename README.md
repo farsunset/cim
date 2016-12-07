@@ -3,6 +3,7 @@
 
 #侣信专业版1.4.5版本发布 
 http://git.oschina.net/farsunset/lvxin-pro
+https://github.com/funset/lvxin-pro
 
 
 #前言：
