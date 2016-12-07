@@ -1,7 +1,7 @@
 #说明：
 此开源版本为基础功能版本，只有消息推送的基础功能！netty版本,和mina版本结构和功能完全一致，大家可以选择自己喜欢的或者合适的版本学习或者使用!
 
-#侣信专业版1.0.0版本发布 
+#侣信专业版1.4.5版本发布 
 http://git.oschina.net/farsunset/lvxin-pro
 
 
@@ -33,7 +33,7 @@ http://git.oschina.net/farsunset/lvxin-pro
 ![image](http://staticres.oss-cn-hangzhou.aliyuncs.com/cim-android_client.png)
 
 ##服务端消息 web入口
-#http://192.168.1.11:8080/ichat-server
+#http://192.168.1.11:8080/cim-server
 
 ![image](http://staticres.oss-cn-hangzhou.aliyuncs.com/cim-server.png)
 
