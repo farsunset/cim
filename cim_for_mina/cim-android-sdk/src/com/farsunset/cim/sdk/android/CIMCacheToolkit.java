@@ -39,13 +39,16 @@ class CIMCacheToolkit extends SQLiteOpenHelper {
 	public static final String KEY_CIM_CONNECTION_STATE = "KEY_CIM_CONNECTION_STATE";
 
 	static  CIMCacheToolkit toolkit;
-	public static CIMCacheToolkit getInstance(Context context){
+	private SQLiteDatabase mSQLiteDatabase;
+	public synchronized static CIMCacheToolkit getInstance(Context context){
          if (toolkit==null){
 			 toolkit = new CIMCacheToolkit(context);
 		 }
 		return toolkit;
 	}
-	public CIMCacheToolkit(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+	
+	 
+	public  CIMCacheToolkit(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
 		super(context, name, factory, version);
 	}
 
@@ -55,42 +58,30 @@ class CIMCacheToolkit extends SQLiteOpenHelper {
 
 
 
-	public  void remove(String key)
+	public synchronized void remove(String key)
 	{
-		SQLiteDatabase database = toolkit.getWritableDatabase();
-		database.execSQL(DELETE_SQL,new String[]{key});
-		database.close();
-		toolkit.close();
-		toolkit = null;
+		getSQLiteDatabase().execSQL(DELETE_SQL,new String[]{key});
 	}
 
 
-	public  void putString(String key,String value)
+	public synchronized void putString(String key,String value)
 	{
-		SQLiteDatabase database = toolkit.getWritableDatabase();
-		database.execSQL(DELETE_SQL,new String[]{key});
-		database.execSQL(SAVE_SQL, new String[]{key, value});
-		database.close();
-
-		toolkit.close();
-		toolkit = null;
+		getSQLiteDatabase().execSQL(DELETE_SQL,new String[]{key});
+		getSQLiteDatabase().execSQL(SAVE_SQL, new String[]{key, value});
 
 	}
 	
-	public  String getString(String key)
+	public synchronized String getString(String key)
 	{
 		String value = null;
-		SQLiteDatabase database = toolkit.getWritableDatabase();
-		Cursor cursor = database.rawQuery(QUERY_SQL, new String[]{key});
+		Cursor cursor = getSQLiteDatabase().rawQuery(QUERY_SQL, new String[]{key});
 		if (cursor!=null&&cursor.moveToFirst())
 		{
 			value = cursor.getString(0);
+			cursor.close();
 		}
 
-		cursor.close();
-		database.close();
-		toolkit.close();
-		toolkit = null;
+		
 		
 		return value;
 	}
@@ -123,6 +114,27 @@ class CIMCacheToolkit extends SQLiteOpenHelper {
 		database.execSQL(TABLE_SQL);
 	}
 
+	
+	public  static synchronized  void destroy(){
+		if (toolkit!=null){
+			try{toolkit.mSQLiteDatabase.close();}catch(Exception e){}
+			try{toolkit.close();}catch(Exception e){}
+		}
+		
+	}
+	
+	
+	private SQLiteDatabase getSQLiteDatabase(){
+		if(mSQLiteDatabase!=null){
+			return mSQLiteDatabase;
+		}else
+		{
+			mSQLiteDatabase =  getWritableDatabase();
+		}
+		return  mSQLiteDatabase;
+	}
+	
+	
 	@Override
 	public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
 
