@@ -33,7 +33,7 @@
 ![image](http://staticres.oss-cn-hangzhou.aliyuncs.com/cim-android_client.png)
 
 ##服务端消息 web入口
-#http://192.168.1.11:8080/ichat-server
+#http://192.168.1.11:8080/cim-server
 
 ![image](http://staticres.oss-cn-hangzhou.aliyuncs.com/cim-server.png)
 
@@ -139,20 +139,8 @@ public static  void sendRequest(Context context,SentBody body)
    示例：
    CIMPushManager.isConnected(context);   
 
-1.8获取PushManager状态
-    //被销毁的destroy()
-	CIMPushManager.STATE_DESTROYED = 0x0000DE;
-	//被销停止的 stop()
-	CIMPushManager.STATE_STOPED = 0x0000EE;
-	
-	CIMPushManager.STATE_NORMAL = 0x000000;
-	
-    public int getState(Context context)   
 
-   示例：
-   CIMPushManager.getState(context);   
-
-1.9推送消息以及相关事件的接收
+1.8推送消息以及相关事件的接收
 
 首先注册一个广播，并监听以下action 参照 后面androidManifest.xml配置
 
