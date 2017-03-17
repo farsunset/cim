@@ -1,9 +1,24 @@
 /**
- * probject:cim-java-sdk
- * @version 2.0.0
- * 
- * @author 3979434@qq.com
- */ 
+ * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ ***************************************************************************************
+ *                                                                                     *
+ *                        Website : http://www.farsunset.com                           *
+ *                                                                                     *
+ ***************************************************************************************
+ */
 package com.farsunset.cim.sdk.client;
 
 
@@ -12,7 +27,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.farsunset.cim.sdk.client.constant.CIMConstant;
-import com.farsunset.cim.sdk.client.exception.CIMSessionDisableException;
+import com.farsunset.cim.sdk.client.exception.SessionDisconnectedException;
 import com.farsunset.cim.sdk.client.model.Intent;
 import com.farsunset.cim.sdk.client.model.Message;
 import com.farsunset.cim.sdk.client.model.ReplyBody;
@@ -44,7 +59,7 @@ public  class CIMEventBroadcastReceiver {
 		  /*
            * cim断开服务器事件
            */
-          if(intent.getAction().equals(CIMConnectorManager.ACTION_CONNECTION_CLOSED))
+          if(intent.getAction().equals(CIMConstant.IntentAction.ACTION_CONNECTION_CLOSED))
           {
         	  onInnerConnectionClosed();
           }
@@ -52,15 +67,16 @@ public  class CIMEventBroadcastReceiver {
           /*
            * cim连接服务器失败事件
            */
-          if(intent.getAction().equals(CIMConnectorManager.ACTION_CONNECTION_FAILED))
+          if(intent.getAction().equals(CIMConstant.IntentAction.ACTION_CONNECTION_FAILED))
           {
-        	  onInnerConnectionFailed((Exception) intent.getExtra("exception"));
+        	  long interval = intent.getLongExtra("interval", CIMConstant.RECONN_INTERVAL_TIME);
+        	  onInnerConnectionFailed((Exception) intent.getExtra(Exception.class.getName()),interval);
           }
           
           /*
            * cim连接服务器成功事件
            */
-          if(intent.getAction().equals(CIMConnectorManager.ACTION_CONNECTION_SUCCESSED))
+          if(intent.getAction().equals(CIMConstant.IntentAction.ACTION_CONNECTION_SUCCESSED))
           {
         	  onInnerConnectionSuccessed();
           }
@@ -68,51 +84,51 @@ public  class CIMEventBroadcastReceiver {
           /*
            * 收到推送消息事件
            */
-          if(intent.getAction().equals(CIMConnectorManager.ACTION_MESSAGE_RECEIVED))
+          if(intent.getAction().equals(CIMConstant.IntentAction.ACTION_MESSAGE_RECEIVED))
           {
-        	  onInnerMessageReceived((Message)intent.getExtra("message"));
+        	  onInnerMessageReceived((Message)intent.getExtra(Message.class.getName()));
           }
           
           
           /*
            * 获取收到replybody成功事件
            */
-          if(intent.getAction().equals(CIMConnectorManager.ACTION_REPLY_RECEIVED))
+          if(intent.getAction().equals(CIMConstant.IntentAction.ACTION_REPLY_RECEIVED))
           {
-        	  listener.onReplyReceived((ReplyBody)intent.getExtra("replyBody"));
+        	  listener.onReplyReceived((ReplyBody)intent.getExtra(ReplyBody.class.getName()));
           }
           
           
           /*
            * 获取sendbody发送失败事件
            */
-          if(intent.getAction().equals(CIMConnectorManager.ACTION_SENT_FAILED))
+          if(intent.getAction().equals(CIMConstant.IntentAction.ACTION_SENT_FAILED))
           {
-        	  onSentFailed((Exception) intent.getExtra("exception"),(SentBody)intent.getExtra("sentBody"));
+        	  onSentFailed((Exception) intent.getExtra(Exception.class.getName()),(SentBody)intent.getExtra(SentBody.class.getName()));
           }
           
           /*
            * 获取sendbody发送成功事件
            */
-          if(intent.getAction().equals(CIMConnectorManager.ACTION_SENT_SUCCESSED))
+          if(intent.getAction().equals(CIMConstant.IntentAction.ACTION_SENT_SUCCESSED))
           {
-        	  onSentSucceed((SentBody)intent.getExtra("sentBody"));
+        	  onSentSucceed((SentBody)intent.getExtra(SentBody.class.getName()));
           }
           
           
           /*
            * 获取cim数据传输异常事件
            */
-          if(intent.getAction().equals(CIMConnectorManager.ACTION_UNCAUGHT_EXCEPTION))
+          if(intent.getAction().equals(CIMConstant.IntentAction.ACTION_UNCAUGHT_EXCEPTION))
           {
-        	  onUncaughtException((Exception)intent.getExtra("exception"));
+        	  onUncaughtException((Exception)intent.getExtra(Exception.class.getName()));
           }
           
           
           /*
            * 重新连接，如果断开的话
            */
-          if(intent.getAction().equals(CIMConnectorManager.ACTION_CONNECTION_RECOVERY))
+          if(intent.getAction().equals(CIMConstant.IntentAction.ACTION_CONNECTION_RECOVERY))
           {
         	  CIMPushManager.connect();
           }
@@ -132,9 +148,9 @@ public  class CIMEventBroadcastReceiver {
 	
    
 	
-   private   void onInnerConnectionFailed(Exception e){
+   private   void onInnerConnectionFailed(Exception e,long interval){
 		
-	    connectionHandler.schedule(new ConnectionTask(),random.nextInt(CIMConstant.RECONN_INTERVAL_TIME) + 20 );
+	    connectionHandler.schedule(new ConnectionTask(),interval);
 		
 	    listener.onConnectionFailed(e);
 	}
@@ -159,14 +175,15 @@ public  class CIMEventBroadcastReceiver {
 	
 	private   void onSentFailed(Exception e, SentBody body){
 		
+		e.printStackTrace();
 		//与服务端端开链接，重新连接
-		if(e instanceof CIMSessionDisableException)
+		if(e instanceof SessionDisconnectedException)
 		{
 			CIMPushManager.connect();
 		}else
 		{
 			//发送失败 重新发送
-			CIMPushManager.sendRequest( body);
+			//CIMPushManager.sendRequest( body);
 		}
 		
 	}

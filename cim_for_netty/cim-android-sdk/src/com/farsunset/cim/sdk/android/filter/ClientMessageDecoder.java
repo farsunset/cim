@@ -1,164 +1,138 @@
 /**
- * probject:cim-server-sdk
- * @version 2.0
- * 
- * @author 3979434@qq.com
- */  
+ * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ ***************************************************************************************
+ *                                                                                     *
+ *                        Website : http://www.farsunset.com                           *
+ *                                                                                     *
+ ***************************************************************************************
+ */
 package com.farsunset.cim.sdk.android.filter;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufUtil;
-import io.netty.buffer.PooledByteBufAllocator;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.serialization.ClassResolver;
-import io.netty.handler.codec.serialization.ObjectDecoder;
-
-import java.io.ByteArrayInputStream;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import java.util.List;
 
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
+import com.farsunset.cim.sdk.android.model.HeartbeatRequest;
 import com.farsunset.cim.sdk.android.model.Message;
 import com.farsunset.cim.sdk.android.model.ReplyBody;
+import com.farsunset.cim.sdk.android.model.proto.MessageProto;
+import com.farsunset.cim.sdk.android.model.proto.ReplyBodyProto;
+import com.google.protobuf.InvalidProtocolBufferException;
 
 import android.util.Log;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.ByteToMessageDecoder;
+
 /**
- *  客户端消息解码
+ * 客户端消息解码
  */
-public class ClientMessageDecoder extends ObjectDecoder {
-
-
-	public ClientMessageDecoder(ClassResolver classResolver) {
-		super(classResolver);
-	}
-
+public class ClientMessageDecoder extends ByteToMessageDecoder {
+	final static String TAG = ClientMessageDecoder.class.getSimpleName();
 	@Override
-	public Object decode(ChannelHandlerContext arg0, ByteBuf  buffer) throws Exception   {
-		 
-		final ByteBuf  tBuffer = PooledByteBufAllocator.DEFAULT.buffer(640);
-		
-		buffer.markReaderIndex();
-		boolean complete = false;  
-		
-		while(buffer.isReadable()){
-			byte b = buffer.readByte();
-			if (b == CIMConstant.MESSAGE_SEPARATE) {
-				complete = true;
-				break;
-			} else {
-				tBuffer.writeByte(b);
-			}
-		}
-		
+	protected void decode(ChannelHandlerContext arg0, ByteBuf buffer, List<Object> queue) throws Exception {
 
-		if(complete){
-			
-			String message = new String(new String(ByteBufUtil.getBytes(tBuffer),CIMConstant.UTF8));
-			Log.i("ClientMessageDecoder", message);
-			Object msg = mappingMessageObject(message);
-			return msg;
-			
-		}else{
-			
-			buffer.resetReaderIndex();
-			return null;
-			
+		/**
+		 * 消息头3位
+		 */
+		if (buffer.readableBytes() < CIMConstant.DATA_HEADER_LENGTH) {
+			return;
 		}
+
+		buffer.markReaderIndex();
+
+		buffer.markReaderIndex();
+
+		byte conetnType = buffer.readByte();
+
+		byte lv = buffer.readByte();// int 低位
+		byte hv = buffer.readByte();// int 高位
+
+		int conetnLength = getContentLength(lv, hv);
+
+		// 如果消息体没有接收完整，则重置读取，等待下一次重新读取
+		if (conetnLength > buffer.readableBytes()) {
+			buffer.resetReaderIndex();
+			return;
+		}
+
+		byte[] dataBytes = new byte[conetnLength];
+		buffer.readBytes(dataBytes);
+
+		Object message = mappingMessageObject(dataBytes, conetnType);
+		
+		if(message!=null){
+			queue.add(message);
+		}
+
 	}
 
-      private Object mappingMessageObject(String  message) throws Exception {
-		
-		if(message.equals(CIMConstant.CMD_HEARTBEAT_REQUEST))//如果是心跳请求命令则直接返回
-		{
-			return CIMConstant.CMD_HEARTBEAT_REQUEST;
-		}
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
-        DocumentBuilder builder = factory.newDocumentBuilder();  
-        Document doc = (Document) builder.parse(new ByteArrayInputStream(message.getBytes(CIMConstant.UTF8)));
-        
-		String name = doc.getDocumentElement().getTagName();
-		if (name.equals("reply")) {
-			ReplyBody reply = new ReplyBody();
-			reply.setKey(doc.getElementsByTagName("key").item(0).getTextContent());
-			reply.setCode(doc.getElementsByTagName("code").item(0).getTextContent());
-			NodeList items = doc.getElementsByTagName("data").item(0).getChildNodes();  
-		     for (int i = 0; i < items.getLength(); i++) {  
-		            Node node = items.item(i);  
-		            reply.getData().put(node.getNodeName(), node.getTextContent());
-		    }  
-			return reply;
-		}
-		if (name.equals("message")) {
+	private Object mappingMessageObject(byte[] bytes, byte type) throws InvalidProtocolBufferException {
 
-			Message body = new Message();
-			NodeList nodeList = doc.getElementsByTagName("message").item(0).getChildNodes();
-			int count = nodeList.getLength();
-			for(int i = 0;i < count; i++){
-				Node node = nodeList.item(i);
-				
-				if(node.getNodeName().equals("mid"))
-				{
-					body.setMid(node.getTextContent());
-				}
-				
-				if(node.getNodeName().equals("type"))
-				{
-					body.setType(node.getTextContent());
-				}
-				
-				if(node.getNodeName().equals("content"))
-				{
-					body.setContent(node.getTextContent());
-				}
-				
-				if(node.getNodeName().equals("file"))
-				{
-					body.setFile(node.getTextContent());
-				}
-				
-				if(node.getNodeName().equals("fileType"))
-				{
-					body.setFileType(node.getTextContent());
-				}
-				
-				if(node.getNodeName().equals("title"))
-				{
-					body.setTitle(node.getTextContent());
-				}
-				
-				if(node.getNodeName().equals("sender"))
-				{
-					body.setSender(node.getTextContent());
-				}
-				
-				if(node.getNodeName().equals("receiver"))
-				{
-					body.setReceiver(node.getTextContent());
-				}
-				
-				if(node.getNodeName().equals("format"))
-				{
-					body.setFormat(node.getTextContent());
-				}
-				
-				if(node.getNodeName().equals("timestamp"))
-				{
-					body.setTimestamp(Long.valueOf(node.getTextContent()));
-				}
-			}
+		if (CIMConstant.ProtobufType.S_H_RQ == type) {
+			HeartbeatRequest request = HeartbeatRequest.getInstance();
+			Log.i(TAG, request.toString());
+			return request;
+		}
+
+		if (CIMConstant.ProtobufType.REPLYBODY == type) {
+			ReplyBodyProto.Model bodyProto = ReplyBodyProto.Model.parseFrom(bytes);
+			ReplyBody body = new ReplyBody();
+			body.setKey(bodyProto.getKey());
+			body.setTimestamp(bodyProto.getTimestamp());
+			body.putAll(bodyProto.getDataMap());
+			body.setCode(bodyProto.getCode());
+			body.setMessage(bodyProto.getMessage());
+
+			Log.i(TAG, body.toString());
 
 			return body;
 		}
-		
-        return null;
+
+		if (CIMConstant.ProtobufType.MESSAGE == type) {
+			MessageProto.Model bodyProto = MessageProto.Model.parseFrom(bytes);
+			Message message = new Message();
+			message.setMid(bodyProto.getMid());
+			message.setAction(bodyProto.getAction());
+			message.setContent(bodyProto.getContent());
+			message.setSender(bodyProto.getSender());
+			message.setReceiver(bodyProto.getReceiver());
+			message.setTitle(bodyProto.getTitle());
+			message.setExtra(bodyProto.getExtra());
+			message.setTimestamp(bodyProto.getTimestamp());
+			message.setFormat(bodyProto.getFormat());
+
+			Log.i(TAG, message.toString());
+			return message;
+		}
+
+		return null;
+
 	}
 
- 
+	/**
+	 * 解析消息体长度
+	 * 
+	 * @param type
+	 * @param length
+	 * @return
+	 */
+	private int getContentLength(byte lv, byte hv) {
+		int l = (lv & 0xff);
+		int h = (hv & 0xff);
+		return (l | (h <<= 8));
+	}
 
- 
 }

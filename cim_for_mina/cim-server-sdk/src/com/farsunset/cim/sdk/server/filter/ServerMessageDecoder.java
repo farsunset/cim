@@ -1,116 +1,109 @@
 /**
- * probject:cim-server-sdk
- * @version 2.0
- * 
- * @author 3979434@qq.com
- */  
+ * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ ***************************************************************************************
+ *                                                                                     *
+ *                        Website : http://www.farsunset.com                           *
+ *                                                                                     *
+ ***************************************************************************************
+ */
 package com.farsunset.cim.sdk.server.filter;
-
-import java.io.ByteArrayInputStream;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.log4j.Logger;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.CumulativeProtocolDecoder;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import com.farsunset.cim.sdk.server.constant.CIMConstant;
+import com.farsunset.cim.sdk.server.model.HeartbeatResponse;
 import com.farsunset.cim.sdk.server.model.SentBody;
+import com.farsunset.cim.sdk.server.model.proto.SentBodyProto;
 /**
- *  服务端接收消息解码，可在此解密消息
+ *  服务端接收消息解码
  */
 public class ServerMessageDecoder extends CumulativeProtocolDecoder {
 	
 	protected final Logger logger = Logger.getLogger(ServerMessageDecoder.class);
 	@Override
 	public boolean doDecode(IoSession iosession, IoBuffer iobuffer, ProtocolDecoderOutput out) throws Exception {
-		
-		boolean complete = false;
-	    IoBuffer tBuffer = IoBuffer.allocate(320).setAutoExpand(true);
+		/**
+	     * 消息头3位
+	     */
+	    if(iobuffer.remaining() < CIMConstant.DATA_HEADER_LENGTH){
+	    	return false;
+	    }
 	    
 	    iobuffer.mark();
 	    
-		while (iobuffer.hasRemaining()) {
-            byte b = iobuffer.get();
-            /**
-			 * CIMConstant.MESSAGE_SEPARATE 为消息界限
-			 * 当一次收到多个消息时，以此分隔解析多个消息
-			 */
-            if (b == CIMConstant.MESSAGE_SEPARATE ) {
-            	
-            	complete = true;
-                break;
-            }else if(b == CIMConstant.FLEX_DATA_SEPARATE)//flex客户端 安全策略验证时会收到<policy-file- request/>\0的消息，忽略此消息内容
-            {
-            	complete = true;
-                break;
-            }
-            else {
-                tBuffer.put(b);
-            }
-        }
-		if (complete) {
-			tBuffer.flip();
-	        byte[] bytes = new byte[tBuffer.limit()];
-	        tBuffer.get(bytes);
-	        
-	        String message = new String(bytes, CIMConstant.UTF8);
-	        
-	        logger.info(message);
-	        
-	        tBuffer.clear();
-	        try{
-	        	 
-				Object body = getSentBody(message);
-		        out.write(body);
-	        }catch(Exception e){
-	        	out.write(message);//解析xml失败 是返回原始的xml数据到上层处理,比如flex sokcet的 安全验证请求xml
-	        	e.printStackTrace();
-	        	logger.error(e);
-	        }
-		}else
-		{
-			iobuffer.reset();//如果消息没有接收完整，对buffer进行重置，下次继续读取
-		}
-	    return complete;
+	    byte conetnType = iobuffer.get();
+	    byte lv =iobuffer.get();//int 低位
+	    byte hv =iobuffer.get();//int 高位
+	    
+	    int conetnLength = getContentLength(lv,hv);
+	    
+	    
+	    //如果消息体没有接收完整，则重置读取，等待下一次重新读取
+	    if(conetnLength > iobuffer.remaining()){
+	    	iobuffer.reset();
+	    	return false;
+	    }
+	    
+	    byte[] dataBytes = new byte[conetnLength]; 
+	    iobuffer.get(dataBytes, 0, conetnLength); 
+	    
+	    Object message = mappingMessageObject(dataBytes,conetnType);
+	    if(message != null){
+	    	out.write(message);
+	    }
+	    return true;
 	}
 	
-	public Object getSentBody(String message) throws Exception
+	public Object mappingMessageObject(byte[] data,byte type) throws Exception
 	{
 		
-		if(CIMConstant.CMD_HEARTBEAT_RESPONSE.equalsIgnoreCase(message))
+		if(CIMConstant.ProtobufType.C_H_RS == type)
 		{
-			return CIMConstant.CMD_HEARTBEAT_RESPONSE;
+			HeartbeatResponse response = HeartbeatResponse.getInstance();
+			logger.info(response.toString());
+			return response;
 		}
 		
-		if(CIMConstant.FLEX_POLICY_REQUEST.equalsIgnoreCase(message))
+		if(CIMConstant.ProtobufType.SENTBODY == type)
 		{
-			return CIMConstant.FLEX_POLICY_REQUEST;
+			SentBodyProto.Model bodyProto = SentBodyProto.Model.parseFrom(data);
+	        SentBody body = new SentBody();
+	        body.setKey(bodyProto.getKey());
+	        body.setTimestamp(bodyProto.getTimestamp());
+	        body.putAll(bodyProto.getDataMap());
+	        logger.info(body.toString());
+	        
+	        return body;
 		}
-		
-		SentBody body = new SentBody();
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();   
-        DocumentBuilder builder = factory.newDocumentBuilder();  
-        Document doc = builder.parse(new ByteArrayInputStream(message.getBytes(CIMConstant.UTF8)));
-        body.setKey(doc.getElementsByTagName("key").item(0).getTextContent());
-        
-        NodeList datas = doc.getElementsByTagName("data");
-        if(datas!=null&&datas.getLength()>0)
-        {
-	        NodeList items = datas.item(0).getChildNodes();  
-	        for (int i = 0; i < items.getLength(); i++) {  
-	            Node node = items.item(i);  
-	            body.getData().put(node.getNodeName(), node.getTextContent());
-	        }
-        }
-        
-        return body;
+        return null;
 	}
 
+	/**
+	 * 解析消息体长度
+	 * @param type
+	 * @param length
+	 * @return
+	 */
+	private int getContentLength(byte lv,byte hv){
+		 int l =  (lv & 0xff);
+		 int h =  (hv & 0xff);
+		 return (l| (h <<= 8));
+	}
 }

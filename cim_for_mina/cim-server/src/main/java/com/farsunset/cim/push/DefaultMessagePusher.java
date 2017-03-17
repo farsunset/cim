@@ -1,19 +1,29 @@
- /**
- * probject:cim
- * @version 2.0
- * 
- * @author 3979434@qq.com
- */ 
+/**
+ * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ ***************************************************************************************
+ *                                                                                     *
+ *                        Website : http://www.farsunset.com                           *
+ *                                                                                     *
+ ***************************************************************************************
+ */
 package com.farsunset.cim.push;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import com.farsunset.cim.sdk.server.model.Message;
 import com.farsunset.cim.sdk.server.session.CIMSession;
 import com.farsunset.cim.sdk.server.session.DefaultSessionManager;
-
-
 
 /**
  * 消息发送实现类
@@ -21,8 +31,6 @@ import com.farsunset.cim.sdk.server.session.DefaultSessionManager;
  */
 public class DefaultMessagePusher implements  CIMMessagePusher {
 
-
-	private final Log log = LogFactory.getLog(getClass());
 
 	private DefaultSessionManager sessionManager;
 	
@@ -38,94 +46,51 @@ public class DefaultMessagePusher implements  CIMMessagePusher {
 	public void push(Message msg) {
 		CIMSession session = sessionManager.get(msg.getReceiver());
 		
-		/*服务器集群时，可以在此 判断当前session是否连接于本台服务器，如果是，继续往下走，如果不是，将此消息发往当前session连接的服务器并 return
-		if(!session.isLocalhost()){//判断当前session是否连接于本台服务器，如不是
-			
-			MessageDispatcher.execute(msg, session.getHost());
-			return;
-		}
-		*/
-		
+		/*
+		 * 服务器集群时，可以在此
+		 * 判断当前session是否连接于本台服务器，如果是，继续往下走，如果不是，将此消息发往当前session连接的服务器并 return
+		 * if(session!=null&&!session.isLocalhost()){//判断当前session是否连接于本台服务器，如不是
+		 * //发往目标服务器处理
+		 * MessageDispatcher.execute(MessageUtil.transform(msg),session.getHost()); 
+		 * return; 
+		 * }
+		 */
+
 		if (session != null && session.isConnected()) {
 			
-			
-			/*//如果用户标示了DeviceToken 且 需要后台推送（Pushable=1） 说明这是ios设备需要使用anps发送
-			
-			if(StringUtil.isNotEmpty(session.getDeviceToken())&&session.getPushable()==User.PUSHABLE)
-			{
-				try {
-					deliverByANPS(msg,session.getDeviceToken());
-					msg.setStatus(Message.STATUS_SEND);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					msg.setStatus(Message.STATUS_NOT_SEND);
-				}
-			}else
-			{
-				
-				//推送消息
-				session.deliver(MessageUtil.transform(msg));
-			}*/
-			
-			//推送消息
-			  session.write(msg);
- 			 
-		}else{
-			
-			/*User target = ((UserService)ContextHolder.getBean("userServiceImpl")).getUserByAccount(msg.getReceiver());
-			//如果用户标示了DeviceToken 且 需要后台推送（Pushable=1） 说明这是ios设备需要使用anps发送
-			if(StringUtil.isNotEmpty(target.getDeviceToken())&&target.getPushable()==User.PUSHABLE)
-			{
-				try {
-					deliverByANPS(msg,target.getDeviceToken());
-					msg.setStatus(Message.STATUS_SEND);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					msg.setStatus(Message.STATUS_NOT_SEND);
-				}
-				
-			} */
-			//未发送
+			session.write(msg);
+			return;
 		}
-		try{
-			//可以在这保存消息到数据库
-			//((MessageService)ContextHolder.getBean("messageServiceImpl")).save(msg);
-		}catch(Exception e){
-			log.warn(" Messages insert to database failure!!");
+		
+		// 如果用户标示了APNS ON 说明这是ios设备需要使用apns发送
+		if (session != null && session.getApnsAble() == CIMSession.APNS_ON) {
+						
+			apnsPush(1,msg.getContent(),session.getDeviceId());
 		}
+		 
 	}
 
-	
-/*	public void deliverByANPS(Message msg,String deviceToken) throws Exception {
+	/**
+	 * 引入javaapns相关jar
+	 * @param badge
+	 * @param content
+	 * @param token
+	 */
+	private void apnsPush(int badge,String content,String token){
+		/*String password = "password";
+		String keystore = "p12 文件 绝对路径";
+		boolean isDebug = true;
 
-		
-		
-		    String alert = getMessageTile(msg);
-			// 被推送的iphone应用程序标示符
-			PayLoad payLoad = new PayLoad();
-			payLoad.addAlert(alert);
-			payLoad.addBadge(1);
-			payLoad.addSound("default");
-			PushNotificationManager pushManager = PushNotificationManager.getInstance();
-			pushManager.addDevice(deviceToken, deviceToken);
-			String host = ConfigManager.getInstance().get("apple.anps.host"); // 测试用的苹果推送服务器
-			int port = Integer.parseInt(ConfigManager.getInstance().get("apple.anps.port"));
-			
-			String password = ConfigManager.getInstance().get("apple.anps.p12.password");
-            String p12File =  ConfigManager.getInstance().get("apple.anps.p12.file");
-			pushManager.initializeConnection(host, port,this.getClass().getClassLoader().getResourceAsStream(p12File), password,
-					SSLConnectionHelper.KEYSTORE_TYPE_PKCS12);
+		PushNotificationPayload payload = PushNotificationPayload.complex();
+		try {
+			payload.addAlert(content);
+			payload.addBadge(1);
+			payload.addSound("default");
+			Push.payload(payload, keystore, password, isDebug, token);
 
-			// Send Push
-			Device client = pushManager.getDevice(deviceToken);
-			pushManager.sendNotification(client, payLoad); // 推送消息
-			pushManager.stopConnection();
-			pushManager.removeDevice(deviceToken);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}*/
+	}
  
-	}
-	
-  
- */
 }

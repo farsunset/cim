@@ -1,117 +1,107 @@
-﻿/**
- * probject:cim-server-sdk
- * @version 2.0
- * 
- * @author 3979434@qq.com
- */  
+/**
+ * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ ***************************************************************************************
+ *                                                                                     *
+ *                        Website : http://www.farsunset.com                           *
+ *                                                                                     *
+ ***************************************************************************************
+ */
 package com.farsunset.cim.sdk.android;
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.serialization.ClassResolvers;
-import io.netty.handler.timeout.IdleState;
-import io.netty.handler.timeout.IdleStateEvent;
-import io.netty.handler.timeout.IdleStateHandler;
-import io.netty.util.AttributeKey;
-
-import java.net.InetSocketAddress;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
-
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler.Sharable;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
+import io.netty.handler.timeout.IdleStateHandler;
+import io.netty.util.AttributeKey;
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
-import com.farsunset.cim.sdk.android.exception.CIMSessionDisableException;
-import com.farsunset.cim.sdk.android.exception.NetWorkDisableException;
-import com.farsunset.cim.sdk.android.exception.WriteToClosedSessionException;
+import com.farsunset.cim.sdk.android.exception.SessionDisconnectedException;
 import com.farsunset.cim.sdk.android.filter.ClientMessageDecoder;
 import com.farsunset.cim.sdk.android.filter.ClientMessageEncoder;
+import com.farsunset.cim.sdk.android.exception.NetworkDisconnectedException;
+import com.farsunset.cim.sdk.android.model.HeartbeatRequest;
+import com.farsunset.cim.sdk.android.model.HeartbeatResponse;
 import com.farsunset.cim.sdk.android.model.Message;
 import com.farsunset.cim.sdk.android.model.ReplyBody;
 import com.farsunset.cim.sdk.android.model.SentBody;
 
 /**
  * 连接服务端管理，cim核心处理类，管理连接，以及消息处理
+ * 
+ * @author 3979434@qq.com
  */
-@io.netty.channel.ChannelHandler.Sharable 
-class CIMConnectorManager  extends SimpleChannelInboundHandler<Object> {
+@Sharable
+class CIMConnectorManager extends SimpleChannelInboundHandler<Object> {
 
-	private final static String TAG = CIMConnectorManager.class.getSimpleName();
-	private  Channel channel;;
+	private final String TAG = CIMConnectorManager.class.getSimpleName();
+	private final int CONNECT_TIMEOUT = 10 * 1000;//秒
+	private final int WRITE_TIMEOUT = 10 * 1000;//秒
 
-	Context context;
+	private final int READ_IDLE_TIME = 120;//秒
+	private final int HEARBEAT_TIME_OUT = (READ_IDLE_TIME + 20) * 1000;// 收到服务端心跳请求超时时间 毫秒
+	private final String KEY_LAST_HEART_TIME =  "KEY_LAST_HEART_TIME" ;
+		
+	private Bootstrap bootstrap;
+	private EventLoopGroup loopGroup ;
+	private Channel channel;;
+	private ExecutorService executor = Executors.newFixedThreadPool(1);
+	private Context context;
 	
-	Bootstrap bootstrap;
-	EventLoopGroup loopGroup ;
-	static CIMConnectorManager manager;
+	private static CIMConnectorManager manager;
 
-	// 消息广播action
-	public static final String ACTION_MESSAGE_RECEIVED = "com.farsunset.cim.MESSAGE_RECEIVED";
 	
-	// 发送sendbody失败广播
-	public static final String ACTION_SENT_FAILED = "com.farsunset.cim.SENT_FAILED";
-	
-	// 发送sendbody成功广播
-	public static final String ACTION_SENT_SUCCESSED = "com.farsunset.cim.SENT_SUCCESSED";
-	// 链接意外关闭广播
-	public static final String ACTION_CONNECTION_CLOSED = "com.farsunset.cim.CONNECTION_CLOSED";
-	// 链接失败广播
-	public static final String ACTION_CONNECTION_FAILED = "com.farsunset.cim.CONNECTION_FAILED";
-	// 链接成功广播
-	public static final String ACTION_CONNECTION_SUCCESSED = "com.farsunset.cim.CONNECTION_SUCCESSED";
-	// 发送sendbody成功后获得replaybody回应广播
-	public static final String ACTION_REPLY_RECEIVED = "com.farsunset.cim.REPLY_RECEIVED";
-	// 网络变化广播
-	public static final String ACTION_NETWORK_CHANGED = "android.net.conn.CONNECTIVITY_CHANGE";
-	
-	// 未知异常
-	public static final String ACTION_UNCAUGHT_EXCEPTION = "com.farsunset.cim.UNCAUGHT_EXCEPTION";
 
-	//重试连接
-	public final static String ACTION_CONNECTION_RECOVERY = "com.farsunset.cim.CONNECTION_RECOVERY";
-
-	private ExecutorService executor;
-	public static final String HEARTBEAT_PINGED ="HEARTBEAT_PINGED";
-	//连接空闲时间
-	public static final int READ_IDLE_TIME = 180;//秒
-	
-	//心跳超时
-	public static final int HEART_TIME_OUT = 30 * 1000;//秒
-	
 	private CIMConnectorManager(Context ctx) {
 		context = ctx;
-		executor = Executors.newCachedThreadPool();
+
 		bootstrap = new Bootstrap();
 		loopGroup = new NioEventLoopGroup();
 		bootstrap.group(loopGroup);
 		bootstrap.channel(NioSocketChannel.class);
         bootstrap.option(ChannelOption.TCP_NODELAY, true);
+        bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
+        bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, CONNECT_TIMEOUT);
+
         bootstrap.handler(new ChannelInitializer<SocketChannel>() {
              @Override
              public void initChannel(SocketChannel ch) throws Exception {
-                 ChannelPipeline pipeline = ch.pipeline();
-                 pipeline.addLast(new ClientMessageDecoder(ClassResolvers.cacheDisabled(CIMConnectorManager.class.getClassLoader())));
-            	 pipeline.addLast(new ClientMessageEncoder());
-            	 pipeline.addLast(new IdleStateHandler(READ_IDLE_TIME,0,0));
-            	 pipeline.addLast(CIMConnectorManager.this);
-                 
+                 ch.pipeline().addLast(new ClientMessageDecoder());
+                 ch.pipeline().addLast(new ClientMessageEncoder());
+                 ch.pipeline().addLast(new IdleStateHandler(READ_IDLE_TIME,0,0));
+                 ch.pipeline().addLast(CIMConnectorManager.this);
              }
           });
-		 
+
 	}
 
 	public synchronized static CIMConnectorManager getManager(Context context) {
@@ -122,100 +112,93 @@ class CIMConnectorManager  extends SimpleChannelInboundHandler<Object> {
 
 	}
 
-	private synchronized void  syncConnection(final String cimServerHost,final int cimServerPort) {
+	private  synchronized void syncConnection( String host, int port) {
+		
+		if(isConnected()){
+			return ;
+		}
+		
 		try {
 
-			if(isConnected()){
-				return ;
-			}
-			ChannelFuture channelFuture = bootstrap.connect(new InetSocketAddress(cimServerHost, cimServerPort)).sync(); //这里的IP和端口，根据自己情况修改
+			Log.i(TAG, "****************CIM正在连接服务器  "+host+":"+port+"......");
+			ChannelFuture channelFuture = bootstrap.connect(host, port).syncUninterruptibly();  
 			channel  = channelFuture.channel();
 		} catch (Exception e) {
 			
+			long interval = CIMConstant.RECONN_INTERVAL_TIME - (5*1000 - new Random().nextInt(15*1000));
+
 			Intent intent = new Intent();
-			intent.setAction(ACTION_CONNECTION_FAILED);
-			intent.putExtra("exception", e);
+			intent.setAction(CIMConstant.IntentAction.ACTION_CONNECTION_FAILED);
+			intent.putExtra(Exception.class.getName(), e);
+			intent.putExtra("interval", interval);
 			context.sendBroadcast(intent);
 			
-			Log.e(TAG,"******************CIM连接服务器失败  "+cimServerHost+":"+cimServerPort);
-			
-		}
+			Log.e(TAG, "****************CIM连接服务器失败  "+host+":"+port+"......将在"+interval/1000+"秒后重新尝试连接");
+		 
+		}  
 
 	}
 
-	public  void connect(final String cimServerHost, final int cimServerPort) {
+	public void connect(final String host, final int port) {
 
-
-		if (!netWorkAvailable(context)) {
+		if (!isNetworkConnected(context)) {
 			
 			Intent intent = new Intent();
-			intent.setAction(ACTION_CONNECTION_FAILED);
-			intent.putExtra("exception", new NetWorkDisableException());
+			intent.setAction(CIMConstant.IntentAction.ACTION_CONNECTION_FAILED);
+			intent.putExtra(Exception.class.getName(), new NetworkDisconnectedException());
 			context.sendBroadcast(intent);
 			
 			return;
 		}
-		
-    	Future<?> future = executor.submit(new Runnable() {
-			@Override
-			public void run() {
-				syncConnection(cimServerHost, cimServerPort);
-			}
-		});
-		try {
-			if(future.get()!=null)
+	
+		executor.execute(new Runnable() {
+			public void run() 
 			{
-				connect(cimServerHost,cimServerPort);
-			}
-		} catch (Exception e) {
-			
-			connect(cimServerHost,cimServerPort);
-			e.printStackTrace();
-		}  
+				syncConnection(host, port);
+		    }
+		});
+		 
 	}
 
-	public void send(final SentBody body) {
+	public synchronized void send(SentBody body) {
 
-		 
-		executor.execute(new Runnable() {
-			@Override
-			public void run() {
-				
-				if(channel!=null && channel.isActive())
-				{
-					boolean  isDone = channel.writeAndFlush(body).awaitUninterruptibly(10000);
-					if (!isDone) {
-
-						Intent intent = new Intent();
-						intent.setAction(ACTION_SENT_FAILED);
-						intent.putExtra("exception", new WriteToClosedSessionException());
-						intent.putExtra("sentBody", body);
-						context.sendBroadcast(intent);
-					}else
-					{
-						Intent intent = new Intent();
-						intent.setAction(ACTION_SENT_SUCCESSED);
-						intent.putExtra("sentBody", body);
-						context.sendBroadcast(intent);
-					}
-				}else
-				{
-				 
-					Intent intent = new Intent();
-					intent.setAction(ACTION_SENT_FAILED);
-					intent.putExtra("exception", new CIMSessionDisableException());
-					intent.putExtra("sentBody", body);
-					context.sendBroadcast(intent);
-				}
-			}
-		});
+		boolean isSuccessed = false;
+		
+		Throwable exception = new SessionDisconnectedException();
+		
+		if(channel!=null && channel.isActive())
+		{
+			isSuccessed = channel.writeAndFlush(body).awaitUninterruptibly(WRITE_TIMEOUT);
+		} 
+		
+		if(!isSuccessed){
+			Intent intent = new Intent();
+			intent.setAction(CIMConstant.IntentAction.ACTION_SENT_FAILED);
+			intent.putExtra(Exception.class.getName(),exception);
+			intent.putExtra(SentBody.class.getName(), body);
+			context.sendBroadcast(intent);
+		}else
+		{
+			Intent intent = new Intent();
+			intent.setAction(CIMConstant.IntentAction.ACTION_SENT_SUCCESSED);
+			intent.putExtra(SentBody.class.getName(), (SentBody) body);
+			context.sendBroadcast(intent);
+		}
+		
 	}
 
 	public   void destroy() {
-		if (manager.channel != null) {
-			manager.channel.close();
+		if (channel != null) {
+			channel.close();
 		}
-		loopGroup.shutdownGracefully();
+
+		if (loopGroup != null) {
+			loopGroup.shutdownGracefully();
+		}
+		
+		
+		CIMCacheToolkit.destroy();
+		
 		manager = null;
 	}
 
@@ -227,6 +210,7 @@ class CIMConnectorManager  extends SimpleChannelInboundHandler<Object> {
 	}
 
 	
+	
 	public void closeSession()
 	{
 		if(channel!=null)
@@ -236,91 +220,106 @@ class CIMConnectorManager  extends SimpleChannelInboundHandler<Object> {
 	}
 
 
-	/**
-	  * 检测到连接空闲事件，发送心跳请求命令
-	  */
-	 @Override
-	 public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-		    Log.e(TAG,"userEventTriggered:"+evt.toString());
-	        if (evt instanceof IdleStateEvent && ((IdleStateEvent) evt).state().equals(IdleState.READER_IDLE))
-	        {
-	        	onReaderIdeled(ctx.channel());
-	        }
-	        super.userEventTriggered(ctx, evt); 
-	 }
-	 
- 
 	
-	 private void onReaderIdeled(Channel channel){
-		 
-		//如果心跳请求发出30秒内没收到响应，则关闭连接
-		Long lastTime = (Long) channel.attr(AttributeKey.valueOf(HEARTBEAT_PINGED)).get();
-    	if(lastTime != null && System.currentTimeMillis() - lastTime > HEART_TIME_OUT)
-    	{
-    		channel.close();
-    	}
-	 }
-    
 	@Override
-	public void channelActive( ChannelHandlerContext ctx) throws Exception {
+	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 
-		Log.i(TAG,"******************CIM连接服务器成功:"+ctx.channel().localAddress());
 		
-		ctx.channel().attr(AttributeKey.valueOf(HEARTBEAT_PINGED)).set(System.currentTimeMillis());
+		Log.i(TAG, "****************CIM连接服务器成功:"+ctx.channel().localAddress()+" NID:"+ctx.channel().id().asShortText());
+		
+		setLastHeartbeatTime(ctx.channel());
 		
 		Intent intent = new Intent();
-		intent.setAction(ACTION_CONNECTION_SUCCESSED);
+		intent.setAction(CIMConstant.IntentAction.ACTION_CONNECTION_SUCCESSED);
+		context.sendBroadcast(intent);
+
+	}
+	 
+	@Override
+	public void channelInactive(ChannelHandlerContext ctx)  {
+
+		Log.e(TAG, "****************CIM与服务器断开连接:"+ctx.channel().localAddress()+" NID:"+ctx.channel().id().asShortText());
+		 
+		Intent intent = new Intent();
+		intent.setAction(CIMConstant.IntentAction.ACTION_CONNECTION_CLOSED);
+		context.sendBroadcast(intent);
+
+	}
+
+	@Override
+	public void userEventTriggered(ChannelHandlerContext ctx, Object evt)  {
+		
+		/**
+		 * 用于解决，wifi情况下。偶而路由器与服务器断开连接时，客户端并没及时收到关闭事件
+		 * 导致这样的情况下当前连接无效也不会重连的问题
+		 * 
+		 */
+		if (evt instanceof IdleStateEvent && ((IdleStateEvent) evt).state().equals(IdleState.READER_IDLE))
+        {
+			Log.d(TAG, "****************CIM "+IdleState.READER_IDLE+":"+ctx.channel().localAddress()+" NID:"+ctx.channel().id().asShortText());
+
+			Long lastTime = getLastHeartbeatTime(ctx.channel());
+	    	if(lastTime != null && System.currentTimeMillis() - lastTime > HEARBEAT_TIME_OUT)
+	    	{
+	    		channel.close();
+				Log.e(TAG, "****************CIM心跳超时 ,即将重新连接......"+" NID:"+ctx.channel().id().asShortText());
+	    	}
+        }
+		 
+	}
+
+	@Override
+	public  void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+		
+		Log.e(TAG, "****************CIM连接出现未知异常:"+ctx.channel().localAddress()+" NID:"+ctx.channel().id().asShortText());
+		
+		if(cause!=null && cause.getMessage()!=null){
+			Log.e(TAG, cause.getMessage());
+		}
+		
+		Intent intent = new Intent();
+		intent.setAction(CIMConstant.IntentAction.ACTION_UNCAUGHT_EXCEPTION);
+		intent.putExtra(Exception.class.getName(), cause);
 		context.sendBroadcast(intent);
 	}
 
-		 
 	@Override
-	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-
-		    Log.e(TAG,"******************closeCIM与服务器断开连接:"+ctx.channel().localAddress());
-			if(channel.id().asLongText().equals(ctx.channel().id().asLongText()))
-			{
-			   Intent intent = new Intent();
-			   intent.setAction(ACTION_CONNECTION_CLOSED);
-			   context.sendBroadcast(intent);
-
-			}
-	}
-
- 
-	@Override
-	public  void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+	public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception{
+		if (msg instanceof Message) {
 
 			Intent intent = new Intent();
-			intent.setAction(ACTION_UNCAUGHT_EXCEPTION);
-			intent.putExtra("exception", cause.getCause());
+			intent.setAction(CIMConstant.IntentAction.ACTION_MESSAGE_RECEIVED);
+			intent.putExtra(Message.class.getName(), (Message) msg);
 			context.sendBroadcast(intent);
-	}
-
-	@Override
-	protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
-		if (msg instanceof Message) {
-				Intent intent = new Intent();
-				intent.setAction(ACTION_MESSAGE_RECEIVED);
-				intent.putExtra("message", (Message) msg);
-				context.sendBroadcast(intent);
-			 
+		 
 		}
 		if (msg instanceof ReplyBody) {
-				Intent intent = new Intent();
-				intent.setAction(ACTION_REPLY_RECEIVED);
-				intent.putExtra("replyBody", (ReplyBody) msg);
-				context.sendBroadcast(intent);
+			
+			Intent intent = new Intent();
+			intent.setAction(CIMConstant.IntentAction.ACTION_REPLY_RECEIVED);
+			intent.putExtra(ReplyBody.class.getName(), (ReplyBody) msg);
+			context.sendBroadcast(intent);
 		}
 		
 		//收到服务端发来的心跳请求命令，则马上回应服务器
-		if (msg.equals(CIMConstant.CMD_HEARTBEAT_REQUEST)) {
-			ctx.writeAndFlush(CIMConstant.CMD_HEARTBEAT_RESPONSE);
-			ctx.channel().attr(AttributeKey.valueOf(HEARTBEAT_PINGED)).set(System.currentTimeMillis());
-	    }
+		if (msg instanceof HeartbeatRequest) {
+			ctx.writeAndFlush(HeartbeatResponse.getInstance());
+			setLastHeartbeatTime(ctx.channel());
+		}
+				
+	}
+
+	private void setLastHeartbeatTime(Channel channel)
+	{
+		channel.attr(AttributeKey.valueOf(KEY_LAST_HEART_TIME)).set(System.currentTimeMillis());
 	}
 	
-	public static boolean netWorkAvailable(Context context) {
+	private Long  getLastHeartbeatTime(Channel channel)
+	{
+		return (Long) channel.attr(AttributeKey.valueOf(KEY_LAST_HEART_TIME)).get();
+	}
+	
+	public static boolean isNetworkConnected(Context context) {
 		try {
 			ConnectivityManager nw = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 			NetworkInfo networkInfo = nw.getActiveNetworkInfo();
@@ -329,7 +328,5 @@ class CIMConnectorManager  extends SimpleChannelInboundHandler<Object> {
 
 		return false;
 	}
-
-	 
-	
+ 
 }

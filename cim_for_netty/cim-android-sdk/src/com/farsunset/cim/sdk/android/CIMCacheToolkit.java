@@ -1,11 +1,27 @@
 /**
- * probject:cim-android-sdk
- * @version 2.1.0
- * 
- * @author 3979434@qq.com
- */ 
+ * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ ***************************************************************************************
+ *                                                                                     *
+ *                        Website : http://www.farsunset.com                           *
+ *                                                                                     *
+ ***************************************************************************************
+ */
 package com.farsunset.cim.sdk.android;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,14 +31,16 @@ class CIMCacheToolkit extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME  = "CIM_CONFIG_INFO.db";
 	private static final int DATABASE_VERSION  = 20160406;
+	private static final String TABLE_NAME  = "T_CIM_CONFIG";
+	private static  CIMCacheToolkit toolkit;
+	
+	private static final String TABLE_SQL  = "CREATE TABLE IF NOT EXISTS "+TABLE_NAME+" (KEY VARCHAR(64) PRIMARY KEY,VALUE TEXT)";
 
-	private static final String TABLE_SQL  = "CREATE TABLE IF NOT EXISTS T_CIM_CONFIG (KEY VARCHAR(64) PRIMARY KEY,VALUE TEXT)";
+	private static final String DELETE_SQL  = "DELETE FROM "+TABLE_NAME+" WHERE KEY = ?";
 
-	private static final String DELETE_SQL  = "DELETE FROM T_CIM_CONFIG WHERE KEY = ?";
+	private static final String QUERY_SQL  = "SELECT VALUE FROM "+TABLE_NAME+" WHERE KEY = ?";
 
-	private static final String SAVE_SQL  = "INSERT INTO T_CIM_CONFIG (KEY,VALUE) VALUES(?,?)";
-
-	private static final String QUERY_SQL  = "SELECT VALUE FROM T_CIM_CONFIG WHERE KEY = ?";
+	private SQLiteDatabase mSQLiteDatabase;
 
 	public static final String CIM_CONFIG_INFO  = "CIM_CONFIG_INFO";
 	
@@ -38,13 +56,14 @@ class CIMCacheToolkit extends SQLiteOpenHelper {
 	
 	public static final String KEY_CIM_CONNECTION_STATE = "KEY_CIM_CONNECTION_STATE";
 
-	static  CIMCacheToolkit toolkit;
-	private SQLiteDatabase mSQLiteDatabase;
+	
 	public synchronized static CIMCacheToolkit getInstance(Context context){
-         if (toolkit==null){
-			 toolkit = new CIMCacheToolkit(context);
-		 }
-		return toolkit;
+		
+        if(toolkit==null){
+		    toolkit = new CIMCacheToolkit(context);
+	    }
+      
+	    return toolkit;
 	}
 	
 	 
@@ -57,7 +76,6 @@ class CIMCacheToolkit extends SQLiteOpenHelper {
 	}
 
 
-
 	public synchronized void remove(String key)
 	{
 		getSQLiteDatabase().execSQL(DELETE_SQL,new String[]{key});
@@ -66,8 +84,15 @@ class CIMCacheToolkit extends SQLiteOpenHelper {
 
 	public synchronized void putString(String key,String value)
 	{
-		getSQLiteDatabase().execSQL(DELETE_SQL,new String[]{key});
-		getSQLiteDatabase().execSQL(SAVE_SQL, new String[]{key, value});
+		
+	    ContentValues values = new ContentValues();
+	    values.put("VALUE", value);
+		int result = getSQLiteDatabase().updateWithOnConflict(TABLE_NAME, values, "KEY=?",new String[]{key},SQLiteDatabase.CONFLICT_FAIL);
+		if(result<=0){
+			
+			values.put("KEY", key);
+			getSQLiteDatabase().insert(TABLE_NAME, null, values);
+		}
 
 	}
 	
@@ -75,14 +100,15 @@ class CIMCacheToolkit extends SQLiteOpenHelper {
 	{
 		String value = null;
 		Cursor cursor = getSQLiteDatabase().rawQuery(QUERY_SQL, new String[]{key});
-		if (cursor!=null&&cursor.moveToFirst())
+		if (cursor!=null)
 		{
-			value = cursor.getString(0);
+			if(cursor.moveToFirst()){
+				value = cursor.getString(0);
+			}
+			
 			cursor.close();
 		}
-
-		
-		
+		 
 		return value;
 	}
 	
@@ -120,6 +146,8 @@ class CIMCacheToolkit extends SQLiteOpenHelper {
 			try{toolkit.mSQLiteDatabase.close();}catch(Exception e){}
 			try{toolkit.close();}catch(Exception e){}
 		}
+		
+		toolkit = null;
 		
 	}
 	

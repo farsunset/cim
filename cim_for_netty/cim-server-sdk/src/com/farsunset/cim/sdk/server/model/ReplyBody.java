@@ -1,18 +1,38 @@
 /**
- * probject:cim-server-sdk
- * @version 2.0
- * 
- * @author 3979434@qq.com
- */  
+ * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ ***************************************************************************************
+ *                                                                                     *
+ *                        Website : http://www.farsunset.com                           *
+ *                                                                                     *
+ ***************************************************************************************
+ */
 package com.farsunset.cim.sdk.server.model;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import com.farsunset.cim.sdk.server.constant.CIMConstant;
+import com.farsunset.cim.sdk.server.model.proto.ReplyBodyProto;
 /**
  * 请求应答对象
  *
  */
-public class ReplyBody implements Serializable {
+public class ReplyBody implements Serializable ,Protobufable{
  
 	private static final long serialVersionUID = 1L;
 
@@ -35,14 +55,13 @@ public class ReplyBody implements Serializable {
 	/**
 	 * 返回数据集合
 	 */
-	private HashMap<String, String> data;
+	private HashMap<String, String> data = new HashMap<String, String>();
 
 	
 	private long timestamp;
 	
 	public ReplyBody()
 	{
-		data = new HashMap<String, String>();
 		timestamp = System.currentTimeMillis();
 	}
 	public long getTimestamp() {
@@ -64,9 +83,15 @@ public class ReplyBody implements Serializable {
 	}
 
 	public void put(String k, String v) {
-		data.put(k, v);
+		if(v!=null && k!=null){
+			data.put(k, v);	
+		}
 	}
 
+	public void putAll(Map<String, String> map) {
+		data.putAll(map);
+	}
+	
 	public String get(String k) {
 		return data.get(k);
 	}
@@ -83,8 +108,8 @@ public class ReplyBody implements Serializable {
 		this.message = message;
 	}
 
-	public HashMap<String, String> getData() {
-		return data;
+	public Set<String> getKeySet()   {
+		return data.keySet();
 	}
 
 	public String getCode() {
@@ -95,30 +120,46 @@ public class ReplyBody implements Serializable {
 		this.code = code;
 	}
 
-	
+	@Override
 	public String toString()
 	{
-		
 		StringBuffer buffer = new StringBuffer();
-		buffer.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		buffer.append("<reply>");
-		buffer.append("<key>").append(this.getKey()).append("</key>");
-		buffer.append("<timestamp>").append(timestamp).append("</timestamp>");
-		buffer.append("<code>").append(code).append("</code>");
-		buffer.append("<data>");
-		for(String key:this.getData().keySet())
-		{
-			buffer.append("<"+key+">").append(this.get(key)).append("</"+key+">");
+		buffer.append("#ReplyBody#").append("\n");
+		buffer.append("key:").append(this.getKey()).append("\n");
+		buffer.append("timestamp:").append(timestamp).append("\n");
+		buffer.append("code:").append(code).append("\n");
+		
+		if(!data.isEmpty()){
+			buffer.append("data{").append("\n");
+			for(String key:getKeySet())
+			{
+				buffer.append(key).append(":").append(this.get(key)).append("\n");
+			}
+			buffer.append("}");
 		}
-		buffer.append("</data>");
-		buffer.append("</reply>");
+		
 		return buffer.toString();
 	}
-
-	
-	public String toXmlString()
-	{
+	@Override
+	public byte[] getByteArray() {
+		ReplyBodyProto.Model.Builder builder = ReplyBodyProto.Model.newBuilder();
+		builder.setCode(code);
+		if(message!=null){
+			builder.setMessage(message);
+		}
+		if(!data.isEmpty()){
+			builder.putAllData(data);
+		}
+		builder.setKey(key);
+		builder.setTimestamp(timestamp);
 		
-		return toString();
+		return builder.build().toByteArray();
 	}
+	 
+	@Override
+	public byte getType() {
+		// TODO Auto-generated method stub
+		return CIMConstant.ProtobufType.REPLYBODY;
+	}
+ 
 }

@@ -2,11 +2,13 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/cim-server/WebRoot/WEB-INF/lib/netty-codec-4.1.0.CR7.jar"/>
-	<classpathentry kind="lib" path="/cim-server/WebRoot/WEB-INF/lib/netty-handler-4.1.0.CR7.jar"/>
-	<classpathentry kind="lib" path="/cim-server/WebRoot/WEB-INF/lib/netty-buffer-4.1.0.CR7.jar"/>
-	<classpathentry kind="lib" path="/cim-server/WebRoot/WEB-INF/lib/netty-transport-4.1.0.CR7.jar"/>
-	<classpathentry kind="lib" path="/cim-server/WebRoot/WEB-INF/lib/netty-common-4.1.0.CR7.jar"/>
-	<classpathentry kind="lib" path="C:/dev/android-sdk-windows/platforms/android-22/android.jar"/>
+	<classpathentry kind="lib" path="libs/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files (x86)/dev/android-sdk-windos/platforms/android-21/android.jar"/>
+	<classpathentry kind="lib" path="libs/protobuf-java-3.2.0.jar"/>
+	<classpathentry kind="lib" path="libs/netty-buffer-4.1.9.Final.jar"/>
+	<classpathentry kind="lib" path="libs/netty-codec-4.1.9.Final.jar"/>
+	<classpathentry kind="lib" path="libs/netty-transport-4.1.9.Final.jar"/>
+	<classpathentry kind="lib" path="libs/netty-common-4.1.9.Final.jar"/>
+	<classpathentry kind="lib" path="libs/netty-handler-4.1.9.Final.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

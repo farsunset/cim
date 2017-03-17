@@ -1,16 +1,29 @@
 /**
- * probject:cim
- * @version 2.0
- * 
- * @author 3979434@qq.com
- */  
+ * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ ***************************************************************************************
+ *                                                                                     *
+ *                        Website : http://www.farsunset.com                           *
+ *                                                                                     *
+ ***************************************************************************************
+ */
 package com.farsunset.cim.session;
 
 import java.util.List;
 import com.farsunset.cim.sdk.server.session.CIMSession;
 import com.farsunset.cim.sdk.server.session.SessionManager;
-import com.farsunset.cim.sdk.server.launcher.CIMNioSocketAcceptor;
-
 
 /** 
  * 集群 session管理实现示例， 各位可以自行实现 AbstractSessionManager接口来实现自己的 session管理
@@ -19,16 +32,6 @@ import com.farsunset.cim.sdk.server.launcher.CIMNioSocketAcceptor;
 public class ClusterSessionManager implements SessionManager{
 
     
- 
-   
-    public void addSession(String account,CIMSession session) {
-         
-        
-        /**
-         * 下面 将session 存入数据库
-         */
-        
-    }
 
      
     public CIMSession get(String account) {
@@ -43,8 +46,6 @@ public class ClusterSessionManager implements SessionManager{
 
     @Override
     public List<CIMSession> queryAll() {
-    	/*//这里查询数据库 
-   	 return database.getSessions();*/
    	return null;
     }
  
@@ -52,27 +53,16 @@ public class ClusterSessionManager implements SessionManager{
     @Override
     public void  remove(String account) {
         
-    	//database.removeSession(account);*/
     	
     }
-
-
-	@Override
-	public void setState(String account, int state) {
-		// TODO Auto-generated method stub
-		
-	}
-
 
 	@Override
 	public void update(CIMSession session) {
 		
 	}
 
-
 	@Override
-	public void add(String account, CIMSession session) {
-		// TODO Auto-generated method stub
+	public void add(CIMSession arg0) {
 		
 	}
 

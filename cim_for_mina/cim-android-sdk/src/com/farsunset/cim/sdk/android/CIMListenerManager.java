@@ -1,22 +1,33 @@
 /**
- * probject:cim-android-sdk
- * @version 2.1.0
- * 
- * @author 3979434@qq.com
- */ 
+ * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ ***************************************************************************************
+ *                                                                                     *
+ *                        Website : http://www.farsunset.com                           *
+ *                                                                                     *
+ ***************************************************************************************
+ */
 package com.farsunset.cim.sdk.android;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import com.farsunset.cim.sdk.android.constant.CIMConstant;
 import com.farsunset.cim.sdk.android.model.Message;
 import com.farsunset.cim.sdk.android.model.ReplyBody;
+import com.farsunset.cim.sdk.android.model.SentBody;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
 import android.net.NetworkInfo;
 import android.util.Log;
  
@@ -27,15 +38,13 @@ import android.util.Log;
 public class CIMListenerManager  {
 
 	private static ArrayList<CIMEventListener> cimListeners = new ArrayList<CIMEventListener>();
+	private static CIMMessageReceiveComparator comparator = new CIMMessageReceiveComparator();
 	
-	
-
-	public static void registerMessageListener(CIMEventListener listener,Context mcontext) {
+	public static void registerMessageListener(CIMEventListener listener) {
 
 		if (!cimListeners.contains(listener)) {
 			cimListeners.add(listener);
-			// 按照接收顺序倒序
-			Collections.sort(cimListeners, new CIMMessageReceiveComparator(mcontext));
+			Collections.sort(cimListeners,comparator);
 		}
 	}
 
@@ -73,6 +82,12 @@ public class CIMListenerManager  {
 		}
 	}
 	
+	public static void notifyOnConnectionFailed() {
+		for (CIMEventListener listener : cimListeners) {
+			listener.onConnectionFailed();
+		}
+	}
+	
 	
 	public static void notifyOnReplyReceived(ReplyBody body) {
 		for (CIMEventListener listener : cimListeners) {
@@ -80,11 +95,12 @@ public class CIMListenerManager  {
 		}
 	}
 	
-	public static void notifyOnConnectionFailed(Exception e) {
+	public static void notifyOnSentSucceed(SentBody body) {
 		for (CIMEventListener listener : cimListeners) {
-			listener.onConnectionFailed(e);
+			listener.onSentSuccessed(body);
 		}
 	}
+
 	
 	public static void destory() {
 		cimListeners.clear();
@@ -99,47 +115,17 @@ public class CIMListenerManager  {
 	/**
 	 * 消息接收activity的接收顺序排序，CIM_RECEIVE_ORDER倒序
 	 */
-   static class CIMMessageReceiveComparator  implements Comparator<CIMEventListener>{
+   private static class CIMMessageReceiveComparator  implements Comparator<CIMEventListener>{
 
-		Context mcontext;
-		public CIMMessageReceiveComparator(Context ctx)
-		{
-			mcontext = ctx;
-		}
-		
 		@Override
 		public int compare(CIMEventListener arg1, CIMEventListener arg2) {
 			 
-			Integer order1  = CIMConstant.CIM_DEFAULT_MESSAGE_ORDER;
-			Integer order2  = CIMConstant.CIM_DEFAULT_MESSAGE_ORDER;
-			ActivityInfo info;
-			if (arg1 instanceof Activity  ) {
-				
-				try {
-					 info = mcontext.getPackageManager() .getActivityInfo(((Activity)(arg1)).getComponentName(), PackageManager.GET_META_DATA);
-					 if(info.metaData!=null)
-					 {
-						 order1 = info.metaData.getInt("CIM_RECEIVE_ORDER");
-					 }
-					 
-			     } catch (Exception e) {}
-			}
-			
-			if (arg1 instanceof Activity ) {
-				try {
-					 info = mcontext.getPackageManager() .getActivityInfo(((Activity)(arg2)).getComponentName(), PackageManager.GET_META_DATA);
-					 if(info.metaData!=null)
-					 {
-						 order2 = info.metaData.getInt("CIM_RECEIVE_ORDER");
-					 }
-					 
-			     } catch (Exception e) {}
-			}
-			
-			return order2.compareTo(order1);
+			int order1 = arg1.getEventDispatchOrder();
+			int order2 = arg2.getEventDispatchOrder();
+			return order2 - order1 ;
 		}
-		 
 
 	}
+
 
 }

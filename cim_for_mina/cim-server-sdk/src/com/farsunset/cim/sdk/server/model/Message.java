@@ -1,16 +1,34 @@
 /**
- * probject:cim-server-sdk
- * @version 2.1.0
- * 
- * @author 3979434@qq.com
- */ 
+ * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ ***************************************************************************************
+ *                                                                                     *
+ *                        Website : http://www.farsunset.com                           *
+ *                                                                                     *
+ ***************************************************************************************
+ */
 package com.farsunset.cim.sdk.server.model;
 
 import java.io.Serializable;
+
+import com.farsunset.cim.sdk.server.constant.CIMConstant;
+import com.farsunset.cim.sdk.server.model.proto.MessageProto;
 /**
  * 消息对象
  */
-public class Message implements Serializable {
+public class Message implements Serializable,Protobufable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -24,13 +42,13 @@ public class Message implements Serializable {
 	/**
 	 * 消息类型，用户自定义消息类别
 	 */
-	private String type;
+	private String action;
 	/**
 	 * 消息标题
 	 */
 	private String title;
 	/**
-	 * 消息类容，于type 组合为任何类型消息，content 根据 format 可表示为 text,json ,xml数据格式
+	 * 消息类容，于action 组合为任何类型消息，content 根据 format 可表示为 text,json ,xml数据格式
 	 */
 	private String content;
 
@@ -44,20 +62,15 @@ public class Message implements Serializable {
 	private String receiver;
 
 	/**
-	 * 文件 url
-	 */
-	private String file;
-    /**
-     * 文件类型
-     */
-	private String fileType;
-
-	/**
 	 * content 内容格式
 	 */
-	private String format = "txt";
+	private String format;
 
-	
+	/**
+	 * 附加内容 内容
+	 */
+	private String extra;
+
 	private long timestamp;
 	
 	
@@ -73,14 +86,14 @@ public class Message implements Serializable {
 		this.timestamp = timestamp;
 	}
 
-	public String getType() {
-		return type;
-	}
+	 
 
-	public void setType(String type) {
-		this.type = type;
+	public String getAction() {
+		return action;
 	}
-
+	public void setAction(String action) {
+		this.action = action;
+	}
 	public String getTitle() {
 		return title;
 	}
@@ -113,22 +126,7 @@ public class Message implements Serializable {
 		this.receiver = receiver;
 	}
 
-	public String getFile() {
-		return file;
-	}
-
-	public void setFile(String file) {
-		this.file = file;
-	}
-
-	public String getFileType() {
-		return fileType;
-	}
-
-	public void setFileType(String fileType) {
-		this.fileType = fileType;
-	}
-
+	 
 	public String getFormat() {
 		return format;
 	}
@@ -137,56 +135,16 @@ public class Message implements Serializable {
 		this.format = format;
 	}
 	
-	public String toString() {
-
-		StringBuffer buffer = new StringBuffer();
-		buffer.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		buffer.append("<message>");
-		buffer.append("<mid>").append(mid).append("</mid>");
-
-		if (isNotEmpty(type)) {
-			buffer.append("<type>").append(type).append("</type>");
-		}
-
-		if (isNotEmpty(title)) {
-			buffer.append("<title>").append(title).append("</title>");
-		}
-		if (isNotEmpty(content)) {
-			buffer.append("<content><![CDATA[").append(content).append("]]></content>");
-		}
-
-		if (isNotEmpty(file)) {
-			buffer.append("<file>").append(file).append("</file>");
-		}
-
-		if (isNotEmpty(fileType)) {
-			buffer.append("<fileType>").append(fileType).append("</fileType>");
-		}
-
-		if (isNotEmpty(sender)) {
-			buffer.append("<sender>").append(sender).append("</sender>");
-		}
-
-		if (isNotEmpty(receiver)) {
-			buffer.append("<receiver>").append(receiver).append("</receiver>");
-		}
-
-		if (isNotEmpty(format)) {
-			buffer.append("<format>").append(format).append("</format>");
-		}
-
-		if (timestamp > 0) {
-			buffer.append("<timestamp>").append(timestamp).append("</timestamp>");
-		}
-
-		buffer.append("</message>");
-		return buffer.toString();
+	
+	
+	public String getExtra() {
+		return extra;
 	}
-
-	public String toXmlString() {
-
-		return toString();
+	public void setExtra(String extra) {
+		this.extra = extra;
 	}
+	
+	 
 
 	public String getMid() {
 		return mid;
@@ -195,9 +153,56 @@ public class Message implements Serializable {
 	public void setMid(String mid) {
 		this.mid = mid;
 	}
+	
+	@Override
+	public String toString() {
+		
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("#Message#").append("\n");
+		buffer.append("mid:").append(mid).append("\n");
+		buffer.append("action:").append(action).append("\n");
+		buffer.append("title:").append(title).append("\n");
+		buffer.append("content:").append(content).append("\n");
+		buffer.append("extra:").append(extra).append("\n");
+		buffer.append("sender:").append(sender).append("\n");
+		buffer.append("receiver:").append(receiver).append("\n");
+		buffer.append("format:").append(format).append("\n");
+		buffer.append("timestamp:").append(timestamp);
+		return buffer.toString();
+	}
 
 	public boolean isNotEmpty(String txt) {
-		return txt != null && txt.trim().length()>0;
+		return txt != null && txt.trim().length()!=0;
+	}
+	@Override
+	public byte[] getByteArray() {
+		MessageProto.Model.Builder builder = MessageProto.Model.newBuilder();
+		builder.setMid(mid);
+		builder.setAction(action);
+		builder.setSender(sender);
+		builder.setReceiver(receiver);
+		builder.setTimestamp(timestamp);
+
+		/**
+		 * 下面字段可能为空
+		 */
+		if(content!=null){
+			builder.setContent(content);	
+		}
+		if(title!=null){
+			builder.setTitle(title);	
+		}
+		if(extra!=null){
+			builder.setExtra(extra);	
+		}
+		if(format!=null){
+			builder.setFormat(format);	
+		}
+		return builder.build().toByteArray();
+	}
+	@Override
+	public byte getType() {
+		return CIMConstant.ProtobufType.MESSAGE;
 	}
 
 	

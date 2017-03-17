@@ -1,30 +1,48 @@
 /**
- * probject:cim-android-sdk
- * @version 2.1.0
- * 
- * @author 3979434@qq.com
- */ 
+ * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ ***************************************************************************************
+ *                                                                                     *
+ *                        Website : http://www.farsunset.com                           *
+ *                                                                                     *
+ ***************************************************************************************
+ */
 package com.farsunset.cim.sdk.android.model;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import com.farsunset.cim.sdk.android.constant.CIMConstant;
+import com.farsunset.cim.sdk.android.model.proto.SentBodyProto;
 /**
  * java |android 客户端请求结构
  *
  */
-public class SentBody implements Serializable {
+public class SentBody implements Serializable,Protobufable {
 
 	private static final long serialVersionUID = 1L;
 
 	private String key;
 
-	private HashMap<String, String> data;
+	private HashMap<String, String>  data = new HashMap<String, String>();;
 
 	private long timestamp;
 
 	public SentBody() {
-
-		data = new HashMap<String, String>();
 		timestamp = System.currentTimeMillis();
 	}
 
@@ -49,36 +67,54 @@ public class SentBody implements Serializable {
 	}
 
 	public void put(String k, String v) {
-		data.put(k, v);
+		if(v!=null && k!=null){
+			data.put(k, v);	
+		}
+	}
+	public void putAll(Map<String, String> map) {
+		data.putAll(map);
 	}
 
+	public Set<String> getKeySet()   {
+		return data.keySet();
+	}
+
+	
 	public void remove(String k) {
 		data.remove(k);
-	}
-
-	public HashMap<String, String> getData() {
-		return data;
 	}
 
 	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
-		buffer.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		buffer.append("<sent>");
-		buffer.append("<key>").append(key).append("</key>");
-		buffer.append("<timestamp>").append(timestamp).append("</timestamp>");
-		buffer.append("<data>");
-		for (String key : data.keySet()) {
-			buffer.append("<" + key + ">").append(data.get(key)).append(
-					"</" + key + ">");
+		buffer.append("#SentBody#").append("\n");;
+		buffer.append("key:").append(key).append("\n");
+		buffer.append("timestamp:").append(timestamp).append("\n");
+		if(!data.isEmpty()){
+			buffer.append("data{").append("\n");
+			for(String key:getKeySet())
+			{
+				buffer.append(key).append(":").append(this.get(key)).append("\n");
+			}
+			buffer.append("}");
 		}
-		buffer.append("</data>");
-		buffer.append("</sent>");
 		return buffer.toString();
 	}
-
-	public String toXmlString() {
-
-		return toString();
+	
+	@Override
+	public byte[] getByteArray() {
+		SentBodyProto.Model.Builder builder = SentBodyProto.Model.newBuilder();
+		builder.setKey(key);
+		builder.setTimestamp(timestamp);
+		if(!data.isEmpty()){
+			builder.putAllData(data);
+		}
+		return builder.build().toByteArray();
 	}
+ 
+	@Override
+	public byte getType() {
+		return CIMConstant.ProtobufType.SENTBODY;
+	}
+ 
 }

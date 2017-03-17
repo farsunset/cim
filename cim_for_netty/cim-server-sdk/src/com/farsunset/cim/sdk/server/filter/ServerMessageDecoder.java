@@ -1,110 +1,115 @@
 /**
- * probject:cim-server-sdk
- * @version 2.0
- * 
- * @author 3979434@qq.com
- */  
+ * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ ***************************************************************************************
+ *                                                                                     *
+ *                        Website : http://www.farsunset.com                           *
+ *                                                                                     *
+ ***************************************************************************************
+ */
 package com.farsunset.cim.sdk.server.filter;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufUtil;
-import io.netty.buffer.PooledByteBufAllocator;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.serialization.ClassResolver;
-import io.netty.handler.codec.serialization.ObjectDecoder;
-import java.io.ByteArrayInputStream;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
+import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import com.farsunset.cim.sdk.server.constant.CIMConstant;
+import com.farsunset.cim.sdk.server.model.HeartbeatResponse;
 import com.farsunset.cim.sdk.server.model.SentBody;
-/**
- *  服务端接收消息解码，可在此解密消息
- */
-public class ServerMessageDecoder extends ObjectDecoder  {
-	protected final Logger logger = Logger.getLogger(ServerMessageDecoder.class.getSimpleName());
-	public ServerMessageDecoder(ClassResolver classResolver) {
-		super(classResolver);
-	}
+import com.farsunset.cim.sdk.server.model.proto.SentBodyProto;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.ByteToMessageDecoder;
+/**
+ *  服务端接收消息解码
+ */
+public class ServerMessageDecoder extends ByteToMessageDecoder {
+	
+	protected final Logger logger = Logger.getLogger(ServerMessageDecoder.class);
 	@Override
-	public Object decode(ChannelHandlerContext arg0, ByteBuf  buffer) throws Exception   {
-		
-		final ByteBuf  tBuffer = PooledByteBufAllocator.DEFAULT.buffer(320);
-		
+	protected void decode(ChannelHandlerContext arg0, ByteBuf buffer, List<Object> queue) throws Exception {
+		/**
+		 * 消息头3位
+		 */
+		if (buffer.readableBytes() < CIMConstant.DATA_HEADER_LENGTH) {
+			return;
+		}
+
 		buffer.markReaderIndex();
-		boolean complete = false;  
-		
-		while(buffer.isReadable()){
-			byte b = buffer.readByte();
-			if (b == CIMConstant.MESSAGE_SEPARATE || b == CIMConstant.FLEX_DATA_SEPARATE) {
-				complete = true;
-				break;
-			} else {
-				tBuffer.writeByte(b);
-			}
-		}
-		
-		if(complete){
-			
-			String message = new String(new String(ByteBufUtil.getBytes(tBuffer),CIMConstant.UTF8));
-			
-			logger.info(message);
-			
-			
-			Object body = parserMessageToSentBody(message);
-			return body;
-			
-		}else{
-		 
+
+		buffer.markReaderIndex();
+
+		byte conetnType = buffer.readByte();
+
+		byte lv = buffer.readByte();// int 低位
+		byte hv = buffer.readByte();// int 高位
+
+		int conetnLength = getContentLength(lv, hv);
+
+		// 如果消息体没有接收完整，则重置读取，等待下一次重新读取
+		if (conetnLength > buffer.readableBytes()) {
 			buffer.resetReaderIndex();
-			return null;
+			return;
 		}
-		 
+
+		byte[] dataBytes = new byte[conetnLength];
+		buffer.readBytes(dataBytes);
+	    
+	    Object message = mappingMessageObject(dataBytes,conetnType);
+	    if(message != null){
+	    	queue.add(message);
+	    }
 	}
 	
-	private Object  parserMessageToSentBody(String message) throws Exception
+	public Object mappingMessageObject(byte[] data,byte type) throws Exception
 	{
 		
-		SentBody body = new SentBody();
-		/*
-		 * 如果是心跳响应，则让HeartbeatHandler去处理
-		 */
-		if(message.equalsIgnoreCase(CIMConstant.CMD_HEARTBEAT_RESPONSE)){
-		 
-			body.setKey(CIMConstant.RequestKey.CLIENT_HEARTBEAT);
+		if(CIMConstant.ProtobufType.C_H_RS == type)
+		{
+			HeartbeatResponse response = HeartbeatResponse.getInstance();
+			logger.info(response.toString());
+			SentBody body = new SentBody();
+		    body.setKey(CIMConstant.CLIENT_HEARTBEAT);
+		    body.setTimestamp(System.currentTimeMillis());
 			return body;
 		}
 		
-		/*
-		 * flex 客户端安全策略请求，需要返回特定报文
-		 */
-		if(CIMConstant.FLEX_POLICY_REQUEST.equalsIgnoreCase(message)){
-		
-			body.setKey(CIMConstant.RequestKey.CLIENT_FLASH_POLICY);
-			return body;
+		if(CIMConstant.ProtobufType.SENTBODY == type)
+		{
+			SentBodyProto.Model bodyProto = SentBodyProto.Model.parseFrom(data);
+	        SentBody body = new SentBody();
+	        body.setKey(bodyProto.getKey());
+	        body.setTimestamp(bodyProto.getTimestamp());
+	        body.putAll(bodyProto.getDataMap());
+	        logger.info(body.toString());
+	        
+	        return body;
 		}
-		
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();   
-        DocumentBuilder builder = factory.newDocumentBuilder();  
-        Document doc = builder.parse(new ByteArrayInputStream(message.toString().getBytes(CIMConstant.UTF8)));
-        body.setKey(doc.getElementsByTagName("key").item(0).getTextContent());
-        NodeList dataNodeList = doc.getElementsByTagName("data");
-        if(dataNodeList!=null && dataNodeList.getLength()>0){
-         
-	        NodeList items = dataNodeList.item(0).getChildNodes();  
-	        for (int i = 0; i < items.getLength(); i++) {  
-	            Node node = items.item(i);  
-	            body.getData().put(node.getNodeName(), node.getTextContent());
-	        }
-        }
-        
-        return body;
+        return null;
 	}
 
+	/**
+	 * 解析消息体长度
+	 * @param type
+	 * @param length
+	 * @return
+	 */
+	private int getContentLength(byte lv,byte hv){
+		 int l =  (lv & 0xff);
+		 int h =  (hv & 0xff);
+		 return (l| (h <<= 8));
+	}
 }

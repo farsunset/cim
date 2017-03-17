@@ -1,9 +1,24 @@
 /**
- * probject:cim-server-sdk
- * @version 2.0
- * 
- * @author 3979434@qq.com
- */   
+ * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ ***************************************************************************************
+ *                                                                                     *
+ *                        Website : http://www.farsunset.com                           *
+ *                                                                                     *
+ ***************************************************************************************
+ */
 package com.farsunset.cim.sdk.server.session;
 
 import java.io.Serializable;
@@ -11,6 +26,7 @@ import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
 
+import org.apache.mina.core.future.WriteFuture;
 import org.apache.mina.core.session.IoSession;
 
 import com.farsunset.cim.sdk.server.constant.CIMConstant;
@@ -40,7 +56,7 @@ public class CIMSession  implements Serializable{
 	private transient IoSession session;
 	
 	private String gid;//session全局ID
-	private long nid;//session在本台服务器上的ID
+	private Long nid;//session在本台服务器上的ID
 	private String deviceId;//客户端ID  (设备号码+应用包名),ios为devicetoken
 	private String host;//session绑定的服务器IP
 	private String account;//session绑定的账号
@@ -271,14 +287,16 @@ public class CIMSession  implements Serializable{
 	public  boolean write(Object msg) {
 		if(session!=null)
 		{
-			return session.write(msg).isWritten();
+			WriteFuture future = session.write(msg); 
+		    future.awaitUninterruptibly(10 * 1000); 
+			return future.isWritten();
 		}
 		
 		return false;
 	}
 
 	public boolean isConnected() {
-		if(session != null && isLocalhost())
+		if(session != null)
 		{
 			return session.isConnected();
 		}
@@ -324,16 +342,18 @@ public class CIMSession  implements Serializable{
 	public String getPackageName() {
 		return packageName;
 	}
+	
+	
+	public int hashCode(){
+		
+		return (deviceId + nid + host).hashCode();
+	}
+	
 	public boolean equals(Object o) {
         
-		if (o instanceof CIMSession) {
-			
-			CIMSession t = (CIMSession) o;
-			if(t.deviceId!=null && deviceId!=null)
-			{
-				return t.deviceId.equals(deviceId) && t.nid == nid  && t.host.equals(host);
-			} 
-		}  
+		if(o instanceof CIMSession){
+			return hashCode() == o.hashCode();
+		}
 		return false;
 	}
 

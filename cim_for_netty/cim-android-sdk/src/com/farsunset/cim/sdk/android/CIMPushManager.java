@@ -1,9 +1,24 @@
 /**
- * probject:cim-android-sdk
- * @version 2.1.0
- * 
- * @author 3979434@qq.com
- */ 
+ * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ ***************************************************************************************
+ *                                                                                     *
+ *                        Website : http://www.farsunset.com                           *
+ *                                                                                     *
+ ***************************************************************************************
+ */
 package com.farsunset.cim.sdk.android;
 import java.util.UUID;
 
@@ -33,27 +48,20 @@ public class CIMPushManager  {
 	
 	static String  KEY_SEND_BODY ="KEY_SEND_BODY";
 	
-	static String  KEY_CIM_CONNECTION_STATUS ="KEY_CIM_CONNECTION_STATUS";
 	
-	//被销毁的destroy()
-	public static final int STATE_DESTROYED = 0x0000DE;
-	//被销停止的 stop()
-	public static final int STATE_STOPED = 0x0000EE;
-	
-	public static final int STATE_NORMAL = 0x000000;
 	/**
 	 * 初始化,连接服务端，在程序启动页或者 在Application里调用
 	 * @param context
 	 * @param ip
 	 * @param port
 	 */
-	public static  void connect(Context context,String host,int port){
+     public static  void connect(Context context,String host,int port){
 		
-		connect(context,host,port,false);
+		connect(context,host,port,false,0);
 		
-	}
+	 }
 	
-private static  void connect(Context context,String ip,int port,boolean autoBind){
+     private static  void connect(Context context,String ip,int port,boolean autoBind,long delayedTime){
 		
 		CIMCacheToolkit.getInstance(context).putBoolean(CIMCacheToolkit.KEY_CIM_DESTROYED, false);
 		CIMCacheToolkit.getInstance(context).putBoolean(CIMCacheToolkit.KEY_MANUAL_STOP, false);
@@ -69,12 +77,13 @@ private static  void connect(Context context,String ip,int port,boolean autoBind
 		Intent serviceIntent  = new Intent(context, CIMPushService.class);
 		serviceIntent.putExtra(CIMCacheToolkit.KEY_CIM_SERVIER_HOST, ip);
 		serviceIntent.putExtra(CIMCacheToolkit.KEY_CIM_SERVIER_PORT, port);
+		serviceIntent.putExtra(CIMPushService.KEY_DELAYED_TIME, delayedTime);
 		serviceIntent.setAction(ACTION_CREATE_CIM_CONNECTION);
 		context.startService(serviceIntent);
 		
-	}
+	 }
 
-	protected static  void connect(Context context){
+	 protected static  void connect(Context context,long delayedTime){
 		
 		boolean  isManualStop  = CIMCacheToolkit.getInstance(context).getBoolean(CIMCacheToolkit.KEY_MANUAL_STOP);
 		boolean  isManualDestory  = CIMCacheToolkit.getInstance(context).getBoolean(CIMCacheToolkit.KEY_CIM_DESTROYED);
@@ -87,9 +96,9 @@ private static  void connect(Context context,String ip,int port,boolean autoBind
 		String host = CIMCacheToolkit.getInstance(context).getString( CIMCacheToolkit.KEY_CIM_SERVIER_HOST);
     	int port =CIMCacheToolkit.getInstance(context).getInt( CIMCacheToolkit.KEY_CIM_SERVIER_PORT);
     	
-    	connect(context,host,port,true);
+    	connect(context,host,port,true,delayedTime);
 		 
-	}
+	 }
 	
 	
 	/**
@@ -104,6 +113,7 @@ private static  void connect(Context context,String ip,int port,boolean autoBind
     	{
     		return ;
     	}
+    	
     	sendBindRequest(context,account);
 		
 	}
@@ -132,8 +142,7 @@ private static  void connect(Context context,String ip,int port,boolean autoBind
     	
     	String account = CIMCacheToolkit.getInstance(context).getString(CIMCacheToolkit.KEY_ACCOUNT);
     	boolean  isManualDestory  =  CIMCacheToolkit.getInstance(context).getBoolean(CIMCacheToolkit.KEY_CIM_DESTROYED);
-    	boolean  isManualStoped  =  CIMCacheToolkit.getInstance(context).getBoolean(CIMCacheToolkit.KEY_MANUAL_STOP);
-    	if( isManualStoped || account==null || account.trim().length()==0 ||  isManualDestory )
+    	if( account==null || account.trim().length()==0 ||  isManualDestory )
     	{
     		return false;
     	}
@@ -195,7 +204,7 @@ private static  void connect(Context context,String ip,int port,boolean autoBind
     	
     	
     	CIMCacheToolkit.getInstance(context).putBoolean(CIMCacheToolkit.KEY_CIM_DESTROYED, true);
-    	CIMCacheToolkit.getInstance(context).remove(CIMCacheToolkit.KEY_ACCOUNT);
+    	CIMCacheToolkit.getInstance(context).putString(CIMCacheToolkit.KEY_ACCOUNT, null);
     	
     	Intent serviceIntent  = new Intent(context, CIMPushService.class);
 		serviceIntent.setAction(ACTION_DESTORY);
@@ -205,9 +214,8 @@ private static  void connect(Context context,String ip,int port,boolean autoBind
     
     
     /**
-     * 重新恢复接收推送，重新连接服务端，并登录当前账号如果aotuBind == true
+     * 重新恢复接收推送，重新连接服务端，并登录当前账号
      * @param context
-     * @param aotuBind
      */
     public static  void resume(Context context){
     	
@@ -223,19 +231,7 @@ private static  void connect(Context context,String ip,int port,boolean autoBind
     	return CIMCacheToolkit.getInstance(context).getBoolean(CIMCacheToolkit.KEY_CIM_CONNECTION_STATE);
     }
  
-    public static int getState(Context context){
-		boolean  isManualDestory  = CIMCacheToolkit.getInstance(context).getBoolean(CIMCacheToolkit.KEY_CIM_DESTROYED);
-		if(isManualDestory){
-			return STATE_DESTROYED;
-		}
-		
-    	boolean  isManualStop  = CIMCacheToolkit.getInstance(context).getBoolean(CIMCacheToolkit.KEY_MANUAL_STOP);
-    	if(isManualStop){
-			return STATE_STOPED;
-		}
-    	
-    	return STATE_NORMAL;
-    }
+    
     
     private  static String getVersionName(Context context) {
     	String  versionName = null;
@@ -246,5 +242,5 @@ private static  void connect(Context context,String ip,int port,boolean autoBind
 		}
 		return versionName;
 	}
-	
+
 }

@@ -1,9 +1,24 @@
 /**
- * probject:cim-server-sdk
- * @version 2.0
- * 
- * @author 3979434@qq.com
- */  
+ * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ ***************************************************************************************
+ *                                                                                     *
+ *                        Website : http://www.farsunset.com                           *
+ *                                                                                     *
+ ***************************************************************************************
+ */
 package com.farsunset.cim.sdk.server.session;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,11 +44,11 @@ public class DefaultSessionManager implements SessionManager{
     /**
      *  
      */
-    public void add(String account,CIMSession session) {
+    public void add(CIMSession session) {
         if(session!=null)
         {
-        	session.setAttribute(CIMConstant.SESSION_KEY, account);
-        	sessions.put(account, session);
+        	session.setAttribute(CIMConstant.SESSION_KEY, session.getAccount());
+        	sessions.put(session.getAccount(), session);
         	connectionsCounter.incrementAndGet();
         }
         
@@ -50,9 +65,9 @@ public class DefaultSessionManager implements SessionManager{
 
      
     public List<CIMSession> queryAll() {
-    	 List<CIMSession> list = new ArrayList<CIMSession>();
-         list.addAll(sessions.values());
-         return list;
+    	List<CIMSession> list = new ArrayList<CIMSession>();
+    	list.addAll(sessions.values());
+        return list;
     }
  
     public void  remove(CIMSession session) {
@@ -74,37 +89,10 @@ public class DefaultSessionManager implements SessionManager{
     	return sessions.containsKey(account);
     }
 
-    
-    public String getAccount(CIMSession ios)
-    {
-    	 if(ios.getAttribute(CIMConstant.SESSION_KEY)==null)
-    	 {
-    		for(String key:sessions.keySet())
-    		{
-    			if(sessions.get(key).equals(ios) || sessions.get(key).getGid()==ios.getGid())
-    			{
-    				return key;
-    			}
-    		}
-    	 }else
-    	 {
-    	    return ios.getAttribute(CIMConstant.SESSION_KEY).toString();
-    	 }
-    	 
-    	 return null;
-    }
-
 
 	@Override
 	public void update(CIMSession session) {
 		sessions.put(session.getAccount(), session);
 	}
-
-
-	@Override
-	public void setState(String account,int state) {
-		sessions.get(account).setStatus(state);
-	}
-
  
 }

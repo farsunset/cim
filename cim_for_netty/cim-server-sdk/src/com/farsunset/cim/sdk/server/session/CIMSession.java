@@ -1,21 +1,34 @@
 /**
- * probject:cim-server-sdk
- * @version 2.0
- * 
- * @author 3979434@qq.com
- */   
+ * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ ***************************************************************************************
+ *                                                                                     *
+ *                        Website : http://www.farsunset.com                           *
+ *                                                                                     *
+ ***************************************************************************************
+ */
 package com.farsunset.cim.sdk.server.session;
-
-import io.netty.channel.Channel;
-import io.netty.util.AttributeKey;
 
 import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
-
-
 import com.farsunset.cim.sdk.server.constant.CIMConstant;
+
+import io.netty.channel.Channel;
+import io.netty.util.AttributeKey;
 
 /**
  * Channel包装类,集群时 将此对象存入表中
@@ -60,7 +73,7 @@ public class CIMSession  implements Serializable{
 	private int status;// 状态
 	public CIMSession(Channel session) {
 		this.session = session;
-		this.nid = session.id().asLongText();
+		this.nid = session.id().asShortText();
 	}
  
 	public CIMSession()
@@ -219,7 +232,9 @@ public class CIMSession  implements Serializable{
 		setAttribute("host", host);
 	}
 
-	
+	public void setChannel(Channel session) {
+		this.session = session;
+	}
 
 
 	public int getApnsAble() {
@@ -261,7 +276,7 @@ public class CIMSession  implements Serializable{
 
 	public void removeAttribute(String key) {
 		if(session!=null)
-		session.attr(AttributeKey.valueOf(key)).remove();
+		session.attr(AttributeKey.valueOf(key)).set(null);;
 	}
 
 	public SocketAddress getRemoteAddress() {
@@ -280,7 +295,7 @@ public class CIMSession  implements Serializable{
 	}
 
 	public boolean isConnected() {
-		if(session != null && isLocalhost())
+		if(session != null)
 		{
 			return session.isActive();
 		}
@@ -308,17 +323,9 @@ public class CIMSession  implements Serializable{
 	
  
 	public void closeNow() {
-		closeOnFlush();
+		if(session!=null)
+		session.close();
 	}
-
-	public void closeOnFlush() {
-		if(session!=null){
-			session.disconnect();
-			session.close();
-		}
-		
-	}
-	
 
 	public void setPackageName(String packageName) {
 		this.packageName = packageName;
@@ -328,16 +335,18 @@ public class CIMSession  implements Serializable{
 	public String getPackageName() {
 		return packageName;
 	}
+	
+	
+	public int hashCode(){
+		
+		return (deviceId + nid + host).hashCode();
+	}
+	
 	public boolean equals(Object o) {
         
-		if (o instanceof CIMSession) {
-			
-			CIMSession t = (CIMSession) o;
-			if(t.deviceId!=null && deviceId!=null)
-			{
-				return t.deviceId.equals(deviceId) && t.nid == nid  && t.host.equals(host);
-			} 
-		}  
+		if(o instanceof CIMSession){
+			return hashCode() == o.hashCode();
+		}
 		return false;
 	}
 
@@ -359,15 +368,6 @@ public class CIMSession  implements Serializable{
 		return !fromOtherDevice(o);
 	}
  
-	public void setChannel(Channel session) {
-		this.session = session;
-	}
-
-	public Channel getSession() {
-		return session;
-	}
-	
-	
 	
 	public String  toString()
 	{

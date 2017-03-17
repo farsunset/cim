@@ -1,14 +1,30 @@
 /**
- * probject:cim-java-sdk
- * @version 2.0.0
- * 
- * @author 3979434@qq.com
- */ 
+ * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ ***************************************************************************************
+ *                                                                                     *
+ *                        Website : http://www.farsunset.com                           *
+ *                                                                                     *
+ ***************************************************************************************
+ */
 package com.farsunset.cim.sdk.client;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
 
 import com.farsunset.cim.sdk.client.constant.CIMConstant;
 import com.farsunset.cim.sdk.client.model.Intent;
@@ -18,6 +34,7 @@ import com.farsunset.cim.sdk.client.model.SentBody;
  * CIM 功能接口
  */
 public class CIMPushManager  {
+	protected static final Logger logger = Logger.getLogger(CIMPushManager.class);
 	static String  ACTION_ACTIVATE_PUSH_SERVICE ="ACTION_ACTIVATE_PUSH_SERVICE";
 	
 	static String  ACTION_CREATE_CIM_CONNECTION ="ACTION_CREATE_CIM_CONNECTION";
@@ -28,7 +45,6 @@ public class CIMPushManager  {
 	
 	static String  ACTION_DESTORY ="ACTION_DESTORY";
 	
-	static String  KEY_SEND_BODY ="KEY_SEND_BODY";
 	
 	static String  KEY_CIM_CONNECTION_STATUS ="KEY_CIM_CONNECTION_STATUS";
 	
@@ -152,7 +168,7 @@ public class CIMPushManager  {
 		}
  
     	Intent serviceIntent  = new Intent();
-		serviceIntent.putExtra(KEY_SEND_BODY, body);
+		serviceIntent.putExtra(SentBody.class.getName(), body);
 		serviceIntent.setAction(ACTION_SEND_REQUEST_BODY);
 		startService(serviceIntent);
 		

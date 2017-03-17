@@ -1,9 +1,24 @@
- /**
- * probject:cim-java-sdk
- * @version 2.0.0
- * 
- * @author 3979434@qq.com
- */ 
+/**
+ * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ ***************************************************************************************
+ *                                                                                     *
+ *                        Website : http://www.farsunset.com                           *
+ *                                                                                     *
+ ***************************************************************************************
+ */
 package com.farsunset.cim.sdk.client;
  
 
@@ -17,7 +32,7 @@ import com.farsunset.cim.sdk.client.model.SentBody;
  */
   public class CIMPushService  {
 
-	protected final  static int DEF_CIM_PORT = 28888;
+	protected final  static int DEF_CIM_PORT = 23456;
 	private CIMConnectorManager manager;
 	
 	private static CIMPushService service;
@@ -37,10 +52,8 @@ import com.farsunset.cim.sdk.client.model.SentBody;
  
     public void onStartCommand(Intent intent) {
     	
-    	if(intent==null)
-    	{
-    		return ;
-    	} 
+    	intent = (intent == null ? new Intent(CIMPushManager.ACTION_ACTIVATE_PUSH_SERVICE) : intent);
+
     	
     	String action = intent.getAction();
     	
@@ -53,7 +66,7 @@ import com.farsunset.cim.sdk.client.model.SentBody;
     	
     	if(CIMPushManager.ACTION_SEND_REQUEST_BODY.equals(action))
     	{
-    		manager.send((SentBody) intent.getExtra(CIMPushManager.KEY_SEND_BODY));
+    		manager.send((SentBody) intent.getExtra(SentBody.class.getName()));
     	}
     	
     	if(CIMPushManager.ACTION_CLOSE_CIM_CONNECTION.equals(action))
