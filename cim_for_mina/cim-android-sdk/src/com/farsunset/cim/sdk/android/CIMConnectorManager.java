@@ -20,6 +20,7 @@
  ***************************************************************************************
  */
 package com.farsunset.cim.sdk.android;
+import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.Random;
@@ -171,7 +172,12 @@ class CIMConnectorManager  extends IoHandlerAdapter implements KeepAliveMessageF
 			// 消息发送超时 5秒
 			wf.awaitUninterruptibly(WRITE_TIMEOUT);
 			isSuccessed = wf.isWritten();
-			exception = wf.getException();
+			
+			if(wf.getException() instanceof Serializable)
+			{
+				exception = wf.getException();
+			}
+			
 		} 
 		
 		if(!isSuccessed){
