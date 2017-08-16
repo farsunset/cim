@@ -69,8 +69,9 @@ public class SplanshActivity extends CIMMonitorActivity{
 		  finish();
 		  CIMPushManager.destroy(this);
 	}
-	 public  void onConnectionFailed(Exception e){
-		 
-		 showToask("连接服务器失败，请检查当前设备是否能连接上服务器IP和端口");
-	 }
+
+	@Override
+	public void onConnectionFailed() {
+		showToask("连接服务器失败，请检查当前设备是否能连接上服务器IP和端口");
+	}
 }

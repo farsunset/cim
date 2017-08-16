@@ -116,7 +116,6 @@ public final class CIMPushManagerReceiver extends CIMEventBroadcastReceiver {
 	}
 
 
-
 	@Override
 	public void onConnectionFailed() {
 		// TODO Auto-generated method stub

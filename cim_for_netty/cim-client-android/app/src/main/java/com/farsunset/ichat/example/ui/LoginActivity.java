@@ -73,8 +73,8 @@ public class LoginActivity extends CIMMonitorActivity implements
 		if(!autoBind)
 		CIMPushManager.bindAccount(this, accountEdit.getText().toString().trim());
 	}
-	
-	
+
+
 	@Override
 	public void onReplyReceived(final ReplyBody reply) {
 

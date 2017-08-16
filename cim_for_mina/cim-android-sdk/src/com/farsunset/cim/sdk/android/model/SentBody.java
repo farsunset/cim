@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2033 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,12 +22,12 @@
 package com.farsunset.cim.sdk.android.model;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Hashtable;
 import java.util.Set;
 
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
 import com.farsunset.cim.sdk.android.model.proto.SentBodyProto;
+
 /**
  * java |android 客户端请求结构
  *
@@ -38,7 +38,7 @@ public class SentBody implements Serializable,Protobufable {
 
 	private String key;
 
-	private HashMap<String, String>  data = new HashMap<String, String>();;
+	private Hashtable<String, String>  data = new Hashtable<String, String>();;
 
 	private long timestamp;
 
@@ -67,13 +67,12 @@ public class SentBody implements Serializable,Protobufable {
 	}
 
 	public void put(String k, String v) {
-		if(v!=null && k!=null){
-			data.put(k, v);	
+		if(k == null || v == null){
+			return;
 		}
+		data.put(k, v);
 	}
-	public void putAll(Map<String, String> map) {
-		data.putAll(map);
-	}
+	 
 
 	public Set<String> getKeySet()   {
 		return data.keySet();

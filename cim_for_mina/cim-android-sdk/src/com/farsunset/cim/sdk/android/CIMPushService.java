@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2033 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,8 +51,8 @@ import com.farsunset.cim.sdk.android.model.SentBody;
 			
 			connectionHandler.removeMessages(0);
 			
-			String host = message.getData().getString(CIMCacheToolkit.KEY_CIM_SERVIER_HOST);
-    	    int port = message.getData().getInt(CIMCacheToolkit.KEY_CIM_SERVIER_PORT,0);
+			String host = message.getData().getString(CIMCacheManager.KEY_CIM_SERVIER_HOST);
+    	    int port = message.getData().getInt(CIMCacheManager.KEY_CIM_SERVIER_PORT,0);
 			manager.connect(host, port);
 		}
 	};
@@ -79,8 +79,8 @@ import com.farsunset.cim.sdk.android.model.SentBody;
     	    	
     	    }else
     	    {
-    	    	String host = intent.getStringExtra(CIMCacheToolkit.KEY_CIM_SERVIER_HOST);
-        	    int port = intent.getIntExtra(CIMCacheToolkit.KEY_CIM_SERVIER_PORT,0);
+    	    	String host = intent.getStringExtra(CIMCacheManager.KEY_CIM_SERVIER_HOST);
+        	    int port = intent.getIntExtra(CIMCacheManager.KEY_CIM_SERVIER_PORT,0);
     	    	manager.connect(host,port);
     	    }
     	}
@@ -105,7 +105,7 @@ import com.farsunset.cim.sdk.android.model.SentBody;
     	{
     		if(!manager.isConnected()){
     			
-    			boolean  isManualStop  = CIMCacheToolkit.getInstance(this).getBoolean(CIMCacheToolkit.KEY_MANUAL_STOP);
+    			boolean  isManualStop  = CIMCacheManager.getBoolean(getApplicationContext(),CIMCacheManager.KEY_MANUAL_STOP);
     	    	Log.w(TAG, "manager.isConnected() == false, isManualStop == " + isManualStop);
     	    	CIMPushManager.connect(this,0);
     	    	

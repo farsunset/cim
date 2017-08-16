@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2033 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,6 +48,7 @@ public class CIMPushManager  {
 	
 	static String  KEY_SEND_BODY ="KEY_SEND_BODY";
 	
+	static String  KEY_CIM_CONNECTION_STATUS ="KEY_CIM_CONNECTION_STATUS";
 	
 	/**
 	 * 初始化,连接服务端，在程序启动页或者 在Application里调用
@@ -63,20 +64,20 @@ public class CIMPushManager  {
 	
      private static  void connect(Context context,String ip,int port,boolean autoBind,long delayedTime){
 		
-		CIMCacheToolkit.getInstance(context).putBoolean(CIMCacheToolkit.KEY_CIM_DESTROYED, false);
-		CIMCacheToolkit.getInstance(context).putBoolean(CIMCacheToolkit.KEY_MANUAL_STOP, false);
+		CIMCacheManager.putBoolean(context,CIMCacheManager.KEY_CIM_DESTROYED, false);
+		CIMCacheManager.putBoolean(context,CIMCacheManager.KEY_MANUAL_STOP, false);
 		
-		CIMCacheToolkit.getInstance(context).putString( CIMCacheToolkit.KEY_CIM_SERVIER_HOST, ip);
-		CIMCacheToolkit.getInstance(context).putInt( CIMCacheToolkit.KEY_CIM_SERVIER_PORT, port);
+		CIMCacheManager.putString(context, CIMCacheManager.KEY_CIM_SERVIER_HOST, ip);
+		CIMCacheManager.putInt(context, CIMCacheManager.KEY_CIM_SERVIER_PORT, port);
 		
 		if(!autoBind)
 		{
-			CIMCacheToolkit.getInstance(context).remove(CIMCacheToolkit.KEY_ACCOUNT);
+			CIMCacheManager.remove(context,CIMCacheManager.KEY_ACCOUNT);
 		}
 		
 		Intent serviceIntent  = new Intent(context, CIMPushService.class);
-		serviceIntent.putExtra(CIMCacheToolkit.KEY_CIM_SERVIER_HOST, ip);
-		serviceIntent.putExtra(CIMCacheToolkit.KEY_CIM_SERVIER_PORT, port);
+		serviceIntent.putExtra(CIMCacheManager.KEY_CIM_SERVIER_HOST, ip);
+		serviceIntent.putExtra(CIMCacheManager.KEY_CIM_SERVIER_PORT, port);
 		serviceIntent.putExtra(CIMPushService.KEY_DELAYED_TIME, delayedTime);
 		serviceIntent.setAction(ACTION_CREATE_CIM_CONNECTION);
 		context.startService(serviceIntent);
@@ -85,16 +86,16 @@ public class CIMPushManager  {
 
 	 protected static  void connect(Context context,long delayedTime){
 		
-		boolean  isManualStop  = CIMCacheToolkit.getInstance(context).getBoolean(CIMCacheToolkit.KEY_MANUAL_STOP);
-		boolean  isManualDestory  = CIMCacheToolkit.getInstance(context).getBoolean(CIMCacheToolkit.KEY_CIM_DESTROYED);
+		boolean  isManualStop  = CIMCacheManager.getBoolean(context,CIMCacheManager.KEY_MANUAL_STOP);
+		boolean  isManualDestory  = CIMCacheManager.getBoolean(context,CIMCacheManager.KEY_CIM_DESTROYED);
 		
 		if(isManualStop || isManualDestory)
 		{
 			return ;
 		}
 		
-		String host = CIMCacheToolkit.getInstance(context).getString( CIMCacheToolkit.KEY_CIM_SERVIER_HOST);
-    	int port =CIMCacheToolkit.getInstance(context).getInt( CIMCacheToolkit.KEY_CIM_SERVIER_PORT);
+		String host = CIMCacheManager.getString(context, CIMCacheManager.KEY_CIM_SERVIER_HOST);
+    	int port =CIMCacheManager.getInt(context, CIMCacheManager.KEY_CIM_SERVIER_PORT);
     	
     	connect(context,host,port,true,delayedTime);
 		 
@@ -108,7 +109,7 @@ public class CIMPushManager  {
     public static  void bindAccount(Context context,String account){
 		
     	
-    	boolean  isManualDestory  = CIMCacheToolkit.getInstance(context).getBoolean(CIMCacheToolkit.KEY_CIM_DESTROYED);
+    	boolean  isManualDestory  = CIMCacheManager.getBoolean(context,CIMCacheManager.KEY_CIM_DESTROYED);
     	if(isManualDestory || account==null || account.trim().length()==0)
     	{
     		return ;
@@ -121,8 +122,8 @@ public class CIMPushManager  {
     
     private static void sendBindRequest(Context context, String account){
     	
-    	CIMCacheToolkit.getInstance(context).putBoolean(CIMCacheToolkit.KEY_MANUAL_STOP, false);
-    	CIMCacheToolkit.getInstance(context).putString(CIMCacheToolkit.KEY_ACCOUNT, account);
+    	CIMCacheManager.putBoolean(context,CIMCacheManager.KEY_MANUAL_STOP, false);
+    	CIMCacheManager.putString(context,CIMCacheManager.KEY_ACCOUNT, account);
     	
     	String imei = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
     	imei += context.getPackageName();
@@ -140,8 +141,8 @@ public class CIMPushManager  {
     
     protected static  boolean  autoBindAccount(Context context){
     	
-    	String account = CIMCacheToolkit.getInstance(context).getString(CIMCacheToolkit.KEY_ACCOUNT);
-    	boolean  isManualDestory  =  CIMCacheToolkit.getInstance(context).getBoolean(CIMCacheToolkit.KEY_CIM_DESTROYED);
+    	String account = CIMCacheManager.getString(context,CIMCacheManager.KEY_ACCOUNT);
+    	boolean  isManualDestory  =  CIMCacheManager.getBoolean(context,CIMCacheManager.KEY_CIM_DESTROYED);
     	if( account==null || account.trim().length()==0 ||  isManualDestory )
     	{
     		return false;
@@ -161,8 +162,8 @@ public class CIMPushManager  {
 	 */
     public static  void sendRequest(Context context, SentBody body){
 		
-    	boolean  isManualStop  = CIMCacheToolkit.getInstance(context).getBoolean(CIMCacheToolkit.KEY_MANUAL_STOP);
-		boolean  isManualDestory  = CIMCacheToolkit.getInstance(context).getBoolean(CIMCacheToolkit.KEY_CIM_DESTROYED);
+    	boolean  isManualStop  = CIMCacheManager.getBoolean(context,CIMCacheManager.KEY_MANUAL_STOP);
+		boolean  isManualDestory  = CIMCacheManager.getBoolean(context,CIMCacheManager.KEY_CIM_DESTROYED);
 		
 		if(isManualStop || isManualDestory)
 		{
@@ -182,12 +183,12 @@ public class CIMPushManager  {
 	 */
     public static  void stop(Context context){
     	
-    	boolean  isManualDestory  = CIMCacheToolkit.getInstance(context).getBoolean(CIMCacheToolkit.KEY_CIM_DESTROYED);
+    	boolean  isManualDestory  = CIMCacheManager.getBoolean(context,CIMCacheManager.KEY_CIM_DESTROYED);
     	if(isManualDestory){
     		return ;
     	}
     	
-    	CIMCacheToolkit.getInstance(context).putBoolean(CIMCacheToolkit.KEY_MANUAL_STOP, true);
+    	CIMCacheManager.putBoolean(context,CIMCacheManager.KEY_MANUAL_STOP, true);
 
     	Intent serviceIntent  = new Intent(context, CIMPushService.class);
 		serviceIntent.setAction(ACTION_CLOSE_CIM_CONNECTION);
@@ -203,8 +204,8 @@ public class CIMPushManager  {
     public static  void destroy(Context context){
     	
     	
-    	CIMCacheToolkit.getInstance(context).putBoolean(CIMCacheToolkit.KEY_CIM_DESTROYED, true);
-    	CIMCacheToolkit.getInstance(context).putString(CIMCacheToolkit.KEY_ACCOUNT, null);
+    	CIMCacheManager.putBoolean(context,CIMCacheManager.KEY_CIM_DESTROYED, true);
+    	CIMCacheManager.putString(context,CIMCacheManager.KEY_ACCOUNT, null);
     	
     	Intent serviceIntent  = new Intent(context, CIMPushService.class);
 		serviceIntent.setAction(ACTION_DESTORY);
@@ -219,7 +220,7 @@ public class CIMPushManager  {
      */
     public static  void resume(Context context){
     	
-    	boolean  isManualDestory  = CIMCacheToolkit.getInstance(context).getBoolean(CIMCacheToolkit.KEY_CIM_DESTROYED);
+    	boolean  isManualDestory  = CIMCacheManager.getBoolean(context,CIMCacheManager.KEY_CIM_DESTROYED);
     	if(isManualDestory){
     		return ;
     	}
@@ -228,7 +229,7 @@ public class CIMPushManager  {
 	}
     
     public static boolean isConnected(Context context){
-    	return CIMCacheToolkit.getInstance(context).getBoolean(CIMCacheToolkit.KEY_CIM_CONNECTION_STATE);
+    	return CIMCacheManager.getBoolean(context,CIMCacheManager.KEY_CIM_CONNECTION_STATE);
     }
  
     

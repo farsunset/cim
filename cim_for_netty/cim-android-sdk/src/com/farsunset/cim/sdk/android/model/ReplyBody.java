@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2033 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,10 @@
 package com.farsunset.cim.sdk.android.model;
 
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
+
 /**
  * 请求应答对象
  *
@@ -49,19 +50,16 @@ public class ReplyBody implements Serializable {
 	 */
 	private String message;
 
-	/**
-	 * 返回数据集合
-	 */
-	private HashMap<String, String> data;
-
 	
 	private long timestamp;
 	
-	public ReplyBody()
-	{
-		data = new HashMap<String, String>();
-		timestamp = System.currentTimeMillis();
-	}
+ 
+	/**
+	 * 返回数据集合
+	 */
+	private Hashtable<String, String> data = new Hashtable<String, String>();
+
+
 	public long getTimestamp() {
 		return timestamp;
 	}
@@ -81,9 +79,7 @@ public class ReplyBody implements Serializable {
 	}
 
 	public void put(String k, String v) {
-		if(v!=null && k!=null){
-			data.put(k, v);	
-		}
+		data.put(k, v);
 	}
 
 	public String get(String k) {

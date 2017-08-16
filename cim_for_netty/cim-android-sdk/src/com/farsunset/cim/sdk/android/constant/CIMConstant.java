@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2033 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ package com.farsunset.cim.sdk.android.constant;
 public   interface  CIMConstant  {
     
 	long RECONN_INTERVAL_TIME= 30 * 1000;
+	
 	//消息头长度为3个字节，第一个字节为消息类型，第二，第三字节 转换int后为消息长度
 	int DATA_HEADER_LENGTH = 3;
     public static interface ReturnCode{
@@ -73,8 +74,6 @@ public   interface  CIMConstant  {
 		
 	    //被其他设备登录挤下线消息
 		String ACTION_999 ="999";
-		//被系统禁用消息
-		String ACTION_444 ="444";
    }
    
    
@@ -104,11 +103,11 @@ public   interface  CIMConstant  {
 	// 网络变化广播
 	String ACTION_NETWORK_CHANGED = "android.net.conn.CONNECTIVITY_CHANGE";
 	
-	// 未知异常
-	String ACTION_UNCAUGHT_EXCEPTION = "com.farsunset.cim.UNCAUGHT_EXCEPTION";
-	
 	//重试连接
 	String ACTION_CONNECTION_RECOVERY = "com.farsunset.cim.CONNECTION_RECOVERY";
+	
+	// 未知异常
+	String ACTION_UNCAUGHT_EXCEPTION = "com.farsunset.cim.UNCAUGHT_EXCEPTION";
   }
   
 }

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.farsunset.ichat.example"
-    android:versionCode="30"
-    android:versionName="3.0.0" >
+ >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -47,8 +46,13 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
 
-        <!--推送服务-->  
-        <service  android:name="com.farsunset.cim.sdk.android.CIMPushService" android:process=":cimpush"   />
+        <!-- ****************************************CIM推送配置 begin*************************************** -->
+        <service  android:name="com.farsunset.cim.sdk.android.CIMPushService"  android:process=":cimpush" />
+        <provider android:name="com.farsunset.cim.sdk.android.CIMCacheProvider"
+            android:authorities="com.farsunset.cim.provider"
+            android:process=":cimpush"
+            android:exported="false" />
+        <!-- ****************************************CIM推送配置 end*************************************** -->
         
         <!--消息接受广播注册-->  
         <receiver android:name="com.farsunset.ichat.example.receiver.CIMPushManagerReceiver" android:exported="false">

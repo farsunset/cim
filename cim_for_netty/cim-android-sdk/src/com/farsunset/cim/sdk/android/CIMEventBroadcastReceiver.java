@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2033 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,8 @@
 package com.farsunset.cim.sdk.android;
 
 
-
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
-import com.farsunset.cim.sdk.android.exception.SessionDisconnectedException;
+import com.farsunset.cim.sdk.android.exception.SessionClosedException;
 import com.farsunset.cim.sdk.android.model.Message;
 import com.farsunset.cim.sdk.android.model.ReplyBody;
 import com.farsunset.cim.sdk.android.model.SentBody;
@@ -55,7 +54,6 @@ public  abstract  class CIMEventBroadcastReceiver extends BroadcastReceiver{
           {
 			  startPushService();
           }
-		  
 
 		  /*
            * 设备网络状态变化事件
@@ -80,7 +78,8 @@ public  abstract  class CIMEventBroadcastReceiver extends BroadcastReceiver{
           if(intent.getAction().equals(CIMConstant.IntentAction.ACTION_CONNECTION_FAILED))
           {
         	  long interval = intent.getLongExtra("interval", CIMConstant.RECONN_INTERVAL_TIME);
-        	  onConnectionFailed((Exception) intent.getSerializableExtra(Exception.class.getName()),interval);
+          	  String exceptionName = intent.getStringExtra(Exception.class.getName());
+        	  onConnectionFailed(exceptionName,interval);
           }
           
           /*
@@ -114,9 +113,9 @@ public  abstract  class CIMEventBroadcastReceiver extends BroadcastReceiver{
            */
           if(intent.getAction().equals(CIMConstant.IntentAction.ACTION_SENT_FAILED))
           {
-        	  Exception exception = (Exception) intent.getSerializableExtra(Exception.class.getName());
+        	  String exceptionName = intent.getStringExtra(Exception.class.getName());
         	  SentBody  sentBody = (SentBody)intent.getSerializableExtra(SentBody.class.getName());
-        	  onSentFailed(exception,sentBody);
+        	  onSentFailed(exceptionName,sentBody);
           }
           
           /*
@@ -128,15 +127,7 @@ public  abstract  class CIMEventBroadcastReceiver extends BroadcastReceiver{
           }
           
           
-          /*
-           * 获取cim数据传输异常事件
-           */
-          if(intent.getAction().equals(CIMConstant.IntentAction.ACTION_UNCAUGHT_EXCEPTION))
-          {
-        	  onUncaughtException((Exception)intent.getSerializableExtra(Exception.class.getName()));
-          }
-          
-          
+         
           /*
            * 重新连接，如果断开的话
            */
@@ -153,7 +144,7 @@ public  abstract  class CIMEventBroadcastReceiver extends BroadcastReceiver{
 	}
 	
 	private  void onInnerConnectionClosed(){
-		CIMCacheToolkit.getInstance(context).putBoolean(CIMCacheToolkit.KEY_CIM_CONNECTION_STATE, false);
+		CIMCacheManager.putBoolean(context,CIMCacheManager.KEY_CIM_CONNECTION_STATE, false);
 		if(CIMConnectorManager.isNetworkConnected(context))
 		{
 			CIMPushManager.connect(context,0);
@@ -162,7 +153,7 @@ public  abstract  class CIMEventBroadcastReceiver extends BroadcastReceiver{
 		onConnectionClosed();
 	}
 
-	private   void onConnectionFailed(Exception e,long reinterval){
+	private   void onConnectionFailed(String exceptionName,long reinterval){
 		
 		if(CIMConnectorManager.isNetworkConnected(context))
 		{
@@ -173,13 +164,11 @@ public  abstract  class CIMEventBroadcastReceiver extends BroadcastReceiver{
 	}
 
 	private   void onInnerConnectionSuccessed(){
-		CIMCacheToolkit.getInstance(context).putBoolean(CIMCacheToolkit.KEY_CIM_CONNECTION_STATE, true);
+		CIMCacheManager.putBoolean(context,CIMCacheManager.KEY_CIM_CONNECTION_STATE, true);
 		
 		boolean autoBind = CIMPushManager.autoBindAccount(context);
 		onConnectionSuccessed(autoBind);
 	}
-
-	private void onUncaughtException(Throwable arg0) {}
 
 	private  void onDevicesNetworkChanged(NetworkInfo info) {
 		
@@ -202,13 +191,13 @@ public  abstract  class CIMEventBroadcastReceiver extends BroadcastReceiver{
 	
 	private boolean isForceOfflineMessage(String action)
 	{
-		return CIMConstant.MessageAction.ACTION_999.equals(action) || CIMConstant.MessageAction.ACTION_444.equals(action);
+		return CIMConstant.MessageAction.ACTION_999.equals(action);
 	}
 	
-	private void onSentFailed(Exception e, SentBody body){
+	private void onSentFailed(String exceptionName, SentBody body){
 		
 		//与服务端端开链接，重新连接
-		if(e instanceof SessionDisconnectedException)
+		if(SessionClosedException.class.getSimpleName().equals(exceptionName))
 		{
 			CIMPushManager.connect(context,0);
 		}else

@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2033 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@
  ***************************************************************************************
  */
 package com.farsunset.cim.sdk.android;
-import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.Random;
@@ -44,8 +43,8 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
-import com.farsunset.cim.sdk.android.exception.SessionDisconnectedException;
-import com.farsunset.cim.sdk.android.exception.NetworkDisconnectedException;
+import com.farsunset.cim.sdk.android.exception.SessionClosedException;
+import com.farsunset.cim.sdk.android.exception.NetworkDisabledException;
 import com.farsunset.cim.sdk.android.filter.ClientMessageCodecFactory;
 import com.farsunset.cim.sdk.android.model.HeartbeatRequest;
 import com.farsunset.cim.sdk.android.model.HeartbeatResponse;
@@ -66,7 +65,7 @@ class CIMConnectorManager  extends IoHandlerAdapter implements KeepAliveMessageF
 	private final int WRITE_TIMEOUT = 10 * 1000;//秒
 
 	private final int READ_IDLE_TIME = 120;//秒
-	private final int HEARBEAT_TIME_OUT = (READ_IDLE_TIME + 20) * 1000;// 收到服务端心跳请求超时时间 毫秒
+	private final int HEARBEAT_TIME_OUT = (READ_IDLE_TIME + 10) * 1000;// 收到服务端心跳请求超时时间 毫秒
 	private final String KEY_LAST_HEART_TIME =  "KEY_LAST_HEART_TIME" ;
 		
 	private NioSocketConnector connector;
@@ -117,7 +116,7 @@ class CIMConnectorManager  extends IoHandlerAdapter implements KeepAliveMessageF
 
 			Log.i(TAG, "****************CIM正在连接服务器  "+host+":"+port+"......");
 			
-			CIMCacheToolkit.getInstance(context).putBoolean(CIMCacheToolkit.KEY_CIM_CONNECTION_STATE, false);
+			CIMCacheManager.putBoolean(context,CIMCacheManager.KEY_CIM_CONNECTION_STATE, false);
 			InetSocketAddress remoteSocketAddress = new InetSocketAddress(host, port);
 			connectFuture = connector.connect(remoteSocketAddress);
 			connectFuture.awaitUninterruptibly();
@@ -128,7 +127,7 @@ class CIMConnectorManager  extends IoHandlerAdapter implements KeepAliveMessageF
 
 			Intent intent = new Intent();
 			intent.setAction(CIMConstant.IntentAction.ACTION_CONNECTION_FAILED);
-			intent.putExtra(Exception.class.getName(), e);
+			intent.putExtra(Exception.class.getName(), e.getClass().getSimpleName());
 			intent.putExtra("interval", interval);
 			context.sendBroadcast(intent);
 			
@@ -144,7 +143,7 @@ class CIMConnectorManager  extends IoHandlerAdapter implements KeepAliveMessageF
 			
 			Intent intent = new Intent();
 			intent.setAction(CIMConstant.IntentAction.ACTION_CONNECTION_FAILED);
-			intent.putExtra(Exception.class.getName(), new NetworkDisconnectedException());
+			intent.putExtra(Exception.class.getName(),NetworkDisabledException.class.getSimpleName());
 			context.sendBroadcast(intent);
 			
 			return;
@@ -163,7 +162,7 @@ class CIMConnectorManager  extends IoHandlerAdapter implements KeepAliveMessageF
 
 		boolean isSuccessed = false;
 		
-		Throwable exception = new SessionDisconnectedException();
+		String exceptionName =SessionClosedException.class.getSimpleName();
 		
 		IoSession session = getCurrentSession();
 		if(session!=null && session.isConnected())
@@ -172,18 +171,16 @@ class CIMConnectorManager  extends IoHandlerAdapter implements KeepAliveMessageF
 			// 消息发送超时 5秒
 			wf.awaitUninterruptibly(WRITE_TIMEOUT);
 			isSuccessed = wf.isWritten();
-			
-			if(wf.getException() instanceof Serializable)
+			if(wf.getException() != null)
 			{
-				exception = wf.getException();
+				exceptionName =wf.getException().getClass().getSimpleName();
 			}
-			
 		} 
 		
 		if(!isSuccessed){
 			Intent intent = new Intent();
 			intent.setAction(CIMConstant.IntentAction.ACTION_SENT_FAILED);
-			intent.putExtra(Exception.class.getName(),exception);
+			intent.putExtra(Exception.class.getName(),exceptionName);
 			intent.putExtra(SentBody.class.getName(), body);
 			context.sendBroadcast(intent);
 		}
@@ -199,9 +196,6 @@ class CIMConnectorManager  extends IoHandlerAdapter implements KeepAliveMessageF
 		if (connector != null && !connector.isDisposed()) {
 			connector.dispose();
 		}
-		
-		
-		CIMCacheToolkit.destroy();
 		
 		manager = null;
 	}
@@ -286,11 +280,6 @@ class CIMConnectorManager  extends IoHandlerAdapter implements KeepAliveMessageF
 		if(cause!=null && cause.getMessage()!=null){
 			Log.e(TAG, cause.getMessage());
 		}
-		
-		Intent intent = new Intent();
-		intent.setAction(CIMConstant.IntentAction.ACTION_UNCAUGHT_EXCEPTION);
-		intent.putExtra(Exception.class.getName(), cause);
-		context.sendBroadcast(intent);
 	}
 
 	@Override

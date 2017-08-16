@@ -45,10 +45,10 @@ import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.AttributeKey;
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
-import com.farsunset.cim.sdk.android.exception.SessionDisconnectedException;
 import com.farsunset.cim.sdk.android.filter.ClientMessageDecoder;
 import com.farsunset.cim.sdk.android.filter.ClientMessageEncoder;
-import com.farsunset.cim.sdk.android.exception.NetworkDisconnectedException;
+import com.farsunset.cim.sdk.android.exception.NetworkDisabledException;
+import com.farsunset.cim.sdk.android.exception.SessionClosedException;
 import com.farsunset.cim.sdk.android.model.HeartbeatRequest;
 import com.farsunset.cim.sdk.android.model.HeartbeatResponse;
 import com.farsunset.cim.sdk.android.model.Message;
@@ -129,7 +129,7 @@ class CIMConnectorManager extends SimpleChannelInboundHandler<Object> {
 
 			Intent intent = new Intent();
 			intent.setAction(CIMConstant.IntentAction.ACTION_CONNECTION_FAILED);
-			intent.putExtra(Exception.class.getName(), e);
+			intent.putExtra(Exception.class.getName(), e.getClass().getSimpleName());
 			intent.putExtra("interval", interval);
 			context.sendBroadcast(intent);
 			
@@ -145,7 +145,7 @@ class CIMConnectorManager extends SimpleChannelInboundHandler<Object> {
 			
 			Intent intent = new Intent();
 			intent.setAction(CIMConstant.IntentAction.ACTION_CONNECTION_FAILED);
-			intent.putExtra(Exception.class.getName(), new NetworkDisconnectedException());
+			intent.putExtra(Exception.class.getName(), NetworkDisabledException.class.getSimpleName());
 			context.sendBroadcast(intent);
 			
 			return;
@@ -164,17 +164,22 @@ class CIMConnectorManager extends SimpleChannelInboundHandler<Object> {
 
 		boolean isSuccessed = false;
 		
-		Throwable exception = new SessionDisconnectedException();
+		String exceptionName =  SessionClosedException.class.getSimpleName();
 		
 		if(channel!=null && channel.isActive())
 		{
-			isSuccessed = channel.writeAndFlush(body).awaitUninterruptibly(WRITE_TIMEOUT);
+			ChannelFuture future = channel.writeAndFlush(body);
+			isSuccessed = future.awaitUninterruptibly(WRITE_TIMEOUT);
+			if(!isSuccessed && future.cause()!=null){
+				exceptionName = future.cause().getClass().getSimpleName();
+			}
+			
 		} 
 		
 		if(!isSuccessed){
 			Intent intent = new Intent();
 			intent.setAction(CIMConstant.IntentAction.ACTION_SENT_FAILED);
-			intent.putExtra(Exception.class.getName(),exception);
+			intent.putExtra(Exception.class.getName(),exceptionName);
 			intent.putExtra(SentBody.class.getName(), body);
 			context.sendBroadcast(intent);
 		}else
@@ -279,7 +284,7 @@ class CIMConnectorManager extends SimpleChannelInboundHandler<Object> {
 		
 		Intent intent = new Intent();
 		intent.setAction(CIMConstant.IntentAction.ACTION_UNCAUGHT_EXCEPTION);
-		intent.putExtra(Exception.class.getName(), cause);
+		intent.putExtra(Exception.class.getName(), cause.getClass().getSimpleName());
 		context.sendBroadcast(intent);
 	}
 

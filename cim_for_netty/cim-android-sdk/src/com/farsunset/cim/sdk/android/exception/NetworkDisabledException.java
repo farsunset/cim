@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2033 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,16 +21,17 @@
  */
 package com.farsunset.cim.sdk.android.exception;
 
+import java.io.Serializable;
 
-public class NetworkDisconnectedException extends Exception {
+public class NetworkDisabledException extends Exception implements Serializable  {
 	 
 	private static final long serialVersionUID = 1L;
 
-	public NetworkDisconnectedException() {
+	public NetworkDisabledException() {
 		super();
 	}
  
-	public NetworkDisconnectedException(String s) {
+	public NetworkDisabledException(String s) {
 		super(s);
 	}
 }
