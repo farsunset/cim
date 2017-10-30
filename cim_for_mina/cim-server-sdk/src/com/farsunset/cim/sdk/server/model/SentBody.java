@@ -35,7 +35,7 @@ public class SentBody implements Serializable {
 
 	private String key;
 
-	private HashMap<String, String> data = new HashMap<String, String>();
+	public HashMap<String, String> data = new HashMap<String, String>();
 
 	private long timestamp;
 

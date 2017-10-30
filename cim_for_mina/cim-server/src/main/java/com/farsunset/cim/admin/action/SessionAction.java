@@ -45,7 +45,8 @@ public class SessionAction extends ActionSupport {
 	   
 	 public String list()  
 	 {  
-		 ServletActionContext.getRequest().setAttribute("sessionList", ((DefaultSessionManager) ContextHolder.getBean("CIMSessionManager")).queryAll());
+		 
+		  ServletActionContext.getRequest().setAttribute("sessionList", ((DefaultSessionManager) ContextHolder.getBean("CIMSessionManager")).queryAll());
 		  
 		  return "list";
 	}

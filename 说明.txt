@@ -3,5 +3,4 @@
 3.cim-server-sdk 是cim-server 用到的封装的jar
 4.cim-server是 java web工程，用eclipse开发工具
 5.cim-client-android 是android客户端  android studio工具
-
 6.将不再维护flash版本 sdk,有兴趣的可以自己修改原来的flash 版本源码

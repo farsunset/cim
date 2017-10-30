@@ -51,7 +51,7 @@ public class CIMSession  implements Serializable{
     public  transient static String CHANNEL_ANDROID = "android";
     public  transient static String CHANNEL_WINDOWS = "windows";
     public  transient static String CHANNEL_WP = "wp";
-    
+    public  transient static String CHANNEL_BROWSER = "browser";
 	private transient Channel session;
 	
 	private String gid;//session全局ID

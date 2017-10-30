@@ -50,7 +50,7 @@ import io.netty.util.AttributeKey;
 
 @Sharable
 public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody>{
-	
+	public final static String WEBSOCKET_HANDLER_KEY = "client_websocket_handshake";
 	private final static String CIMSESSION_CLOSED_HANDLER_KEY = "client_cimsession_closed";
 	private Logger logger = Logger.getLogger(CIMNioSocketAcceptor.class);
 	private HashMap<String, CIMRequestHandler> handlers = new HashMap<String, CIMRequestHandler>();
@@ -66,6 +66,11 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody>{
   	
     public void bind() throws IOException
     {
+    	
+    	/**
+    	 * 预制websocket握手请求的处理
+    	 */
+    	handlers.put(WEBSOCKET_HANDLER_KEY, new WebsocketHandler());
     	ServerBootstrap bootstrap = new ServerBootstrap();
 		bootstrap.group(new NioEventLoopGroup(), new NioEventLoopGroup());
 		bootstrap.childOption(ChannelOption.TCP_NODELAY, true);
@@ -73,7 +78,6 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody>{
         bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
                  @Override
                  public void initChannel(SocketChannel ch) throws Exception {
-
                 	 ch.pipeline().addLast(new ServerMessageDecoder());
                 	 ch.pipeline().addLast(new ServerMessageEncoder());
                 	 ch.pipeline().addLast(new IdleStateHandler(READ_IDLE_TIME,WRITE_IDLE_TIME,0));

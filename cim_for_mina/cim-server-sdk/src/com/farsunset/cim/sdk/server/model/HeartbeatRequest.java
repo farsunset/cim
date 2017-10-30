@@ -22,13 +22,15 @@
 package com.farsunset.cim.sdk.server.model;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 
 import com.farsunset.cim.sdk.server.constant.CIMConstant;
+import com.farsunset.cim.sdk.server.model.feature.EncodeFormatable;
 /**
  * 服务端心跳请求
  *
  */
-public class HeartbeatRequest implements Serializable,Protobufable {
+public class HeartbeatRequest implements Serializable,EncodeFormatable {
 
 	private static final long serialVersionUID = 1L;
 	private static final String TAG = "SERVER_HEARTBEAT_REQUEST";
@@ -45,17 +47,27 @@ public class HeartbeatRequest implements Serializable,Protobufable {
 	}
 	
 	@Override
-	public byte[] getByteArray() {
+	public byte[] getProtobufBody() {
 		return CMD_HEARTBEAT_RESPONSE.getBytes();
 	}
 	
 	public String toString(){
 		return TAG;
 	}
-	 
+ 
+	@Override
+	public byte[] getJSONBody() {
+		try {
+			return CMD_HEARTBEAT_RESPONSE.getBytes("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 
 	@Override
-	public byte getType() {
+	public byte getDataType() {
 		return CIMConstant.ProtobufType.S_H_RQ;
 	}
  

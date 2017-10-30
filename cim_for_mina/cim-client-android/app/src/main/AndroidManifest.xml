@@ -13,7 +13,7 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/icon"
-        android:label="cim"
+        android:label="@string/app_name"
         android:theme="@style/GlobeTheme" >
         <activity
             android:name=".ui.SplanshActivity"
@@ -55,7 +55,7 @@
         <!-- ****************************************CIM推送配置 end*************************************** -->
         
         <!--消息接受广播注册-->  
-        <receiver android:name="com.farsunset.ichat.example.receiver.CIMPushManagerReceiver" android:exported="false">
+        <receiver android:name="com.farsunset.ichat.example.receiver.CIMPushManagerReceiver">
             <intent-filter android:priority="0x7fffffff">  
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>  <!-- 网络变化广播 -->
                 <action android:name="com.farsunset.cim.MESSAGE_RECEIVED"/><!-- 消息广播action -->

@@ -20,12 +20,42 @@
  ***************************************************************************************
  */
 package com.farsunset.cim.sdk.server.model;
-/**
- * 需要向另一端发送的结构体
- */
-public interface Protobufable {
 
-	byte[] getByteArray();
+import java.io.UnsupportedEncodingException;
+/**
+ *websocket握手响应结果
+ *
+ */
+public class WebsocketResponse{
+ 
+	private String token;
 	
-	byte getType();
+	public WebsocketResponse(String token) {
+		this.token = token;
+	}
+	
+	public byte[] getBytes() {
+        try {
+			return toString().getBytes("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+        return null;
+	}
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("HTTP/1.1 101 Switching Protocols");
+		builder.append("\r\n");
+		builder.append("Upgrade: websocket");
+		builder.append("\r\n");
+		builder.append("Connection: Upgrade");
+		builder.append("\r\n");
+		builder.append("Sec-WebSocket-Accept:").append(token);
+		builder.append("\r\n");
+		builder.append("\r\n");
+
+        return builder.toString();
+        
+	}
 }

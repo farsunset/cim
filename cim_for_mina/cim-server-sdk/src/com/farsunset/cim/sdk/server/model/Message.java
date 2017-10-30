@@ -22,13 +22,15 @@
 package com.farsunset.cim.sdk.server.model;
 
 import java.io.Serializable;
-
+import java.io.UnsupportedEncodingException;
+import com.alibaba.fastjson.JSONObject;
 import com.farsunset.cim.sdk.server.constant.CIMConstant;
+import com.farsunset.cim.sdk.server.model.feature.EncodeFormatable;
 import com.farsunset.cim.sdk.server.model.proto.MessageProto;
 /**
  * 消息对象
  */
-public class Message implements Serializable,Protobufable {
+public class Message implements Serializable,EncodeFormatable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -72,6 +74,7 @@ public class Message implements Serializable,Protobufable {
 	private String extra;
 
 	private long timestamp;
+	
 	
 	
 	public Message()
@@ -156,7 +159,6 @@ public class Message implements Serializable,Protobufable {
 	
 	@Override
 	public String toString() {
-		
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("#Message#").append("\n");
 		buffer.append("mid:").append(mid).append("\n");
@@ -175,7 +177,7 @@ public class Message implements Serializable,Protobufable {
 		return txt != null && txt.trim().length()!=0;
 	}
 	@Override
-	public byte[] getByteArray() {
+	public byte[] getProtobufBody() {
 		MessageProto.Model.Builder builder = MessageProto.Model.newBuilder();
 		builder.setMid(mid);
 		builder.setAction(action);
@@ -200,10 +202,30 @@ public class Message implements Serializable,Protobufable {
 		}
 		return builder.build().toByteArray();
 	}
+ 
 	@Override
-	public byte getType() {
+	public byte[] getJSONBody() {
+		JSONObject json = new JSONObject();
+		json.put("contentType", getClass().getSimpleName());
+		json.put("mid", mid);
+		json.put("action", action);
+		json.put("title", title);
+		json.put("content", content);
+		json.put("extra", extra);
+		json.put("sender", sender);
+		json.put("receiver", receiver);
+		json.put("format", format);
+		json.put("timestamp", timestamp);
+		String data = json.toJSONString();
+		try {
+			return data.getBytes("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	@Override
+	public byte getDataType() {
 		return CIMConstant.ProtobufType.MESSAGE;
 	}
-
-	
 }

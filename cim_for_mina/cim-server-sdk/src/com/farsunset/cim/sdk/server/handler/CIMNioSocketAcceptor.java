@@ -49,7 +49,8 @@ import com.farsunset.cim.sdk.server.session.CIMSession;
 
 public class CIMNioSocketAcceptor extends IoHandlerAdapter implements KeepAliveMessageFactory{
 	
-	private final static String CIMSESSION_CLOSED_HANDLER_KEY = "client_cimsession_closed";
+	public final static String WEBSOCKET_HANDLER_KEY = "client_websocket_handshake";
+	public final static String CIMSESSION_CLOSED_HANDLER_KEY = "client_cimsession_closed";
 	private Logger logger = Logger.getLogger(CIMNioSocketAcceptor.class);
 	private HashMap<String, CIMRequestHandler> handlers = new HashMap<String, CIMRequestHandler>();
 	private IoAcceptor acceptor;
@@ -60,6 +61,12 @@ public class CIMNioSocketAcceptor extends IoHandlerAdapter implements KeepAliveM
 
     public void bind() throws IOException
     {
+    
+    	/**
+    	 * 预制websocket握手请求的处理
+    	 */
+    	handlers.put(WEBSOCKET_HANDLER_KEY, new WebsocketHandler());
+    	
     	acceptor = new NioSocketAcceptor();  
         acceptor.getSessionConfig().setReadBufferSize(READ_BUFFER_SIZE);  
         ((DefaultSocketSessionConfig)acceptor.getSessionConfig()).setKeepAlive(true);

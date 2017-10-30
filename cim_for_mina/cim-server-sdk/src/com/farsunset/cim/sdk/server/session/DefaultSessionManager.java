@@ -61,8 +61,6 @@ public class DefaultSessionManager implements SessionManager{
        return sessions.get(account);
     }
 
-    
-
      
     public List<CIMSession> queryAll() {
     	List<CIMSession> list = new ArrayList<CIMSession>();

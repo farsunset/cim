@@ -48,7 +48,8 @@ public   interface  CIMConstant  {
 	
 	//消息头长度为3个字节，第一个字节为消息类型，第二，第三字节 转换int后为消息长度
 	int DATA_HEADER_LENGTH = 3;
-	
+	//WEBSOCKET消息头长度为2个字节
+	int WS_DATA_HEADER_LENGTH = 2;
 	public static interface ProtobufType{
 		byte C_H_RS = 0;
 		byte S_H_RQ = 1;

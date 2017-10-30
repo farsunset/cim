@@ -32,7 +32,7 @@ public class HeartbeatRequest implements Serializable,Protobufable {
 
 	private static final long serialVersionUID = 1L;
 	private static final String TAG = "SERVER_HEARTBEAT_REQUEST";
-	private static final String CMD_HEARTBEAT_RESPONSE = "SR";
+	private static final String CMD_HEARTBEAT_REQUEST = "SR";
 
 	private static HeartbeatRequest object = new HeartbeatRequest();
 	
@@ -46,7 +46,7 @@ public class HeartbeatRequest implements Serializable,Protobufable {
 	
 	@Override
 	public byte[] getByteArray() {
-		return CMD_HEARTBEAT_RESPONSE.getBytes();
+		return CMD_HEARTBEAT_REQUEST.getBytes();
 	}
 	
 	public String toString(){

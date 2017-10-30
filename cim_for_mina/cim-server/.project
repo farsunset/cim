@@ -3,6 +3,7 @@
 	<name>cim-server</name>
 	<comment></comment>
 	<projects>
+		<project>cim-server-sdk</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

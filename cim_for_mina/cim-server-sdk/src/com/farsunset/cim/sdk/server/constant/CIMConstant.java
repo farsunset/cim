@@ -46,19 +46,16 @@ public   interface  CIMConstant  {
 	
 
 	public static interface ProtobufType{
-		byte C_H_RS = 0;
 		byte S_H_RQ = 1;
+		byte C_H_RS = 0;
 		byte MESSAGE = 2;
 		byte SENTBODY = 3;
 	    byte REPLYBODY = 4;
 	}
-	
+	 
 	public static interface MessageAction{
-		
 	    //被其他设备登录挤下线消息
 		String ACTION_999 ="999";
-		//被系统禁用消息
-		String ACTION_444 ="444";
     }
    
 }

@@ -22,17 +22,20 @@
 package com.farsunset.cim.sdk.server.model;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.alibaba.fastjson.JSONObject;
 import com.farsunset.cim.sdk.server.constant.CIMConstant;
+import com.farsunset.cim.sdk.server.model.feature.EncodeFormatable;
 import com.farsunset.cim.sdk.server.model.proto.ReplyBodyProto;
 /**
  * 请求应答对象
  *
  */
-public class ReplyBody implements Serializable ,Protobufable{
+public class ReplyBody implements Serializable ,EncodeFormatable{
  
 	private static final long serialVersionUID = 1L;
 
@@ -141,7 +144,7 @@ public class ReplyBody implements Serializable ,Protobufable{
 		return buffer.toString();
 	}
 	@Override
-	public byte[] getByteArray() {
+	public byte[] getProtobufBody() {
 		ReplyBodyProto.Model.Builder builder = ReplyBodyProto.Model.newBuilder();
 		builder.setCode(code);
 		if(message!=null){
@@ -157,9 +160,24 @@ public class ReplyBody implements Serializable ,Protobufable{
 	}
 	 
 	@Override
-	public byte getType() {
-		// TODO Auto-generated method stub
+	public byte getDataType() {
 		return CIMConstant.ProtobufType.REPLYBODY;
 	}
- 
+	@Override
+	public byte[] getJSONBody() {
+		JSONObject json = new JSONObject();
+		json.put("contentType", getClass().getSimpleName());
+		json.put("key", key);
+		json.put("code", code);
+		json.put("message", message);
+		json.put("data", data);
+		String data = json.toJSONString();
+		try {
+			return data.getBytes("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

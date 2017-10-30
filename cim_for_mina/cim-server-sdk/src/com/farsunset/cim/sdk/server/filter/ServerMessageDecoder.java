@@ -21,89 +21,18 @@
  */
 package com.farsunset.cim.sdk.server.filter;
 
-import org.apache.log4j.Logger;
-import org.apache.mina.core.buffer.IoBuffer;
-import org.apache.mina.core.session.IoSession;
-import org.apache.mina.filter.codec.CumulativeProtocolDecoder;
-import org.apache.mina.filter.codec.ProtocolDecoderOutput;
+import org.apache.mina.filter.codec.demux.DemuxingProtocolDecoder;
 
-import com.farsunset.cim.sdk.server.constant.CIMConstant;
-import com.farsunset.cim.sdk.server.model.HeartbeatResponse;
-import com.farsunset.cim.sdk.server.model.SentBody;
-import com.farsunset.cim.sdk.server.model.proto.SentBodyProto;
+import com.farsunset.cim.sdk.server.filter.decoder.AppMessageDecoder;
+import com.farsunset.cim.sdk.server.filter.decoder.WebMessageDecoder;
 /**
  *  服务端接收消息解码
  */
-public class ServerMessageDecoder extends CumulativeProtocolDecoder {
+public class ServerMessageDecoder extends DemuxingProtocolDecoder {
 	
-	protected final Logger logger = Logger.getLogger(ServerMessageDecoder.class);
-	@Override
-	public boolean doDecode(IoSession iosession, IoBuffer iobuffer, ProtocolDecoderOutput out) throws Exception {
-		/**
-	     * 消息头3位
-	     */
-	    if(iobuffer.remaining() < CIMConstant.DATA_HEADER_LENGTH){
-	    	return false;
-	    }
-	    
-	    iobuffer.mark();
-	    
-	    byte conetnType = iobuffer.get();
-	    byte lv =iobuffer.get();//int 低位
-	    byte hv =iobuffer.get();//int 高位
-	    
-	    int conetnLength = getContentLength(lv,hv);
-	    
-	    
-	    //如果消息体没有接收完整，则重置读取，等待下一次重新读取
-	    if(conetnLength > iobuffer.remaining()){
-	    	iobuffer.reset();
-	    	return false;
-	    }
-	    
-	    byte[] dataBytes = new byte[conetnLength]; 
-	    iobuffer.get(dataBytes, 0, conetnLength); 
-	    
-	    Object message = mappingMessageObject(dataBytes,conetnType);
-	    if(message != null){
-	    	out.write(message);
-	    }
-	    return true;
-	}
-	
-	public Object mappingMessageObject(byte[] data,byte type) throws Exception
-	{
-		
-		if(CIMConstant.ProtobufType.C_H_RS == type)
-		{
-			HeartbeatResponse response = HeartbeatResponse.getInstance();
-			logger.info(response.toString());
-			return response;
-		}
-		
-		if(CIMConstant.ProtobufType.SENTBODY == type)
-		{
-			SentBodyProto.Model bodyProto = SentBodyProto.Model.parseFrom(data);
-	        SentBody body = new SentBody();
-	        body.setKey(bodyProto.getKey());
-	        body.setTimestamp(bodyProto.getTimestamp());
-	        body.putAll(bodyProto.getDataMap());
-	        logger.info(body.toString());
-	        
-	        return body;
-		}
-        return null;
-	}
 
-	/**
-	 * 解析消息体长度
-	 * @param type
-	 * @param length
-	 * @return
-	 */
-	private int getContentLength(byte lv,byte hv){
-		 int l =  (lv & 0xff);
-		 int h =  (hv & 0xff);
-		 return (l| (h <<= 8));
+	public ServerMessageDecoder() {
+		addMessageDecoder(new AppMessageDecoder());
+		addMessageDecoder(new WebMessageDecoder());
 	}
 }
