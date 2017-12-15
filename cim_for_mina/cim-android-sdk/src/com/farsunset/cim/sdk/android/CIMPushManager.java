@@ -26,7 +26,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
 import com.farsunset.cim.sdk.android.model.SentBody;
@@ -125,12 +125,16 @@ public class CIMPushManager  {
     	CIMCacheManager.putBoolean(context,CIMCacheManager.KEY_MANUAL_STOP, false);
     	CIMCacheManager.putString(context,CIMCacheManager.KEY_ACCOUNT, account);
     	
-    	String imei = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
-    	imei += context.getPackageName();
+    	String deviceId =  CIMCacheManager.getString(context,CIMCacheManager.KEY_DEVICE_ID);
+    	if(TextUtils.isEmpty(deviceId)) {
+    		deviceId = UUID.randomUUID().toString().replaceAll("-", "");
+        	CIMCacheManager.putString(context,CIMCacheManager.KEY_DEVICE_ID, deviceId);
+    	}
+    	
     	SentBody sent = new SentBody();
 		sent.setKey(CIMConstant.RequestKey.CLIENT_BIND);
 		sent.put("account", account);
-		sent.put("deviceId",UUID.nameUUIDFromBytes(imei.getBytes()).toString().replaceAll("-", ""));
+		sent.put("deviceId",deviceId);
 		sent.put("channel", "android");
 		sent.put("device",android.os.Build.MODEL);
 		sent.put("version",getVersionName(context));

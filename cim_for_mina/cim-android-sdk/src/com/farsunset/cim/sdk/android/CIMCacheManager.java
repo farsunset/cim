@@ -33,6 +33,8 @@ class CIMCacheManager  {
 	
 	public static final String KEY_ACCOUNT = "KEY_ACCOUNT";
 	
+	public static final String KEY_DEVICE_ID = "KEY_DEVICE_ID";
+	
 	public static final String KEY_MANUAL_STOP = "KEY_MANUAL_STOP";
 	
 	public static final String KEY_CIM_DESTROYED = "KEY_CIM_DESTROYED";

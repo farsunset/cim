@@ -5,6 +5,6 @@
 	<classpathentry kind="lib" path="libs/log4j-1.2.17.jar"/>
 	<classpathentry kind="lib" path="libs/mina-core-2.0.16.jar"/>
 	<classpathentry kind="lib" path="libs/protobuf-java-3.2.0.jar"/>
-	<classpathentry kind="lib" path="D:/devtools/dev/android-sdk-windows/platforms/android-21/android.jar"/>
+	<classpathentry kind="lib" path="D:/devtools/android-sdk-windows/platforms/android-22/android.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -201,9 +201,6 @@ class CIMConnectorManager extends SimpleChannelInboundHandler<Object> {
 			loopGroup.shutdownGracefully();
 		}
 		
-		
-		CIMCacheToolkit.destroy();
-		
 		manager = null;
 	}
 
