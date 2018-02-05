@@ -37,16 +37,19 @@ import com.farsunset.cim.sdk.server.model.SentBody;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
+
 /**
- *  服务端接收来自websocket消息解码
+ * 服务端接收来自websocket消息解码
  */
 public class WebMessageDecoder extends ByteToMessageDecoder {
 	public static final byte MASK = 0x1;// 1000 0000
 	public static final byte HAS_EXTEND_DATA = 126;
 	public static final byte HAS_EXTEND_DATA_CONTINUE = 127;
 	public static final byte PAYLOADLEN = 0x7F;// 0111 1111
-	public static final Pattern SEC_KEY_PATTERN = Pattern.compile("^(Sec-WebSocket-Key:).+",Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+	public static final Pattern SEC_KEY_PATTERN = Pattern.compile("^(Sec-WebSocket-Key:).+",
+			Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
 	protected final Logger logger = Logger.getLogger(WebMessageDecoder.class);
+
 	@Override
 	public void decode(ChannelHandlerContext arg0, ByteBuf iobuffer, List<Object> queue) throws Exception {
 		/**
@@ -57,8 +60,8 @@ public class WebMessageDecoder extends ByteToMessageDecoder {
 		}
 
 		iobuffer.markReaderIndex();
-	    
-	    byte head = iobuffer.readByte();// 第二个字节
+
+		byte head = iobuffer.readByte();// 第二个字节
 		byte datalength = (byte) (head & PAYLOADLEN);// 得到第二个字节后七位的值
 		int length = 0;
 		if (datalength < HAS_EXTEND_DATA) {// 第一种是消息内容少于126存储消息长度
@@ -66,7 +69,7 @@ public class WebMessageDecoder extends ByteToMessageDecoder {
 		} else if (datalength == HAS_EXTEND_DATA) {// 第二种是消息长度大于等于126且少于UINT16的情况此值为126
 			if (iobuffer.readableBytes() < 2) {
 				iobuffer.resetReaderIndex();
-				return ;
+				return;
 			}
 			byte[] extended = new byte[2];
 			iobuffer.readBytes(extended);
@@ -79,7 +82,7 @@ public class WebMessageDecoder extends ByteToMessageDecoder {
 		} else if (datalength == HAS_EXTEND_DATA_CONTINUE) {// 第三种是消息长度大于UINT16的情况下此值为127
 			if (iobuffer.readableBytes() < 4) {
 				iobuffer.resetReaderIndex();
-				return ;
+				return;
 			}
 			byte[] extended = new byte[4];
 			iobuffer.readBytes(extended);
@@ -92,16 +95,16 @@ public class WebMessageDecoder extends ByteToMessageDecoder {
 		}
 
 		int ismask = head >> 7 & MASK;// 得到第二个字节第一位的值
-		if ((ismask == 1 && iobuffer.readableBytes() < 4 + length) || (ismask == 0 && iobuffer.readableBytes() < length)) {// 有掩码
+		if ((ismask == 1 && iobuffer.readableBytes() < 4 + length)
+				|| (ismask == 0 && iobuffer.readableBytes() < length)) {// 有掩码
 			iobuffer.resetReaderIndex();
-			return ;
+			return;
 		}
 		iobuffer.resetReaderIndex();
-		
-		decodeDataBody(iobuffer,queue);
+
+		decodeDataBody(iobuffer, queue);
 	}
-	 
-	
+
 	public void decodeDataBody(ByteBuf iobuffer, List<Object> queue) {
 		iobuffer.readByte();
 		byte head = iobuffer.readByte();
@@ -119,22 +122,22 @@ public class WebMessageDecoder extends ByteToMessageDecoder {
 			// 获取掩码
 			byte[] mask = new byte[4];
 			iobuffer.readBytes(mask);
-			
+
 			data = new byte[iobuffer.readableBytes()];
 			iobuffer.readBytes(data);
 			for (int i = 0; i < data.length; i++) {
 				// 数据进行异或运算
 				data[i] = (byte) (data[i] ^ mask[i % 4]);
 			}
-			handleSentBodyAndHeartPing(data,queue);
+			handleSentBodyAndHeartPing(data, queue);
 		} else {
 			data = new byte[iobuffer.readableBytes()];
 			iobuffer.readBytes(data);
-			handleWebsocketHandshake(data,queue);
+			handleWebsocketHandshake(data, queue);
 		}
 	}
-	
-	private void handleWebsocketHandshake(byte[] data,List<Object> queue) {
+
+	private void handleWebsocketHandshake(byte[] data, List<Object> queue) {
 		String message = null;
 		try {
 			message = new String(data, "UTF-8");
@@ -144,7 +147,7 @@ public class WebMessageDecoder extends ByteToMessageDecoder {
 		}
 		SentBody body = new SentBody();
 		body.setKey(CIMNioSocketAcceptor.WEBSOCKET_HANDLER_KEY);
-		
+
 		Matcher m = SEC_KEY_PATTERN.matcher(message);
 		if (m.find()) {
 			String foundstring = m.group();
@@ -153,8 +156,7 @@ public class WebMessageDecoder extends ByteToMessageDecoder {
 		queue.add(body);
 	}
 
-	
-	public void handleSentBodyAndHeartPing(byte[] data,List<Object> queue) {
+	public void handleSentBodyAndHeartPing(byte[] data, List<Object> queue) {
 		String message = null;
 		try {
 			message = new String(data, "UTF-8");
@@ -169,12 +171,11 @@ public class WebMessageDecoder extends ByteToMessageDecoder {
 			HeartbeatResponse response = HeartbeatResponse.getInstance();
 			logger.info(response.toString());
 			queue.add(response);
-		}else if(data.length > 2)
-		{
+		} else if (data.length > 2) {
 			SentBody body = JSON.parseObject(message, SentBody.class);
 			logger.info(body.toString());
 			queue.add(body);
 		}
- 
+
 	}
 }

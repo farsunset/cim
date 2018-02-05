@@ -28,8 +28,8 @@ package com.farsunset.cim.sdk.server.handler;
 import com.farsunset.cim.sdk.server.model.ReplyBody;
 import com.farsunset.cim.sdk.server.model.SentBody;
 import com.farsunset.cim.sdk.server.session.CIMSession;
- 
-public interface  CIMRequestHandler  {
 
-   ReplyBody process(CIMSession session,SentBody message);
+public interface CIMRequestHandler {
+
+	ReplyBody process(CIMSession session, SentBody message);
 }

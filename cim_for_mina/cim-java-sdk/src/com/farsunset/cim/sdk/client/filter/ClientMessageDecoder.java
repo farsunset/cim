@@ -21,7 +21,6 @@
  */
 package com.farsunset.cim.sdk.client.filter;
 
-
 import org.apache.log4j.Logger;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
@@ -35,78 +34,72 @@ import com.farsunset.cim.sdk.client.model.ReplyBody;
 import com.farsunset.cim.sdk.model.proto.MessageProto;
 import com.farsunset.cim.sdk.model.proto.ReplyBodyProto;
 import com.google.protobuf.InvalidProtocolBufferException;
+
 /**
- *  客户端消息解码
+ * 客户端消息解码
  */
 public class ClientMessageDecoder extends CumulativeProtocolDecoder {
 	protected final Logger logger = Logger.getLogger(ClientMessageDecoder.class);
-	
 
 	@Override
-	public boolean doDecode(IoSession iosession, IoBuffer iobuffer,
-			ProtocolDecoderOutput out) throws Exception {
+	public boolean doDecode(IoSession iosession, IoBuffer iobuffer, ProtocolDecoderOutput out) throws Exception {
 
-	    /**
-	     * 消息头3位
-	     */
-	    if(iobuffer.remaining() < CIMConstant.DATA_HEADER_LENGTH){
-	    	return false;
-	    }
-	    
-	    iobuffer.mark();
-	    
-	    byte conetnType = iobuffer.get();
-	    
-	    byte lv =iobuffer.get();//int 低位
-	    byte hv =iobuffer.get();//int 高位
-	    
-	    int conetnLength = getContentLength(lv,hv);
-	    
-	    //如果消息体没有接收完整，则重置读取，等待下一次重新读取
-	    if(conetnLength > iobuffer.remaining()){
-	    	iobuffer.reset();
-	    	return false;
-	    }
-	    
-	    byte[] dataBytes = new byte[conetnLength]; 
-	    iobuffer.get(dataBytes, 0, conetnLength); 
-        
-	    Object message = mappingMessageObject(dataBytes,conetnType);
-	    if(message!=null){
-	    	out.write(message);
-	    }
-	    
+		/**
+		 * 消息头3位
+		 */
+		if (iobuffer.remaining() < CIMConstant.DATA_HEADER_LENGTH) {
+			return false;
+		}
+
+		iobuffer.mark();
+
+		byte conetnType = iobuffer.get();
+
+		byte lv = iobuffer.get();// int 低位
+		byte hv = iobuffer.get();// int 高位
+
+		int conetnLength = getContentLength(lv, hv);
+
+		// 如果消息体没有接收完整，则重置读取，等待下一次重新读取
+		if (conetnLength > iobuffer.remaining()) {
+			iobuffer.reset();
+			return false;
+		}
+
+		byte[] dataBytes = new byte[conetnLength];
+		iobuffer.get(dataBytes, 0, conetnLength);
+
+		Object message = mappingMessageObject(dataBytes, conetnType);
+		if (message != null) {
+			out.write(message);
+		}
+
 		return true;
 	}
 
-    private Object mappingMessageObject(byte[]  bytes,byte type) throws InvalidProtocolBufferException {
-		
-    	
-    	  
-		if(CIMConstant.ProtobufType.S_H_RQ == type)
-		{
+	private Object mappingMessageObject(byte[] bytes, byte type) throws InvalidProtocolBufferException {
+
+		if (CIMConstant.ProtobufType.S_H_RQ == type) {
 			HeartbeatRequest request = HeartbeatRequest.getInstance();
 			logger.info(request.toString());
 			return request;
 		}
-		
-		if(CIMConstant.ProtobufType.REPLYBODY == type)
-		{
+
+		if (CIMConstant.ProtobufType.REPLYBODY == type) {
 			ReplyBodyProto.Model bodyProto = ReplyBodyProto.Model.parseFrom(bytes);
 			ReplyBody body = new ReplyBody();
-	        body.setKey(bodyProto.getKey());
-	        body.setTimestamp(bodyProto.getTimestamp());
-	        body.putAll(bodyProto.getDataMap());
-	        body.setCode(bodyProto.getCode());
-	        body.setMessage(bodyProto.getMessage());
-	        
-	        logger.info(body.toString());
-	        
-	        return body;
+			body.setKey(bodyProto.getKey());
+			body.setTimestamp(bodyProto.getTimestamp());
+			body.putAll(bodyProto.getDataMap());
+			body.setCode(bodyProto.getCode());
+			body.setMessage(bodyProto.getMessage());
+
+			logger.info(body.toString());
+
+			return body;
 		}
-		
-		if(CIMConstant.ProtobufType.MESSAGE == type)
-		{
+
+		if (CIMConstant.ProtobufType.MESSAGE == type) {
 			MessageProto.Model bodyProto = MessageProto.Model.parseFrom(bytes);
 			Message message = new Message();
 			message.setMid(bodyProto.getMid());
@@ -118,25 +111,26 @@ public class ClientMessageDecoder extends CumulativeProtocolDecoder {
 			message.setExtra(bodyProto.getExtra());
 			message.setTimestamp(bodyProto.getTimestamp());
 			message.setFormat(bodyProto.getFormat());
-			
+
 			logger.info(message.toString());
-	        return message;
+			return message;
 		}
-		
+
 		return null;
-		
+
 	}
-    
-    /**
+
+	/**
 	 * 解析消息体长度
+	 * 
 	 * @param type
 	 * @param length
 	 * @return
 	 */
-	private int getContentLength(byte lv,byte hv){
-		 int l =  (lv & 0xff);
-		 int h =  (hv & 0xff);
-		 return (l| (h <<= 8));
+	private int getContentLength(byte lv, byte hv) {
+		int l = (lv & 0xff);
+		int h = (hv & 0xff);
+		return (l | (h <<= 8));
 	}
- 
+
 }

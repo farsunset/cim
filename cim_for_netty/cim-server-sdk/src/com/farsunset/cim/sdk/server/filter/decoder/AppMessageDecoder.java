@@ -33,12 +33,14 @@ import com.farsunset.cim.sdk.server.model.proto.SentBodyProto;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
+
 /**
- *  服务端接收来自应用的消息解码
+ * 服务端接收来自应用的消息解码
  */
 public class AppMessageDecoder extends ByteToMessageDecoder {
-	
+
 	protected final Logger logger = Logger.getLogger(AppMessageDecoder.class);
+
 	@Override
 	public void decode(ChannelHandlerContext arg0, ByteBuf buffer, List<Object> queue) throws Exception {
 		/**
@@ -51,7 +53,7 @@ public class AppMessageDecoder extends ByteToMessageDecoder {
 		buffer.markReaderIndex();
 
 		byte conetnType = buffer.readByte();
-		 
+
 		byte lv = buffer.readByte();// int 低位
 		byte hv = buffer.readByte();// int 高位
 
@@ -65,49 +67,47 @@ public class AppMessageDecoder extends ByteToMessageDecoder {
 
 		byte[] dataBytes = new byte[conetnLength];
 		buffer.readBytes(dataBytes);
-	    
-	    Object message = mappingMessageObject(dataBytes,conetnType);
-	    if(message != null){
-	    	queue.add(message);
-	    }
+
+		Object message = mappingMessageObject(dataBytes, conetnType);
+		if (message != null) {
+			queue.add(message);
+		}
 	}
-	
-	public Object mappingMessageObject(byte[] data,byte type) throws Exception
-	{
-		
-		if(CIMConstant.ProtobufType.C_H_RS == type)
-		{
+
+	public Object mappingMessageObject(byte[] data, byte type) throws Exception {
+
+		if (CIMConstant.ProtobufType.C_H_RS == type) {
 			HeartbeatResponse response = HeartbeatResponse.getInstance();
 			logger.info(response.toString());
 			SentBody body = new SentBody();
-		    body.setKey(CIMConstant.CLIENT_HEARTBEAT);
-		    body.setTimestamp(System.currentTimeMillis());
+			body.setKey(CIMConstant.CLIENT_HEARTBEAT);
+			body.setTimestamp(System.currentTimeMillis());
 			return body;
 		}
-		
-		if(CIMConstant.ProtobufType.SENTBODY == type)
-		{
+
+		if (CIMConstant.ProtobufType.SENTBODY == type) {
 			SentBodyProto.Model bodyProto = SentBodyProto.Model.parseFrom(data);
-	        SentBody body = new SentBody();
-	        body.setKey(bodyProto.getKey());
-	        body.setTimestamp(bodyProto.getTimestamp());
-	        body.putAll(bodyProto.getDataMap());
-	        logger.info(body.toString());
-	        
-	        return body;
+			SentBody body = new SentBody();
+			body.setKey(bodyProto.getKey());
+			body.setTimestamp(bodyProto.getTimestamp());
+			body.putAll(bodyProto.getDataMap());
+			logger.info(body.toString());
+
+			return body;
 		}
-        return null;
+		return null;
 	}
 
 	/**
 	 * 解析消息体长度
+	 * 
 	 * @param type
 	 * @param length
 	 * @return
 	 */
-	private int getContentLength(byte lv,byte hv){
-		 int l =  (lv & 0xff);
-		 int h =  (hv & 0xff);
-		 return (l| (h <<= 8));
+	private int getContentLength(byte lv, byte hv) {
+		int l = (lv & 0xff);
+		int h = (hv & 0xff);
+		return (l | (h <<= 8));
 	}
 }

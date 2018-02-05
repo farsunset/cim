@@ -22,15 +22,14 @@
 package com.farsunset.cim.push;
 
 import com.farsunset.cim.sdk.server.model.Message;
- 
-public class SystemMessagePusher  extends DefaultMessagePusher{
 
-	
+public class SystemMessagePusher extends DefaultMessagePusher {
+
 	@Override
-	public void push(Message message){
-		
+	public void push(Message message) {
+
 		message.setSender("system");
 		super.push(message);
-		
+
 	}
 }

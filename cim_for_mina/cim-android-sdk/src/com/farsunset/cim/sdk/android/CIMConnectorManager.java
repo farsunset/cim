@@ -20,6 +20,7 @@
  ***************************************************************************************
  */
 package com.farsunset.cim.sdk.android;
+
 import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.Random;
@@ -57,25 +58,23 @@ import com.farsunset.cim.sdk.android.model.SentBody;
  * 
  * @author 3979434@qq.com
  */
-class CIMConnectorManager  extends IoHandlerAdapter implements KeepAliveMessageFactory {
+class CIMConnectorManager extends IoHandlerAdapter implements KeepAliveMessageFactory {
 
 	private final String TAG = CIMConnectorManager.class.getSimpleName();
-	private final int READ_BUFFER_SIZE = 2048;//bit
-	private final int CONNECT_TIMEOUT = 10 * 1000;//秒
-	private final int WRITE_TIMEOUT = 10 * 1000;//秒
+	private final int READ_BUFFER_SIZE = 2048;// bit
+	private final int CONNECT_TIMEOUT = 10 * 1000;// 秒
+	private final int WRITE_TIMEOUT = 10 * 1000;// 秒
 
-	private final int READ_IDLE_TIME = 120;//秒
+	private final int READ_IDLE_TIME = 120;// 秒
 	private final int HEARBEAT_TIME_OUT = (READ_IDLE_TIME + 10) * 1000;// 收到服务端心跳请求超时时间 毫秒
-	private final String KEY_LAST_HEART_TIME =  "KEY_LAST_HEART_TIME" ;
-		
+	private final String KEY_LAST_HEART_TIME = "KEY_LAST_HEART_TIME";
+
 	private NioSocketConnector connector;
 	private ConnectFuture connectFuture;
 	private ExecutorService executor = Executors.newFixedThreadPool(1);
 	private Context context;
-	
-	private static CIMConnectorManager manager;
 
-	
+	private static CIMConnectorManager manager;
 
 	private CIMConnectorManager(Context ctx) {
 		context = ctx;
@@ -85,15 +84,15 @@ class CIMConnectorManager  extends IoHandlerAdapter implements KeepAliveMessageF
 		connector.getSessionConfig().setTcpNoDelay(true);
 		connector.getSessionConfig().setKeepAlive(true);
 		connector.getSessionConfig().setReadBufferSize(READ_BUFFER_SIZE);
-		
+
 		KeepAliveFilter keepAliveaHandler = new KeepAliveFilter(this);
 		keepAliveaHandler.setRequestInterval(READ_IDLE_TIME);
 		keepAliveaHandler.setRequestTimeoutHandler(KeepAliveRequestTimeoutHandler.NOOP);
 		keepAliveaHandler.setForwardEvent(true);
-		
+
 		connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(new ClientMessageCodecFactory()));
 		connector.getFilterChain().addLast("heartbeat", keepAliveaHandler);
-		
+
 		connector.setHandler(this);
 
 	}
@@ -106,88 +105,85 @@ class CIMConnectorManager  extends IoHandlerAdapter implements KeepAliveMessageF
 
 	}
 
-	private  synchronized void syncConnection(final String host,final int port) {
-		
-		if(isConnected()){
-			return ;
+	private synchronized void syncConnection(final String host, final int port) {
+
+		if (isConnected()) {
+			return;
 		}
-		
+
 		try {
 
-			Log.i(TAG, "****************CIM正在连接服务器  "+host+":"+port+"......");
-			
-			CIMCacheManager.putBoolean(context,CIMCacheManager.KEY_CIM_CONNECTION_STATE, false);
+			Log.i(TAG, "****************CIM正在连接服务器  " + host + ":" + port + "......");
+
+			CIMCacheManager.putBoolean(context, CIMCacheManager.KEY_CIM_CONNECTION_STATE, false);
 			InetSocketAddress remoteSocketAddress = new InetSocketAddress(host, port);
 			connectFuture = connector.connect(remoteSocketAddress);
 			connectFuture.awaitUninterruptibly();
 			connectFuture.getSession();
 		} catch (Exception e) {
-			
-			long interval = CIMConstant.RECONN_INTERVAL_TIME - (5*1000 - new Random().nextInt(15*1000));
+
+			long interval = CIMConstant.RECONN_INTERVAL_TIME - (5 * 1000 - new Random().nextInt(15 * 1000));
 
 			Intent intent = new Intent();
 			intent.setAction(CIMConstant.IntentAction.ACTION_CONNECTION_FAILED);
 			intent.putExtra(Exception.class.getName(), e.getClass().getSimpleName());
 			intent.putExtra("interval", interval);
 			context.sendBroadcast(intent);
-			
-			Log.e(TAG, "****************CIM连接服务器失败  "+host+":"+port+"......将在"+interval/1000+"秒后重新尝试连接");
-		 
-		}  
+
+			Log.e(TAG, "****************CIM连接服务器失败  " + host + ":" + port + "......将在" + interval / 1000 + "秒后重新尝试连接");
+
+		}
 
 	}
 
 	public void connect(final String host, final int port) {
 
 		if (!isNetworkConnected(context)) {
-			
+
 			Intent intent = new Intent();
 			intent.setAction(CIMConstant.IntentAction.ACTION_CONNECTION_FAILED);
-			intent.putExtra(Exception.class.getName(),NetworkDisabledException.class.getSimpleName());
+			intent.putExtra(Exception.class.getName(), NetworkDisabledException.class.getSimpleName());
 			context.sendBroadcast(intent);
-			
+
 			return;
 		}
-	
+
 		executor.execute(new Runnable() {
-			public void run() 
-			{
+			public void run() {
 				syncConnection(host, port);
-		    }
+			}
 		});
-		 
+
 	}
 
 	public synchronized void send(SentBody body) {
 
 		boolean isSuccessed = false;
-		
-		String exceptionName =SessionClosedException.class.getSimpleName();
-		
+
+		String exceptionName = SessionClosedException.class.getSimpleName();
+
 		IoSession session = getCurrentSession();
-		if(session!=null && session.isConnected())
-		{
+		if (session != null && session.isConnected()) {
 			WriteFuture wf = session.write(body);
 			// 消息发送超时 5秒
 			wf.awaitUninterruptibly(WRITE_TIMEOUT);
 			isSuccessed = wf.isWritten();
-			if(wf.getException() != null)
-			{
-				exceptionName =wf.getException().getClass().getSimpleName();
+			if (wf.getException() != null) {
+				exceptionName = wf.getException().getClass().getSimpleName();
 			}
-		} 
-		
-		if(!isSuccessed){
+		}
+
+		if (!isSuccessed) {
 			Intent intent = new Intent();
 			intent.setAction(CIMConstant.IntentAction.ACTION_SENT_FAILED);
-			intent.putExtra(Exception.class.getName(),exceptionName);
+			intent.putExtra(Exception.class.getName(), exceptionName);
 			intent.putExtra(SentBody.class.getName(), body);
 			context.sendBroadcast(intent);
 		}
-		
+
 	}
 
-	public   void destroy() {
+	public void destroy() {
 		IoSession session = getCurrentSession();
 		if (session != null) {
 			session.closeNow();
@@ -196,59 +192,51 @@ class CIMConnectorManager  extends IoHandlerAdapter implements KeepAliveMessageF
 		if (connector != null && !connector.isDisposed()) {
 			connector.dispose();
 		}
-		
+
 		manager = null;
 	}
 
 	public boolean isConnected() {
 		IoSession session = getCurrentSession();
-		return session != null ;
+		return session != null;
 	}
 
-	
-	
-	public void closeSession()
-	{
+	public void closeSession() {
 		IoSession session = getCurrentSession();
-		if(session!=null)
-		{
+		if (session != null) {
 			session.closeNow();
 		}
 	}
 
-	public IoSession getCurrentSession()
-	{
-		Map<Long,IoSession> sessions = connector.getManagedSessions();
-		for(Long key:sessions.keySet())
-		{
+	public IoSession getCurrentSession() {
+		Map<Long, IoSession> sessions = connector.getManagedSessions();
+		for (Long key : sessions.keySet()) {
 			IoSession session = sessions.get(key);
-			if(session.isConnected()){
+			if (session.isConnected()) {
 				return session;
 			}
 		}
 		return null;
 	}
 
-	
 	@Override
 	public void sessionCreated(IoSession session) throws Exception {
 
-		
-		Log.i(TAG, "****************CIM连接服务器成功:"+session.getLocalAddress()+" NID:"+session.getId());
-		
+		Log.i(TAG, "****************CIM连接服务器成功:" + session.getLocalAddress() + " NID:" + session.getId());
+
 		setLastHeartbeatTime(session);
-		
+
 		Intent intent = new Intent();
 		intent.setAction(CIMConstant.IntentAction.ACTION_CONNECTION_SUCCESSED);
 		context.sendBroadcast(intent);
 
 	}
-	 
+
 	@Override
 	public void sessionClosed(IoSession session) {
 
-		Log.e(TAG, "****************CIM与服务器断开连接:"+session.getLocalAddress()+" NID:"+session.getId());
-		 
+		Log.e(TAG, "****************CIM与服务器断开连接:" + session.getLocalAddress() + " NID:" + session.getId());
+
 		Intent intent = new Intent();
 		intent.setAction(CIMConstant.IntentAction.ACTION_CONNECTION_CLOSED);
 		context.sendBroadcast(intent);
@@ -256,45 +244,44 @@ class CIMConnectorManager  extends IoHandlerAdapter implements KeepAliveMessageF
 	}
 
 	@Override
-	public void sessionIdle(IoSession session, IdleStatus status)  {
-		Log.d(TAG, "****************CIM "+status.toString().toUpperCase()+":"+session.getLocalAddress() +" NID:"+session.getId()+  " isConnected:" + session.isConnected());
-		
+	public void sessionIdle(IoSession session, IdleStatus status) {
+		Log.d(TAG, "****************CIM " + status.toString().toUpperCase() + ":" + session.getLocalAddress() + " NID:"
+				+ session.getId() + " isConnected:" + session.isConnected());
+
 		/**
-		 * 用于解决，wifi情况下。偶而路由器与服务器断开连接时，客户端并没及时收到关闭事件
-		 * 导致这样的情况下当前连接无效也不会重连的问题
+		 * 用于解决，wifi情况下。偶而路由器与服务器断开连接时，客户端并没及时收到关闭事件 导致这样的情况下当前连接无效也不会重连的问题
 		 * 
 		 */
 		long lastHeartbeatTime = getLastHeartbeatTime(session);
-		if(System.currentTimeMillis() - lastHeartbeatTime >= HEARBEAT_TIME_OUT)
-		{
+		if (System.currentTimeMillis() - lastHeartbeatTime >= HEARBEAT_TIME_OUT) {
 			session.closeNow();
-			Log.e(TAG, "****************CIM心跳超时 ,即将重新连接......"+" NID:"+session.getId());
+			Log.e(TAG, "****************CIM心跳超时 ,即将重新连接......" + " NID:" + session.getId());
 		}
 	}
 
 	@Override
 	public void exceptionCaught(IoSession session, Throwable cause) {
-		
-		Log.e(TAG, "****************CIM连接出现未知异常:"+session.getLocalAddress()+" NID:"+session.getId());
-		
-		if(cause!=null && cause.getMessage()!=null){
+
+		Log.e(TAG, "****************CIM连接出现未知异常:" + session.getLocalAddress() + " NID:" + session.getId());
+
+		if (cause != null && cause.getMessage() != null) {
 			Log.e(TAG, cause.getMessage());
 		}
 	}
 
 	@Override
-	public void messageReceived(IoSession session, Object obj){
-		
+	public void messageReceived(IoSession session, Object obj) {
+
 		if (obj instanceof Message) {
 
 			Intent intent = new Intent();
 			intent.setAction(CIMConstant.IntentAction.ACTION_MESSAGE_RECEIVED);
 			intent.putExtra(Message.class.getName(), (Message) obj);
 			context.sendBroadcast(intent);
-		 
+
 		}
 		if (obj instanceof ReplyBody) {
-			
+
 			Intent intent = new Intent();
 			intent.setAction(CIMConstant.IntentAction.ACTION_REPLY_RECEIVED);
 			intent.putExtra(ReplyBody.class.getName(), (ReplyBody) obj);
@@ -304,42 +291,38 @@ class CIMConnectorManager  extends IoHandlerAdapter implements KeepAliveMessageF
 
 	@Override
 	public void messageSent(IoSession session, Object message) {
-		if(message instanceof SentBody)
-		{
+		if (message instanceof SentBody) {
 			Intent intent = new Intent();
 			intent.setAction(CIMConstant.IntentAction.ACTION_SENT_SUCCESSED);
 			intent.putExtra(SentBody.class.getName(), (SentBody) message);
 			context.sendBroadcast(intent);
 		}
 	}
-	
-	
-	private void setLastHeartbeatTime(IoSession session)
-	{
+
+	private void setLastHeartbeatTime(IoSession session) {
 		session.setAttribute(KEY_LAST_HEART_TIME, System.currentTimeMillis());
 	}
-	
-	private long  getLastHeartbeatTime(IoSession session)
-	{
+
+	private long getLastHeartbeatTime(IoSession session) {
 		long time = 0;
 		Object value = session.getAttribute(KEY_LAST_HEART_TIME);
-		if(value !=null){
+		if (value != null) {
 			time = Long.parseLong(value.toString());
 		}
 		return time;
 	}
-	
+
 	public static boolean isNetworkConnected(Context context) {
 		try {
 			ConnectivityManager nw = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 			NetworkInfo networkInfo = nw.getActiveNetworkInfo();
 			return networkInfo != null;
-		} catch (Exception e) {}
+		} catch (Exception e) {
+		}
 
 		return false;
 	}
 
-	
 	@Override
 	public Object getRequest(IoSession arg0) {
 		return null;
@@ -352,9 +335,9 @@ class CIMConnectorManager  extends IoHandlerAdapter implements KeepAliveMessageF
 
 	@Override
 	public boolean isRequest(IoSession session, Object data) {
-		
+
 		setLastHeartbeatTime(session);
-		
+
 		return data instanceof HeartbeatRequest;
 	}
 

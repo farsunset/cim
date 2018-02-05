@@ -41,18 +41,16 @@ public class SessionClosedHandler implements CIMRequestHandler {
 
 	public ReplyBody process(CIMSession ios, SentBody message) {
 
-		Object account =ios.getAttribute(CIMConstant.SESSION_KEY);
-        if(account == null){
-        	return null;
-        }
-        DefaultSessionManager sessionManager  =  ((DefaultSessionManager) ContextHolder.getBean("CIMSessionManager"));
-		
+		Object account = ios.getAttribute(CIMConstant.SESSION_KEY);
+		if (account == null) {
+			return null;
+		}
+		DefaultSessionManager sessionManager = ((DefaultSessionManager) ContextHolder.getBean("CIMSessionManager"));
+
 		ios.removeAttribute(CIMConstant.SESSION_KEY);
 		sessionManager.remove(account.toString());
-	    
+
 		return null;
 	}
-	
- 
-	
+
 }

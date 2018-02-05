@@ -105,8 +105,8 @@ public class ServerMessageEncoder extends ProtocolEncoderAdapter {
 	}
 
 	/**
-	 * 发送到websocket的数据需要进行相关格式转换
-	 * 对传入数据进行无掩码转换
+	 * 发送到websocket的数据需要进行相关格式转换 对传入数据进行无掩码转换
+	 * 
 	 * @param data
 	 * @return
 	 */

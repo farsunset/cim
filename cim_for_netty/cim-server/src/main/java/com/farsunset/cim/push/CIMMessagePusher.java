@@ -23,20 +23,17 @@ package com.farsunset.cim.push;
 
 import com.farsunset.cim.sdk.server.model.Message;
 
-
 /**
  * 消息发送实接口
  * 
  */
 public interface CIMMessagePusher {
 
- 
- 
-    /**
-     * 向用户发送消息
-     * @param msg
-     */
+	/**
+	 * 向用户发送消息
+	 * 
+	 * @param msg
+	 */
 	public void push(Message msg);
 
- 
 }

@@ -31,34 +31,30 @@ import java.util.Set;
  *
  */
 public class ReplyBody implements Serializable {
- 
+
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 请求key
 	 */
 	private String key;
-	
-	
+
 	/**
 	 * 返回码
 	 */
 	private String code;
-	
+
 	/**
 	 * 返回说明
 	 */
 	private String message;
 
-	
 	private long timestamp;
-	
- 
+
 	/**
 	 * 返回数据集合
 	 */
 	private Hashtable<String, String> data = new Hashtable<String, String>();
-
 
 	public long getTimestamp() {
 		return timestamp;
@@ -67,8 +63,6 @@ public class ReplyBody implements Serializable {
 	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
 	}
-
-	 
 
 	public String getKey() {
 		return key;
@@ -101,8 +95,8 @@ public class ReplyBody implements Serializable {
 	public void putAll(Map<String, String> map) {
 		data.putAll(map);
 	}
-	
-	public Set<String> getKeySet()   {
+
+	public Set<String> getKeySet() {
 		return data.keySet();
 	}
 
@@ -114,24 +108,21 @@ public class ReplyBody implements Serializable {
 		this.code = code;
 	}
 
-	
-	public String toString()
-	{
+	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("#ReplyBody#").append("\n");
 		buffer.append("key:").append(this.getKey()).append("\n");
 		buffer.append("timestamp:").append(timestamp).append("\n");
 		buffer.append("code:").append(code).append("\n");
-		
-		if(!data.isEmpty()){
+
+		if (!data.isEmpty()) {
 			buffer.append("data{").append("\n");
-			for(String key:getKeySet())
-			{
+			for (String key : getKeySet()) {
 				buffer.append(key).append(":").append(this.get(key)).append("\n");
 			}
 			buffer.append("}");
 		}
-		
+
 		return buffer.toString();
 	}
 

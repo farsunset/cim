@@ -26,7 +26,7 @@ import org.apache.mina.filter.codec.ProtocolCodecFactory;
 import org.apache.mina.filter.codec.ProtocolDecoder;
 import org.apache.mina.filter.codec.ProtocolEncoder;
 
-/** 
+/**
  * android客户端端消息 编码解码器
  */
 public class ClientMessageCodecFactory implements ProtocolCodecFactory {
@@ -34,23 +34,23 @@ public class ClientMessageCodecFactory implements ProtocolCodecFactory {
 	/**
 	 * 消息编码器
 	 */
-    private final ClientMessageEncoder encoder;
-    /**
+	private final ClientMessageEncoder encoder;
+	/**
 	 * 消息解码器
 	 */
-    private final ClientMessageDecoder decoder;
+	private final ClientMessageDecoder decoder;
 
-     
-    public ClientMessageCodecFactory() {
-        encoder = new ClientMessageEncoder();
-        decoder = new ClientMessageDecoder();
-    }
-    
-    public ProtocolEncoder getEncoder(IoSession session) throws Exception {
-        return encoder;
-    }
-    public ProtocolDecoder getDecoder(IoSession session) throws Exception {
-        return decoder;
-    }
+	public ClientMessageCodecFactory() {
+		encoder = new ClientMessageEncoder();
+		decoder = new ClientMessageDecoder();
+	}
+
+	public ProtocolEncoder getEncoder(IoSession session) throws Exception {
+		return encoder;
+	}
+
+	public ProtocolDecoder getDecoder(IoSession session) throws Exception {
+		return decoder;
+	}
 
 }

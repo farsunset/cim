@@ -41,6 +41,7 @@ import io.netty.handler.codec.ByteToMessageDecoder;
  */
 public class ClientMessageDecoder extends ByteToMessageDecoder {
 	final static String TAG = ClientMessageDecoder.class.getSimpleName();
+
 	@Override
 	protected void decode(ChannelHandlerContext arg0, ByteBuf buffer, List<Object> queue) throws Exception {
 
@@ -72,8 +73,8 @@ public class ClientMessageDecoder extends ByteToMessageDecoder {
 		buffer.readBytes(dataBytes);
 
 		Object message = mappingMessageObject(dataBytes, conetnType);
-		
-		if(message!=null){
+
+		if (message != null) {
 			queue.add(message);
 		}
 

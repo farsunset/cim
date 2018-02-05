@@ -21,15 +21,14 @@
  */
 package com.farsunset.cim.sdk.client.exception;
 
-
 public class NetworkDisconnectedException extends Exception {
-	 
+
 	private static final long serialVersionUID = 1L;
 
 	public NetworkDisconnectedException() {
 		super();
 	}
- 
+
 	public NetworkDisconnectedException(String s) {
 		super(s);
 	}

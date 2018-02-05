@@ -25,6 +25,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
 /**
  * java |android 客户端请求结构
  *
@@ -59,43 +60,41 @@ public class SentBody implements Serializable {
 		this.key = key;
 	}
 
-	 
 	public void remove(String k) {
 		data.remove(k);
 	}
 
 	public void put(String k, String v) {
-		if(v!=null && k!=null){
-			data.put(k, v);	
+		if (v != null && k != null) {
+			data.put(k, v);
 		}
 	}
-	
+
 	public void putAll(Map<String, String> map) {
 		data.putAll(map);
 	}
-	
-	public Set<String> getKeySet()   {
+
+	public Set<String> getKeySet() {
 		return data.keySet();
 	}
-	
-	 
+
 	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
-		buffer.append("#SentBody#").append("\n");;
+		buffer.append("#SentBody#").append("\n");
+		;
 		buffer.append("key:").append(key).append("\n");
 		buffer.append("timestamp:").append(timestamp).append("\n");
-		 
-		if(!data.isEmpty()){
+
+		if (!data.isEmpty()) {
 			buffer.append("data{").append("\n");
-			for(String key:getKeySet())
-			{
+			for (String key : getKeySet()) {
 				buffer.append(key).append(":").append(this.get(key)).append("\n");
 			}
 			buffer.append("}");
 		}
-		
+
 		return buffer.toString();
 	}
- 
+
 }

@@ -29,36 +29,36 @@ import com.farsunset.cim.sdk.server.filter.decoder.WebMessageDecoder;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
+
 /**
- *  服务端接收消息路由解码，通过消息类型分发到不同的真正解码器
+ * 服务端接收消息路由解码，通过消息类型分发到不同的真正解码器
  */
 public class ServerMessageDecoder extends ByteToMessageDecoder {
-	
+
 	private WebMessageDecoder webMessageDecoder;
 	private AppMessageDecoder appMessageDecoder;
-	
+
 	public ServerMessageDecoder() {
 		webMessageDecoder = new WebMessageDecoder();
 		appMessageDecoder = new AppMessageDecoder();
 
 	}
+
 	@Override
 	protected void decode(ChannelHandlerContext arg0, ByteBuf buffer, List<Object> queue) throws Exception {
 		buffer.markReaderIndex();
 		byte conetnType = buffer.readByte();
 		buffer.resetReaderIndex();
-		
+
 		/**
-	     * 原生SDK只会发送2种类型消息 1个心跳类型 另一个是sendbody，报文的第一个字节为消息类型,否则才是websocket的消息
-	     */
-	    if(conetnType == CIMConstant.ProtobufType.C_H_RS || conetnType == CIMConstant.ProtobufType.SENTBODY) {
-	    	appMessageDecoder.decode(arg0, buffer, queue);
-	    }else
-	    {
-	    	webMessageDecoder.decode(arg0, buffer, queue);
-	    }
-		
+		 * 原生SDK只会发送2种类型消息 1个心跳类型 另一个是sendbody，报文的第一个字节为消息类型,否则才是websocket的消息
+		 */
+		if (conetnType == CIMConstant.ProtobufType.C_H_RS || conetnType == CIMConstant.ProtobufType.SENTBODY) {
+			appMessageDecoder.decode(arg0, buffer, queue);
+		} else {
+			webMessageDecoder.decode(arg0, buffer, queue);
+		}
+
 	}
 
-	 
 }

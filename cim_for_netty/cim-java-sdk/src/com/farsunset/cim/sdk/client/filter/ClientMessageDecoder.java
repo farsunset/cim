@@ -74,8 +74,8 @@ public class ClientMessageDecoder extends ByteToMessageDecoder {
 		buffer.readBytes(dataBytes);
 
 		Object message = mappingMessageObject(dataBytes, conetnType);
-		
-		if(message!=null){
+
+		if (message != null) {
 			queue.add(message);
 		}
 
@@ -116,7 +116,7 @@ public class ClientMessageDecoder extends ByteToMessageDecoder {
 			message.setTimestamp(bodyProto.getTimestamp());
 			message.setFormat(bodyProto.getFormat());
 
-			logger.info( message.toString());
+			logger.info(message.toString());
 			return message;
 		}
 

@@ -21,8 +21,6 @@
  */
 package com.farsunset.cim.sdk.client.filter;
 
-
-
 import org.apache.log4j.Logger;
 
 import com.farsunset.cim.sdk.client.constant.CIMConstant;
@@ -32,47 +30,42 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
-
 /**
- *  客户端消息发送前进行编码,可在此加密消息
+ * 客户端消息发送前进行编码,可在此加密消息
  *
  */
-public class ClientMessageEncoder extends MessageToByteEncoder<Object>  {
+public class ClientMessageEncoder extends MessageToByteEncoder<Object> {
 	protected final Logger logger = Logger.getLogger(ClientMessageEncoder.class.getSimpleName());
 
 	@Override
 	protected void encode(ChannelHandlerContext ctx, Object message, ByteBuf out) throws Exception {
-		
-		
-		if(message instanceof Protobufable){
-    		
-	        Protobufable data = (Protobufable) message;
-	        byte[] byteArray = data.getByteArray();
-	        		
-		        	
-	        out.writeBytes(createHeader(data.getType(),byteArray.length));
-	        out.writeBytes(byteArray);
-	        		
-	    }
-		
+
+		if (message instanceof Protobufable) {
+
+			Protobufable data = (Protobufable) message;
+			byte[] byteArray = data.getByteArray();
+
+			out.writeBytes(createHeader(data.getType(), byteArray.length));
+			out.writeBytes(byteArray);
+
+		}
+
 		logger.info(message.toString());
 	}
-	
+
 	/**
 	 * 消息体最大为65535
+	 * 
 	 * @param type
 	 * @param length
 	 * @return
 	 */
-	private byte[] createHeader(byte type,int length){
+	private byte[] createHeader(byte type, int length) {
 		byte[] header = new byte[CIMConstant.DATA_HEADER_LENGTH];
 		header[0] = type;
 		header[1] = (byte) (length & 0xff);
-        header[2] = (byte) ((length >> 8) & 0xff);
+		header[2] = (byte) ((length >> 8) & 0xff);
 		return header;
 	}
-	
-	
-	 
-	
+
 }

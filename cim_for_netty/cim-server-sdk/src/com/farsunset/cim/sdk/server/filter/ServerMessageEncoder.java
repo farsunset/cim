@@ -33,7 +33,6 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 import io.netty.util.AttributeKey;
 
-
 /**
  * 服务端发送消息前编码
  */
@@ -43,7 +42,7 @@ public class ServerMessageEncoder extends MessageToByteEncoder<Object> {
 
 	@Override
 	protected void encode(ChannelHandlerContext ctx, Object object, ByteBuf out) throws Exception {
-		
+
 		Object channel = ctx.channel().attr(AttributeKey.valueOf("channel")).get();
 
 		/**
@@ -56,7 +55,6 @@ public class ServerMessageEncoder extends MessageToByteEncoder<Object> {
 			logger.info(data.toString());
 		}
 
-		
 		/**
 		 * websocket的数据传输使用JSON编码数据格式，因为Protobuf还没有支持js
 		 */
@@ -77,29 +75,30 @@ public class ServerMessageEncoder extends MessageToByteEncoder<Object> {
 
 			EncodeFormatable data = (EncodeFormatable) object;
 			byte[] byteArray = data.getProtobufBody();
-			out.writeBytes(createHeader(data.getDataType(),byteArray.length));
-		    out.writeBytes(byteArray);
+			out.writeBytes(createHeader(data.getDataType(), byteArray.length));
+			out.writeBytes(byteArray);
 			logger.info(data.toString());
 		}
 	}
-	
+
 	/**
 	 * 消息体最大为65535
+	 * 
 	 * @param type
 	 * @param length
 	 * @return
 	 */
-	private byte[] createHeader(byte type,int length){
+	private byte[] createHeader(byte type, int length) {
 		byte[] header = new byte[CIMConstant.DATA_HEADER_LENGTH];
 		header[0] = type;
 		header[1] = (byte) (length & 0xff);
-        header[2] = (byte) ((length >> 8) & 0xff);
+		header[2] = (byte) ((length >> 8) & 0xff);
 		return header;
 	}
-	 
+
 	/**
-	 * 发送到websocket的数据需要进行相关格式转换
-	 * 对传入数据进行无掩码转换
+	 * 发送到websocket的数据需要进行相关格式转换 对传入数据进行无掩码转换
+	 * 
 	 * @param data
 	 * @return
 	 */
@@ -143,6 +142,5 @@ public class ServerMessageEncoder extends MessageToByteEncoder<Object> {
 
 		return result;
 	}
-
 
 }

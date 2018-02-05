@@ -28,8 +28,10 @@ import com.farsunset.cim.sdk.server.model.ReplyBody;
 import com.farsunset.cim.sdk.server.model.SentBody;
 import com.farsunset.cim.sdk.server.model.WebsocketResponse;
 import com.farsunset.cim.sdk.server.session.CIMSession;
+
 /**
  * 处理websocket握手请求，返回响应的报文给浏览器
+ * 
  * @author Iraid
  *
  */

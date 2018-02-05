@@ -23,14 +23,14 @@ package com.farsunset.cim.sdk.android.exception;
 
 import java.io.Serializable;
 
-public class NetworkDisabledException extends Exception implements Serializable  {
-	 
+public class NetworkDisabledException extends Exception implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
 	public NetworkDisabledException() {
 		super();
 	}
- 
+
 	public NetworkDisabledException(String s) {
 		super(s);
 	}

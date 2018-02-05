@@ -45,7 +45,8 @@ public class WebMessageDecoder extends MessageDecoderAdapter {
 	public static final byte HAS_EXTEND_DATA = 126;
 	public static final byte HAS_EXTEND_DATA_CONTINUE = 127;
 	public static final byte PAYLOADLEN = 0x7F;// 0111 1111
-	public static final Pattern SEC_KEY_PATTERN = Pattern.compile("^(Sec-WebSocket-Key:).+",Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+	public static final Pattern SEC_KEY_PATTERN = Pattern.compile("^(Sec-WebSocket-Key:).+",
+			Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
 
 	protected final Logger logger = Logger.getLogger(WebMessageDecoder.class);
 
@@ -55,11 +56,10 @@ public class WebMessageDecoder extends MessageDecoderAdapter {
 			return NEED_DATA;
 		}
 
-		 /**
-	     * 原生SDK只会发送2种类型消息 1个心跳类型 另一个是sendbody，报文的第一个字节为消息类型
-	     * 如果非原生sdk发出的消息，则认为是websocket发送的消息
-	     * websocket发送的消息 第一个字节不可能等于C_H_RS或者SENTBODY
-	     */
+		/**
+		 * 原生SDK只会发送2种类型消息 1个心跳类型 另一个是sendbody，报文的第一个字节为消息类型
+		 * 如果非原生sdk发出的消息，则认为是websocket发送的消息 websocket发送的消息 第一个字节不可能等于C_H_RS或者SENTBODY
+		 */
 		byte conetnType = iobuffer.get();
 		if (conetnType == CIMConstant.ProtobufType.C_H_RS || conetnType == CIMConstant.ProtobufType.SENTBODY) {
 			return NOT_OK;
@@ -104,7 +104,7 @@ public class WebMessageDecoder extends MessageDecoderAdapter {
 	}
 
 	@Override
-	public MessageDecoderResult decode(IoSession iosession, IoBuffer in, ProtocolDecoderOutput out)throws Exception {
+	public MessageDecoderResult decode(IoSession iosession, IoBuffer in, ProtocolDecoderOutput out) throws Exception {
 		in.get();
 		byte head = in.get();
 		byte datalength = (byte) (head & PAYLOADLEN);
@@ -121,26 +121,26 @@ public class WebMessageDecoder extends MessageDecoderAdapter {
 			// 获取掩码
 			byte[] mask = new byte[4];
 			in.get(mask);
-			
+
 			data = new byte[in.remaining()];
 			in.get(data);
 			for (int i = 0; i < data.length; i++) {
 				// 数据进行异或运算
 				data[i] = (byte) (data[i] ^ mask[i % 4]);
 			}
-			handleSentBodyAndHeartPing(data,out);
+			handleSentBodyAndHeartPing(data, out);
 		} else {
 			data = new byte[in.remaining()];
 			in.get(data);
-			handleWebsocketHandshake(new String(data, "UTF-8"),out);
+			handleWebsocketHandshake(new String(data, "UTF-8"), out);
 		}
 		return OK;
 	}
-	
-	private void handleWebsocketHandshake(String message,ProtocolDecoderOutput out) {
+
+	private void handleWebsocketHandshake(String message, ProtocolDecoderOutput out) {
 		SentBody body = new SentBody();
 		body.setKey(CIMNioSocketAcceptor.WEBSOCKET_HANDLER_KEY);
-		
+
 		Matcher m = SEC_KEY_PATTERN.matcher(message);
 		if (m.find()) {
 			String foundstring = m.group();
@@ -149,10 +149,9 @@ public class WebMessageDecoder extends MessageDecoderAdapter {
 		out.write(body);
 	}
 
-	
-	public void handleSentBodyAndHeartPing(byte[] data,ProtocolDecoderOutput out) throws UnsupportedEncodingException   {
+	public void handleSentBodyAndHeartPing(byte[] data, ProtocolDecoderOutput out) throws UnsupportedEncodingException {
 		String message = new String(data, "UTF-8");
-	 
+
 		/**
 		 * 只处理心跳响应以及，sentbody消息
 		 */
@@ -160,12 +159,11 @@ public class WebMessageDecoder extends MessageDecoderAdapter {
 			HeartbeatResponse response = HeartbeatResponse.getInstance();
 			logger.info(response.toString());
 			out.write(response);
-		}else if(data.length > 2)
-		{
+		} else if (data.length > 2) {
 			SentBody body = JSON.parseObject(message, SentBody.class);
 			logger.info(body.toString());
 			out.write(body);
 		}
- 
+
 	}
 }

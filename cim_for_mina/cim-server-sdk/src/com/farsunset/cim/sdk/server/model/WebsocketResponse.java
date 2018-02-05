@@ -22,26 +22,28 @@
 package com.farsunset.cim.sdk.server.model;
 
 import java.io.UnsupportedEncodingException;
+
 /**
- *websocket握手响应结果
+ * websocket握手响应结果
  *
  */
-public class WebsocketResponse{
- 
+public class WebsocketResponse {
+
 	private String token;
-	
+
 	public WebsocketResponse(String token) {
 		this.token = token;
 	}
-	
+
 	public byte[] getBytes() {
-        try {
+		try {
 			return toString().getBytes("UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-        return null;
+		return null;
 	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -55,7 +57,7 @@ public class WebsocketResponse{
 		builder.append("\r\n");
 		builder.append("\r\n");
 
-        return builder.toString();
-        
+		return builder.toString();
+
 	}
 }

@@ -26,35 +26,36 @@ import java.io.UnsupportedEncodingException;
 
 import com.farsunset.cim.sdk.server.constant.CIMConstant;
 import com.farsunset.cim.sdk.server.model.feature.EncodeFormatable;
+
 /**
  * 服务端心跳请求
  *
  */
-public class HeartbeatRequest implements Serializable,EncodeFormatable {
+public class HeartbeatRequest implements Serializable, EncodeFormatable {
 
 	private static final long serialVersionUID = 1L;
 	private static final String TAG = "SERVER_HEARTBEAT_REQUEST";
 	private static final String CMD_HEARTBEAT_RESPONSE = "SR";
 
 	private static HeartbeatRequest object = new HeartbeatRequest();
-	
-    private HeartbeatRequest(){
-		
+
+	private HeartbeatRequest() {
+
 	}
 
 	public static HeartbeatRequest getInstance() {
 		return object;
 	}
-	
+
 	@Override
 	public byte[] getProtobufBody() {
 		return CMD_HEARTBEAT_RESPONSE.getBytes();
 	}
-	
-	public String toString(){
+
+	public String toString() {
 		return TAG;
 	}
- 
+
 	@Override
 	public byte[] getJSONBody() {
 		try {
@@ -65,10 +66,9 @@ public class HeartbeatRequest implements Serializable,EncodeFormatable {
 		return null;
 	}
 
-
 	@Override
 	public byte getDataType() {
 		return CIMConstant.ProtobufType.S_H_RQ;
 	}
- 
+
 }

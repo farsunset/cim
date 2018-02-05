@@ -29,13 +29,12 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 
 public class CIMCacheProvider extends ContentProvider {
-	public static final String CONTENT_URI="content://com.farsunset.cim.provider";
-    static final String MODEL_KEY = "PRIVATE_CIM_CONFIG";
-    
+	public static final String CONTENT_URI = "content://com.farsunset.cim.provider";
+	static final String MODEL_KEY = "PRIVATE_CIM_CONFIG";
 
 	@Override
 	public int delete(Uri arg0, String key, String[] arg2) {
-	    getContext().getSharedPreferences(MODEL_KEY, Context.MODE_PRIVATE).edit().remove(key).apply();
+		getContext().getSharedPreferences(MODEL_KEY, Context.MODE_PRIVATE).edit().remove(key).apply();
 		return 0;
 	}
 
@@ -48,7 +47,7 @@ public class CIMCacheProvider extends ContentProvider {
 	public Uri insert(Uri arg0, ContentValues values) {
 		String key = values.getAsString("key");
 		String value = values.getAsString("value");
-	    getContext().getSharedPreferences(MODEL_KEY, Context.MODE_PRIVATE).edit().putString(key, value).apply();
+		getContext().getSharedPreferences(MODEL_KEY, Context.MODE_PRIVATE).edit().putString(key, value).apply();
 		return null;
 	}
 
@@ -59,9 +58,9 @@ public class CIMCacheProvider extends ContentProvider {
 
 	@Override
 	public Cursor query(Uri arg0, String[] arg1, String key, String[] arg3, String arg4) {
-        MatrixCursor cursor = new MatrixCursor(new String[]{"value"});
-		String value =  getContext().getSharedPreferences(MODEL_KEY, Context.MODE_PRIVATE).getString(arg1[0], null);
-		cursor.addRow(new Object[]{value});
+		MatrixCursor cursor = new MatrixCursor(new String[] { "value" });
+		String value = getContext().getSharedPreferences(MODEL_KEY, Context.MODE_PRIVATE).getString(arg1[0], null);
+		cursor.addRow(new Object[] { value });
 		return cursor;
 	}
 
@@ -70,5 +69,4 @@ public class CIMCacheProvider extends ContentProvider {
 		return 0;
 	}
 
- 
 }

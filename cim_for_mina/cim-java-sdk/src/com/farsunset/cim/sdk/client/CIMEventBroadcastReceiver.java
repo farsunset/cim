@@ -21,7 +21,6 @@
  */
 package com.farsunset.cim.sdk.client;
 
-
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -32,171 +31,155 @@ import com.farsunset.cim.sdk.client.model.Intent;
 import com.farsunset.cim.sdk.client.model.Message;
 import com.farsunset.cim.sdk.client.model.ReplyBody;
 import com.farsunset.cim.sdk.client.model.SentBody;
- 
+
 /**
- *  消息入口，所有消息都会经过这里
+ * 消息入口，所有消息都会经过这里
  */
-public  class CIMEventBroadcastReceiver {
-    Random random = new Random();
+public class CIMEventBroadcastReceiver {
+	Random random = new Random();
 	private static CIMEventBroadcastReceiver recerver;
 	private CIMEventListener listener;
 	private Timer connectionHandler = new Timer();;
-	public static CIMEventBroadcastReceiver getInstance(){
-         if (recerver==null){
-        	 recerver = new CIMEventBroadcastReceiver();
-		 }
+
+	public static CIMEventBroadcastReceiver getInstance() {
+		if (recerver == null) {
+			recerver = new CIMEventBroadcastReceiver();
+		}
 		return recerver;
 	}
-	
-	public void setGlobalCIMEventListener(CIMEventListener ls){
+
+	public void setGlobalCIMEventListener(CIMEventListener ls) {
 		listener = ls;
 	}
-	
-	
+
 	public void onReceive(Intent intent) {
 
-		  
-		  /*
-           * cim断开服务器事件
-           */
-          if(intent.getAction().equals(CIMConstant.IntentAction.ACTION_CONNECTION_CLOSED))
-          {
-        	  onInnerConnectionClosed();
-          }
-          
-          /*
-           * cim连接服务器失败事件
-           */
-          if(intent.getAction().equals(CIMConstant.IntentAction.ACTION_CONNECTION_FAILED))
-          {
-        	  long interval = intent.getLongExtra("interval", CIMConstant.RECONN_INTERVAL_TIME);
-        	  onInnerConnectionFailed((Exception) intent.getExtra(Exception.class.getName()),interval);
-          }
-          
-          /*
-           * cim连接服务器成功事件
-           */
-          if(intent.getAction().equals(CIMConstant.IntentAction.ACTION_CONNECTION_SUCCESSED))
-          {
-        	  onInnerConnectionSuccessed();
-          }
-          
-          /*
-           * 收到推送消息事件
-           */
-          if(intent.getAction().equals(CIMConstant.IntentAction.ACTION_MESSAGE_RECEIVED))
-          {
-        	  onInnerMessageReceived((Message)intent.getExtra(Message.class.getName()));
-          }
-          
-          
-          /*
-           * 获取收到replybody成功事件
-           */
-          if(intent.getAction().equals(CIMConstant.IntentAction.ACTION_REPLY_RECEIVED))
-          {
-        	  listener.onReplyReceived((ReplyBody)intent.getExtra(ReplyBody.class.getName()));
-          }
-          
-          
-          /*
-           * 获取sendbody发送失败事件
-           */
-          if(intent.getAction().equals(CIMConstant.IntentAction.ACTION_SENT_FAILED))
-          {
-        	  onSentFailed((Exception) intent.getExtra(Exception.class.getName()),(SentBody)intent.getExtra(SentBody.class.getName()));
-          }
-          
-          /*
-           * 获取sendbody发送成功事件
-           */
-          if(intent.getAction().equals(CIMConstant.IntentAction.ACTION_SENT_SUCCESSED))
-          {
-        	  onSentSucceed((SentBody)intent.getExtra(SentBody.class.getName()));
-          }
-          
-          
-          /*
-           * 获取cim数据传输异常事件
-           */
-          if(intent.getAction().equals(CIMConstant.IntentAction.ACTION_UNCAUGHT_EXCEPTION))
-          {
-        	  onUncaughtException((Exception)intent.getExtra(Exception.class.getName()));
-          }
-          
-          
-          /*
-           * 重新连接，如果断开的话
-           */
-          if(intent.getAction().equals(CIMConstant.IntentAction.ACTION_CONNECTION_RECOVERY))
-          {
-        	  CIMPushManager.connect();
-          }
+		/*
+		 * cim断开服务器事件
+		 */
+		if (intent.getAction().equals(CIMConstant.IntentAction.ACTION_CONNECTION_CLOSED)) {
+			onInnerConnectionClosed();
+		}
+
+		/*
+		 * cim连接服务器失败事件
+		 */
+		if (intent.getAction().equals(CIMConstant.IntentAction.ACTION_CONNECTION_FAILED)) {
+			long interval = intent.getLongExtra("interval", CIMConstant.RECONN_INTERVAL_TIME);
+			onInnerConnectionFailed((Exception) intent.getExtra(Exception.class.getName()), interval);
+		}
+
+		/*
+		 * cim连接服务器成功事件
+		 */
+		if (intent.getAction().equals(CIMConstant.IntentAction.ACTION_CONNECTION_SUCCESSED)) {
+			onInnerConnectionSuccessed();
+		}
+
+		/*
+		 * 收到推送消息事件
+		 */
+		if (intent.getAction().equals(CIMConstant.IntentAction.ACTION_MESSAGE_RECEIVED)) {
+			onInnerMessageReceived((Message) intent.getExtra(Message.class.getName()));
+		}
+
+		/*
+		 * 获取收到replybody成功事件
+		 */
+		if (intent.getAction().equals(CIMConstant.IntentAction.ACTION_REPLY_RECEIVED)) {
+			listener.onReplyReceived((ReplyBody) intent.getExtra(ReplyBody.class.getName()));
+		}
+
+		/*
+		 * 获取sendbody发送失败事件
+		 */
+		if (intent.getAction().equals(CIMConstant.IntentAction.ACTION_SENT_FAILED)) {
+			onSentFailed((Exception) intent.getExtra(Exception.class.getName()),
+					(SentBody) intent.getExtra(SentBody.class.getName()));
+		}
+
+		/*
+		 * 获取sendbody发送成功事件
+		 */
+		if (intent.getAction().equals(CIMConstant.IntentAction.ACTION_SENT_SUCCESSED)) {
+			onSentSucceed((SentBody) intent.getExtra(SentBody.class.getName()));
+		}
+
+		/*
+		 * 获取cim数据传输异常事件
+		 */
+		if (intent.getAction().equals(CIMConstant.IntentAction.ACTION_UNCAUGHT_EXCEPTION)) {
+			onUncaughtException((Exception) intent.getExtra(Exception.class.getName()));
+		}
+
+		/*
+		 * 重新连接，如果断开的话
+		 */
+		if (intent.getAction().equals(CIMConstant.IntentAction.ACTION_CONNECTION_RECOVERY)) {
+			CIMPushManager.connect();
+		}
 	}
 
-	 
-	private  void onInnerConnectionClosed(){
-		
+	private void onInnerConnectionClosed() {
+
 		listener.onConnectionClosed();
-		
-		CIMCacheToolkit.getInstance().putBoolean(CIMCacheToolkit.KEY_CIM_CONNECTION_STATE, false);
+
+		CIMCacheManager.getInstance().putBoolean(CIMCacheManager.KEY_CIM_CONNECTION_STATE, false);
 		CIMPushManager.connect();
-		
-		
+
 	}
-	
-	
-   
-	
-   private   void onInnerConnectionFailed(Exception e,long interval){
-		
-	    connectionHandler.schedule(new ConnectionTask(),interval);
-		
-	    listener.onConnectionFailed(e);
+
+	private void onInnerConnectionFailed(Exception e, long interval) {
+
+		connectionHandler.schedule(new ConnectionTask(), interval);
+
+		listener.onConnectionFailed(e);
 	}
-	
-	private   void onInnerConnectionSuccessed(){
-		CIMCacheToolkit.getInstance().putBoolean(CIMCacheToolkit.KEY_CIM_CONNECTION_STATE, true);
-		
-		boolean  autoBind = CIMPushManager.autoBindDeviceId();
-		
+
+	private void onInnerConnectionSuccessed() {
+		CIMCacheManager.getInstance().putBoolean(CIMCacheManager.KEY_CIM_CONNECTION_STATE, true);
+
+		boolean autoBind = CIMPushManager.autoBindDeviceId();
+
 		listener.onConnectionSuccessed(autoBind);
 	}
 
-	private void onUncaughtException(Throwable arg0) {}
+	private void onUncaughtException(Throwable arg0) {
+	}
 
-	
- 
+	private void onInnerMessageReceived(com.farsunset.cim.sdk.client.model.Message message) {
+		if (isForceOfflineMessage(message.getAction())) {
+			CIMPushManager.stop();
+		}
 
-	private void onInnerMessageReceived(com.farsunset.cim.sdk.client.model.Message message)
-	{
 		listener.onMessageReceived(message);
 	}
-	
-	private   void onSentFailed(Exception e, SentBody body){
-		
-		e.printStackTrace();
-		//与服务端端开链接，重新连接
-		if(e instanceof SessionDisconnectedException)
-		{
-			CIMPushManager.connect();
-		}else
-		{
-			//发送失败 重新发送
-			//CIMPushManager.sendRequest( body);
-		}
-		
+
+	private boolean isForceOfflineMessage(String action) {
+		return CIMConstant.MessageAction.ACTION_999.equals(action);
 	}
 
-	private  void onSentSucceed(SentBody body){}
-	 
-	
-	 
-	class ConnectionTask extends TimerTask{
-		
-		public void run(){
+	private void onSentFailed(Exception e, SentBody body) {
+
+		e.printStackTrace();
+		// 与服务端端开链接，重新连接
+		if (e instanceof SessionDisconnectedException) {
+			CIMPushManager.connect();
+		} else {
+			// 发送失败 重新发送
+			CIMPushManager.sendRequest(body);
+		}
+
+	}
+
+	private void onSentSucceed(SentBody body) {
+	}
+
+	class ConnectionTask extends TimerTask {
+
+		public void run() {
 			CIMPushManager.connect();
 		}
 	}
-	 
+
 }

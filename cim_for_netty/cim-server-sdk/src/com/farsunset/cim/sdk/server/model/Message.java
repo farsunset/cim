@@ -27,20 +27,19 @@ import com.alibaba.fastjson.JSONObject;
 import com.farsunset.cim.sdk.server.constant.CIMConstant;
 import com.farsunset.cim.sdk.server.model.feature.EncodeFormatable;
 import com.farsunset.cim.sdk.server.model.proto.MessageProto;
+
 /**
  * 消息对象
  */
-public class Message implements Serializable,EncodeFormatable {
+public class Message implements Serializable, EncodeFormatable {
 
 	private static final long serialVersionUID = 1L;
 
-	
 	/**
 	 * 消息类型，用户自定义消息类别
 	 */
 	private String mid;
-	
-	
+
 	/**
 	 * 消息类型，用户自定义消息类别
 	 */
@@ -74,13 +73,11 @@ public class Message implements Serializable,EncodeFormatable {
 	private String extra;
 
 	private long timestamp;
-	
-	
-	
-	public Message()
-	{
+
+	public Message() {
 		timestamp = System.currentTimeMillis();
 	}
+
 	public long getTimestamp() {
 		return timestamp;
 	}
@@ -89,14 +86,14 @@ public class Message implements Serializable,EncodeFormatable {
 		this.timestamp = timestamp;
 	}
 
-	 
-
 	public String getAction() {
 		return action;
 	}
+
 	public void setAction(String action) {
 		this.action = action;
 	}
+
 	public String getTitle() {
 		return title;
 	}
@@ -129,7 +126,6 @@ public class Message implements Serializable,EncodeFormatable {
 		this.receiver = receiver;
 	}
 
-	 
 	public String getFormat() {
 		return format;
 	}
@@ -137,17 +133,14 @@ public class Message implements Serializable,EncodeFormatable {
 	public void setFormat(String format) {
 		this.format = format;
 	}
-	
-	
-	
+
 	public String getExtra() {
 		return extra;
 	}
+
 	public void setExtra(String extra) {
 		this.extra = extra;
 	}
-	
-	 
 
 	public String getMid() {
 		return mid;
@@ -156,7 +149,7 @@ public class Message implements Serializable,EncodeFormatable {
 	public void setMid(String mid) {
 		this.mid = mid;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
@@ -174,8 +167,9 @@ public class Message implements Serializable,EncodeFormatable {
 	}
 
 	public boolean isNotEmpty(String txt) {
-		return txt != null && txt.trim().length()!=0;
+		return txt != null && txt.trim().length() != 0;
 	}
+
 	@Override
 	public byte[] getProtobufBody() {
 		MessageProto.Model.Builder builder = MessageProto.Model.newBuilder();
@@ -188,21 +182,21 @@ public class Message implements Serializable,EncodeFormatable {
 		/**
 		 * 下面字段可能为空
 		 */
-		if(content!=null){
-			builder.setContent(content);	
+		if (content != null) {
+			builder.setContent(content);
 		}
-		if(title!=null){
-			builder.setTitle(title);	
+		if (title != null) {
+			builder.setTitle(title);
 		}
-		if(extra!=null){
-			builder.setExtra(extra);	
+		if (extra != null) {
+			builder.setExtra(extra);
 		}
-		if(format!=null){
-			builder.setFormat(format);	
+		if (format != null) {
+			builder.setFormat(format);
 		}
 		return builder.build().toByteArray();
 	}
- 
+
 	@Override
 	public byte[] getJSONBody() {
 		JSONObject json = new JSONObject();
@@ -224,6 +218,7 @@ public class Message implements Serializable,EncodeFormatable {
 		}
 		return null;
 	}
+
 	@Override
 	public byte getDataType() {
 		return CIMConstant.ProtobufType.MESSAGE;

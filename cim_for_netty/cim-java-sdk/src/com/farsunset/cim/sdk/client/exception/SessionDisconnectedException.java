@@ -21,9 +21,8 @@
  */
 package com.farsunset.cim.sdk.client.exception;
 
-
 public class SessionDisconnectedException extends Exception {
-	 
+
 	private static final long serialVersionUID = 1L;
 
 	public SessionDisconnectedException() {

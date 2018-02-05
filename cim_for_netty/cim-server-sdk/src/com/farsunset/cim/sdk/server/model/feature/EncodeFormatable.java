@@ -20,11 +20,14 @@
  ***************************************************************************************
  */
 package com.farsunset.cim.sdk.server.model.feature;
+
 /**
  * 需要向另一端发送的结构体
  */
 public interface EncodeFormatable {
 	byte[] getProtobufBody();
+
 	byte[] getJSONBody();
+
 	byte getDataType();
 }

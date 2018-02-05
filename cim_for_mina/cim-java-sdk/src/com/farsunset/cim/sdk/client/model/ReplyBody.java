@@ -25,25 +25,25 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
 /**
  * 请求应答对象
  *
  */
 public class ReplyBody implements Serializable {
- 
+
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 请求key
 	 */
 	private String key;
-	
-	
+
 	/**
 	 * 返回码
 	 */
 	private String code;
-	
+
 	/**
 	 * 返回说明
 	 */
@@ -54,14 +54,13 @@ public class ReplyBody implements Serializable {
 	 */
 	private HashMap<String, String> data;
 
-	
 	private long timestamp;
-	
-	public ReplyBody()
-	{
+
+	public ReplyBody() {
 		data = new HashMap<String, String>();
 		timestamp = System.currentTimeMillis();
 	}
+
 	public long getTimestamp() {
 		return timestamp;
 	}
@@ -69,8 +68,6 @@ public class ReplyBody implements Serializable {
 	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
 	}
-
-	 
 
 	public String getKey() {
 		return key;
@@ -81,8 +78,8 @@ public class ReplyBody implements Serializable {
 	}
 
 	public void put(String k, String v) {
-		if(v!=null && k!=null){
-			data.put(k, v);	
+		if (v != null && k != null) {
+			data.put(k, v);
 		}
 	}
 
@@ -105,8 +102,8 @@ public class ReplyBody implements Serializable {
 	public void putAll(Map<String, String> map) {
 		data.putAll(map);
 	}
-	
-	public Set<String> getKeySet()   {
+
+	public Set<String> getKeySet() {
 		return data.keySet();
 	}
 
@@ -118,24 +115,21 @@ public class ReplyBody implements Serializable {
 		this.code = code;
 	}
 
-	
-	public String toString()
-	{
+	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("#ReplyBody#").append("\n");
 		buffer.append("key:").append(this.getKey()).append("\n");
 		buffer.append("timestamp:").append(timestamp).append("\n");
 		buffer.append("code:").append(code).append("\n");
-		
-		if(!data.isEmpty()){
+
+		if (!data.isEmpty()) {
 			buffer.append("data{").append("\n");
-			for(String key:getKeySet())
-			{
+			for (String key : getKeySet()) {
 				buffer.append(key).append(":").append(this.get(key)).append("\n");
 			}
 			buffer.append("}");
 		}
-		
+
 		return buffer.toString();
 	}
 

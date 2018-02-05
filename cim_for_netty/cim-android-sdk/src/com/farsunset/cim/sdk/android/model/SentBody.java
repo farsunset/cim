@@ -32,13 +32,13 @@ import com.farsunset.cim.sdk.android.model.proto.SentBodyProto;
  * java |android 客户端请求结构
  *
  */
-public class SentBody implements Serializable,Protobufable {
+public class SentBody implements Serializable, Protobufable {
 
 	private static final long serialVersionUID = 1L;
 
 	private String key;
 
-	private Hashtable<String, String>  data = new Hashtable<String, String>();;
+	private Hashtable<String, String> data = new Hashtable<String, String>();;
 
 	private long timestamp;
 
@@ -67,18 +67,16 @@ public class SentBody implements Serializable,Protobufable {
 	}
 
 	public void put(String k, String v) {
-		if(k == null || v == null){
+		if (k == null || v == null) {
 			return;
 		}
 		data.put(k, v);
 	}
-	 
 
-	public Set<String> getKeySet()   {
+	public Set<String> getKeySet() {
 		return data.keySet();
 	}
 
-	
 	public void remove(String k) {
 		data.remove(k);
 	}
@@ -86,34 +84,34 @@ public class SentBody implements Serializable,Protobufable {
 	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
-		buffer.append("#SentBody#").append("\n");;
+		buffer.append("#SentBody#").append("\n");
+		;
 		buffer.append("key:").append(key).append("\n");
 		buffer.append("timestamp:").append(timestamp).append("\n");
-		if(!data.isEmpty()){
+		if (!data.isEmpty()) {
 			buffer.append("data{").append("\n");
-			for(String key:getKeySet())
-			{
+			for (String key : getKeySet()) {
 				buffer.append(key).append(":").append(this.get(key)).append("\n");
 			}
 			buffer.append("}");
 		}
 		return buffer.toString();
 	}
-	
+
 	@Override
 	public byte[] getByteArray() {
 		SentBodyProto.Model.Builder builder = SentBodyProto.Model.newBuilder();
 		builder.setKey(key);
 		builder.setTimestamp(timestamp);
-		if(!data.isEmpty()){
+		if (!data.isEmpty()) {
 			builder.putAllData(data);
 		}
 		return builder.build().toByteArray();
 	}
- 
+
 	@Override
 	public byte getType() {
 		return CIMConstant.ProtobufType.SENTBODY;
 	}
- 
+
 }

@@ -30,13 +30,11 @@ public class Message implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	
 	/**
 	 * 消息类型，用户自定义消息类别
 	 */
 	private String mid;
-	
-	
+
 	/**
 	 * 消息类型，用户自定义消息类别
 	 */
@@ -59,8 +57,6 @@ public class Message implements Serializable {
 	 */
 	private String receiver;
 
-	 
-   
 	/**
 	 * content 内容格式
 	 */
@@ -72,12 +68,11 @@ public class Message implements Serializable {
 	private String extra;
 
 	private long timestamp;
-	
-	
-	public Message()
-	{
+
+	public Message() {
 		timestamp = System.currentTimeMillis();
 	}
+
 	public long getTimestamp() {
 		return timestamp;
 	}
@@ -86,14 +81,14 @@ public class Message implements Serializable {
 		this.timestamp = timestamp;
 	}
 
-	 
-
 	public String getAction() {
 		return action;
 	}
+
 	public void setAction(String action) {
 		this.action = action;
 	}
+
 	public String getTitle() {
 		return title;
 	}
@@ -126,7 +121,6 @@ public class Message implements Serializable {
 		this.receiver = receiver;
 	}
 
-	 
 	public String getFormat() {
 		return format;
 	}
@@ -134,17 +128,17 @@ public class Message implements Serializable {
 	public void setFormat(String format) {
 		this.format = format;
 	}
-	
-	
-	
+
 	public String getExtra() {
 		return extra;
 	}
+
 	public void setExtra(String extra) {
 		this.extra = extra;
 	}
+
 	public String toString() {
-		 
+
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("#Message#").append("\n");
 		buffer.append("mid:").append(mid).append("\n");
@@ -158,7 +152,6 @@ public class Message implements Serializable {
 		buffer.append("timestamp:").append(timestamp);
 		return buffer.toString();
 	}
- 
 
 	public String getMid() {
 		return mid;
@@ -169,8 +162,7 @@ public class Message implements Serializable {
 	}
 
 	public boolean isNotEmpty(String txt) {
-		return txt != null && txt.trim().length()!=0;
+		return txt != null && txt.trim().length() != 0;
 	}
-	 
-	
+
 }

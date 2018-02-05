@@ -25,11 +25,11 @@ import org.apache.mina.filter.codec.demux.DemuxingProtocolDecoder;
 
 import com.farsunset.cim.sdk.server.filter.decoder.AppMessageDecoder;
 import com.farsunset.cim.sdk.server.filter.decoder.WebMessageDecoder;
+
 /**
- *  服务端接收消息解码
+ * 服务端接收消息解码
  */
 public class ServerMessageDecoder extends DemuxingProtocolDecoder {
-	
 
 	public ServerMessageDecoder() {
 		addMessageDecoder(new AppMessageDecoder());

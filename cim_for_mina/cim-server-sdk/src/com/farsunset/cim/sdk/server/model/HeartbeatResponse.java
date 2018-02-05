@@ -23,7 +23,6 @@ package com.farsunset.cim.sdk.server.model;
 
 import java.io.Serializable;
 
-
 /**
  * 客户端心跳响应
  */
@@ -42,10 +41,8 @@ public class HeartbeatResponse implements Serializable {
 		return object;
 	}
 
-	 
 	public String toString() {
 		return TAG;
 	}
-	 
 
 }

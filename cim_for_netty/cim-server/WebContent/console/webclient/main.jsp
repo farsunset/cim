@@ -49,6 +49,11 @@
    
    function onMessageReceived(message)
    { 
+	   if(message.acction == ACTION_999){
+		   doHideDialog('MessageDialog');
+	       doShowDialog('LoginDialog');
+		   return ;
+	   }
        $("#messageList").append("<div class='alert alert-info' >"+message.content+"</div>");
    }
    
