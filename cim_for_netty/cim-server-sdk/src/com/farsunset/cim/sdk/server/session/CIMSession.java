@@ -25,6 +25,7 @@ import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
+
 import com.farsunset.cim.sdk.server.constant.CIMConstant;
 
 import io.netty.channel.Channel;
@@ -40,8 +41,11 @@ public class CIMSession implements Serializable {
 	 * 
 	 */
 	private transient static final long serialVersionUID = 1L;
-	public transient static String ID = "ID";
-	public transient static String HOST = "HOST";
+
+	public transient static String PROTOCOL = "protocol";
+	public transient static String WEBSOCKET = "websocket";
+	public transient static String NATIVEAPP = "nativeapp";
+
 	public transient static final int STATUS_ENABLED = 0;
 	public transient static final int STATUS_DISABLED = 1;
 	public transient static final int APNS_ON = 1;

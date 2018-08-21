@@ -55,11 +55,6 @@ public class HeartbeatRequest implements Serializable, EncodeFormatable {
 	}
 
 	@Override
-	public byte[] getJSONBody() {
-		return CMD_HEARTBEAT_RESPONSE.getBytes();
-	}
-
-	@Override
 	public byte getDataType() {
 		return CIMConstant.ProtobufType.S_H_RQ;
 	}

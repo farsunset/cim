@@ -24,9 +24,8 @@ package com.farsunset.cim.sdk.server.handler;
 import java.security.MessageDigest;
 import java.util.Base64;
 
-import com.farsunset.cim.sdk.server.model.ReplyBody;
+import com.farsunset.cim.sdk.server.model.HandshakerResponse;
 import com.farsunset.cim.sdk.server.model.SentBody;
-import com.farsunset.cim.sdk.server.model.WebsocketResponse;
 import com.farsunset.cim.sdk.server.session.CIMSession;
 
 /**
@@ -39,7 +38,7 @@ public class WebsocketHandler implements CIMRequestHandler {
 
 	private final static String GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 
-	public ReplyBody process(CIMSession session, SentBody body) {
+	public void process(CIMSession session, SentBody body) {
 		session.setChannel(CIMSession.CHANNEL_BROWSER);
 		String secKey = body.get("key") + GUID;
 		try {
@@ -50,7 +49,6 @@ public class WebsocketHandler implements CIMRequestHandler {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		session.write(new WebsocketResponse(secKey));
-		return null;
+		session.write(new HandshakerResponse(secKey));
 	}
 }

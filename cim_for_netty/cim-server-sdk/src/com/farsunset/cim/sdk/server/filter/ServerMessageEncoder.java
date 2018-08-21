@@ -21,10 +21,10 @@
  */
 package com.farsunset.cim.sdk.server.filter;
 
-import org.apache.log4j.Logger;
+import java.util.Objects;
 
 import com.farsunset.cim.sdk.server.constant.CIMConstant;
-import com.farsunset.cim.sdk.server.model.WebsocketResponse;
+import com.farsunset.cim.sdk.server.model.HandshakerResponse;
 import com.farsunset.cim.sdk.server.model.feature.EncodeFormatable;
 import com.farsunset.cim.sdk.server.session.CIMSession;
 
@@ -38,62 +38,51 @@ import io.netty.util.AttributeKey;
  */
 public class ServerMessageEncoder extends MessageToByteEncoder<Object> {
 
-	protected final Logger logger = Logger.getLogger(ServerMessageEncoder.class.getSimpleName());
-
 	@Override
-	protected void encode(ChannelHandlerContext ctx, Object object, ByteBuf out) throws Exception {
-
-		Object channel = ctx.channel().attr(AttributeKey.valueOf("channel")).get();
-
+	protected void encode(final ChannelHandlerContext ctx, final Object object, ByteBuf out) throws Exception {
+		Object protocol = ctx.channel().attr(AttributeKey.valueOf(CIMSession.PROTOCOL)).get();
+ 
 		/**
 		 * websocket的握手响应
 		 */
-		if (CIMSession.CHANNEL_BROWSER.equals(channel) && object instanceof WebsocketResponse) {
-			WebsocketResponse data = (WebsocketResponse) object;
-			byte[] byteArray = data.getBytes();
-			out.writeBytes(byteArray);
-			logger.info(data.toString());
+		if (Objects.equals(CIMSession.WEBSOCKET, protocol) && object instanceof HandshakerResponse) {
+			out.writeBytes(object.toString().getBytes());
+			return;
+
 		}
 
 		/**
-		 * websocket的数据传输使用JSON编码数据格式，因为Protobuf还没有支持js
+		 * websocket的业务数据 
 		 */
-		if (CIMSession.CHANNEL_BROWSER.equals(channel) && object instanceof EncodeFormatable) {
+		if (Objects.equals(CIMSession.WEBSOCKET, protocol) && object instanceof EncodeFormatable) {
 			EncodeFormatable data = (EncodeFormatable) object;
-			byte[] byteArray = encodeDataFrame(data.getJSONBody());
-			/**
-			 * 由于websocket没有黏包和断包的问题，所以不必知道消息体的大小
-			 */
-			out.writeBytes(byteArray);
-			logger.info(data.toString());
+			byte[] body = data.getProtobufBody();
+			byte[] header = createHeader(data.getDataType(), body.length);
+
+			byte[] protobuf = new byte[body.length + CIMConstant.DATA_HEADER_LENGTH];
+			System.arraycopy(header, 0, protobuf, 0, header.length);
+			System.arraycopy(body,0, protobuf, header.length, body.length);
+			
+			byte[] binaryFrame = encodeDataFrame(protobuf);
+			out.writeBytes(binaryFrame);
+
+			return;
 		}
 
 		/**
 		 * 非websocket的数据传输使用Protobuf编码数据格式
 		 */
-		if (!CIMSession.CHANNEL_BROWSER.equals(channel) && object instanceof EncodeFormatable) {
+		if (Objects.equals(CIMSession.NATIVEAPP, protocol) && object instanceof EncodeFormatable) {
 
 			EncodeFormatable data = (EncodeFormatable) object;
-			byte[] byteArray = data.getProtobufBody();
-			out.writeBytes(createHeader(data.getDataType(), byteArray.length));
-			out.writeBytes(byteArray);
-			logger.info(data.toString());
-		}
-	}
+			byte[] body = data.getProtobufBody();
+			byte[] header = createHeader(data.getDataType(), body.length);
 
-	/**
-	 * 消息体最大为65535
-	 * 
-	 * @param type
-	 * @param length
-	 * @return
-	 */
-	private byte[] createHeader(byte type, int length) {
-		byte[] header = new byte[CIMConstant.DATA_HEADER_LENGTH];
-		header[0] = type;
-		header[1] = (byte) (length & 0xff);
-		header[2] = (byte) ((length >> 8) & 0xff);
-		return header;
+			out.writeBytes(header);
+			out.writeBytes(body);
+
+		}
+
 	}
 
 	/**
@@ -120,7 +109,7 @@ public class ServerMessageEncoder extends MessageToByteEncoder<Object> {
 
 		// 开始计算ws-frame
 		// frame-fin + frame-rsv1 + frame-rsv2 + frame-rsv3 + frame-opcode
-		result[0] = (byte) 0x81; // 129
+		result[0] = (byte) 0x82; // 0x82 二进制帧 0x80 文本帧
 
 		// frame-masked+frame-payload-length
 		// 从第9个字节开始是 1111101=125,掩码是第3-第6个数据
@@ -143,4 +132,11 @@ public class ServerMessageEncoder extends MessageToByteEncoder<Object> {
 		return result;
 	}
 
+	private byte[] createHeader(byte type, int length) {
+		byte[] header = new byte[CIMConstant.DATA_HEADER_LENGTH];
+		header[0] = type;
+		header[1] = (byte) (length & 0xff);
+		header[2] = (byte) ((length >> 8) & 0xff);
+		return header;
+	}
 }

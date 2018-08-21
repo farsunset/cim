@@ -24,25 +24,24 @@ package com.farsunset.cim.sdk.server.handler;
 import java.io.IOException;
 import java.util.HashMap;
 
-import org.apache.log4j.Logger;
-
 import com.farsunset.cim.sdk.server.constant.CIMConstant;
 import com.farsunset.cim.sdk.server.filter.ServerMessageDecoder;
 import com.farsunset.cim.sdk.server.filter.ServerMessageEncoder;
 import com.farsunset.cim.sdk.server.model.HeartbeatRequest;
-import com.farsunset.cim.sdk.server.model.ReplyBody;
 import com.farsunset.cim.sdk.server.model.SentBody;
 import com.farsunset.cim.sdk.server.session.CIMSession;
 
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
@@ -50,10 +49,19 @@ import io.netty.util.AttributeKey;
 
 @Sharable
 public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody> {
+
+	/**
+	 * websocket特有的握手处理handler
+	 */
 	public final static String WEBSOCKET_HANDLER_KEY = "client_websocket_handshake";
-	private final static String CIMSESSION_CLOSED_HANDLER_KEY = "client_cimsession_closed";
-	private Logger logger = Logger.getLogger(CIMNioSocketAcceptor.class);
-	private HashMap<String, CIMRequestHandler> handlers = new HashMap<String, CIMRequestHandler>();
+	/**
+	 * 连接关闭处理handler
+	 */
+	public final static String CIMSESSION_CLOSED_HANDLER_KEY = "client_closed";
+
+	private HashMap<String, CIMRequestHandler> innerHandlerMap = new HashMap<String, CIMRequestHandler>();
+	private CIMRequestHandler outerRequestHandler;
+
 	private int port;
 
 	// 连接空闲时间
@@ -69,16 +77,20 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody> 
 		/**
 		 * 预制websocket握手请求的处理
 		 */
-		handlers.put(WEBSOCKET_HANDLER_KEY, new WebsocketHandler());
+		innerHandlerMap.put(WEBSOCKET_HANDLER_KEY, new WebsocketHandler());
+
 		ServerBootstrap bootstrap = new ServerBootstrap();
 		bootstrap.group(new NioEventLoopGroup(), new NioEventLoopGroup());
 		bootstrap.childOption(ChannelOption.TCP_NODELAY, true);
+		bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
 		bootstrap.channel(NioServerSocketChannel.class);
 		bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
 			@Override
 			public void initChannel(SocketChannel ch) throws Exception {
+
 				ch.pipeline().addLast(new ServerMessageDecoder());
 				ch.pipeline().addLast(new ServerMessageEncoder());
+				ch.pipeline().addLast(new LoggingHandler(LogLevel.INFO));
 				ch.pipeline().addLast(new IdleStateHandler(READ_IDLE_TIME, WRITE_IDLE_TIME, 0));
 				ch.pipeline().addLast(CIMNioSocketAcceptor.this);
 			}
@@ -87,46 +99,43 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody> 
 		bootstrap.bind(port);
 	}
 
-	public void channelRegistered(ChannelHandlerContext ctx) {
-		logger.info("sessionCreated()... from " + ctx.channel().remoteAddress() + " nid:"
-				+ ctx.channel().id().asShortText());
+	/**
+	 * 设置应用层的sentbody处理handler
+	 * 
+	 * @param outerRequestHandler
+	 */
+	public void setAppSentBodyHandler(CIMRequestHandler outerRequestHandler) {
+		this.outerRequestHandler = outerRequestHandler;
 	}
 
 	protected void channelRead0(ChannelHandlerContext ctx, SentBody body) throws Exception {
 
-		CIMSession cimSession = new CIMSession(ctx.channel());
+		CIMSession session = new CIMSession(ctx.channel());
 
-		CIMRequestHandler handler = handlers.get(body.getKey());
-		if (handler == null) {
-
-			ReplyBody reply = new ReplyBody();
-			reply.setKey(body.getKey());
-			reply.setCode(CIMConstant.ReturnCode.CODE_404);
-			reply.setMessage("KEY:" + body.getKey() + "  not defined on server");
-			cimSession.write(reply);
-
-		} else {
-			ReplyBody reply = handler.process(cimSession, body);
-			if (reply != null) {
-				reply.setKey(body.getKey());
-				cimSession.write(reply);
-			}
+		CIMRequestHandler handler = innerHandlerMap.get(body.getKey());
+		/**
+		 * 如果有内置的特殊handler需要处理，则使用内置的
+		 */
+		if (handler != null) {
+			handler.process(session, body);
+			return;
 		}
 
+		/**
+		 * 有业务层去处理其他的sentbody
+		 */
+		outerRequestHandler.process(session, body);
 	}
 
 	/**
 	 */
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 
-		CIMSession cimSession = new CIMSession(ctx.channel());
+		CIMSession session = new CIMSession(ctx.channel());
+		SentBody body = new SentBody();
+		body.setKey(CIMSESSION_CLOSED_HANDLER_KEY);
+		outerRequestHandler.process(session, body);
 
-		logger.warn("sessionClosed()... from " + ctx.channel().remoteAddress() + " nid:" + cimSession.getNid()
-				+ ",isConnected:" + ctx.channel().isActive());
-		CIMRequestHandler handler = handlers.get(CIMSESSION_CLOSED_HANDLER_KEY);
-		if (handler != null) {
-			handler.process(cimSession, null);
-		}
 	}
 
 	/**
@@ -135,16 +144,11 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody> 
 		if (evt instanceof IdleStateEvent && ((IdleStateEvent) evt).state().equals(IdleState.WRITER_IDLE)) {
 			ctx.channel().attr(AttributeKey.valueOf(CIMConstant.HEARTBEAT_KEY)).set(System.currentTimeMillis());
 			ctx.channel().writeAndFlush(HeartbeatRequest.getInstance());
-			logger.debug(IdleState.WRITER_IDLE + "... from " + ctx.channel().remoteAddress() + " nid:"
-					+ ctx.channel().id().asShortText());
-
 		}
 
 		// 如果心跳请求发出30秒内没收到响应，则关闭连接
 		if (evt instanceof IdleStateEvent && ((IdleStateEvent) evt).state().equals(IdleState.READER_IDLE)) {
 
-			logger.debug(IdleState.READER_IDLE + "... from " + ctx.channel().remoteAddress() + " nid:"
-					+ ctx.channel().id().asShortText());
 			Long lastTime = (Long) ctx.channel().attr(AttributeKey.valueOf(CIMConstant.HEARTBEAT_KEY)).get();
 			if (lastTime != null && System.currentTimeMillis() - lastTime >= PING_TIME_OUT) {
 				ctx.channel().close();
@@ -154,21 +158,8 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody> 
 		}
 	}
 
-	/**
-	 */
-	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-
-		logger.error("exceptionCaught()... from " + ctx.channel().remoteAddress() + " isConnected:"
-				+ ctx.channel().isActive() + " nid:" + ctx.channel().id().asShortText(), cause);
-		ctx.channel().close();
-	}
-
 	public void setPort(int port) {
 		this.port = port;
-	}
-
-	public void setHandlers(HashMap<String, CIMRequestHandler> handlers) {
-		this.handlers = handlers;
 	}
 
 }

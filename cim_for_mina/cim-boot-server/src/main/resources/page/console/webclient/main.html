@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>CIM Webclient  </title>
+        <link rel="shortcut icon" href="/image/favicon.ico" type="image/x-icon">
+		<link charset="utf-8" rel="stylesheet" 	href="/bootstrap-3.3.7-dist/css/bootstrap.min.css" />
+		<link charset="utf-8" rel="stylesheet" href="/css/common.css" />
+		<script type="text/javascript" 	src="/js/jquery-3.3.1.min.js"></script>
+		<script type="text/javascript" src="/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="/js/common.js"></script>
+		<script type="text/javascript" src="/js/cim/message.js"></script>
+		<script type="text/javascript" src="/js/cim/replybody.js"></script>
+		<script type="text/javascript" src="/js/cim/sentbody.js"></script>
+		<script type="text/javascript" src="/js/cim/cim.web.sdk.js"></script>
+</head>
+
+
+<script type="text/javascript"> 
+
+   
+   /**  当socket连接成功回调 **/
+   function onConnectionSuccessed(){
+	   CIMWebBridge.bindAccount($('#account').val());
+   }
+   
+   /** 当收到请求回复时候回调  **/
+   function onReplyReceived(reply)
+   {
+	 console.log(reply);
+     if(reply.key=='client_bind' && reply.code==200)
+     {
+        hideProcess();
+        
+        $('#LoginDialog').fadeOut();
+
+        
+        $('#MessageDialog').fadeIn();
+        $('#MessageDialog').addClass("in");
+        $("#current_account").text($('#account').val());
+        
+     }
+   }
+   
+   /** 当收到消息时候回调  **/
+   
+   function onMessageReceived(message)
+   { 
+	   console.log(message);
+	   if(message.action == ACTION_999){
+	       $('#MessageDialog').fadeOut();
+		   $('#LoginDialog').fadeIn();
+	       $('#LoginDialog').addClass("in");
+		   return ;
+	   }
+	   
+	   showNotification(message.content);
+	   
+       $("#messageList").append("<h6 style='text-align: center;'>时间:"+new Date(message.timestamp).toLocaleString()+"</h6>");
+       $("#messageList").append("<div class='alert alert-info' >"+message.content+"</div>");
+   }
+   
+    $(document).ready(function(){
+    	$('#LoginDialog').fadeIn();
+        $('#LoginDialog').addClass("in");
+        
+        initNotification();
+    });
+    
+    
+    function initNotification(){
+    	//判断浏览器是否支持桌面通知
+    	if (window.Notification) {
+    	    var notification = window.Notification;
+    	    if (notification.permission == "default") {
+    	    	 notification.requestPermission(function(permission) {
+     	        });
+    	    }
+    	}
+    }
+    
+    function showNotification(msg){
+    	var notify = new Notification("系统消息", {
+    	        body: msg,
+    	        icon: '/image/icon.png',
+    	        tag: 1
+    	});
+    	
+    	notify.onshow = function() {
+    	        setTimeout(function() {
+    	        	notify.close();
+    	        }, 3000);
+    	}
+    }
+    
+   
+</script>
+ 
+
+<body style="width: 600px;">
+<#include "loginDialog.html">
+<#include "messageDialog.html">
+</body>
+</html>

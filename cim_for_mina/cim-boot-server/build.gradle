@@ -1,0 +1,55 @@
+buildscript {
+    repositories {
+      jcenter()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.4.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+
+//生成的jar包包名和版本
+jar {
+    baseName = 'lvxin-server'
+    version =  '1.0.0'
+}
+
+repositories {
+    jcenter()
+    maven {
+        url 'https://repo.spring.io/libs-milestone'
+    }
+}
+configurations {
+    //all*.exclude group: 'com.fasterxml.jackson.core' , module: 'jackson-databind'
+    all*.exclude group: 'com.fasterxml.jackson.datatype'
+    all*.exclude group: 'com.fasterxml.jackson.module'
+    
+    all*.exclude group: 'org.yaml'
+    all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+    all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-jdbc'
+    
+    all*.exclude group: 'org.apache.tomcat'
+    all*.exclude group: 'io.undertow', module: 'undertow-websockets-jsr'
+    all*.exclude group: 'org.jboss.spec.javax.websocket'
+    all*.exclude group: 'org.jboss.spec.javax.transaction'
+    all*.exclude group: 'org.glassfish'
+
+}
+dependencies {
+    compile fileTree(dir: 'libs', include: '*.jar')
+    compile 'org.springframework.boot:spring-boot-starter-web:2.0.4.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-undertow:2.0.4.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-freemarker:2.0.4.RELEASE'
+    compile 'com.google.protobuf:protobuf-java:3.6.0'
+    compile 'com.google.code.gson:gson:2.8.5'
+    compile 'org.apache.mina:mina-core:2.0.19'
+    compile 'commons-io:commons-io:2.6'
+    compile 'org.apache.commons:commons-lang3:3.5'
+    compile 'com.squareup.okhttp3:okhttp:3.10.0'
+    compile 'cn.teaey.apns4j:apns4j:1.1.4'
+    
+}
+ 

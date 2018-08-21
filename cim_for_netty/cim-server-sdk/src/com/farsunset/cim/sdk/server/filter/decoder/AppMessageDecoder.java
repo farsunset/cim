@@ -23,26 +23,24 @@ package com.farsunset.cim.sdk.server.filter.decoder;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import com.farsunset.cim.sdk.server.constant.CIMConstant;
-import com.farsunset.cim.sdk.server.model.HeartbeatResponse;
 import com.farsunset.cim.sdk.server.model.SentBody;
 import com.farsunset.cim.sdk.server.model.proto.SentBodyProto;
+import com.farsunset.cim.sdk.server.session.CIMSession;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
+import io.netty.util.AttributeKey;
 
 /**
  * 服务端接收来自应用的消息解码
  */
 public class AppMessageDecoder extends ByteToMessageDecoder {
 
-	protected final Logger logger = Logger.getLogger(AppMessageDecoder.class);
-
 	@Override
 	public void decode(ChannelHandlerContext arg0, ByteBuf buffer, List<Object> queue) throws Exception {
+
 		/**
 		 * 消息头3位
 		 */
@@ -60,25 +58,24 @@ public class AppMessageDecoder extends ByteToMessageDecoder {
 		int conetnLength = getContentLength(lv, hv);
 
 		// 如果消息体没有接收完整，则重置读取，等待下一次重新读取
-		if (conetnLength > buffer.readableBytes()) {
-			buffer.resetReaderIndex();
-			return;
+		if (conetnLength <= buffer.readableBytes()) {
+			byte[] dataBytes = new byte[conetnLength];
+			buffer.readBytes(dataBytes);
+
+			Object message = mappingMessageObject(dataBytes, conetnType);
+			if (message != null) {
+				arg0.channel().attr(AttributeKey.valueOf(CIMSession.PROTOCOL)).set(CIMSession.NATIVEAPP);
+				queue.add(message);
+				return;
+			}
 		}
 
-		byte[] dataBytes = new byte[conetnLength];
-		buffer.readBytes(dataBytes);
-
-		Object message = mappingMessageObject(dataBytes, conetnType);
-		if (message != null) {
-			queue.add(message);
-		}
+		buffer.resetReaderIndex();
 	}
 
 	public Object mappingMessageObject(byte[] data, byte type) throws Exception {
 
 		if (CIMConstant.ProtobufType.C_H_RS == type) {
-			HeartbeatResponse response = HeartbeatResponse.getInstance();
-			logger.info(response.toString());
 			SentBody body = new SentBody();
 			body.setKey(CIMConstant.CLIENT_HEARTBEAT);
 			body.setTimestamp(System.currentTimeMillis());
@@ -91,7 +88,6 @@ public class AppMessageDecoder extends ByteToMessageDecoder {
 			body.setKey(bodyProto.getKey());
 			body.setTimestamp(bodyProto.getTimestamp());
 			body.putAll(bodyProto.getDataMap());
-			logger.info(body.toString());
 
 			return body;
 		}

@@ -1,0 +1,4 @@
+.js文件是已经编译好的 proto 的js文件
+.proto文件是protobuf的源文件，如果需要可以自己修改内容重新编译成js文件
+编译教程参见
+https://blog.csdn.net/arvin_kai/article/details/77532595

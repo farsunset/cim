@@ -24,7 +24,7 @@ package com.farsunset.ichat.example.app;
 public interface Constant { 
 	
 	    //服务端IP地址
-        public static final String CIM_SERVER_HOST = "172.168.11.18";
+        public static final String CIM_SERVER_HOST = "192.168.1.103";
 
 	
 	    //注意，这里的端口不是tomcat的端口，CIM端口在服务端spring-cim.xml中配置的，没改动就使用默认的23456

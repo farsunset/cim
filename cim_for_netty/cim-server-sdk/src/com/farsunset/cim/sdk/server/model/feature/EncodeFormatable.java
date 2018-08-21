@@ -27,7 +27,5 @@ package com.farsunset.cim.sdk.server.model.feature;
 public interface EncodeFormatable {
 	byte[] getProtobufBody();
 
-	byte[] getJSONBody();
-
 	byte getDataType();
 }

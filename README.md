@@ -1,200 +1,48 @@
-### 说明：
-此开源版本为基础功能版本，只有消息推送的基础功能！netty版本,和mina版本结构和功能完全一致，大家可以选择自己喜欢的或者合适的版本学习或者使用!
+#### 项目介绍
+CIM是一套基于apache mina和Netty框架下的推送系统，平时我们一直使用第三方的推送SDK，比如极光，百度推送，小米推送，以及腾讯信鸽等来支撑自己的移动端的业务，或许有一些企业有着自己一套即时通讯系统的需求，那么CIM为您提供了一个解决方案，目前CIM支撑 webcokset，android，ios，桌面应用，系统应用等多端接入支持，CIM服务端使用springboot搭建仅仅拥有消息推送的功能，关于数据缓存与持久化都需要使用者自己开发，并且配备了比较完整的使用文档。希望能为您带来一些价值。
+   
 
-### 侣信专业版2.5.0版本发布 
-### [http://farsunset.com](http://farsunset.com)
+#### 目录说明
+
+1. cim_for_mina目录下为mina版本实现
+2. cim_for_netty目录下为netty版本实现
+3. doc目录中是相关使用文档，以及protubuf结构体文件
+5. cim-android-sdk 是android客户端封装的的jar包
+6. cim-java-sdk 是java版客户端封装的的jar包
+7. cim-server-sdk 是cim-server 用到的封装的jar
+8. cim-boot-server是springboot服务端工程，是eclipse4.x基于gradle构建插件
+9. cim-client-android 是android客户端  android studio工具
+10. 说明.txt是服务端环境搭建说明
+
+
+#### 建议反馈
+
+智者千虑必有一失，如果再使用中发现任何问题或者有优化建议，您可以通过QQ3979434或者 邮箱3979434@qq.com向我反馈，当然目前还缺少IOS客户端sdk和.net客户端SDK，如果您有兴趣可以参与开发，CIM将会越来越好。
  
 
-### 前言：
+#### 相关项目
 
-   现在市面上有很多 xmpp协议的即时通讯方案，openfire androidpn，等等。它们都是使用了apache mina开发，但是这些东西基本都需要二次改造开发。而且改动还很大，我也看过这些东西的源码，发现代码结构不太理想，耦合的情况太多，实在不好扩展。所谓XMPP 协议。只不过是别人使用mina 自定义了一个消息编码解码协议。通俗的讲就是，xml形式消息的编码与解码，我们完全没有必要在国外这套不成熟的openfire 与xmpp 上耗费过多的精力去研究，我们完全可以通过apache mina 自定义自己的通讯协议，并可以为它使用自己的名字。我们不要盲目崇拜国外的有些东西，自己掌握原理，才是最重要的，各位切记~
+侣信专业版是基于CIM面向中小企业和者各类团队组织内部交流使用工具。具有丰富的功能，聊天，群组，部门组织，内部朋友圈等功能。它可以在局域网内使用保证沟通的信息安全，并且它是完全免费的，而且可以及时获得更新。
+#### [http://farsunset.com](http://farsunset.com)
 
-   这套IM系统为我个人自主开发 使用了 apache mina ，主要功能为 服务端和客户端，客户端 到客户端的即时通信，可以支持包括文字 图片，语音等任何消息形式 服务端使用的 struts2+spring3和 apache mina android端 也使用的apache mina。这套IM系统结构还是非常清晰合理的，非常容易扩展和改造，下面是android版本 的 demo的目的是只是一个演示 ，可以参照它的代码，使用这套系统开发自己的东西，核心价值是一套高灵活性，相对标准化的即时通讯解决方案，即时聊天只是它的一种运用途径！
+#### 功能预览
 
-
-### 服务端集群配置方案
-## 服务端修改
-1.多台服务器集群配置，首先需要重写SessionManager接口(参考com.farsunset.ichat.cim.session.ClusterSessionManager.java)，用户登录时，将账号和服务器IP 存入数据库中，这样就可以统计各台服务器接受的连接数量。
-2.客户端连接服务器时，服务端为客户端动态分配 服务器IP，每次分配 较为空闲的服务器IP
-3.服务端接受消息后 通过接收者账号查询出对应的Iosession，和 登录的 服务器IP，然后将消息信息传往目标服务器处理发送
-
-
-### 客户端端修改
-1.客户端登录时将不在是固定的服务器IP 而是先通过http接口获取到当前空闲的服务器IP，然后登录
-     
-### 成功案例
-### http://blog.csdn.net/xx753277/article/details/17512255
-### http://blog.csdn.net/xx753277/article/details/45535981
-
- 
- 
-
-### 客户端接收消息
-![image](http://staticres.oss-cn-hangzhou.aliyuncs.com/cim-android_client.png)
-
-### 服务端消息 web入口
-### http://192.168.1.11:8080/ichat-server
-
+1.控制台页面
 ![image](http://staticres.oss-cn-hangzhou.aliyuncs.com/cim-server.png)
+2.Android客户端
+![image](http://staticres.oss-cn-hangzhou.aliyuncs.com/cim-android_client.png)
+3.Web客户端
+![image](http://staticres.oss-cn-hangzhou.aliyuncs.com/cim-server-message.png)
 
 
+#### 更新日志
+-------------------------------------------------------------------------------------------
+版本:3.5.0/时间:2018-08-22
 
-### 常用功能接口
-所有开放外部接口都集中在
-com.farsunset.cim.client.android.CIMPushManager
+1.服务端由原来的 spring+struts2修改为springboot工程
 
-
-#### 1.1连接服务器
-```java
-/**
-* 初始化,连接服务端，在程序启动页或者 在Application里调用
-* @param context
-* @param ip
-* @param port
-*/
-public static  void connect(Context context,String ip,int port)
-
-//示例
-CIMPushManager.connect(context,"125.12.35.231",28888);
-
-```
-
-#### 1.2绑定账号到服务端
-```java
-/**
-* 设置一个账号登录到服务端
-* @param account 用户唯一ID
-*/
-public static  void bindAccount(Context context,String account)
-
-//示例
-CIMPushManager.bindAccount(context,"xiyang");
+2.全面重新websocket的实现，全面拥抱protobuf替换josn序列化方式，更加高效
 
 
-```
-
-#### 1.3发送一个CIM请求
-
- 酌情使用此功能，可用http接口替代
-```java
-/**
-* 发送一个CIM请求
-* @param context 
-* @param body  请求体的结构
-*/
-public static  void sendRequest(Context context,SentBody body)
-
-//示例：获取离线消息
-SentBody sent = new SentBody();
-sent.setKey(CIMConstant.RequestKey.CLIENT_OFFLINE_MESSAGE);
-sent.put("account", "xiyang");
-CIMPushManager.sendRequest(context, sent);
-
-//该功能需要服务端实现，详情参考服务端PullOflineMessageHandler.java
-
-```
-
-#### 1.4停止接收消息
-```java  
-/**
-* 停止接受推送，将会退出当前账号登录，端口与服务端的连接
-* @param context
-*/
-public static  void stop(Context context)
-//示例：
-CIMPushManager.stop(context);    
-      
-```
-#### 1.5恢复接收消息
-```java
-/**
-* 重新恢复接收推送，重新连接服务端，并登录当前账号
-* @param context
-*/
-public static  void resume(Context context)
-//示例：
-CIMPushManager.resume(context);    
-```
-
-
-#### 1.6完全销毁连接
-```java
-/**
-* 完全销毁CIM，一般用于完全退出程序，调用resume将不能恢复
-* @param context
-*/
-public static  void destroy(Context context)
-//示例：
-CIMPushManager.destroy(context);    
-
-
-```
-#### 1.7获取是否与服务端连接正常
-```java
-
-/**
- *  
- * @param context
- */
-public boolean isConnected(Context context)   
-
-//示例：
-CIMPushManager.isConnected(context);   
-```
-
-#### 1.8获取PushManager状态
-```java
-//被销毁的destroy()
-CIMPushManager.STATE_DESTROYED = 0x0000DE;
-//被销停止的 stop()
-CIMPushManager.STATE_STOPED = 0x0000EE;
-	
-CIMPushManager.STATE_NORMAL = 0x000000;
-	
-public int getState(Context context)   
-
-//示例：
-CIMPushManager.getState(context);   
-```
-
-#### 1.9推送消息以及相关事件的接收
-
-首先注册一个广播，并监听以下action 参照 后面androidManifest.xml配置
-
-参考CustomCIMMessageReceiver的实现
-```java
-/**
-* 当收到服务端推送过来的消息时调用
-* @param message
-*/
-public abstract void onMessageReceived(Message message);
-
-/**
-* 当调用CIMPushManager.sendRequest()向服务端发送请求，获得相应时调用
-* @param replybody
-*/
-public abstract void onReplyReceived(ReplyBody replybody);
-
-/**
-* 当手机网络发生变化时调用
-* @param networkinfo
-*/
-public abstract void onNetworkChanged(NetworkInfo networkinfo);
-    
-/**
-* 当连接服务器成功时回调
-* @param hasAutoBind  : true 已经自动绑定账号到服务器了，不需要再手动调用bindAccount
-*/
-public abstract void onConnectionSuccessed(boolean hasAutoBind);
-    
-/**
-* 当断开服务器连接的时候回调
-*/
-public abstract void onConnectionClosed();
-    
-/**
-* 当服务器连接失败的时候回调
-* 
-*/
-public abstract void onConnectionFailed(Exception e);
-```
+ 
+ 

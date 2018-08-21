@@ -22,8 +22,7 @@
 package com.farsunset.cim.sdk.server.model;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import com.alibaba.fastjson.JSONObject;
+
 import com.farsunset.cim.sdk.server.constant.CIMConstant;
 import com.farsunset.cim.sdk.server.model.feature.EncodeFormatable;
 import com.farsunset.cim.sdk.server.model.proto.MessageProto;
@@ -195,28 +194,6 @@ public class Message implements Serializable, EncodeFormatable {
 			builder.setFormat(format);
 		}
 		return builder.build().toByteArray();
-	}
-
-	@Override
-	public byte[] getJSONBody() {
-		JSONObject json = new JSONObject();
-		json.put("contentType", getClass().getSimpleName());
-		json.put("mid", mid);
-		json.put("action", action);
-		json.put("title", title);
-		json.put("content", content);
-		json.put("extra", extra);
-		json.put("sender", sender);
-		json.put("receiver", receiver);
-		json.put("format", format);
-		json.put("timestamp", timestamp);
-		String data = json.toJSONString();
-		try {
-			return data.getBytes("UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	@Override

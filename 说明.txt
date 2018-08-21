@@ -1,6 +1,13 @@
 1.cim-android-sdk 是android客户端封装的的jar包
 2.cim-java-sdk 是java版客户端封装的的jar包
 3.cim-server-sdk 是cim-server 用到的封装的jar
-4.cim-server是 java web工程，用eclipse开发工具
+4.cim-boot-server是spring boot 服务端工程，是eclipse4.x 基于gradle  jar包管理工具(最新版Eclipse可能已经包含了gradle插件，如果没有可以自行安装)
 5.cim-client-android 是android客户端  android studio工具
-6.将不再维护flash版本 sdk,有兴趣的可以自己修改原来的flash 版本源码
+
+
+-----------------服务端搭建---------------------------
+1 安装jdk1.8  
+2 Eclipse最新版本(下载地址:http://www.eclipse.org/downloads/packages/eclipse-ide-java-ee-developers/neon2)
+导入lvxin-boot-server 
+Eclipse的Gradle插件地址 
+https://github.com/eclipse/buildship/blob/master/docs/user/Installation.md

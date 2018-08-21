@@ -8,5 +8,5 @@
 
 .fatjar
 bin/
-
+build/
 classes/
