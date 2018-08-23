@@ -19,39 +19,52 @@
  *                                                                                     *
  ***************************************************************************************
  */
-package com.farsunset.cim.sdk.server.model;
+package com.farsunset.cim.sdk.client.model;
 
+import java.io.Serializable;
+import java.util.HashMap;
 
 /**
- * websocket握手响应结果
+ * java |android 客户端请求结构
  *
  */
-public class HandshakerResponse {
+public class Intent implements Serializable {
 
-	private String token;
+	private static final long serialVersionUID = 1L;
 
-	public HandshakerResponse(String token) {
-		this.token = token;
+	private String action;
+
+	private HashMap<String, Object> data = new HashMap<String, Object>();
+
+	public Intent() {
 	}
 
-	public byte[] getBytes() {
-		return toString().getBytes();
+	public Intent(String action) {
+		this.action = action;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("HTTP/1.1 101 Switching Protocols");
-		builder.append("\r\n");
-		builder.append("Upgrade: websocket");
-		builder.append("\r\n");
-		builder.append("Connection: Upgrade");
-		builder.append("\r\n");
-		builder.append("Sec-WebSocket-Accept:").append(token);
-		builder.append("\r\n");
-		builder.append("\r\n");
+	public String getAction() {
+		return action;
+	}
 
-		return builder.toString();
+	public void setAction(String action) {
+		this.action = action;
+	}
 
+	public void putExtra(String key, Object value) {
+		data.put(key, value);
+	}
+
+	public Object getExtra(String key) {
+		return data.get(key);
+	}
+
+	public long getLongExtra(String key, long defValue) {
+		Object v = getExtra(key);
+		try {
+			return Long.parseLong(v.toString());
+		} catch (Exception e) {
+			return defValue;
+		}
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2033 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,39 +19,19 @@
  *                                                                                     *
  ***************************************************************************************
  */
-package com.farsunset.cim.sdk.server.model;
+package com.farsunset.cim.sdk.android.exception;
 
+import java.io.Serializable;
 
-/**
- * websocket握手响应结果
- *
- */
-public class HandshakerResponse {
+public class SessionClosedException extends Exception implements Serializable {
 
-	private String token;
+	private static final long serialVersionUID = 1L;
 
-	public HandshakerResponse(String token) {
-		this.token = token;
+	public SessionClosedException() {
+		super();
 	}
 
-	public byte[] getBytes() {
-		return toString().getBytes();
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("HTTP/1.1 101 Switching Protocols");
-		builder.append("\r\n");
-		builder.append("Upgrade: websocket");
-		builder.append("\r\n");
-		builder.append("Connection: Upgrade");
-		builder.append("\r\n");
-		builder.append("Sec-WebSocket-Accept:").append(token);
-		builder.append("\r\n");
-		builder.append("\r\n");
-
-		return builder.toString();
-
+	public SessionClosedException(String s) {
+		super(s);
 	}
 }

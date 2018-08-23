@@ -19,39 +19,20 @@
  *                                                                                     *
  ***************************************************************************************
  */
-package com.farsunset.cim.sdk.server.model;
+package com.farsunset.cim.sdk.server.filter;
 
+import org.apache.mina.filter.codec.demux.DemuxingProtocolDecoder;
+
+import com.farsunset.cim.sdk.server.filter.decoder.AppMessageDecoder;
+import com.farsunset.cim.sdk.server.filter.decoder.WebMessageDecoder;
 
 /**
- * websocket握手响应结果
- *
+ * 服务端接收消息解码
  */
-public class HandshakerResponse {
+public class ServerMessageDecoder extends DemuxingProtocolDecoder {
 
-	private String token;
-
-	public HandshakerResponse(String token) {
-		this.token = token;
-	}
-
-	public byte[] getBytes() {
-		return toString().getBytes();
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("HTTP/1.1 101 Switching Protocols");
-		builder.append("\r\n");
-		builder.append("Upgrade: websocket");
-		builder.append("\r\n");
-		builder.append("Connection: Upgrade");
-		builder.append("\r\n");
-		builder.append("Sec-WebSocket-Accept:").append(token);
-		builder.append("\r\n");
-		builder.append("\r\n");
-
-		return builder.toString();
-
+	public ServerMessageDecoder() {
+		addMessageDecoder(new AppMessageDecoder());
+		addMessageDecoder(new WebMessageDecoder());
 	}
 }

@@ -19,39 +19,41 @@
  *                                                                                     *
  ***************************************************************************************
  */
-package com.farsunset.cim.sdk.server.model;
-
+package com.farsunset.cim.sdk.server.constant;
 
 /**
- * websocket握手响应结果
- *
+ * 常量
  */
-public class HandshakerResponse {
+public interface CIMConstant {
+	// 消息头长度为3个字节，第一个字节为消息类型，第二，第三字节 转换int后为消息长度
+	int DATA_HEADER_LENGTH = 3;
 
-	private String token;
+	public static interface ReturnCode {
 
-	public HandshakerResponse(String token) {
-		this.token = token;
-	}
+		String CODE_200 = "200";
 
-	public byte[] getBytes() {
-		return toString().getBytes();
-	}
+		String CODE_404 = "404";
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("HTTP/1.1 101 Switching Protocols");
-		builder.append("\r\n");
-		builder.append("Upgrade: websocket");
-		builder.append("\r\n");
-		builder.append("Connection: Upgrade");
-		builder.append("\r\n");
-		builder.append("Sec-WebSocket-Accept:").append(token);
-		builder.append("\r\n");
-		builder.append("\r\n");
+		String CODE_403 = "403";
 
-		return builder.toString();
+		String CODE_500 = "500";
 
 	}
+
+	String SESSION_KEY = "account";
+	String HEARTBEAT_KEY = "heartbeat";
+
+	public static interface ProtobufType {
+		byte S_H_RQ = 1;
+		byte C_H_RS = 0;
+		byte MESSAGE = 2;
+		byte SENTBODY = 3;
+		byte REPLYBODY = 4;
+	}
+
+	public static interface MessageAction {
+		// 被其他设备登录挤下线消息
+		String ACTION_999 = "999";
+	}
+
 }

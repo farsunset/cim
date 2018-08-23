@@ -19,39 +19,46 @@
  *                                                                                     *
  ***************************************************************************************
  */
-package com.farsunset.cim.sdk.server.model;
+package com.farsunset.cim.sdk.server.session;
 
+import java.util.List;
 
 /**
- * websocket握手响应结果
- *
+ * 客户端的 session管理接口 可自行实现此接口管理session
  */
-public class HandshakerResponse {
 
-	private String token;
+public interface SessionManager {
 
-	public HandshakerResponse(String token) {
-		this.token = token;
-	}
+	/**
+	 * 添加新的session
+	 */
+	public void add(CIMSession session);
 
-	public byte[] getBytes() {
-		return toString().getBytes();
-	}
+	/**
+	 * 更新session
+	 */
+	public void update(CIMSession session);
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("HTTP/1.1 101 Switching Protocols");
-		builder.append("\r\n");
-		builder.append("Upgrade: websocket");
-		builder.append("\r\n");
-		builder.append("Connection: Upgrade");
-		builder.append("\r\n");
-		builder.append("Sec-WebSocket-Accept:").append(token);
-		builder.append("\r\n");
-		builder.append("\r\n");
+	/**
+	 * 
+	 * @param account
+	 *            客户端session的 key 一般可用 用户账号来对应session
+	 * @return
+	 */
+	CIMSession get(String account);
 
-		return builder.toString();
+	/**
+	 * 获取所有session
+	 * 
+	 * @return
+	 */
+	public List<CIMSession> queryAll();
 
-	}
+	/**
+	 * 删除session
+	 * 
+	 * @param session
+	 */
+	public void remove(String account);
+
 }

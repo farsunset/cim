@@ -21,37 +21,27 @@
  */
 package com.farsunset.cim.sdk.server.model;
 
+import java.io.Serializable;
 
 /**
- * websocket握手响应结果
- *
+ * 客户端心跳响应
  */
-public class HandshakerResponse {
+public class HeartbeatResponse implements Serializable {
 
-	private String token;
+	private static final long serialVersionUID = 1L;
+	private static final String TAG = "CLIENT_HEARTBEAT_RESPONSE";
+	public static final String CMD_HEARTBEAT_RESPONSE = "CR";
+	private static HeartbeatResponse object = new HeartbeatResponse();
 
-	public HandshakerResponse(String token) {
-		this.token = token;
+	private HeartbeatResponse() {
 	}
 
-	public byte[] getBytes() {
-		return toString().getBytes();
+	public static HeartbeatResponse getInstance() {
+		return object;
 	}
 
-	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("HTTP/1.1 101 Switching Protocols");
-		builder.append("\r\n");
-		builder.append("Upgrade: websocket");
-		builder.append("\r\n");
-		builder.append("Connection: Upgrade");
-		builder.append("\r\n");
-		builder.append("Sec-WebSocket-Accept:").append(token);
-		builder.append("\r\n");
-		builder.append("\r\n");
-
-		return builder.toString();
-
+		return TAG;
 	}
+	 
 }

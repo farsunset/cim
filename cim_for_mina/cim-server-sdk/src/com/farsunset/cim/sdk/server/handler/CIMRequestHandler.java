@@ -19,39 +19,16 @@
  *                                                                                     *
  ***************************************************************************************
  */
-package com.farsunset.cim.sdk.server.model;
-
+package com.farsunset.cim.sdk.server.handler;
 
 /**
- * websocket握手响应结果
- *
+ *  请求处理接口,所有的请求实现必须实现此接口
+ *  @author 3979434@qq.com
  */
-public class HandshakerResponse {
+import com.farsunset.cim.sdk.server.model.SentBody;
+import com.farsunset.cim.sdk.server.session.CIMSession;
 
-	private String token;
+public interface CIMRequestHandler {
 
-	public HandshakerResponse(String token) {
-		this.token = token;
-	}
-
-	public byte[] getBytes() {
-		return toString().getBytes();
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("HTTP/1.1 101 Switching Protocols");
-		builder.append("\r\n");
-		builder.append("Upgrade: websocket");
-		builder.append("\r\n");
-		builder.append("Connection: Upgrade");
-		builder.append("\r\n");
-		builder.append("Sec-WebSocket-Accept:").append(token);
-		builder.append("\r\n");
-		builder.append("\r\n");
-
-		return builder.toString();
-
-	}
+	void process(CIMSession session, SentBody message);
 }

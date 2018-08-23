@@ -26,13 +26,13 @@ import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
 
+import org.apache.mina.core.future.WriteFuture;
+import org.apache.mina.core.session.IoSession;
+
 import com.farsunset.cim.sdk.server.constant.CIMConstant;
 
-import io.netty.channel.Channel;
-import io.netty.util.AttributeKey;
-
 /**
- * Channel包装类,集群时 将此对象存入表中
+ * IoSession包装类,集群时 将此对象存入表中
  */
 
 public class CIMSession implements Serializable {
@@ -41,7 +41,7 @@ public class CIMSession implements Serializable {
 	 * 
 	 */
 	private transient static final long serialVersionUID = 1L;
-
+	
 	public transient static String PROTOCOL = "protocol";
 	public transient static String WEBSOCKET = "websocket";
 	public transient static String NATIVEAPP = "nativeapp";
@@ -56,10 +56,11 @@ public class CIMSession implements Serializable {
 	public transient static String CHANNEL_WINDOWS = "windows";
 	public transient static String CHANNEL_WP = "wp";
 	public transient static String CHANNEL_BROWSER = "browser";
-	private transient Channel session;
+
+	private transient IoSession session;
 
 	private String gid;// session全局ID
-	private String nid;// session在本台服务器上的ID
+	private Long nid;// session在本台服务器上的ID
 	private String deviceId;// 客户端ID (设备号码+应用包名),ios为devicetoken
 	private String host;// session绑定的服务器IP
 	private String account;// session绑定的账号
@@ -74,11 +75,11 @@ public class CIMSession implements Serializable {
 	private Double latitude;// 维度
 	private String location;// 位置
 	private int apnsAble;// apns推送状态
-	private int status;// 状态
+	private int state;// 状态
 
-	public CIMSession(Channel session) {
+	public CIMSession(IoSession session) {
 		this.session = session;
-		this.nid = session.id().asShortText();
+		this.nid = session.getId();
 	}
 
 	public CIMSession() {
@@ -91,6 +92,7 @@ public class CIMSession implements Serializable {
 
 	public void setAccount(String account) {
 		this.account = account;
+
 		setAttribute(CIMConstant.SESSION_KEY, account);
 	}
 
@@ -123,14 +125,17 @@ public class CIMSession implements Serializable {
 	}
 
 	public void setGid(String gid) {
+
 		this.gid = gid;
+
+		setAttribute("gid", gid);
 	}
 
-	public String getNid() {
+	public Long getNid() {
 		return nid;
 	}
 
-	public void setNid(String nid) {
+	public void setNid(Long nid) {
 		this.nid = nid;
 	}
 
@@ -156,6 +161,7 @@ public class CIMSession implements Serializable {
 
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
+
 	}
 
 	public String getHost() {
@@ -199,10 +205,6 @@ public class CIMSession implements Serializable {
 		this.host = host;
 	}
 
-	public void setChannel(Channel session) {
-		this.session = session;
-	}
-
 	public int getApnsAble() {
 		return apnsAble;
 	}
@@ -211,46 +213,47 @@ public class CIMSession implements Serializable {
 		this.apnsAble = apnsAble;
 	}
 
-	public int getStatus() {
-		return status;
+	public int getState() {
+		return state;
 	}
 
-	public void setStatus(int status) {
-		this.status = status;
+	public void setState(int state) {
+		this.state = state;
 	}
 
 	public void setAttribute(String key, Object value) {
 		if (session != null)
-			session.attr(AttributeKey.valueOf(key)).set(value);
+			session.setAttribute(key, value);
 	}
 
 	public boolean containsAttribute(String key) {
 		if (session != null)
-			return session.hasAttr(AttributeKey.valueOf(key));
+			return session.containsAttribute(key);
 		return false;
 	}
 
 	public Object getAttribute(String key) {
 		if (session != null)
-			return session.attr(AttributeKey.valueOf(key)).get();
+			return session.getAttribute(key);
 		return null;
 	}
 
 	public void removeAttribute(String key) {
 		if (session != null)
-			session.attr(AttributeKey.valueOf(key)).set(null);
-		;
+			session.removeAttribute(key);
 	}
 
 	public SocketAddress getRemoteAddress() {
 		if (session != null)
-			return session.remoteAddress();
+			return session.getRemoteAddress();
 		return null;
 	}
 
 	public boolean write(Object msg) {
-		if (session != null && session.isActive()) {
-			return session.writeAndFlush(msg).awaitUninterruptibly(5000);
+		if (session != null) {
+			WriteFuture future = session.write(msg);
+			future.awaitUninterruptibly(10 * 1000);
+			return future.isWritten();
 		}
 
 		return false;
@@ -258,11 +261,11 @@ public class CIMSession implements Serializable {
 
 	public boolean isConnected() {
 		if (session != null) {
-			return session.isActive();
+			return session.isConnected();
 		}
 
 		if (!isLocalhost()) {
-			return status == STATUS_ENABLED;
+			return state == STATUS_ENABLED;
 		}
 
 		return false;
@@ -282,7 +285,12 @@ public class CIMSession implements Serializable {
 
 	public void closeNow() {
 		if (session != null)
-			session.close();
+			session.closeNow();
+	}
+
+	public void closeOnFlush() {
+		if (session != null)
+			session.closeOnFlush();
 	}
 
 	public void setPackageName(String packageName) {
@@ -323,6 +331,14 @@ public class CIMSession implements Serializable {
 		return !fromOtherDevice(o);
 	}
 
+	public void setIoSession(IoSession session) {
+		this.session = session;
+	}
+
+	public IoSession getIoSession() {
+		return session;
+	}
+
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("{");
@@ -333,9 +349,8 @@ public class CIMSession implements Serializable {
 		buffer.append("\"").append("host").append("\":").append("\"").append(host).append("\"").append(",");
 		buffer.append("\"").append("account").append("\":").append("\"").append(account).append("\"").append(",");
 		buffer.append("\"").append("channel").append("\":").append("\"").append(channel).append("\"").append(",");
-		buffer.append("\"").append("deviceModel").append("\":").append("\"").append(deviceModel).append("\"")
-				.append(",");
-		buffer.append("\"").append("status").append("\":").append(status).append(",");
+		buffer.append("\"").append("deviceModel").append("\":").append("\"").append(deviceModel).append("\"").append(",");
+		buffer.append("\"").append("status").append("\":").append(state).append(",");
 		buffer.append("\"").append("apnsAble").append("\":").append(apnsAble).append(",");
 		buffer.append("\"").append("bindTime").append("\":").append(bindTime).append(",");
 		buffer.append("\"").append("heartbeat").append("\":").append(heartbeat);

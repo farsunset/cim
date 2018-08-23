@@ -19,39 +19,44 @@
  *                                                                                     *
  ***************************************************************************************
  */
-package com.farsunset.cim.sdk.server.model;
+package com.farsunset.cim.sdk.client.model;
 
+import java.io.Serializable;
+
+import com.farsunset.cim.sdk.client.constant.CIMConstant;
 
 /**
- * websocket握手响应结果
+ * 服务端心跳请求
  *
  */
-public class HandshakerResponse {
+public class HeartbeatRequest implements Serializable, Protobufable {
 
-	private String token;
+	private static final long serialVersionUID = 1L;
+	private static final String TAG = "SERVER_HEARTBEAT_REQUEST";
+	private static final String CMD_HEARTBEAT_RESPONSE = "SR";
 
-	public HandshakerResponse(String token) {
-		this.token = token;
+	private static HeartbeatRequest object = new HeartbeatRequest();
+
+	private HeartbeatRequest() {
+
 	}
 
-	public byte[] getBytes() {
-		return toString().getBytes();
+	public static HeartbeatRequest getInstance() {
+		return object;
 	}
 
 	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("HTTP/1.1 101 Switching Protocols");
-		builder.append("\r\n");
-		builder.append("Upgrade: websocket");
-		builder.append("\r\n");
-		builder.append("Connection: Upgrade");
-		builder.append("\r\n");
-		builder.append("Sec-WebSocket-Accept:").append(token);
-		builder.append("\r\n");
-		builder.append("\r\n");
-
-		return builder.toString();
-
+	public byte[] getByteArray() {
+		return CMD_HEARTBEAT_RESPONSE.getBytes();
 	}
+
+	public String toString() {
+		return TAG;
+	}
+
+	@Override
+	public byte getType() {
+		return CIMConstant.ProtobufType.S_H_RQ;
+	}
+
 }

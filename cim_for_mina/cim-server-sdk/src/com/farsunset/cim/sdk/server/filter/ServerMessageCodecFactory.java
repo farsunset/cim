@@ -19,39 +19,33 @@
  *                                                                                     *
  ***************************************************************************************
  */
-package com.farsunset.cim.sdk.server.model;
+package com.farsunset.cim.sdk.server.filter;
 
+import org.apache.mina.core.session.IoSession;
+import org.apache.mina.filter.codec.ProtocolCodecFactory;
+import org.apache.mina.filter.codec.ProtocolDecoder;
+import org.apache.mina.filter.codec.ProtocolEncoder;
 
 /**
- * websocket握手响应结果
- *
+ * 服务端消息 编码解码器
  */
-public class HandshakerResponse {
+public class ServerMessageCodecFactory implements ProtocolCodecFactory {
 
-	private String token;
+	private final ServerMessageEncoder encoder;
 
-	public HandshakerResponse(String token) {
-		this.token = token;
+	private final ServerMessageDecoder decoder;
+
+	public ServerMessageCodecFactory() {
+		encoder = new ServerMessageEncoder();
+		decoder = new ServerMessageDecoder();
 	}
 
-	public byte[] getBytes() {
-		return toString().getBytes();
+	public ProtocolEncoder getEncoder(IoSession session) throws Exception {
+		return encoder;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("HTTP/1.1 101 Switching Protocols");
-		builder.append("\r\n");
-		builder.append("Upgrade: websocket");
-		builder.append("\r\n");
-		builder.append("Connection: Upgrade");
-		builder.append("\r\n");
-		builder.append("Sec-WebSocket-Accept:").append(token);
-		builder.append("\r\n");
-		builder.append("\r\n");
-
-		return builder.toString();
-
+	public ProtocolDecoder getDecoder(IoSession session) throws Exception {
+		return decoder;
 	}
+
 }

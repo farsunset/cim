@@ -19,39 +19,32 @@
  *                                                                                     *
  ***************************************************************************************
  */
-package com.farsunset.cim.sdk.server.model;
+package com.farsunset.cim.sdk.server.handler;
 
+import java.security.MessageDigest;
+
+import com.farsunset.cim.sdk.server.model.SentBody;
+import com.farsunset.cim.sdk.server.model.HandshakerResponse;
+import com.farsunset.cim.sdk.server.session.CIMSession;
 
 /**
- * websocket握手响应结果
- *
+ * 处理websocket握手请求，返回响应的报文给浏览器
  */
-public class HandshakerResponse {
+public class WebsocketHandler implements CIMRequestHandler {
 
-	private String token;
+	private final static String GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 
-	public HandshakerResponse(String token) {
-		this.token = token;
-	}
-
-	public byte[] getBytes() {
-		return toString().getBytes();
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("HTTP/1.1 101 Switching Protocols");
-		builder.append("\r\n");
-		builder.append("Upgrade: websocket");
-		builder.append("\r\n");
-		builder.append("Connection: Upgrade");
-		builder.append("\r\n");
-		builder.append("Sec-WebSocket-Accept:").append(token);
-		builder.append("\r\n");
-		builder.append("\r\n");
-
-		return builder.toString();
-
+	public void process(CIMSession session, SentBody body) {
+		session.setChannel(CIMSession.CHANNEL_BROWSER);
+		String secKey = body.get("key") + GUID;
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA-1");
+			md.update(secKey.getBytes("iso-8859-1"), 0, secKey.length());
+			byte[] sha1Hash = md.digest();
+			secKey = new String(org.apache.mina.util.Base64.encodeBase64(sha1Hash));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		session.write(new HandshakerResponse(secKey));
 	}
 }
