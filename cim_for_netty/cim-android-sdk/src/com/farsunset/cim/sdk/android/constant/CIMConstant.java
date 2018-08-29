@@ -100,9 +100,6 @@ public interface CIMConstant {
 
 		// 重试连接
 		String ACTION_CONNECTION_RECOVERY = "com.farsunset.cim.CONNECTION_RECOVERY";
-
-		// 未知异常
-		String ACTION_UNCAUGHT_EXCEPTION = "com.farsunset.cim.UNCAUGHT_EXCEPTION";
 	}
 
 }

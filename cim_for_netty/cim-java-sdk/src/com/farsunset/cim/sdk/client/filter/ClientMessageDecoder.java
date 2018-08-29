@@ -23,7 +23,8 @@ package com.farsunset.cim.sdk.client.filter;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.farsunset.cim.sdk.client.constant.CIMConstant;
 import com.farsunset.cim.sdk.client.model.HeartbeatRequest;
@@ -41,7 +42,7 @@ import io.netty.handler.codec.ByteToMessageDecoder;
  * 客户端消息解码
  */
 public class ClientMessageDecoder extends ByteToMessageDecoder {
-	protected final Logger logger = Logger.getLogger(ClientMessageDecoder.class.getSimpleName());
+	protected final Logger logger = LoggerFactory.getLogger(ClientMessageDecoder.class.getSimpleName());
 
 	@Override
 	protected void decode(ChannelHandlerContext arg0, ByteBuf buffer, List<Object> queue) throws Exception {

@@ -25,7 +25,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.farsunset.cim.sdk.client.model.Message;
 import com.farsunset.cim.sdk.client.model.ReplyBody;
@@ -37,7 +38,7 @@ public class CIMListenerManager {
 
 	private static ArrayList<CIMEventListener> cimListeners = new ArrayList<CIMEventListener>();
 	private static CIMMessageReceiveComparator comparator = new CIMMessageReceiveComparator();
-	protected static final Logger logger = Logger.getLogger(CIMListenerManager.class);
+	protected static final Logger logger = LoggerFactory.getLogger(CIMListenerManager.class);
 
 	public static void registerMessageListener(CIMEventListener listener) {
 

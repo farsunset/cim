@@ -26,9 +26,11 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 
 import org.apache.log4j.Logger;
 import org.apache.mina.core.future.ConnectFuture;
+import org.apache.mina.core.future.IoFutureListener;
 import org.apache.mina.core.future.WriteFuture;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
@@ -38,6 +40,7 @@ import org.apache.mina.filter.keepalive.KeepAliveFilter;
 import org.apache.mina.filter.keepalive.KeepAliveMessageFactory;
 import org.apache.mina.filter.keepalive.KeepAliveRequestTimeoutHandler;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
+
 import com.farsunset.cim.sdk.client.constant.CIMConstant;
 import com.farsunset.cim.sdk.client.exception.SessionDisconnectedException;
 import com.farsunset.cim.sdk.client.filter.ClientMessageCodecFactory;
@@ -65,8 +68,8 @@ class CIMConnectorManager extends IoHandlerAdapter implements KeepAliveMessageFa
 	private final String KEY_LAST_HEART_TIME = "KEY_LAST_HEART_TIME";
 
 	private NioSocketConnector connector;
-	private ConnectFuture connectFuture;
 	private ExecutorService executor = Executors.newFixedThreadPool(1);
+	private Semaphore semaphore = new Semaphore(1,true);
 
 	private static CIMConnectorManager manager;
 
@@ -97,49 +100,50 @@ class CIMConnectorManager extends IoHandlerAdapter implements KeepAliveMessageFa
 
 	}
 
-	private synchronized void syncConnection(final String host, final int port) {
-
-		if (isConnected()) {
-			return;
-		}
-
-		try {
-
-			logger.info("****************CIM正在连接服务器  " + host + ":" + port + "......");
-
-			CIMCacheManager.getInstance().putBoolean(CIMCacheManager.KEY_CIM_CONNECTION_STATE, false);
-			InetSocketAddress remoteSocketAddress = new InetSocketAddress(host, port);
-			connectFuture = connector.connect(remoteSocketAddress);
-			connectFuture.awaitUninterruptibly();
-			connectFuture.getSession();
-		} catch (Exception e) {
-
-			long interval = CIMConstant.RECONN_INTERVAL_TIME - (5 * 1000 - new Random().nextInt(15 * 1000));
-
-			Intent intent = new Intent();
-			intent.setAction(CIMConstant.IntentAction.ACTION_CONNECTION_FAILED);
-			intent.putExtra(Exception.class.getName(), e);
-			intent.putExtra("interval", interval);
-			sendBroadcast(intent);
-
-			logger.error(
-					"****************CIM连接服务器失败  " + host + ":" + port + "......将在" + interval / 1000 + "秒后重新尝试连接");
-
-		}
-
-	}
-
+	
+	
 	public void connect(final String host, final int port) {
 
+		if (isConnected() || !semaphore.tryAcquire()) {
+			return;
+		}
+		 
 		executor.execute(new Runnable() {
+			@Override
 			public void run() {
-				syncConnection(host, port);
+				
+				logger.info("****************CIM正在连接服务器  " + host + ":" + port + "......");
+				InetSocketAddress remoteAddress = new InetSocketAddress(host, port);
+				CIMCacheManager.getInstance().putBoolean(CIMCacheManager.KEY_CIM_CONNECTION_STATE, false);
+				connector.connect(remoteAddress).addListener(new IoFutureListener<ConnectFuture>() {
+					@Override
+					public void operationComplete(ConnectFuture future) {
+						semaphore.release();
+						future.removeListener(this);
+						if(future.getException() != null) {
+							handleConnectFailure(future.getException(),remoteAddress);
+						}
+					}
+				});
 			}
 		});
 
 	}
 
-	public synchronized void send(SentBody body) {
+	private void handleConnectFailure(Throwable error,InetSocketAddress remoteAddress) {
+		long interval = CIMConstant.RECONN_INTERVAL_TIME - (5 * 1000 - new Random().nextInt(15 * 1000));
+
+		Intent intent = new Intent();
+		intent.setAction(CIMConstant.IntentAction.ACTION_CONNECTION_FAILED);
+		intent.putExtra(Exception.class.getName(), error);
+		intent.putExtra("interval", interval);
+		sendBroadcast(intent);
+
+		logger.error("****************CIM连接服务器失败  " + remoteAddress.getHostString() + ":" + remoteAddress.getPort() + "......将在" + interval / 1000 + "秒后重新尝试连接");
+
+	}
+	
+	public void send(SentBody body) {
 
 		boolean isSuccessed = false;
 

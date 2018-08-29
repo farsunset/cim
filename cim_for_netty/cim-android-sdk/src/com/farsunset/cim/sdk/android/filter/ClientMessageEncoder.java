@@ -28,28 +28,21 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
-import android.util.Log;
-
 /**
  * 客户端消息发送前进行编码,可在此加密消息
  *
  */
-public class ClientMessageEncoder extends MessageToByteEncoder<Object> {
+public class ClientMessageEncoder extends MessageToByteEncoder<Protobufable> {
 
 	@Override
-	protected void encode(ChannelHandlerContext ctx, Object message, ByteBuf out) throws Exception {
+	protected void encode(ChannelHandlerContext ctx, Protobufable message, ByteBuf out) throws Exception {
 
-		if (message instanceof Protobufable) {
+		Protobufable data = (Protobufable) message;
+		byte[] byteArray = data.getByteArray();
 
-			Protobufable data = (Protobufable) message;
-			byte[] byteArray = data.getByteArray();
+		out.writeBytes(createHeader(data.getType(), byteArray.length));
+		out.writeBytes(byteArray);
 
-			out.writeBytes(createHeader(data.getType(), byteArray.length));
-			out.writeBytes(byteArray);
-
-		}
-
-		Log.i(ClientMessageEncoder.class.getSimpleName(), message.toString());
 	}
 
 	/**

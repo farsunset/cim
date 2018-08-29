@@ -26,7 +26,8 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.util.Log;
+
+import com.farsunset.cim.sdk.android.filter.CIMLoggingFilter;
 import com.farsunset.cim.sdk.android.model.SentBody;
 
 /**
@@ -36,8 +37,9 @@ import com.farsunset.cim.sdk.android.model.SentBody;
  *
  */
 public class CIMPushService extends Service {
-	private final String TAG = CIMPushService.class.getSimpleName();
 	public final static String KEY_DELAYED_TIME = "KEY_DELAYED_TIME";
+	public final static String KEY_LOGGER_ENABLE = "KEY_LOGGER_ENABLE";
+
 	private CIMConnectorManager manager;
 
 	@Override
@@ -97,17 +99,24 @@ public class CIMPushService extends Service {
 		if (CIMPushManager.ACTION_ACTIVATE_PUSH_SERVICE.equals(action)) {
 			if (!manager.isConnected()) {
 
-				boolean isManualStop = CIMCacheManager.getBoolean(getApplicationContext(),
-						CIMCacheManager.KEY_MANUAL_STOP);
-				Log.w(TAG, "manager.isConnected() == false, isManualStop == " + isManualStop);
+				boolean isManualStop = CIMCacheManager.getBoolean(getApplicationContext(),CIMCacheManager.KEY_MANUAL_STOP);
+				boolean isDestroyed = CIMCacheManager.getBoolean(getApplicationContext(),CIMCacheManager.KEY_CIM_DESTROYED);
+
+				CIMLoggingFilter.getLogger().connectState(false, isManualStop, isDestroyed);
+				
 				CIMPushManager.connect(this, 0);
 
 			} else {
-				Log.i(TAG, "manager.isConnected() == true");
+				CIMLoggingFilter.getLogger().connectState(true);
 			}
 
 		}
 
+		if (CIMPushManager.ACTION_SET_LOGGER_EANABLE.equals(action)) {
+			boolean enable = intent.getBooleanExtra(KEY_LOGGER_ENABLE, true);
+			CIMLoggingFilter.getLogger().debugMode(enable);
+		}
+		
 		return START_STICKY;
 	}
 

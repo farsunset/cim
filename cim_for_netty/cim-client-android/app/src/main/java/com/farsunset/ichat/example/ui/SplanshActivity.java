@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 
 import com.farsunset.cim.sdk.android.CIMPushManager;
+import com.farsunset.ichat.example.BuildConfig;
 import com.farsunset.ichat.example.R;
 import com.farsunset.ichat.example.app.CIMMonitorActivity;
 import com.farsunset.ichat.example.app.Constant;
@@ -38,10 +39,12 @@ public class SplanshActivity extends CIMMonitorActivity{
 	boolean initComplete = false;
 	public void onCreate(Bundle savedInstanceState)
 	{
-		
-		
+
+
 		super.onCreate(savedInstanceState);
-		
+
+		CIMPushManager.setLoggerEnable(this, BuildConfig.DEBUG);
+
 		//连接服务端
 		
 		CIMPushManager.connect(SplanshActivity.this,Constant.CIM_SERVER_HOST, Constant.CIM_SERVER_PORT);

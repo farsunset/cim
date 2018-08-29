@@ -19,66 +19,117 @@
  *                                                                                     *
  ***************************************************************************************
  */
-package com.farsunset.cim.sdk.server.filter;
+package com.farsunset.cim.sdk.android.filter;
+
+import java.net.InetSocketAddress;
 
 import org.apache.mina.core.filterchain.IoFilterAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.core.write.WriteRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import com.farsunset.cim.sdk.server.constant.CIMConstant;
+import android.util.Log;
+
 
 /**
  * 日志打印，添加session 的id和ip address
  */
 public class CIMLoggingFilter extends IoFilterAdapter {
-
-	private final Logger logger = LoggerFactory.getLogger(CIMLoggingFilter.class);
-
+	private final static String TAG = "CIM";
+	private boolean debug = true;
+	
+	public static CIMLoggingFilter getLogger() {
+		return LoggerHolder.logger;
+	}
+	
+	private CIMLoggingFilter() {
+		
+	}
+	
+	private static class LoggerHolder{
+		private static CIMLoggingFilter logger = new CIMLoggingFilter();
+	}
+	
+	public void  debugMode(boolean mode) {
+		debug = mode;
+	}
+	
 	@Override
 	public void exceptionCaught(NextFilter nextFilter, IoSession session, Throwable cause)   {
-		logger.info("EXCEPTION" + getSessionInfo(session) + "\n{}", cause.getClass().getName());
+		if(debug) {
+			Log.d(TAG,String.format("EXCEPTION" + getSessionInfo(session) + "\n%s", cause.getClass().getName()));
+		}
 		session.closeOnFlush();
 	}
 
 	@Override
 	public void messageReceived(NextFilter nextFilter, IoSession session, Object message)  {
-		logger.info("RECEIVED" + getSessionInfo(session) + "\n{}", message);
+		if(debug) {
+			Log.i(TAG,String.format("RECEIVED" + getSessionInfo(session) + "\n%s", message));
+		}
 		nextFilter.messageReceived(session, message);
 	}
 
 	@Override
 	public void messageSent(NextFilter nextFilter, IoSession session, WriteRequest writeRequest)   {
-		logger.info("SENT" + getSessionInfo(session) + "\n{}", writeRequest.getOriginalRequest().getMessage());
+		if(debug) {
+			Log.i(TAG,String.format("SENT" + getSessionInfo(session) + "\n%s", writeRequest.getOriginalRequest().getMessage()));
+		}
 		nextFilter.messageSent(session, writeRequest);
 	}
 
 	@Override
 	public void sessionCreated(NextFilter nextFilter, IoSession session) throws Exception {
-		logger.info("CREATED" + getSessionInfo(session));
 		nextFilter.sessionCreated(session);
 	}
 
 	@Override
 	public void sessionOpened(NextFilter nextFilter, IoSession session) throws Exception {
-		logger.info("OPENED" + getSessionInfo(session));
+		if(debug) {
+			Log.i(TAG,"OPENED" + getSessionInfo(session));
+		}
 		nextFilter.sessionOpened(session);
 	}
 
 	@Override
 	public void sessionIdle(NextFilter nextFilter, IoSession session, IdleStatus status)   {
-		logger.info("IDLE" + getSessionInfo(session));
+		if(debug) {
+			Log.i(TAG,"IDLE " + status.toString().toUpperCase() + getSessionInfo(session));
+		}
 		nextFilter.sessionIdle(session, status);
 	}
 
 	@Override
 	public void sessionClosed(NextFilter nextFilter, IoSession session)  {
-		logger.info("CLOSED" + getSessionInfo(session));
+		if(debug) {
+			Log.i(TAG,"CLOSED" + getSessionInfo(session));
+		}
 		nextFilter.sessionClosed(session);
 	}
 
+	public void connectFailure(InetSocketAddress remoteAddress,long interval)  {
+		if(debug) {
+			Log.i(TAG,"CONNECT FAILURE TRY RECONNECT AFTER " + interval +"ms");
+		}
+	}
+	
+	public void startConnect(InetSocketAddress remoteAddress) {
+		if(debug) {
+			Log.i(TAG,"START CONNECT REMOTE HOST: " + remoteAddress.toString());
+		} 
+	}
+	
+	public void connectState(boolean isConnected)  {
+		if(debug) {
+			Log.i(TAG,"CONNECTED:" + isConnected);
+		}
+	}
+	 
+	public void connectState(boolean isConnected,boolean isManualStop,boolean isDestroyed)  {
+		if(debug) {
+			Log.i(TAG,"CONNECTED:" + isConnected + " STOPED:"+isManualStop+ " DESTROYED:"+isDestroyed);
+		}
+	}
 	private String getSessionInfo(IoSession session) {
 		StringBuilder builder = new StringBuilder();
 		if (session == null) {
@@ -95,11 +146,9 @@ public class CIMLoggingFilter extends IoFilterAdapter {
 		if (session.getRemoteAddress() != null) {
 			builder.append(" R:").append(session.getRemoteAddress().toString());
 		}
-		
-		if (session.containsAttribute(CIMConstant.SESSION_KEY)) {
-			builder.append(" account:").append(session.getAttribute(CIMConstant.SESSION_KEY));
-		}
 		builder.append("]");
 		return builder.toString();
 	}
+	 
+	
 }

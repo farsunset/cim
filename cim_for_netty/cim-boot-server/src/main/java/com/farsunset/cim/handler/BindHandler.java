@@ -86,9 +86,17 @@ public class BindHandler implements CIMRequestHandler {
 				sendForceOfflineMessage(oldSession, account, newSession.getDeviceModel());
 			}
 
-			// 第一次设置心跳时间为登录时间
-			newSession.setBindTime(System.currentTimeMillis());
 
+			/**
+			 * 有可能是同一个设备重复连接，则关闭旧的链接，这种情况一般是客户端断网，联网又重新链接上来，之前的旧链接没有来得及通过心跳机制关闭，在这里手动关闭
+			 * 条件1，连接来自是同一个设备
+			 * 条件2.2个连接都是同一台服务器
+			 */
+			
+			if (oldSession != null && !fromOtherDevice(newSession,oldSession) && Objects.equals(oldSession.getHost(),host)) {
+				oldSession.removeAttribute(CIMConstant.SESSION_KEY);
+				oldSession.closeNow();
+			}
 
 			// 第一次设置心跳时间为登录时间
 			newSession.setBindTime(System.currentTimeMillis());

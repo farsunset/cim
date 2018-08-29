@@ -25,7 +25,6 @@ import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.CumulativeProtocolDecoder;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
-import android.util.Log;
 
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
 import com.farsunset.cim.sdk.android.model.HeartbeatRequest;
@@ -40,7 +39,6 @@ import com.google.protobuf.InvalidProtocolBufferException;
  */
 public class ClientMessageDecoder extends CumulativeProtocolDecoder {
 
-	final static String TAG = ClientMessageDecoder.class.getSimpleName();
 
 	@Override
 	public boolean doDecode(IoSession iosession, IoBuffer iobuffer, ProtocolDecoderOutput out) throws Exception {
@@ -82,7 +80,6 @@ public class ClientMessageDecoder extends CumulativeProtocolDecoder {
 
 		if (CIMConstant.ProtobufType.S_H_RQ == type) {
 			HeartbeatRequest request = HeartbeatRequest.getInstance();
-			Log.i(TAG, request.toString());
 			return request;
 		}
 
@@ -94,9 +91,6 @@ public class ClientMessageDecoder extends CumulativeProtocolDecoder {
 			body.putAll(bodyProto.getDataMap());
 			body.setCode(bodyProto.getCode());
 			body.setMessage(bodyProto.getMessage());
-
-			Log.i(TAG, body.toString());
-
 			return body;
 		}
 
@@ -112,8 +106,6 @@ public class ClientMessageDecoder extends CumulativeProtocolDecoder {
 			message.setExtra(bodyProto.getExtra());
 			message.setTimestamp(bodyProto.getTimestamp());
 			message.setFormat(bodyProto.getFormat());
-
-			Log.i(TAG, message.toString());
 			return message;
 		}
 

@@ -23,6 +23,7 @@ package com.farsunset.cim.sdk.server.handler;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.farsunset.cim.sdk.server.constant.CIMConstant;
 import com.farsunset.cim.sdk.server.filter.ServerMessageDecoder;
@@ -32,6 +33,7 @@ import com.farsunset.cim.sdk.server.model.SentBody;
 import com.farsunset.cim.sdk.server.session.CIMSession;
 
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
@@ -61,7 +63,7 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody> 
 
 	private HashMap<String, CIMRequestHandler> innerHandlerMap = new HashMap<String, CIMRequestHandler>();
 	private CIMRequestHandler outerRequestHandler;
-
+    private ConcurrentHashMap<String,Channel> channelGroup = new ConcurrentHashMap<String,Channel>();
 	private int port;
 
 	// 连接空闲时间
@@ -108,6 +110,7 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody> 
 		this.outerRequestHandler = outerRequestHandler;
 	}
 
+	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, SentBody body) throws Exception {
 
 		CIMSession session = new CIMSession(ctx.channel());
@@ -127,10 +130,10 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody> 
 		outerRequestHandler.process(session, body);
 	}
 
-	/**
-	 */
-	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-
+	@Override
+	public void channelInactive(ChannelHandlerContext ctx) {
+		channelGroup.remove(ctx.channel().id().asShortText());
+		
 		CIMSession session = new CIMSession(ctx.channel());
 		SentBody body = new SentBody();
 		body.setKey(CIMSESSION_CLOSED_HANDLER_KEY);
@@ -138,8 +141,12 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody> 
 
 	}
 
-	/**
-	 */
+	@Override
+    public void channelActive(ChannelHandlerContext ctx){
+		channelGroup.put(ctx.channel().id().asShortText(),ctx.channel());
+    }
+	
+	@Override
 	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
 		if (evt instanceof IdleStateEvent && ((IdleStateEvent) evt).state().equals(IdleState.WRITER_IDLE)) {
 			ctx.channel().attr(AttributeKey.valueOf(CIMConstant.HEARTBEAT_KEY)).set(System.currentTimeMillis());
@@ -162,4 +169,11 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody> 
 		this.port = port;
 	}
 
+	
+	public Channel getManagedChannel(String id) {
+		if (id == null) {
+			return null;
+		}
+		return channelGroup.get(id);
+	}
 }

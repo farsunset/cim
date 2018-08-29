@@ -21,11 +21,15 @@
  */
 package com.farsunset.cim.sdk.client;
 
+import java.net.InetSocketAddress;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.farsunset.cim.sdk.client.constant.CIMConstant;
 import com.farsunset.cim.sdk.client.exception.SessionDisconnectedException;
 import com.farsunset.cim.sdk.client.filter.ClientMessageDecoder;
@@ -40,13 +44,13 @@ import com.farsunset.cim.sdk.client.model.SentBody;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -54,6 +58,7 @@ import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.AttributeKey;
+import io.netty.util.concurrent.GenericFutureListener;
 
 /**
  * 连接服务端管理，cim核心处理类，管理连接，以及消息处理
@@ -62,7 +67,7 @@ import io.netty.util.AttributeKey;
  */
 @Sharable
 class CIMConnectorManager extends SimpleChannelInboundHandler<Object> {
-	protected final Logger logger = Logger.getLogger(CIMConnectorManager.class.getSimpleName());
+	protected final Logger logger = LoggerFactory.getLogger(CIMConnectorManager.class.getSimpleName());
 	private final int CONNECT_TIMEOUT = 10 * 1000;// 秒
 	private final int WRITE_TIMEOUT = 10 * 1000;// 秒
 
@@ -74,6 +79,7 @@ class CIMConnectorManager extends SimpleChannelInboundHandler<Object> {
 	private EventLoopGroup loopGroup;
 	private Channel channel;;
 	private ExecutorService executor = Executors.newCachedThreadPool();
+	private Semaphore semaphore = new Semaphore(1,true);
 	private static CIMConnectorManager manager;
 
 	private CIMConnectorManager() {
@@ -106,47 +112,53 @@ class CIMConnectorManager extends SimpleChannelInboundHandler<Object> {
 		return manager;
 
 	}
-
-	private synchronized void syncConnection(String host, int port) {
-
-		if (isConnected()) {
-			return;
-		}
-
-		try {
-
-			logger.info("****************CIM正在连接服务器  " + host + ":" + port + "......");
-
-			ChannelFuture channelFuture = bootstrap.connect(host, port).syncUninterruptibly();
-			channel = channelFuture.channel();
-		} catch (Exception e) {
-
-			long interval = CIMConstant.RECONN_INTERVAL_TIME - (5 * 1000 - new Random().nextInt(15 * 1000));
-
-			Intent intent = new Intent();
-			intent.setAction(CIMConstant.IntentAction.ACTION_CONNECTION_FAILED);
-			intent.putExtra(Exception.class.getName(), e);
-			intent.putExtra("interval", interval);
-			sendBroadcast(intent);
-
-			logger.error(
-					"****************CIM连接服务器失败  " + host + ":" + port + "......将在" + interval / 1000 + "秒后重新尝试连接");
-
-		}
-
-	}
-
+	
 	public void connect(final String host, final int port) {
 
+		if (isConnected() || !semaphore.tryAcquire()) {
+			return;
+		}
+		 
 		executor.execute(new Runnable() {
+			@Override
 			public void run() {
-				syncConnection(host, port);
+				
+				logger.info("****************CIM正在连接服务器  " + host + ":" + port + "......");
+				final InetSocketAddress remoteAddress = new InetSocketAddress(host, port);
+				bootstrap.connect(remoteAddress).addListener(new GenericFutureListener<ChannelFuture>() {
+
+					@Override
+					public void operationComplete(ChannelFuture future) throws Exception {
+						future.removeListener(this);
+						semaphore.acquire();
+						if(!future.isSuccess() && future.cause() != null) {
+							handleConnectFailure(future.cause(),remoteAddress);
+						}
+						
+						if(future.isSuccess()) {
+							channel = future.channel();
+						}
+					}
+				});
 			}
 		});
 
 	}
+	
+	private void handleConnectFailure(Throwable error,InetSocketAddress remoteAddress) {
+		long interval = CIMConstant.RECONN_INTERVAL_TIME - (5 * 1000 - new Random().nextInt(15 * 1000));
 
-	public synchronized void send(SentBody body) {
+		Intent intent = new Intent();
+		intent.setAction(CIMConstant.IntentAction.ACTION_CONNECTION_FAILED);
+		intent.putExtra(Exception.class.getName(), error);
+		intent.putExtra("interval", interval);
+		sendBroadcast(intent);
+
+		logger.warn("****************CIM连接服务器失败  " + remoteAddress.getHostName() + ":" + remoteAddress.getPort() + "......将在" + interval / 1000 + "秒后重新尝试连接");
+
+	}
+
+	public void send(SentBody body) {
 
 		boolean isSuccessed = false;
 
@@ -184,10 +196,7 @@ class CIMConnectorManager extends SimpleChannelInboundHandler<Object> {
 	}
 
 	public boolean isConnected() {
-		if (channel == null) {
-			return false;
-		}
-		return channel.isActive();
+		return channel != null && channel.isActive();
 	}
 
 	public void closeSession() {

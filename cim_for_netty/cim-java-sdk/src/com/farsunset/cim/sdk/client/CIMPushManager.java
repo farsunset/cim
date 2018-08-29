@@ -25,7 +25,8 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.farsunset.cim.sdk.client.constant.CIMConstant;
 import com.farsunset.cim.sdk.client.model.Intent;
@@ -35,7 +36,7 @@ import com.farsunset.cim.sdk.client.model.SentBody;
  * CIM 功能接口
  */
 public class CIMPushManager {
-	protected static final Logger logger = Logger.getLogger(CIMPushManager.class);
+	protected static final Logger logger = LoggerFactory.getLogger(CIMPushManager.class);
 	static String ACTION_ACTIVATE_PUSH_SERVICE = "ACTION_ACTIVATE_PUSH_SERVICE";
 
 	static String ACTION_CREATE_CIM_CONNECTION = "ACTION_CREATE_CIM_CONNECTION";

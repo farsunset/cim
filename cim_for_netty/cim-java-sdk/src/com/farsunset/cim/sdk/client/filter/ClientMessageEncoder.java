@@ -21,7 +21,8 @@
  */
 package com.farsunset.cim.sdk.client.filter;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.farsunset.cim.sdk.client.constant.CIMConstant;
 import com.farsunset.cim.sdk.client.model.Protobufable;
@@ -35,7 +36,7 @@ import io.netty.handler.codec.MessageToByteEncoder;
  *
  */
 public class ClientMessageEncoder extends MessageToByteEncoder<Object> {
-	protected final Logger logger = Logger.getLogger(ClientMessageEncoder.class.getSimpleName());
+	protected final Logger logger = LoggerFactory.getLogger(ClientMessageEncoder.class.getSimpleName());
 
 	@Override
 	protected void encode(ChannelHandlerContext ctx, Object message, ByteBuf out) throws Exception {

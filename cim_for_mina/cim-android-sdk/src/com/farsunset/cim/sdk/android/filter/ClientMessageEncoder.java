@@ -25,8 +25,6 @@ import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolEncoderAdapter;
 import org.apache.mina.filter.codec.ProtocolEncoderOutput;
-import android.util.Log;
-
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
 import com.farsunset.cim.sdk.android.model.Protobufable;
 
@@ -34,8 +32,6 @@ import com.farsunset.cim.sdk.android.model.Protobufable;
  * 客户端消息发送前进行编码
  */
 public class ClientMessageEncoder extends ProtocolEncoderAdapter {
-
-	final static String TAG = ClientMessageEncoder.class.getSimpleName();
 
 	@Override
 	public void encode(IoSession iosession, Object object, ProtocolEncoderOutput out) throws Exception {
@@ -52,8 +48,6 @@ public class ClientMessageEncoder extends ProtocolEncoderAdapter {
 
 			buff.flip();
 			out.write(buff);
-			// 打印出收到的消息
-			Log.i(TAG, data.toString());
 		}
 
 	}

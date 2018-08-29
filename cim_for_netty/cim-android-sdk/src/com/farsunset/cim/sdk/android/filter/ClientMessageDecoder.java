@@ -31,7 +31,6 @@ import com.farsunset.cim.sdk.android.model.proto.MessageProto;
 import com.farsunset.cim.sdk.android.model.proto.ReplyBodyProto;
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import android.util.Log;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -40,7 +39,6 @@ import io.netty.handler.codec.ByteToMessageDecoder;
  * 客户端消息解码
  */
 public class ClientMessageDecoder extends ByteToMessageDecoder {
-	final static String TAG = ClientMessageDecoder.class.getSimpleName();
 
 	@Override
 	protected void decode(ChannelHandlerContext arg0, ByteBuf buffer, List<Object> queue) throws Exception {
@@ -84,7 +82,6 @@ public class ClientMessageDecoder extends ByteToMessageDecoder {
 
 		if (CIMConstant.ProtobufType.S_H_RQ == type) {
 			HeartbeatRequest request = HeartbeatRequest.getInstance();
-			Log.i(TAG, request.toString());
 			return request;
 		}
 
@@ -96,9 +93,6 @@ public class ClientMessageDecoder extends ByteToMessageDecoder {
 			body.putAll(bodyProto.getDataMap());
 			body.setCode(bodyProto.getCode());
 			body.setMessage(bodyProto.getMessage());
-
-			Log.i(TAG, body.toString());
-
 			return body;
 		}
 
@@ -114,8 +108,6 @@ public class ClientMessageDecoder extends ByteToMessageDecoder {
 			message.setExtra(bodyProto.getExtra());
 			message.setTimestamp(bodyProto.getTimestamp());
 			message.setFormat(bodyProto.getFormat());
-
-			Log.i(TAG, message.toString());
 			return message;
 		}
 

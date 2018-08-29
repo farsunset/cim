@@ -45,6 +45,8 @@ public class CIMPushManager {
 
 	static String ACTION_CLOSE_CIM_CONNECTION = "ACTION_CLOSE_CIM_CONNECTION";
 
+	static String ACTION_SET_LOGGER_EANABLE = "ACTION_SET_LOGGER_EANABLE";
+
 	static String ACTION_DESTORY = "ACTION_DESTORY";
 
 	static String KEY_SEND_BODY = "KEY_SEND_BODY";
@@ -85,6 +87,13 @@ public class CIMPushManager {
 
 	}
 
+	public static void setLoggerEnable(Context context,boolean enable) {
+		Intent serviceIntent = new Intent(context, CIMPushService.class);
+		serviceIntent.putExtra(CIMPushService.KEY_LOGGER_ENABLE, enable);
+		serviceIntent.setAction(ACTION_SET_LOGGER_EANABLE);
+		context.startService(serviceIntent);
+	}
+	
 	protected static void connect(Context context, long delayedTime) {
 
 		boolean isManualStop = CIMCacheManager.getBoolean(context, CIMCacheManager.KEY_MANUAL_STOP);
