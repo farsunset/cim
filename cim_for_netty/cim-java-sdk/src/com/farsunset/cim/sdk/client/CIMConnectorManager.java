@@ -129,8 +129,8 @@ class CIMConnectorManager extends SimpleChannelInboundHandler<Object> {
 
 					@Override
 					public void operationComplete(ChannelFuture future) throws Exception {
+						semaphore.release();
 						future.removeListener(this);
-						semaphore.acquire();
 						if(!future.isSuccess() && future.cause() != null) {
 							handleConnectFailure(future.cause(),remoteAddress);
 						}
