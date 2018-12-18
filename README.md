@@ -41,7 +41,7 @@ CIM是基于mina和netty框架下的推送系统，我们平常使用第三方�
 
 1.服务端由原来的 spring+struts2修改为springboot工程
 
-2.全面重写websocket的实现，全面拥抱protobuf，替换josn序列化方式，更加高效
+2.全面重写websocket的实现，全面拥抱protobuf，替换json序列化方式，更加高效
 
 
  
