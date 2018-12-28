@@ -21,6 +21,7 @@
  */
 package com.farsunset.cim.sdk.server.filter.decoder;
 
+import java.nio.charset.Charset;
 import java.util.List;
 
 import com.farsunset.cim.sdk.server.constant.CIMConstant;
@@ -103,7 +104,7 @@ public class WebMessageDecoder extends ByteToMessageDecoder {
 			}
 
 		} else if (OPCODE_CLOSE == frameOqcode) {
-			handleClose(arg0);
+			handleSocketClosed(arg0,iobuffer);
 		} else {
 			// 忽略其他类型的消息
 			iobuffer.readBytes(new byte[iobuffer.readableBytes()]);
@@ -111,7 +112,8 @@ public class WebMessageDecoder extends ByteToMessageDecoder {
 
 	}
 
-	private void handleClose(ChannelHandlerContext arg0) {
+	private void handleSocketClosed(ChannelHandlerContext arg0,ByteBuf iobuffer) {
+		iobuffer.readBytes(new byte[iobuffer.readableBytes()]);
 		arg0.channel().close();
 	}
 
