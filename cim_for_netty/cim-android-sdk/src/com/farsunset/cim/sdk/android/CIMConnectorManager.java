@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2019 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,7 +83,11 @@ class CIMConnectorManager extends SimpleChannelInboundHandler<Object> {
 
 	private CIMConnectorManager(Context ctx) {
 		context = ctx;
+		makeNioBootstrap();
 
+	}
+	
+	private void makeNioBootstrap() {
 		bootstrap = new Bootstrap();
 		loopGroup = new NioEventLoopGroup(1);
 		bootstrap.group(loopGroup);
@@ -101,7 +105,6 @@ class CIMConnectorManager extends SimpleChannelInboundHandler<Object> {
 				ch.pipeline().addLast(CIMConnectorManager.this);
 			}
 		});
-
 	}
 
 	public synchronized static CIMConnectorManager getManager(Context context) {
@@ -118,8 +121,8 @@ class CIMConnectorManager extends SimpleChannelInboundHandler<Object> {
 		
 		CIMLoggingHandler.getLogger().connectFailure(remoteAddress, interval);
 		
-		Intent intent = new Intent();
-		intent.setAction(CIMConstant.IntentAction.ACTION_CONNECTION_FAILED);
+		Intent intent = new Intent(CIMConstant.IntentAction.ACTION_CONNECTION_FAILED);
+		intent.setPackage(context.getPackageName());
 		intent.putExtra(Exception.class.getName(), error.getClass().getSimpleName());
 		intent.putExtra("interval", interval);
 		context.sendBroadcast(intent);
@@ -133,8 +136,8 @@ class CIMConnectorManager extends SimpleChannelInboundHandler<Object> {
 
 		if (!isNetworkConnected(context)) {
 
-			Intent intent = new Intent();
-			intent.setAction(CIMConstant.IntentAction.ACTION_CONNECTION_FAILED);
+			Intent intent = new Intent(CIMConstant.IntentAction.ACTION_CONNECTION_FAILED);
+			intent.setPackage(context.getPackageName());
 			intent.putExtra(Exception.class.getName(), NetworkDisabledException.class.getSimpleName());
 			context.sendBroadcast(intent);
 
@@ -143,6 +146,10 @@ class CIMConnectorManager extends SimpleChannelInboundHandler<Object> {
 
 		if (isConnected() || !semaphore.tryAcquire()) {
 			return;
+		}
+		
+		if (bootstrap == null || loopGroup.isShutdown()) {
+			makeNioBootstrap();
 		}
 		 
 		executor.execute(new Runnable() {
@@ -187,14 +194,14 @@ class CIMConnectorManager extends SimpleChannelInboundHandler<Object> {
 		}
 
 		if (!isSuccessed) {
-			Intent intent = new Intent();
-			intent.setAction(CIMConstant.IntentAction.ACTION_SENT_FAILED);
+			Intent intent = new Intent(CIMConstant.IntentAction.ACTION_SENT_FAILED);
+			intent.setPackage(context.getPackageName());
 			intent.putExtra(Exception.class.getName(), exceptionName);
 			intent.putExtra(SentBody.class.getName(), body);
 			context.sendBroadcast(intent);
 		} else {
-			Intent intent = new Intent();
-			intent.setAction(CIMConstant.IntentAction.ACTION_SENT_SUCCESSED);
+			Intent intent = new Intent(CIMConstant.IntentAction.ACTION_SENT_SUCCESSED);
+			intent.setPackage(context.getPackageName());
 			intent.putExtra(SentBody.class.getName(), (SentBody) body);
 			context.sendBroadcast(intent);
 		}
@@ -210,7 +217,6 @@ class CIMConnectorManager extends SimpleChannelInboundHandler<Object> {
 			loopGroup.shutdownGracefully();
 		}
 
-		manager = null;
 	}
 
 	public boolean isConnected() {
@@ -229,8 +235,8 @@ class CIMConnectorManager extends SimpleChannelInboundHandler<Object> {
 
 		setLastHeartbeatTime(ctx.channel());
 
-		Intent intent = new Intent();
-		intent.setAction(CIMConstant.IntentAction.ACTION_CONNECTION_SUCCESSED);
+		Intent intent = new Intent(CIMConstant.IntentAction.ACTION_CONNECTION_SUCCESSED);
+		intent.setPackage(context.getPackageName());
 		context.sendBroadcast(intent);
 
 	}
@@ -238,8 +244,8 @@ class CIMConnectorManager extends SimpleChannelInboundHandler<Object> {
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) {
 
-		Intent intent = new Intent();
-		intent.setAction(CIMConstant.IntentAction.ACTION_CONNECTION_CLOSED);
+		Intent intent = new Intent(CIMConstant.IntentAction.ACTION_CONNECTION_CLOSED);
+		intent.setPackage(context.getPackageName());
 		context.sendBroadcast(intent);
 
 	}
@@ -264,16 +270,16 @@ class CIMConnectorManager extends SimpleChannelInboundHandler<Object> {
 	public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
 		if (msg instanceof Message) {
 
-			Intent intent = new Intent();
-			intent.setAction(CIMConstant.IntentAction.ACTION_MESSAGE_RECEIVED);
+			Intent intent = new Intent(CIMConstant.IntentAction.ACTION_MESSAGE_RECEIVED);
+			intent.setPackage(context.getPackageName());
 			intent.putExtra(Message.class.getName(), (Message) msg);
 			context.sendBroadcast(intent);
 
 		}
 		if (msg instanceof ReplyBody) {
 
-			Intent intent = new Intent();
-			intent.setAction(CIMConstant.IntentAction.ACTION_REPLY_RECEIVED);
+			Intent intent = new Intent(CIMConstant.IntentAction.ACTION_REPLY_RECEIVED);
+			intent.setPackage(context.getPackageName());
 			intent.putExtra(ReplyBody.class.getName(), (ReplyBody) msg);
 			context.sendBroadcast(intent);
 		}

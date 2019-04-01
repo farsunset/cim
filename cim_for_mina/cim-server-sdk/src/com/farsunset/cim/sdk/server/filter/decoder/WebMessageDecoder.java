@@ -210,7 +210,6 @@ public class WebMessageDecoder extends MessageDecoderAdapter {
 	}
    
    private void handleClose(IoSession iosession, IoBuffer in) {
-		
 		in.get(new byte[in.remaining()]);
 		iosession.closeOnFlush();
 	}

@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2019 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,10 +34,12 @@ import com.farsunset.cim.sdk.server.session.CIMSession;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
@@ -82,7 +84,9 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody> 
 		innerHandlerMap.put(WEBSOCKET_HANDLER_KEY, new WebsocketHandler());
 
 		ServerBootstrap bootstrap = new ServerBootstrap();
-		bootstrap.group(new NioEventLoopGroup(), new NioEventLoopGroup());
+		EventLoopGroup bossGroup = new NioEventLoopGroup();
+        EventLoopGroup workerGroup = new NioEventLoopGroup();
+        bootstrap.group(bossGroup, workerGroup);
 		bootstrap.childOption(ChannelOption.TCP_NODELAY, true);
 		bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
 		bootstrap.channel(NioServerSocketChannel.class);
@@ -99,6 +103,14 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody> 
 		});
 
 		bootstrap.bind(port);
+		
+		ChannelFuture channelFuture = bootstrap.bind(port).syncUninterruptibly();
+		
+        channelFuture.channel().closeFuture().addListener(future -> {
+        	bossGroup.shutdownGracefully();
+            workerGroup.shutdownGracefully();
+        });
+        
 	}
 
 	/**
