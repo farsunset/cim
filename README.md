@@ -5,11 +5,11 @@ CIM是基于mina和netty框架下的推送系统，我们平常使用第三方�
 ## 相关项目
 侣信专业版是基于CIM面向中小企业和者各类团队组织内部交流使用工具。具有丰富的功能，聊天，群组，部门组织，内部朋友圈等功能。它可以在局域网内使用保证沟通的信息安全，并且它是完全免费的，而且可以及时获得更新。
 ## [http://farsunset.com](http://farsunset.com)
-<figure class="third">
+<div align="center">
    <img src="http://staticres.oss-cn-hangzhou.aliyuncs.com/lvxin-pro/lvxin_chat.png" width="300px" height="689px" />
    <img src="http://staticres.oss-cn-hangzhou.aliyuncs.com/lvxin-pro/lvxin_contacts.png" width="300px" height="689px"/>
    <img src="http://staticres.oss-cn-hangzhou.aliyuncs.com/lvxin-pro/lvxin_momment.png" width="300px" height="689px"/>
-</figure>
+</div>
 ---  
 
 #### 目录说明
