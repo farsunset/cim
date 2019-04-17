@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -22,23 +23,27 @@ public class CIMConfig implements CIMRequestHandler {
 	@Value("${cim.server.port}")
 	private int port;
 
-	@Autowired
+	@Resource
 	private BindHandler bindHandler;
-	@Autowired
+	
+	@Resource
 	private SessionClosedHandler closedHandler;
-
-	private HashMap<String,CIMRequestHandler> appHandlerMap = new HashMap<>();
+	
+	@Resource
+	private ApplicationContext applicationContext;
+	
+	private HashMap<String,Class<? extends CIMRequestHandler>> appHandlerMap = new HashMap<>();
 
 	@PostConstruct
 	private void initHandler() {
 		/*
 		 * 账号绑定handler
 		 */
-		appHandlerMap.put("client_bind", bindHandler);
+		appHandlerMap.put("client_bind", BindHandler.class);
 		/*
 		 * 连接关闭handler
 		 */
-		appHandlerMap.put("client_closed", closedHandler);
+		appHandlerMap.put("client_closed", SessionClosedHandler.class);
 	}
 
 	@Bean
@@ -53,12 +58,21 @@ public class CIMConfig implements CIMRequestHandler {
 	@Override
 	public void process(CIMSession session, SentBody body) {
 		
-        CIMRequestHandler handler = appHandlerMap.get(body.getKey());
+        CIMRequestHandler handler = findHandlerByKey(body.getKey());
 		
 		if(handler == null) {return ;}
 		
 		handler.process(session, body);
 		
 	}
+
+	private CIMRequestHandler findHandlerByKey(String key){
+		Class<? extends CIMRequestHandler> handlerClass = appHandlerMap.get(key);
+		if (handlerClass==null){
+			return null;
+		}
+		return applicationContext.getBean(handlerClass);
+	}
+	
 
 }

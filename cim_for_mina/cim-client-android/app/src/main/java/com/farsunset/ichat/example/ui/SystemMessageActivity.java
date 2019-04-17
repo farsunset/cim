@@ -1,29 +1,26 @@
 /**
- * Copyright 2013-2023 Xia Jun(3979434@qq.com).
- *
+ * Copyright 2013-2019 Xia Jun(3979434@qq.com).
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
- ***************************************************************************************
- *                                                                                     *
- *                        Website : http://www.farsunset.com                           *
- *                                                                                     *
- ***************************************************************************************
+ * <p>
+ * **************************************************************************************
+ * *
+ * Website : http://www.farsunset.com                           *
+ * *
+ * **************************************************************************************
  */
 package com.farsunset.ichat.example.ui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.NetworkInfo;
@@ -32,6 +29,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.farsunset.cim.sdk.android.CIMPushManager;
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
 import com.farsunset.cim.sdk.android.model.Message;
@@ -41,108 +40,97 @@ import com.farsunset.ichat.example.adapter.SystemMsgListViewAdapter;
 import com.farsunset.ichat.example.app.CIMMonitorActivity;
 import com.farsunset.ichat.example.app.Constant;
 
-public class SystemMessageActivity extends CIMMonitorActivity implements OnClickListener{
+import java.util.ArrayList;
 
-	protected ListView chatListView;
-	protected SystemMsgListViewAdapter adapter;
-	private ArrayList<Message> list;
+public class SystemMessageActivity extends CIMMonitorActivity implements OnClickListener {
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_system_chat);
-		initViews();
+    protected ListView chatListView;
+    protected SystemMsgListViewAdapter adapter;
+    private ArrayList<Message> list;
 
-		//绑定账号成功，获取离线消息
-		getOfflineMessage();
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_system_chat);
+        initViews();
 
-	public void initViews() {
+        //绑定账号成功，获取离线消息
+        getOfflineMessage();
+    }
 
-		list = new ArrayList<Message>();
+    public void initViews() {
 
-		chatListView = (ListView) findViewById(R.id.chat_list);
-		findViewById(R.id.TOP_BACK_BUTTON).setOnClickListener(this);
-		findViewById(R.id.TOP_BACK_BUTTON).setVisibility(View.VISIBLE);
-		((TextView) findViewById(R.id.TOP_BACK_BUTTON)).setText("登录");
-		((TextView) findViewById(R.id.TITLE_TEXT)).setText("系统消息");
-		((TextView) findViewById(R.id.account)).setText(this.getIntent().getStringExtra("account"));
-		 
-		 adapter = new SystemMsgListViewAdapter(this, list);
-		 chatListView.setAdapter(adapter);
-         
-		 showToask("登录成功，请通过后台页面发送消息吧^_^");
-	}
-	
-	//收到消息
-	@Override
-	public void onMessageReceived(Message message) {
-		 
-		if(message.getAction().equals(Constant.MessageType.TYPE_999))
-		{
-			  //返回登录页面，停止接受消息
-		      CIMPushManager.stop(this);
-		      
-			  this.showToask("你被迫下线!");
-			  Intent intent = new Intent(this, LoginActivity.class);
-			  startActivity(intent);
-			  this.finish();
-		}else
-		{
-			MediaPlayer.create(this, R.raw.classic).start();
-			list.add(message);
-			adapter.notifyDataSetChanged();
-			chatListView.setSelection(chatListView.getTop());
-			
-		}
+        list = new ArrayList<Message>();
 
-	}
- 
-	//获取离线消息，代码示例，前提是服务端要实现此功能,建议使用http 接口拉去大量的离线消息
-	private void getOfflineMessage()
-	{
-		SentBody sent = new SentBody();
-		sent.setKey(CIMConstant.RequestKey.CLIENT_PULL_MESSAGE);
-		sent.put("account", this.getIntent().getStringExtra("account"));
-		CIMPushManager.sendRequest(this, sent);
-	}
-	
-	@Override
-	public   void onNetworkChanged(NetworkInfo info){
-		
-		if(info ==null)
-		{
-			showToask("网络已断开");
-			
-		}else
-		{
-			showToask("网络已恢复，重新连接....");
-		}
-		
-	}
+        chatListView = (ListView) findViewById(R.id.chat_list);
+        findViewById(R.id.TOP_BACK_BUTTON).setOnClickListener(this);
+        findViewById(R.id.TOP_BACK_BUTTON).setVisibility(View.VISIBLE);
+        ((TextView) findViewById(R.id.TOP_BACK_BUTTON)).setText("登录");
+        ((TextView) findViewById(R.id.TITLE_TEXT)).setText("系统消息");
+        ((TextView) findViewById(R.id.account)).setText(this.getIntent().getStringExtra("account"));
+
+        adapter = new SystemMsgListViewAdapter(this, list);
+        chatListView.setAdapter(adapter);
+
+        Toast.makeText(this,"登录成功，请通过后台页面发送消息吧^_^",Toast.LENGTH_LONG).show();
+
+    }
+
+    //收到消息
+    @Override
+    public void onMessageReceived(Message message) {
+
+        if (message.getAction().equals(Constant.MessageAction.ACTION_999)) {
+            //返回登录页面，停止接受消息
+            CIMPushManager.stop(this);
+
+            Toast.makeText(this,"你被系统强制下线!",Toast.LENGTH_LONG).show();
+
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            this.finish();
+        } else {
+            MediaPlayer.create(this, R.raw.classic).start();
+            list.add(message);
+            adapter.notifyDataSetChanged();
+            chatListView.setSelection(chatListView.getTop());
+
+        }
+
+    }
+
+    //获取离线消息，代码示例，前提是服务端要实现此功能,建议使用http 接口拉去大量的离线消息
+    private void getOfflineMessage() {
+        SentBody sent = new SentBody();
+        sent.setKey(CIMConstant.RequestKey.CLIENT_PULL_MESSAGE);
+        sent.put("account", this.getIntent().getStringExtra("account"));
+        CIMPushManager.sendRequest(this, sent);
+    }
+
+    @Override
+    public void onNetworkChanged(NetworkInfo info) {
+
+        if (info == null) {
+            Toast.makeText(this,"网络已断开!",Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this,"网络已恢复，重新连接....",Toast.LENGTH_LONG).show();
+        }
+
+    }
 
 
+    @Override
+    public void onClick(View v) {
+        onBackPressed();
+    }
 
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-			case R.id.TOP_BACK_BUTTON: {
-				onBackPressed();
-				break;
-			}
-		}
-	}
+    @Override
+    public void onBackPressed() {
+        //返回登录页面，停止接受消息
+        CIMPushManager.stop(this);
+        startActivity(new Intent(this, LoginActivity.class));
+        super.onBackPressed();
+    }
 
-	@Override
-	public void onBackPressed() {
-		
-		//返回登录页面，停止接受消息
-	    CIMPushManager.stop(this);
-	    
-	    Intent intent = new Intent(this, LoginActivity.class);
-		startActivity(intent);
-		this.finish();
-	}
 
-	
 }

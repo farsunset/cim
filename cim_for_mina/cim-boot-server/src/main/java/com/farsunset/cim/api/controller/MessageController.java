@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2019 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,8 @@
  */
 package com.farsunset.cim.api.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,10 +41,10 @@ public class MessageController  {
 
 
 	 
-	@Autowired
+	@Resource
 	private SystemMessagePusher systemMessagePusher;
 	
-	@Autowired
+	@Resource
 	private DefaultMessagePusher defaultMessagePusher;
 
 	 

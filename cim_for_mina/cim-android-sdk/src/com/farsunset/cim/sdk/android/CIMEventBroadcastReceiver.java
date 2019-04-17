@@ -32,6 +32,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 
 /**
  * 消息入口，所有消息都会经过这里
@@ -125,9 +126,16 @@ public abstract class CIMEventBroadcastReceiver extends BroadcastReceiver {
 	}
 
 	private void startPushService() {
+		
 		Intent intent = new Intent(context, CIMPushService.class);
 		intent.setAction(CIMPushManager.ACTION_ACTIVATE_PUSH_SERVICE);
-		context.startService(intent);
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			context.startForegroundService(intent);
+        } else {
+        	context.startService(intent);
+        }
+		
 	}
 
 	private void onInnerConnectionClosed() {

@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2019 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,8 @@ package com.farsunset.cim.push;
 
 import java.util.Objects;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -43,14 +44,14 @@ public class DefaultMessagePusher implements CIMMessagePusher {
 	@Value("${server.host}")
 	private String host;
 	
-	@Autowired
+	@Resource
 	private DefaultSessionManager sessionManager;
  
-	@Autowired
+	@Resource
 	private MessageDispatcherImpl messageDispatcher;
 	
 
-	@Autowired
+	@Resource
 	private ApnsService apnsService;
 	
 	

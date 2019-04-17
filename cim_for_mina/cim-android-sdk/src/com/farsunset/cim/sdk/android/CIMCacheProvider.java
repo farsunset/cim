@@ -29,7 +29,6 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 
 public class CIMCacheProvider extends ContentProvider {
-	public static final String CONTENT_URI = "content://com.farsunset.cim.provider";
 	static final String MODEL_KEY = "PRIVATE_CIM_CONFIG";
 
 	@Override

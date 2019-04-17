@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.farsunset.ichat.example"
- >
+    package="com.farsunset.ichat.example">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -14,11 +13,11 @@
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
-        android:theme="@style/GlobeTheme" >
+        android:theme="@style/GlobeTheme">
         <activity
             android:name=".ui.SplanshActivity"
             android:alwaysRetainTaskState="true"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,7 +28,7 @@
             android:name=".ui.SystemMessageActivity"
             android:alwaysRetainTaskState="true"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.farsunset.cim.look.notify" />
 
@@ -47,30 +46,35 @@
             android:screenOrientation="portrait" />
 
         <!-- ****************************************CIM推送配置 begin*************************************** -->
-        <service  android:name="com.farsunset.cim.sdk.android.CIMPushService"  android:process=":cimpush" />
-        <provider android:name="com.farsunset.cim.sdk.android.CIMCacheProvider"
-            android:authorities="com.farsunset.cim.provider"
+        <service
+            android:name="com.farsunset.cim.sdk.android.CIMPushService"
+            android:process=":cimpush" />
+
+        <provider
+            android:name="com.farsunset.cim.sdk.android.CIMCacheProvider"
+            android:authorities="com.farsunset.ichat.example.cim.provider"
             android:process=":cimpush"
             android:exported="false" />
+        <!-- android:authorities="${package}.cim.provider"-->
         <!-- ****************************************CIM推送配置 end*************************************** -->
-        
-        <!--消息接受广播注册-->  
+
+        <!--消息接受广播注册-->
         <receiver android:name="com.farsunset.ichat.example.receiver.CIMPushManagerReceiver">
-            <intent-filter android:priority="0x7fffffff">  
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>  <!-- 网络变化广播 -->
-                <action android:name="com.farsunset.cim.MESSAGE_RECEIVED"/><!-- 消息广播action -->
-                <action android:name="com.farsunset.cim.SENT_FAILED"/> <!-- 发送sendbody失败广播-->
-                <action android:name="com.farsunset.cim.SENT_SUCCESSED"/> <!-- 发送sendbody成功广播 -->
-                <action android:name="com.farsunset.cim.CONNECTION_RECOVERY"/> <!--重新连接 -->
-                <action android:name="com.farsunset.cim.CONNECTION_CLOSED"/> <!-- 链接意外关闭广播 -->
-                <action android:name="com.farsunset.cim.CONNECTION_FAILED"/> <!-- 链接失败广播 -->
-                <action android:name="com.farsunset.cim.CONNECTION_SUCCESSED"/> <!-- 链接成功广播-->
-                <action android:name="com.farsunset.cim.REPLY_RECEIVED"/> <!-- 发送sendbody成功后获得replaybody回应广播 -->
-                
+            <intent-filter android:priority="0x7fffffff">
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />  <!-- 网络变化广播 -->
+                <action android:name="com.farsunset.cim.MESSAGE_RECEIVED" /><!-- 消息广播action -->
+                <action android:name="com.farsunset.cim.SENT_FAILED" /> <!-- 发送sendbody失败广播-->
+                <action android:name="com.farsunset.cim.SENT_SUCCESSED" /> <!-- 发送sendbody成功广播 -->
+                <action android:name="com.farsunset.cim.CONNECTION_RECOVERY" /> <!--重新连接 -->
+                <action android:name="com.farsunset.cim.CONNECTION_CLOSED" /> <!-- 链接意外关闭广播 -->
+                <action android:name="com.farsunset.cim.CONNECTION_FAILED" /> <!-- 链接失败广播 -->
+                <action android:name="com.farsunset.cim.CONNECTION_SUCCESSED" /> <!-- 链接成功广播-->
+                <action android:name="com.farsunset.cim.REPLY_RECEIVED" /> <!-- 发送sendbody成功后获得replaybody回应广播 -->
+
                 <!-- 【可选】 一些常用的系统广播，增强pushservice的复活机会-->
                 <action android:name="android.intent.action.USER_PRESENT" />
-	            <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
-	            <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
             </intent-filter>
         </receiver>
     </application>

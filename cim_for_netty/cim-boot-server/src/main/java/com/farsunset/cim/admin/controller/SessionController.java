@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2019 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,8 @@
  */
 package com.farsunset.cim.admin.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +32,7 @@ import com.farsunset.cim.service.impl.CIMSessionServiceImpl;
 @RequestMapping("/console/session")
 public class SessionController {
 
-	@Autowired
+	@Resource
 	private CIMSessionServiceImpl sessionManager;
 	
 	@RequestMapping(value = "/list.action")
@@ -39,16 +40,4 @@ public class SessionController {
 		model.addAttribute("sessionList", sessionManager.queryAll());
 		return "console/session/manage";
 	}
-
-	/*public void offline() throws IOException {
-
-		String account = ServletActionContext.getRequest().getParameter("account");
-		Message msg = new Message();
-		msg.setAction(CIMConstant.MessageAction.ACTION_999);// 强行下线消息类型
-		msg.setReceiver(account);
-
-		// 向客户端 发送消息
-		ContextHolder.getBean(SystemMessagePusher.class).push(msg);
-
-	}*/
 }

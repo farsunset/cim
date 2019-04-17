@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2033 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2019 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,18 @@
  */
 package com.farsunset.cim.sdk.android;
 
+import android.app.Notification;
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+
+import java.util.concurrent.Semaphore;
 
 import com.farsunset.cim.sdk.android.filter.CIMLoggingHandler;
 import com.farsunset.cim.sdk.android.model.SentBody;
@@ -39,47 +46,45 @@ import com.farsunset.cim.sdk.android.model.SentBody;
 public class CIMPushService extends Service {
 	public final static String KEY_DELAYED_TIME = "KEY_DELAYED_TIME";
 	public final static String KEY_LOGGER_ENABLE = "KEY_LOGGER_ENABLE";
+
 	private CIMConnectorManager manager;
+	private KeepAliveBroadcastReceiver keepAliveReceiver;
+	private Semaphore semaphore = new Semaphore(1,true);
 
 	@Override
 	public void onCreate() {
 		manager = CIMConnectorManager.getManager(this.getApplicationContext());
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+			keepAliveReceiver = new KeepAliveBroadcastReceiver();
+			registerReceiver(keepAliveReceiver, keepAliveReceiver.getIntentFilter());
+		}
 	}
 
 	Handler connectionHandler = new Handler() {
 		@Override
 		public void handleMessage(android.os.Message message) {
 
-			connectionHandler.removeMessages(0);
-
 			String host = message.getData().getString(CIMCacheManager.KEY_CIM_SERVIER_HOST);
 			int port = message.getData().getInt(CIMCacheManager.KEY_CIM_SERVIER_PORT, 0);
 			manager.connect(host, port);
+			semaphore.release();
 		}
 	};
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			startForeground(this.hashCode(), new Notification.Builder(this,null).build());
+		}
+		
 		intent = (intent == null ? new Intent(CIMPushManager.ACTION_ACTIVATE_PUSH_SERVICE) : intent);
 
 		String action = intent.getAction();
 
 		if (CIMPushManager.ACTION_CREATE_CIM_CONNECTION.equals(action)) {
-
-			long delayMillis = intent.getLongExtra(KEY_DELAYED_TIME, 0);
-			if (delayMillis > 0) {
-
-				Message msg = connectionHandler.obtainMessage();
-				msg.what = 0;
-				msg.setData(intent.getExtras());
-				connectionHandler.sendMessageDelayed(msg, delayMillis);
-
-			} else {
-				String host = intent.getStringExtra(CIMCacheManager.KEY_CIM_SERVIER_HOST);
-				int port = intent.getIntExtra(CIMCacheManager.KEY_CIM_SERVIER_PORT, 0);
-				manager.connect(host, port);
-			}
+			handleConnection(intent);
 		}
 
 		if (CIMPushManager.ACTION_SEND_REQUEST_BODY.equals(action)) {
@@ -96,33 +101,88 @@ public class CIMPushService extends Service {
 		}
 
 		if (CIMPushManager.ACTION_ACTIVATE_PUSH_SERVICE.equals(action)) {
-			if (!manager.isConnected()) {
-
-				boolean isManualStop = CIMCacheManager.getBoolean(getApplicationContext(),CIMCacheManager.KEY_MANUAL_STOP);
-				boolean isDestroyed = CIMCacheManager.getBoolean(getApplicationContext(),CIMCacheManager.KEY_CIM_DESTROYED);
-
-				CIMLoggingHandler.getLogger().connectState(false, isManualStop, isDestroyed);
-				
-				CIMPushManager.connect(this, 0);
-
-			} else {
-				
-				CIMLoggingHandler.getLogger().connectState(true);
-			}
-
+			handleKeepAlive();
 		}
-		
+
 		if (CIMPushManager.ACTION_SET_LOGGER_EANABLE.equals(action)) {
 			boolean enable = intent.getBooleanExtra(KEY_LOGGER_ENABLE, true);
 			CIMLoggingHandler.getLogger().debugMode(enable);
 		}
-
-		return START_STICKY;
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			stopForeground(true);
+		}
+		
+		return super.onStartCommand(intent, flags, startId);
 	}
 
+	private void handleConnection(Intent intent) {
+		
+		long delayMillis = intent.getLongExtra(KEY_DELAYED_TIME, 0);
+		
+		if (delayMillis <= 0) {
+			String host = intent.getStringExtra(CIMCacheManager.KEY_CIM_SERVIER_HOST);
+			int port = intent.getIntExtra(CIMCacheManager.KEY_CIM_SERVIER_PORT, 0);
+			manager.connect(host, port);
+            return;
+		} 
+
+		if(!semaphore.tryAcquire()) {
+			return;
+		}
+		
+		
+		Message msg = connectionHandler.obtainMessage();
+		msg.what = 0;
+		msg.setData(intent.getExtras());
+		connectionHandler.sendMessageDelayed(msg, delayMillis);
+	}
+	
+	private void handleKeepAlive() {
+		if (manager.isConnected()) {
+			CIMLoggingHandler.getLogger().connectState(true);
+			return;
+		} 
+
+		boolean isManualStop = CIMCacheManager.getBoolean(getApplicationContext(),CIMCacheManager.KEY_MANUAL_STOP);
+		boolean isDestroyed = CIMCacheManager.getBoolean(getApplicationContext(),CIMCacheManager.KEY_CIM_DESTROYED);
+
+		CIMLoggingHandler.getLogger().connectState(false, isManualStop, isDestroyed);
+		
+		CIMPushManager.connect(this, 0);
+
+	}
+	
 	@Override
 	public IBinder onBind(Intent arg0) {
+		
 		return null;
+	}
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			unregisterReceiver(keepAliveReceiver);
+		}
+	}
+	
+	public class KeepAliveBroadcastReceiver extends BroadcastReceiver{
+
+		@Override
+		public void onReceive(Context arg0, Intent arg1) {
+			handleKeepAlive();
+		}
+		
+		public IntentFilter getIntentFilter() {
+			IntentFilter intentFilter = new IntentFilter();
+			intentFilter.addAction(Intent.ACTION_POWER_CONNECTED);
+			intentFilter.addAction(Intent.ACTION_POWER_DISCONNECTED);
+			intentFilter.addAction(Intent.ACTION_SCREEN_ON);
+			intentFilter.addAction(Intent.ACTION_USER_PRESENT);
+
+			return intentFilter;
+		}
+		
 	}
 
 }

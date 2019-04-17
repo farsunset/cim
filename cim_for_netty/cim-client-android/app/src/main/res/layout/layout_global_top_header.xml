@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="50dp"
     android:background="@drawable/skin_header_bar_bg"
-    android:padding="0.0px" >
+    android:padding="0.0px">
 
     <TextView
         android:id="@+id/TOP_BACK_BUTTON"
@@ -21,8 +21,7 @@
         android:singleLine="true"
         android:textColor="@android:color/white"
         android:textSize="14.0sp"
-        android:visibility="gone"
-          />
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/TITLE_TEXT"
@@ -34,7 +33,7 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
-     <TextView
+    <TextView
         android:id="@+id/account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -44,5 +43,5 @@
         android:text="消息"
         android:textSize="12sp"
         android:textStyle="bold" />
-    
+
 </RelativeLayout>

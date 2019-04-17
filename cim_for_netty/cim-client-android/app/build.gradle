@@ -1,12 +1,13 @@
 apply plugin: 'com.android.application'
 
+
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
     defaultConfig {
         applicationId "com.farsunset.ichat.example"
         minSdkVersion 14
-        targetSdkVersion 21
+        targetSdkVersion 26
         versionCode 31
         versionName "3.1.0"
     }
@@ -16,7 +17,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
 
     packagingOptions {
         exclude 'META-INF/INDEX.LIST'
@@ -30,8 +30,14 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.google.protobuf:protobuf-java:3.3.0'
-    compile 'com.android.support:appcompat-v7:25.3.1'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.google.protobuf:protobuf-java:3.7.0'
+    implementation 'io.netty:netty-handler:4.1.34.Final'
+    implementation 'io.netty:netty-buffer:4.1.34.Final'
+    implementation 'io.netty:netty-codec:4.1.34.Final'
+    implementation 'io.netty:netty-transport:4.1.34.Final'
+    implementation 'io.netty:netty-common:4.1.34.Final'
 
 }
+

@@ -35,10 +35,10 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -62,7 +62,7 @@ import com.farsunset.cim.sdk.android.model.ReplyBody;
 import com.farsunset.cim.sdk.android.model.SentBody;
 
 @Sharable
-class CIMConnectorManager extends SimpleChannelInboundHandler<Object> {
+class CIMConnectorManager extends ChannelInboundHandlerAdapter{
 
 	private final int CONNECT_TIMEOUT = 10 * 1000;// 秒
 	private final int WRITE_TIMEOUT = 10 * 1000;// 秒
@@ -267,7 +267,7 @@ class CIMConnectorManager extends SimpleChannelInboundHandler<Object> {
 	}
 
 	@Override
-	public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
+	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 		if (msg instanceof Message) {
 
 			Intent intent = new Intent(CIMConstant.IntentAction.ACTION_MESSAGE_RECEIVED);

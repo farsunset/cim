@@ -3,12 +3,12 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="libs/log4j-1.2.17.jar"/>
-	<classpathentry kind="lib" path="libs/protobuf-java-3.2.0.jar"/>
 	<classpathentry kind="lib" path="libs/netty-buffer-4.1.9.Final.jar"/>
 	<classpathentry kind="lib" path="libs/netty-codec-4.1.9.Final.jar"/>
-	<classpathentry kind="lib" path="libs/netty-transport-4.1.9.Final.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Android/android-sdk-windows/platforms/android-26/android.jar"/>
 	<classpathentry kind="lib" path="libs/netty-common-4.1.9.Final.jar"/>
+	<classpathentry kind="lib" path="libs/netty-transport-4.1.9.Final.jar"/>
 	<classpathentry kind="lib" path="libs/netty-handler-4.1.9.Final.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Android/android-sdk-windows/platforms/android-24/android.jar"/>
+	<classpathentry kind="lib" path="libs/protobuf-java-3.7.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

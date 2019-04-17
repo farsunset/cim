@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2033 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2019 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,9 +45,12 @@ class CIMCacheManager {
 
 	public static final String KEY_CIM_CONNECTION_STATE = "KEY_CIM_CONNECTION_STATE";
 
+	public static final String CONTENT_URI = "content://%s.cim.provider";
+
+	
 	public static void remove(Context context, String key) {
 		ContentResolver resolver = context.getContentResolver();
-		resolver.delete(Uri.parse(CIMCacheProvider.CONTENT_URI), key, null);
+		resolver.delete(Uri.parse(String.format(CONTENT_URI,context.getPackageName())), key, null);
 	}
 
 	public static void putString(Context context, String key, String value) {
@@ -56,14 +59,14 @@ class CIMCacheManager {
 		ContentValues values = new ContentValues();
 		values.put("value", value);
 		values.put("key", key);
-		resolver.insert(Uri.parse(CIMCacheProvider.CONTENT_URI), values);
+		resolver.insert(Uri.parse(String.format(CONTENT_URI,context.getPackageName())), values);
 
 	}
 
 	public static String getString(Context context, String key) {
 		String value = null;
 		ContentResolver resolver = context.getContentResolver();
-		Cursor cursor = resolver.query(Uri.parse(CIMCacheProvider.CONTENT_URI), new String[] { key }, null, null, null);
+		Cursor cursor = resolver.query(Uri.parse(String.format(CONTENT_URI,context.getPackageName())), new String[] { key }, null, null, null);
 		if (cursor != null && cursor.moveToFirst()) {
 			value = cursor.getString(0);
 			cursor.close();

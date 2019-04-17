@@ -27,6 +27,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Build;
 import android.text.TextUtils;
 
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
@@ -83,15 +84,14 @@ public class CIMPushManager {
 		serviceIntent.putExtra(CIMCacheManager.KEY_CIM_SERVIER_PORT, port);
 		serviceIntent.putExtra(CIMPushService.KEY_DELAYED_TIME, delayedTime);
 		serviceIntent.setAction(ACTION_CREATE_CIM_CONNECTION);
-		context.startService(serviceIntent);
-
+		startServiceCompat(context,serviceIntent);
 	}
 
 	public static void setLoggerEnable(Context context,boolean enable) {
 		Intent serviceIntent = new Intent(context, CIMPushService.class);
 		serviceIntent.putExtra(CIMPushService.KEY_LOGGER_ENABLE, enable);
 		serviceIntent.setAction(ACTION_SET_LOGGER_EANABLE);
-		context.startService(serviceIntent);
+		startServiceCompat(context,serviceIntent);
 	}
 	
 	protected static void connect(Context context, long delayedTime) {
@@ -181,7 +181,7 @@ public class CIMPushManager {
 		Intent serviceIntent = new Intent(context, CIMPushService.class);
 		serviceIntent.putExtra(KEY_SEND_BODY, body);
 		serviceIntent.setAction(ACTION_SEND_REQUEST_BODY);
-		context.startService(serviceIntent);
+		startServiceCompat(context,serviceIntent);
 
 	}
 
@@ -201,7 +201,7 @@ public class CIMPushManager {
 
 		Intent serviceIntent = new Intent(context, CIMPushService.class);
 		serviceIntent.setAction(ACTION_CLOSE_CIM_CONNECTION);
-		context.startService(serviceIntent);
+		startServiceCompat(context,serviceIntent);
 
 	}
 
@@ -217,7 +217,7 @@ public class CIMPushManager {
 
 		Intent serviceIntent = new Intent(context, CIMPushService.class);
 		serviceIntent.setAction(ACTION_DESTORY);
-		context.startService(serviceIntent);
+		startServiceCompat(context,serviceIntent);
 
 	}
 
@@ -248,6 +248,14 @@ public class CIMPushManager {
 		} catch (NameNotFoundException e) {
 		}
 		return versionName;
+	}
+	
+	private static void startServiceCompat(Context context,Intent intent) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			context.startForegroundService(intent);
+        } else {
+        	context.startService(intent);
+        }
 	}
 
 }
