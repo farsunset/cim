@@ -19,14 +19,9 @@ public final class MessageProto {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>string mid = 1;</code>
+     * <code>int64 id = 1;</code>
      */
-    java.lang.String getMid();
-    /**
-     * <code>string mid = 1;</code>
-     */
-    com.google.protobuf.ByteString
-        getMidBytes();
+    long getId();
 
     /**
      * <code>string action = 2;</code>
@@ -116,7 +111,6 @@ public final class MessageProto {
       super(builder);
     }
     private Model() {
-      mid_ = "";
       action_ = "";
       content_ = "";
       sender_ = "";
@@ -150,10 +144,9 @@ public final class MessageProto {
             case 0:
               done = true;
               break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
+            case 8: {
 
-              mid_ = s;
+              id_ = input.readInt64();
               break;
             }
             case 18: {
@@ -235,38 +228,13 @@ public final class MessageProto {
               com.farsunset.cim.sdk.android.model.proto.MessageProto.Model.class, com.farsunset.cim.sdk.android.model.proto.MessageProto.Model.Builder.class);
     }
 
-    public static final int MID_FIELD_NUMBER = 1;
-    private volatile java.lang.Object mid_;
+    public static final int ID_FIELD_NUMBER = 1;
+    private long id_;
     /**
-     * <code>string mid = 1;</code>
+     * <code>int64 id = 1;</code>
      */
-    public java.lang.String getMid() {
-      java.lang.Object ref = mid_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        mid_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string mid = 1;</code>
-     */
-    public com.google.protobuf.ByteString
-        getMidBytes() {
-      java.lang.Object ref = mid_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        mid_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public long getId() {
+      return id_;
     }
 
     public static final int ACTION_FIELD_NUMBER = 2;
@@ -530,8 +498,8 @@ public final class MessageProto {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (!getMidBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, mid_);
+      if (id_ != 0L) {
+        output.writeInt64(1, id_);
       }
       if (!getActionBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, action_);
@@ -566,8 +534,9 @@ public final class MessageProto {
       if (size != -1) return size;
 
       size = 0;
-      if (!getMidBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, mid_);
+      if (id_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(1, id_);
       }
       if (!getActionBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, action_);
@@ -609,8 +578,8 @@ public final class MessageProto {
       }
       com.farsunset.cim.sdk.android.model.proto.MessageProto.Model other = (com.farsunset.cim.sdk.android.model.proto.MessageProto.Model) obj;
 
-      if (!getMid()
-          .equals(other.getMid())) return false;
+      if (getId()
+          != other.getId()) return false;
       if (!getAction()
           .equals(other.getAction())) return false;
       if (!getContent()
@@ -638,8 +607,9 @@ public final class MessageProto {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + MID_FIELD_NUMBER;
-      hash = (53 * hash) + getMid().hashCode();
+      hash = (37 * hash) + ID_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getId());
       hash = (37 * hash) + ACTION_FIELD_NUMBER;
       hash = (53 * hash) + getAction().hashCode();
       hash = (37 * hash) + CONTENT_FIELD_NUMBER;
@@ -790,7 +760,7 @@ public final class MessageProto {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        mid_ = "";
+        id_ = 0L;
 
         action_ = "";
 
@@ -834,7 +804,7 @@ public final class MessageProto {
       @java.lang.Override
       public com.farsunset.cim.sdk.android.model.proto.MessageProto.Model buildPartial() {
         com.farsunset.cim.sdk.android.model.proto.MessageProto.Model result = new com.farsunset.cim.sdk.android.model.proto.MessageProto.Model(this);
-        result.mid_ = mid_;
+        result.id_ = id_;
         result.action_ = action_;
         result.content_ = content_;
         result.sender_ = sender_;
@@ -891,9 +861,8 @@ public final class MessageProto {
 
       public Builder mergeFrom(com.farsunset.cim.sdk.android.model.proto.MessageProto.Model other) {
         if (other == com.farsunset.cim.sdk.android.model.proto.MessageProto.Model.getDefaultInstance()) return this;
-        if (!other.getMid().isEmpty()) {
-          mid_ = other.mid_;
-          onChanged();
+        if (other.getId() != 0L) {
+          setId(other.getId());
         }
         if (!other.getAction().isEmpty()) {
           action_ = other.action_;
@@ -955,71 +924,28 @@ public final class MessageProto {
         return this;
       }
 
-      private java.lang.Object mid_ = "";
+      private long id_ ;
       /**
-       * <code>string mid = 1;</code>
+       * <code>int64 id = 1;</code>
        */
-      public java.lang.String getMid() {
-        java.lang.Object ref = mid_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          mid_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
+      public long getId() {
+        return id_;
       }
       /**
-       * <code>string mid = 1;</code>
+       * <code>int64 id = 1;</code>
        */
-      public com.google.protobuf.ByteString
-          getMidBytes() {
-        java.lang.Object ref = mid_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          mid_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string mid = 1;</code>
-       */
-      public Builder setMid(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        mid_ = value;
+      public Builder setId(long value) {
+        
+        id_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string mid = 1;</code>
+       * <code>int64 id = 1;</code>
        */
-      public Builder clearMid() {
+      public Builder clearId() {
         
-        mid_ = getDefaultInstance().getMid();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string mid = 1;</code>
-       */
-      public Builder setMidBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        mid_ = value;
+        id_ = 0L;
         onChanged();
         return this;
       }
@@ -1600,11 +1526,11 @@ public final class MessageProto {
   static {
     java.lang.String[] descriptorData = {
       "\n\rMessage.proto\022)com.farsunset.cim.sdk.a" +
-      "ndroid.model.proto\"\230\001\n\005Model\022\013\n\003mid\030\001 \001(" +
-      "\t\022\016\n\006action\030\002 \001(\t\022\017\n\007content\030\003 \001(\t\022\016\n\006se" +
-      "nder\030\004 \001(\t\022\020\n\010receiver\030\005 \001(\t\022\r\n\005extra\030\006 " +
-      "\001(\t\022\r\n\005title\030\007 \001(\t\022\016\n\006format\030\010 \001(\t\022\021\n\tti" +
-      "mestamp\030\t \001(\003B\016B\014MessageProtob\006proto3"
+      "ndroid.model.proto\"\227\001\n\005Model\022\n\n\002id\030\001 \001(\003" +
+      "\022\016\n\006action\030\002 \001(\t\022\017\n\007content\030\003 \001(\t\022\016\n\006sen" +
+      "der\030\004 \001(\t\022\020\n\010receiver\030\005 \001(\t\022\r\n\005extra\030\006 \001" +
+      "(\t\022\r\n\005title\030\007 \001(\t\022\016\n\006format\030\010 \001(\t\022\021\n\ttim" +
+      "estamp\030\t \001(\003B\016B\014MessageProtob\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1623,7 +1549,7 @@ public final class MessageProto {
     internal_static_com_farsunset_cim_sdk_android_model_proto_Model_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_farsunset_cim_sdk_android_model_proto_Model_descriptor,
-        new java.lang.String[] { "Mid", "Action", "Content", "Sender", "Receiver", "Extra", "Title", "Format", "Timestamp", });
+        new java.lang.String[] { "Id", "Action", "Content", "Sender", "Receiver", "Extra", "Title", "Format", "Timestamp", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

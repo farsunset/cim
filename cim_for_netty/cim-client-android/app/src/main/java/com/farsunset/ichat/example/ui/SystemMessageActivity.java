@@ -90,11 +90,9 @@ public class SystemMessageActivity extends CIMMonitorActivity implements OnClick
             startActivity(intent);
             this.finish();
         } else {
-            MediaPlayer.create(this, R.raw.classic).start();
             list.add(message);
             adapter.notifyDataSetChanged();
             chatListView.setSelection(chatListView.getTop());
-
         }
 
     }

@@ -36,7 +36,7 @@ public class Message implements Serializable, EncodeFormatable {
 	/**
 	 * 消息类型，用户自定义消息类别
 	 */
-	private String mid;
+	private long id;
 
 	/**
 	 * 消息类型，用户自定义消息类别
@@ -75,6 +75,17 @@ public class Message implements Serializable, EncodeFormatable {
 	public Message() {
 		timestamp = System.currentTimeMillis();
 	}
+
+	
+	public long getId() {
+		return id;
+	}
+
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
 
 	public long getTimestamp() {
 		return timestamp;
@@ -140,19 +151,11 @@ public class Message implements Serializable, EncodeFormatable {
 		this.extra = extra;
 	}
 
-	public String getMid() {
-		return mid;
-	}
-
-	public void setMid(String mid) {
-		this.mid = mid;
-	}
-
 	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("#Message#").append("\n");
-		buffer.append("mid:").append(mid).append("\n");
+		buffer.append("id:").append(id).append("\n");
 		buffer.append("action:").append(action).append("\n");
 		buffer.append("title:").append(title).append("\n");
 		buffer.append("content:").append(content).append("\n");
@@ -171,7 +174,7 @@ public class Message implements Serializable, EncodeFormatable {
 	@Override
 	public byte[] getProtobufBody() {
 		MessageProto.Model.Builder builder = MessageProto.Model.newBuilder();
-		builder.setMid(mid);
+		builder.setId(id);
 		builder.setAction(action);
 		builder.setSender(sender);
 		builder.setReceiver(receiver);

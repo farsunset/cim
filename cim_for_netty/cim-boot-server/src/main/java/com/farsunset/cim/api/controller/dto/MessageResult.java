@@ -23,5 +23,5 @@ package com.farsunset.cim.api.controller.dto;
 
 public class MessageResult extends BaseResult {
 	public long timestamp;
-	public String id;
+	public long id;
 }

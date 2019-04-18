@@ -57,7 +57,8 @@ public abstract class CIMEventBroadcastReceiver extends BroadcastReceiver {
 		/*
 		 * 设备网络状态变化事件
 		 */
-		if (intent.getAction().equals(CIMConstant.IntentAction.ACTION_NETWORK_CHANGED)) {
+		if (intent.getAction().equals(CIMConstant.IntentAction.ACTION_NETWORK_CHANGED)
+				||intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
 			ConnectivityManager connectivityManager = (ConnectivityManager) context
 					.getSystemService(Context.CONNECTIVITY_SERVICE);
 			onDevicesNetworkChanged(connectivityManager.getActiveNetworkInfo());

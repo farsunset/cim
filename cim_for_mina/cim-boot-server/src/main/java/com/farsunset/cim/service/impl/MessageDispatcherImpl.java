@@ -62,7 +62,7 @@ public class MessageDispatcherImpl implements MessageDispatcher{
 		OkHttpClient httpclient = new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS).build();
 		FormBody.Builder build = new FormBody.Builder();
 
-		build.add("mid", String.valueOf(msg.getMid()));
+		build.add("id", String.valueOf(msg.getId()));
 		build.add("action", msg.getAction());
 		build.add("title", msg.getTitle());
 		build.add("content", msg.getContent());

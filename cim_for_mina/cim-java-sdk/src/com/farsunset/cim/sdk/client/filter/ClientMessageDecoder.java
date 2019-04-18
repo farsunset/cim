@@ -102,7 +102,7 @@ public class ClientMessageDecoder extends CumulativeProtocolDecoder {
 		if (CIMConstant.ProtobufType.MESSAGE == type) {
 			MessageProto.Model bodyProto = MessageProto.Model.parseFrom(bytes);
 			Message message = new Message();
-			message.setMid(bodyProto.getMid());
+			message.setId(bodyProto.getId());
 			message.setAction(bodyProto.getAction());
 			message.setContent(bodyProto.getContent());
 			message.setSender(bodyProto.getSender());

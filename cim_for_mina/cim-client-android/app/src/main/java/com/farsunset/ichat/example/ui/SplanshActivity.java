@@ -22,13 +22,20 @@
 package com.farsunset.ichat.example.ui;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkRequest;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.Toast;
 
 import com.farsunset.cim.sdk.android.CIMPushManager;
+import com.farsunset.cim.sdk.android.constant.CIMConstant;
 import com.farsunset.ichat.example.BuildConfig;
 import com.farsunset.ichat.example.R;
 import com.farsunset.ichat.example.app.CIMMonitorActivity;
@@ -37,6 +44,7 @@ import com.farsunset.ichat.example.app.Constant;
 public class SplanshActivity extends CIMMonitorActivity {
 
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void onCreate(Bundle savedInstanceState) {
 
 

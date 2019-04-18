@@ -27,6 +27,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.Network;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -34,6 +36,7 @@ import android.os.Message;
 
 import java.util.concurrent.Semaphore;
 
+import com.farsunset.cim.sdk.android.constant.CIMConstant;
 import com.farsunset.cim.sdk.android.filter.CIMLoggingHandler;
 import com.farsunset.cim.sdk.android.model.SentBody;
 
@@ -58,6 +61,30 @@ public class CIMPushService extends Service {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
 			keepAliveReceiver = new KeepAliveBroadcastReceiver();
 			registerReceiver(keepAliveReceiver, keepAliveReceiver.getIntentFilter());
+			
+		}
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+
+			ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+			connectivityManager.registerDefaultNetworkCallback(new ConnectivityManager.NetworkCallback() {
+				@Override
+				public void onAvailable(Network network) {
+					Intent intent = new Intent();
+					intent.setPackage(getPackageName());
+					intent.setAction(CIMConstant.IntentAction.ACTION_NETWORK_CHANGED);
+					sendBroadcast(intent);
+				}
+				@Override
+				public void onUnavailable() {
+					Intent intent = new Intent();
+					intent.setPackage(getPackageName());
+					intent.setAction(CIMConstant.IntentAction.ACTION_NETWORK_CHANGED);
+					sendBroadcast(intent);
+				}
+				
+			});
+
 		}
 	}
 

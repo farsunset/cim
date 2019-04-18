@@ -94,9 +94,9 @@ public interface CIMConstant {
 
 		// 发送sendbody成功后获得replaybody回应广播
 		String ACTION_REPLY_RECEIVED = "com.farsunset.cim.REPLY_RECEIVED";
-
+	 
 		// 网络变化广播
-		String ACTION_NETWORK_CHANGED = "android.net.conn.CONNECTIVITY_CHANGE";
+		String ACTION_NETWORK_CHANGED = "com.farsunset.cim.NETWORK_CHANAGED";
 
 		// 重试连接
 		String ACTION_CONNECTION_RECOVERY = "com.farsunset.cim.CONNECTION_RECOVERY";

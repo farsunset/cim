@@ -65,13 +65,13 @@ public class MessageController  {
 
 		MessageResult result = new MessageResult();
 
-		message.setMid(StringUtil.getUUID());
+		message.setId(System.currentTimeMillis());
 		if (Constants.MessageType.TYPE_2.equals(message.getAction())) {
 			systemMessagePusher.push(message);
 		} else {
 			defaultMessagePusher.push(message);
 		}
-		result.id = message.getMid();
+		result.id = message.getId();
 		result.timestamp = message.getTimestamp();
 		return result;
 	}

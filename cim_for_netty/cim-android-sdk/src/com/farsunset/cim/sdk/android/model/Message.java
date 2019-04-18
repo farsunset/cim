@@ -33,7 +33,7 @@ public class Message implements Serializable {
 	/**
 	 * 消息类型，用户自定义消息类别
 	 */
-	private String mid;
+	private long id;
 
 	/**
 	 * 消息类型，用户自定义消息类别
@@ -141,7 +141,7 @@ public class Message implements Serializable {
 
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("#Message#").append("\n");
-		buffer.append("mid:").append(mid).append("\n");
+		buffer.append("id:").append(id).append("\n");
 		buffer.append("action:").append(action).append("\n");
 		buffer.append("title:").append(title).append("\n");
 		buffer.append("content:").append(content).append("\n");
@@ -152,13 +152,14 @@ public class Message implements Serializable {
 		buffer.append("timestamp:").append(timestamp);
 		return buffer.toString();
 	}
-
-	public String getMid() {
-		return mid;
+ 
+	
+	public long getId() {
+		return id;
 	}
 
-	public void setMid(String mid) {
-		this.mid = mid;
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public boolean isNotEmpty(String txt) {

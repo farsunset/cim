@@ -125,7 +125,7 @@ public class BindHandler implements CIMRequestHandler {
 		msg.setReceiver(account);
 		msg.setSender("system");
 		msg.setContent(deviceModel);
-		msg.setMid(StringUtil.getUUID());
+		msg.setId(System.currentTimeMillis());
 		closeQuietly(oldSession,msg);
 
 	}

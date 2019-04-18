@@ -56,6 +56,8 @@ CIM是基于mina和netty框架下的推送系统，我们平常使用第三方�
 
 2.android sdk升级，适配android8.0+，修复一些之前的兼容性问题
 
+3.消息的id字段名由mid修改为id，类型由String修改为long;
+
 
  
  

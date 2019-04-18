@@ -52,7 +52,7 @@
 
         <provider
             android:name="com.farsunset.cim.sdk.android.CIMCacheProvider"
-            android:authorities="com.farsunset.ichat.example.cim.provider"
+            android:authorities="${applicationId}.cim.provider"
             android:process=":cimpush"
             android:exported="false" />
         <!-- android:authorities="${package}.cim.provider"-->
@@ -61,7 +61,8 @@
         <!--消息接受广播注册-->
         <receiver android:name="com.farsunset.ichat.example.receiver.CIMPushManagerReceiver">
             <intent-filter android:priority="0x7fffffff">
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />  <!-- 网络变化广播 -->
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />  <!-- 网络变化广播 targetVersion 24之前 -->
+                <action android:name="com.farsunset.cim.NETWORK_CHANAGED" />  <!-- 网络变化广播 targetVersion 24之后-->
                 <action android:name="com.farsunset.cim.MESSAGE_RECEIVED" /><!-- 消息广播action -->
                 <action android:name="com.farsunset.cim.SENT_FAILED" /> <!-- 发送sendbody失败广播-->
                 <action android:name="com.farsunset.cim.SENT_SUCCESSED" /> <!-- 发送sendbody成功广播 -->

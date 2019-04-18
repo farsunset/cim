@@ -2,7 +2,7 @@ syntax = "proto3";
 package com.farsunset.cim.sdk.android.model.proto;
 option java_outer_classname="MessageProto";
 message Model {
-   string mid = 1;
+   int64 id = 1;
    string action = 2;
    string content = 3;
    string sender = 4;
