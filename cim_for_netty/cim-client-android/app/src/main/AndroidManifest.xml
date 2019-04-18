@@ -62,7 +62,7 @@
         <receiver android:name="com.farsunset.ichat.example.receiver.CIMPushManagerReceiver">
             <intent-filter android:priority="0x7fffffff">
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />  <!-- 网络变化广播 targetVersion 24之前 -->
-                <action android:name="com.farsunset.cim.NETWORK_CHANAGED" />  <!-- 网络变化广播 targetVersion 24之后-->
+                <action android:name="com.farsunset.cim.NETWORK_CHANGED" />  <!-- 网络变化广播 targetVersion 24之后-->
                 <action android:name="com.farsunset.cim.MESSAGE_RECEIVED" /><!-- 消息广播action -->
                 <action android:name="com.farsunset.cim.SENT_FAILED" /> <!-- 发送sendbody失败广播-->
                 <action android:name="com.farsunset.cim.SENT_SUCCESSED" /> <!-- 发送sendbody成功广播 -->

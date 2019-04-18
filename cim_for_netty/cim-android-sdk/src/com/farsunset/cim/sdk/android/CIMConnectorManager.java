@@ -25,7 +25,7 @@ import java.net.InetSocketAddress;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.content.Context;
 import android.content.Intent;
@@ -75,7 +75,7 @@ class CIMConnectorManager extends ChannelInboundHandlerAdapter{
 	private EventLoopGroup loopGroup;
 	private Channel channel;;
 	private ExecutorService executor = Executors.newFixedThreadPool(1);
-	private Semaphore semaphore = new Semaphore(1,true);
+	private final AtomicBoolean CONNECTING_FLAG = new AtomicBoolean(false) ;
 
 	private Context context;
 
@@ -143,10 +143,12 @@ class CIMConnectorManager extends ChannelInboundHandlerAdapter{
 
 			return;
 		}
-
-		if (isConnected() || !semaphore.tryAcquire()) {
+		
+		if (CONNECTING_FLAG.get() || isConnected()) {
 			return;
 		}
+		
+		CONNECTING_FLAG.set(true);
 		
 		if (bootstrap == null || loopGroup.isShutdown()) {
 			makeNioBootstrap();
@@ -161,7 +163,7 @@ class CIMConnectorManager extends ChannelInboundHandlerAdapter{
 
 					@Override
 					public void operationComplete(ChannelFuture future) {
-						semaphore.release();
+						CONNECTING_FLAG.set(false);
 						future.removeListener(this);
 						if(!future.isSuccess() && future.cause() != null) {
 							handleConnectFailure(future.cause(),remoteAddress);

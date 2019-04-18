@@ -96,7 +96,7 @@ public interface CIMConstant {
 		String ACTION_REPLY_RECEIVED = "com.farsunset.cim.REPLY_RECEIVED";
 
 		// 网络变化广播
-		String ACTION_NETWORK_CHANGED = "com.farsunset.cim.NETWORK_CHANAGED";
+		String ACTION_NETWORK_CHANGED = "com.farsunset.cim.NETWORK_CHANGED";
 
 
 		// 重试连接

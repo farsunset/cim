@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.future.IoFutureListener;
@@ -76,7 +76,9 @@ class CIMConnectorManager extends IoHandlerAdapter implements KeepAliveMessageFa
 	
 	
 	private ExecutorService executor = Executors.newFixedThreadPool(1);
-	private Semaphore semaphore = new Semaphore(1,true);
+	
+	private final AtomicBoolean CONNECTING_FLAG = new AtomicBoolean(false) ;
+	
 	private CIMConnectorManager(Context ctx) {
 		context = ctx;
 		makeNioConnector();
@@ -127,10 +129,13 @@ class CIMConnectorManager extends IoHandlerAdapter implements KeepAliveMessageFa
 
 			return;
 		}
+		 
 		
-		if (isConnected() || !semaphore.tryAcquire()) {
+		if (CONNECTING_FLAG.get() || isConnected()) {
 			return;
 		}
+		
+		CONNECTING_FLAG.set(true);
 		
 		if(connector == null || connector.isDisposed()) {
 			makeNioConnector();
@@ -149,7 +154,7 @@ class CIMConnectorManager extends IoHandlerAdapter implements KeepAliveMessageFa
 				connector.connect(remoteAddress).addListener(new IoFutureListener<ConnectFuture>() {
 					@Override
 					public void operationComplete(ConnectFuture future) {
-						semaphore.release();
+						CONNECTING_FLAG.set(false);
 						future.removeListener(this);
 						if(future.getException() != null) {
 							handleConnectFailure(future.getException(),remoteAddress);
@@ -267,7 +272,7 @@ class CIMConnectorManager extends IoHandlerAdapter implements KeepAliveMessageFa
 		intent.setPackage(context.getPackageName());
 		intent.setAction(CIMConstant.IntentAction.ACTION_CONNECTION_CLOSED);
 		context.sendBroadcast(intent);
-
+		
 	}
 
 	@Override
