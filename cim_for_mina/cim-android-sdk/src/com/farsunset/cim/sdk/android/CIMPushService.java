@@ -22,6 +22,8 @@
 package com.farsunset.cim.sdk.android;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -102,7 +104,13 @@ public class CIMPushService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			startForeground(this.hashCode(), new Notification.Builder(this, null).build());
+			NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+			NotificationChannel channel = new NotificationChannel(getClass().getSimpleName(),getClass().getSimpleName(), NotificationManager.IMPORTANCE_LOW);
+			channel.enableLights(false);
+			channel.enableVibration(false);
+		    notificationManager.createNotificationChannel(channel);
+		    Notification notification = new Notification.Builder(this, channel.getId()).build();
+	        startForeground(this.hashCode(),notification);
 		}
 
 		intent = (intent == null ? new Intent(CIMPushManager.ACTION_ACTIVATE_PUSH_SERVICE) : intent);
