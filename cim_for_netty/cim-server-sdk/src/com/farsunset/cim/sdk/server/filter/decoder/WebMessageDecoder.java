@@ -21,11 +21,9 @@
  */
 package com.farsunset.cim.sdk.server.filter.decoder;
 
-import java.nio.charset.Charset;
 import java.util.List;
 
 import com.farsunset.cim.sdk.server.constant.CIMConstant;
-import com.farsunset.cim.sdk.server.model.HeartbeatResponse;
 import com.farsunset.cim.sdk.server.model.SentBody;
 import com.farsunset.cim.sdk.server.model.proto.SentBodyProto;
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -124,8 +122,10 @@ public class WebMessageDecoder extends ByteToMessageDecoder {
 		 * 只处理心跳响应以及，sentbody消息
 		 */
 		if (type == CIMConstant.ProtobufType.C_H_RS) {
-			HeartbeatResponse response = HeartbeatResponse.getInstance();
-			queue.add(response);
+			SentBody body = new SentBody();
+			body.setKey(CIMConstant.CLIENT_HEARTBEAT);
+			body.setTimestamp(System.currentTimeMillis());
+			queue.add(body);
 		}
 
 		if (type == CIMConstant.ProtobufType.SENTBODY) {

@@ -27,17 +27,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.farsunset.cim.service.impl.CIMSessionServiceImpl;
+import com.farsunset.cim.service.CIMSessionService;
+
 @Controller
 @RequestMapping("/console/session")
 public class SessionController {
 
 	@Resource
-	private CIMSessionServiceImpl sessionManager;
+	private CIMSessionService memorySessionService;
 	
 	@RequestMapping(value = "/list.action")
 	public String list(Model model) {
-		model.addAttribute("sessionList", sessionManager.queryAll());
+		model.addAttribute("sessionList", memorySessionService.list());
 		return "console/session/manage";
 	}
 }

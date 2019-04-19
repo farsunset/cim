@@ -26,11 +26,11 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.farsunset.cim.sdk.server.constant.CIMConstant;
 import com.farsunset.cim.sdk.server.filter.decoder.AppMessageDecoder;
 import com.farsunset.cim.sdk.server.filter.decoder.WebMessageDecoder;
-import com.farsunset.cim.sdk.server.handler.CIMNioSocketAcceptor;
 import com.farsunset.cim.sdk.server.model.SentBody;
-import com.farsunset.cim.sdk.server.session.CIMSession;
+import com.farsunset.cim.sdk.server.model.CIMSession;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -95,7 +95,7 @@ public class ServerMessageDecoder extends ByteToMessageDecoder {
 			arg0.channel().attr(AttributeKey.valueOf(CIMSession.PROTOCOL)).set(CIMSession.WEBSOCKET);
 
 			SentBody body = new SentBody();
-			body.setKey(CIMNioSocketAcceptor.WEBSOCKET_HANDLER_KEY);
+			body.setKey(CIMConstant.CLIENT_WEBSOCKET_HANDSHAKE);
 			body.setTimestamp(System.currentTimeMillis());
 			body.put("key", secKey);
 			queue.add(body);

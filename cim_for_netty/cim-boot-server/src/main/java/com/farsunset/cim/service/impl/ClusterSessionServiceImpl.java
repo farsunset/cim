@@ -19,47 +19,54 @@
  *                                                                                     *
  ***************************************************************************************
  */
-package com.farsunset.cim.session;
+package com.farsunset.cim.service.impl;
+
 
 import java.util.List;
-import com.farsunset.cim.sdk.server.session.CIMSession;
-import com.farsunset.cim.sdk.server.session.SessionManager;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.farsunset.cim.sdk.server.handler.CIMNioSocketAcceptor;
+import com.farsunset.cim.sdk.server.model.CIMSession;
+import com.farsunset.cim.service.CIMSessionService;
+
 
 /**
- * 集群 session管理实现示例， 各位可以自行实现 AbstractSessionManager接口来实现自己的 session管理 服务器集群时
- * 须要将CIMSession 信息存入数据库或者nosql 等 第三方存储空间中，便于所有服务器都可以访问
+ * 集群情况下，数据库或者redis存储实现
+ * 自行实现存储管理
+ *
  */
-public class ClusterSessionManager implements SessionManager {
+@Service("clusterSessionService")
+public class ClusterSessionServiceImpl implements CIMSessionService {
 
-	public CIMSession get(String account) {
-
-		// 这里查询数据库
-		/*
-		 * CIMSession session = database.getSession(account);
-		 * session.setIoSession(ContextHolder.getBean(CIMNioSocketAcceptor.class).
-		 * getManagedSessions().get(session.getNid())); return session;
-		 */
-		return null;
+ 	@Resource
+ 	private CIMNioSocketAcceptor nioSocketAcceptor;
+ 	
+	@Override
+	public void save(CIMSession session) {
 	}
 
 	@Override
-	public List<CIMSession> queryAll() {
+	public CIMSession get(String account) {
+		 
+		/*
+		* CIMSession session = database.getSession(account);
+		* session.setIoSession(nioSocketAcceptor.getManagedChannel().get(session.getNid()));
+		* return session;
+		*/
+		
 		return null;
 	}
-
+ 
 	@Override
 	public void remove(String account) {
-
 	}
 
 	@Override
-	public void update(CIMSession session) {
-
+	public List<CIMSession> list() {
+		return null;
 	}
-
-	@Override
-	public void add(CIMSession arg0) {
-
-	}
-
+	 
 }

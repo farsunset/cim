@@ -96,8 +96,8 @@ public class CIMLoggingFilter extends IoFilterAdapter {
 			builder.append(" R:").append(session.getRemoteAddress().toString());
 		}
 		
-		if (session.containsAttribute(CIMConstant.SESSION_KEY)) {
-			builder.append(" account:").append(session.getAttribute(CIMConstant.SESSION_KEY));
+		if (session.containsAttribute(CIMConstant.KEY_ACCOUNT)) {
+			builder.append(" account:").append(session.getAttribute(CIMConstant.KEY_ACCOUNT));
 		}
 		builder.append("]");
 		return builder.toString();

@@ -19,46 +19,54 @@
  *                                                                                     *
  ***************************************************************************************
  */
-package com.farsunset.cim.sdk.server.session;
+package com.farsunset.cim.service.impl;
+
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.farsunset.cim.sdk.server.handler.CIMNioSocketAcceptor;
+import com.farsunset.cim.sdk.server.model.CIMSession;
+import com.farsunset.cim.service.CIMSessionService;
+
+
 /**
- * 客户端的 session管理接口 可自行实现此接口管理session
+ * 集群情况下，数据库或者redis存储实现
+ * 自行实现存储管理
+ *
  */
+@Service("clusterSessionService")
+public class ClusterSessionServiceImpl implements CIMSessionService {
 
-public interface SessionManager {
+ 	@Resource
+ 	private CIMNioSocketAcceptor nioSocketAcceptor;
+ 	
+	@Override
+	public void save(CIMSession session) {
+	}
 
-	/**
-	 * 添加新的session
-	 */
-	public void add(CIMSession session);
+	@Override
+	public CIMSession get(String account) {
+		 
+		/*
+		* CIMSession session = database.getSession(account);
+		* session.setIoSession(nioSocketAcceptor.getManagedSessions().get(session.getNid()));
+		* return session;
+		*/
+		
+		return null;
+	}
+ 
+	@Override
+	public void remove(String account) {
+	}
 
-	/**
-	 * 更新session
-	 */
-	public void update(CIMSession session);
-
-	/**
-	 * 
-	 * @param account
-	 *            客户端session的 key 一般可用 用户账号来对应session
-	 * @return
-	 */
-	CIMSession get(String account);
-
-	/**
-	 * 获取所有session
-	 * 
-	 * @return
-	 */
-	public List<CIMSession> queryAll();
-
-	/**
-	 * 删除session
-	 * 
-	 * @param session
-	 */
-	public void remove(String account);
-
+	@Override
+	public List<CIMSession> list() {
+		return null;
+	}
+	 
 }

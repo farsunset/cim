@@ -29,10 +29,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.farsunset.cim.sdk.server.model.Message;
-import com.farsunset.cim.sdk.server.session.CIMSession;
-import com.farsunset.cim.sdk.server.session.DefaultSessionManager;
+import com.farsunset.cim.sdk.server.model.CIMSession;
 import com.farsunset.cim.service.ApnsService;
-import com.farsunset.cim.service.impl.MessageDispatcherImpl;
+import com.farsunset.cim.service.CIMSessionService;
 
 /**
  * 消息发送实现类
@@ -45,10 +44,8 @@ public class DefaultMessagePusher implements CIMMessagePusher {
 	private String host;
 	
 	@Resource
-	private DefaultSessionManager sessionManager;
+	private CIMSessionService memorySessionService;
  
-	@Resource
-	private MessageDispatcherImpl messageDispatcher;
 	
 
 	@Resource
@@ -61,31 +58,39 @@ public class DefaultMessagePusher implements CIMMessagePusher {
 	 * @param msg
 	 */
 	public void push(Message message) {
-		CIMSession session = sessionManager.get(message.getReceiver());
+		CIMSession session = memorySessionService.get(message.getReceiver());
 
-		/**
-		 * 服务器集群时，可以在此 判断当前session是否连接于本台服务器，如果是，继续往下走，如果不是，将此消息发往当前session连接的服务器并
-		 */
-		if (session.isConnected() && !Objects.equals(host, session.getHost())) {
-			messageDispatcher.forward(message, session.getHost());
+		if(session == null) {
 			return;
 		}
 
-		/**
-		 * 如果是在当前服务器则直接推送
+		/*
+		 * IOS设备，如果开启了apns，则使用apns推送
 		 */
-		if (session.isConnected() && Objects.equals(host, session.getHost())) {
-			session.write(message);
+		if (session.isIOSChannel() && session.isApnsOpend()) {
+			apnsService.push(message, session.getDeviceId());
 			return;
 		}
 		
-		/**
-		 * ios设备流程特别处理，如果长链接断开了，并且ApnsAble为打开状态的话优走apns
+		/*
+		 * 服务器集群时，判断当前session是否连接于本台服务器
+		 * 如果连接到了其他服务器则转发请求到目标服务器
 		 */
-		if (Objects.equals(session.getChannel(), CIMSession.CHANNEL_IOS) && Objects.equals(session.getApnsAble(), CIMSession.APNS_ON)) {
-			apnsService.push(message, session.getDeviceId());
+		if (session.isConnected() && !Objects.equals(host, session.getHost())) {
+			/**
+			 * @TODO
+			 * 在此调用目标服务器接口来发送
+			 */
+			return;
 		}
 
+		/*
+		 * 如果是Android，浏览器或者windows客户端则直接发送
+		 */
+		if (session.isConnected() && Objects.equals(host, session.getHost())) {
+			session.write(message);
+		}
+		
 	}
 
 }

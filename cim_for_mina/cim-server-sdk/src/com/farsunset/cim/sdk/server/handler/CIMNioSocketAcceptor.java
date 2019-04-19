@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2019 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2023 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.mina.core.service.IoAcceptor;
@@ -38,24 +39,16 @@ import org.apache.mina.filter.keepalive.KeepAliveMessageFactory;
 import org.apache.mina.transport.socket.DefaultSocketSessionConfig;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 
+import com.farsunset.cim.sdk.server.constant.CIMConstant;
 import com.farsunset.cim.sdk.server.filter.CIMLoggingFilter;
 import com.farsunset.cim.sdk.server.filter.ServerMessageCodecFactory;
 import com.farsunset.cim.sdk.server.model.HeartbeatRequest;
 import com.farsunset.cim.sdk.server.model.HeartbeatResponse;
 import com.farsunset.cim.sdk.server.model.SentBody;
-import com.farsunset.cim.sdk.server.session.CIMSession;
+import com.farsunset.cim.sdk.server.model.CIMSession;
 
 public class CIMNioSocketAcceptor extends IoHandlerAdapter implements KeepAliveMessageFactory {
 
-    /**
-     * websocket特有的握手处理handler
-     */
-	public final static String WEBSOCKET_HANDLER_KEY = "client_websocket_handshake";
-	 /**
-     * 连接关闭处理handler
-     */
-	public final static String CIMSESSION_CLOSED_HANDLER_KEY = "client_closed";
-	
 	private HashMap<String, CIMRequestHandler> innerHandlerMap = new HashMap<String, CIMRequestHandler>();
 	private CIMRequestHandler outerRequestHandler;
 	private IoAcceptor acceptor;
@@ -69,7 +62,7 @@ public class CIMNioSocketAcceptor extends IoHandlerAdapter implements KeepAliveM
 		/**
 		 * 预制websocket握手请求的处理
 		 */
-		innerHandlerMap.put(WEBSOCKET_HANDLER_KEY, new WebsocketHandler());
+		innerHandlerMap.put(CIMConstant.CLIENT_WEBSOCKET_HANDSHAKE, new WebsocketHandler());
 
 		acceptor = new NioSocketAcceptor();
 		acceptor.getSessionConfig().setReadBufferSize(READ_BUFFER_SIZE);
@@ -81,11 +74,16 @@ public class CIMNioSocketAcceptor extends IoHandlerAdapter implements KeepAliveM
 		keepAliveFilter.setRequestTimeout(TIME_OUT);
 		keepAliveFilter.setForwardEvent(true);
 
-		acceptor.getFilterChain().addLast("executor", new ExecutorFilter(Executors.newCachedThreadPool()));
+		ExecutorService executor = Executors.newCachedThreadPool(runnable -> {
+	        Thread thread = Executors.defaultThreadFactory().newThread(runnable);
+	        thread.setName("mina-thread-" + thread.getId());
+	        return thread;
+	    });
+		
 		acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(new ServerMessageCodecFactory()));
 		acceptor.getFilterChain().addLast("logger", new CIMLoggingFilter());
 		acceptor.getFilterChain().addLast("heartbeat", keepAliveFilter);
-
+		acceptor.getFilterChain().addLast("executor", new ExecutorFilter(executor));
 		acceptor.setHandler(this);
 
 		acceptor.bind(new InetSocketAddress(port));
@@ -93,6 +91,7 @@ public class CIMNioSocketAcceptor extends IoHandlerAdapter implements KeepAliveM
 
 	public void unbind() {
 		acceptor.unbind();
+		acceptor.dispose();
 	}
 
 	/**
@@ -126,13 +125,12 @@ public class CIMNioSocketAcceptor extends IoHandlerAdapter implements KeepAliveM
  
 	@Override
 	public void sessionClosed(IoSession ios) {
-
+      
 		CIMSession session = new CIMSession(ios);
         SentBody body = new SentBody();
-        body.setKey(CIMSESSION_CLOSED_HANDLER_KEY);
+        body.setKey(CIMConstant.CLIENT_CONNECT_CLOSED);
 		outerRequestHandler.process(session, body);
 	}
-	 
 
 	@Override
 	public Object getRequest(IoSession session) {

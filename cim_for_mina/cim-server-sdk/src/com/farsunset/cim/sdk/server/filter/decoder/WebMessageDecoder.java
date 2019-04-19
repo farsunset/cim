@@ -30,11 +30,10 @@ import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 import org.apache.mina.filter.codec.demux.MessageDecoderAdapter;
 import org.apache.mina.filter.codec.demux.MessageDecoderResult;
 import com.farsunset.cim.sdk.server.constant.CIMConstant;
-import com.farsunset.cim.sdk.server.handler.CIMNioSocketAcceptor;
 import com.farsunset.cim.sdk.server.model.HeartbeatResponse;
 import com.farsunset.cim.sdk.server.model.SentBody;
 import com.farsunset.cim.sdk.server.model.proto.SentBodyProto;
-import com.farsunset.cim.sdk.server.session.CIMSession;
+import com.farsunset.cim.sdk.server.model.CIMSession;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 /**
@@ -203,7 +202,7 @@ public class WebMessageDecoder extends MessageDecoderAdapter {
 		iosession.setAttribute(CIMSession.PROTOCOL,CIMSession.WEBSOCKET);
 
 		SentBody body = new SentBody();
-		body.setKey(CIMNioSocketAcceptor.WEBSOCKET_HANDLER_KEY);
+		body.setKey(CIMConstant.CLIENT_WEBSOCKET_HANDSHAKE);
 		body.setTimestamp(System.currentTimeMillis());
 		body.put("key", getSecWebSocketKey(message));
 		out.write(body);

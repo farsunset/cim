@@ -26,12 +26,10 @@ import java.util.Base64;
 
 import com.farsunset.cim.sdk.server.model.HandshakerResponse;
 import com.farsunset.cim.sdk.server.model.SentBody;
-import com.farsunset.cim.sdk.server.session.CIMSession;
+import com.farsunset.cim.sdk.server.model.CIMSession;
 
 /**
  * 处理websocket握手请求，返回响应的报文给浏览器
- * 
- * @author Iraid
  *
  */
 public class WebsocketHandler implements CIMRequestHandler {

@@ -22,6 +22,8 @@
 package com.farsunset.cim.handler;
 
 
+import java.util.Objects;
+
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
@@ -31,8 +33,8 @@ import org.springframework.stereotype.Component;
 import com.farsunset.cim.sdk.server.constant.CIMConstant;
 import com.farsunset.cim.sdk.server.handler.CIMRequestHandler;
 import com.farsunset.cim.sdk.server.model.SentBody;
-import com.farsunset.cim.sdk.server.session.CIMSession;
-import com.farsunset.cim.service.impl.CIMSessionServiceImpl;
+import com.farsunset.cim.sdk.server.model.CIMSession;
+import com.farsunset.cim.service.CIMSessionService;
 
 
 /**
@@ -46,17 +48,28 @@ public class SessionClosedHandler implements CIMRequestHandler {
 	protected final Logger logger = LoggerFactory.getLogger(SessionClosedHandler.class);
 
 	@Resource
-	private CIMSessionServiceImpl sessionManager;
+	private CIMSessionService memorySessionService;
 	
 	public void process(CIMSession ios, SentBody message) {
+		Object quietly = ios.getAttribute(CIMConstant.KEY_QUIETLY_CLOSE);
+		if (Objects.equals(quietly, true)) {
+			return;
+		}
 
-		Object account = ios.getAttribute(CIMConstant.SESSION_KEY);
+		Object account = ios.getAttribute(CIMConstant.KEY_ACCOUNT);
 		if (account == null) {
 			return;
 		}
 
-		ios.removeAttribute(CIMConstant.SESSION_KEY);
-		sessionManager.remove(account.toString());
+		CIMSession oldSession = memorySessionService.get(account.toString());
+
+		if (oldSession == null || oldSession.isApnsOpend()) {
+			return;
+		}
+
+		oldSession.setState(CIMSession.STATE_DISABLED);
+		oldSession.setNid(null);
+		memorySessionService.save(oldSession);
 	}
 
 }

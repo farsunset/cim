@@ -26,7 +26,7 @@ import java.util.Objects;
 import com.farsunset.cim.sdk.server.constant.CIMConstant;
 import com.farsunset.cim.sdk.server.model.HandshakerResponse;
 import com.farsunset.cim.sdk.server.model.feature.EncodeFormatable;
-import com.farsunset.cim.sdk.server.session.CIMSession;
+import com.farsunset.cim.sdk.server.model.CIMSession;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

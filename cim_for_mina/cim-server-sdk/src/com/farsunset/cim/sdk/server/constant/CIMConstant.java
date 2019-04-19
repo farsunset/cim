@@ -40,9 +40,14 @@ public interface CIMConstant {
 
 	}
 
-	String SESSION_KEY = "account";
-	String HEARTBEAT_KEY = "heartbeat";
+	String KEY_ACCOUNT = "account";
 
+	String KEY_QUIETLY_CLOSE = "quietlyClose";
+
+	String CLIENT_WEBSOCKET_HANDSHAKE = "client_websocket_handshake";
+	
+	String CLIENT_CONNECT_CLOSED = "client_closed";
+	
 	public static interface ProtobufType {
 		byte S_H_RQ = 1;
 		byte C_H_RS = 0;

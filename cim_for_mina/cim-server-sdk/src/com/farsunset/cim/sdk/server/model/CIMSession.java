@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2019 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2023 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,35 +19,33 @@
  *                                                                                     *
  ***************************************************************************************
  */
-package com.farsunset.cim.sdk.server.session;
+package com.farsunset.cim.sdk.server.model;
 
 import java.io.Serializable;
-import java.net.InetAddress;
 import java.net.SocketAddress;
-import java.net.UnknownHostException;
+import java.util.Objects;
+
+import org.apache.mina.core.future.WriteFuture;
+import org.apache.mina.core.session.IoSession;
 
 import com.farsunset.cim.sdk.server.constant.CIMConstant;
-
-import io.netty.channel.Channel;
-import io.netty.util.AttributeKey;
+import com.farsunset.cim.sdk.server.model.proto.SessionProto;
+import com.google.protobuf.InvalidProtocolBufferException;
 
 /**
- * Channel包装类,集群时 将此对象存入表中
+ * IoSession包装类,集群时 将此对象存入表中
  */
-
 public class CIMSession implements Serializable {
 
-	/**
-	 * 
-	 */
 	private transient static final long serialVersionUID = 1L;
 
 	public transient static String PROTOCOL = "protocol";
 	public transient static String WEBSOCKET = "websocket";
 	public transient static String NATIVEAPP = "nativeapp";
 
-	public transient static final int STATUS_ENABLED = 0;
-	public transient static final int STATUS_DISABLED = 1;
+	public transient static String HOST = "HOST";
+	public transient static final int STATE_ENABLED = 0;
+	public transient static final int STATE_DISABLED = 1;
 	public transient static final int APNS_ON = 1;
 	public transient static final int APNS_OFF = 0;
 
@@ -56,29 +54,27 @@ public class CIMSession implements Serializable {
 	public transient static String CHANNEL_WINDOWS = "windows";
 	public transient static String CHANNEL_WP = "wp";
 	public transient static String CHANNEL_BROWSER = "browser";
-	private transient Channel session;
 
-	private String gid;// session全局ID
-	private String nid;// session在本台服务器上的ID
+	private transient IoSession session;
+
+	private String account;// session绑定的账号,主键，一个账号同一时间之内在一个设备在线
+	private Long nid;// session在本台服务器上的ID
 	private String deviceId;// 客户端ID (设备号码+应用包名),ios为devicetoken
 	private String host;// session绑定的服务器IP
-	private String account;// session绑定的账号
 	private String channel;// 终端设备类型
 	private String deviceModel;// 终端设备型号
 	private String clientVersion;// 终端应用版本
 	private String systemVersion;// 终端系统版本
-	private String packageName;// 终端应用包名
 	private Long bindTime;// 登录时间
-	private Long heartbeat;// 心跳时间
 	private Double longitude;// 经度
 	private Double latitude;// 维度
 	private String location;// 位置
-	private int apnsAble;// apns推送状态
-	private int status;// 状态
+	private int apns;// apns推送状态
+	private int state;// 状态
 
-	public CIMSession(Channel session) {
+	public CIMSession(IoSession session) {
 		this.session = session;
-		this.nid = session.id().asShortText();
+		this.nid = session.getId();
 	}
 
 	public CIMSession() {
@@ -91,7 +87,8 @@ public class CIMSession implements Serializable {
 
 	public void setAccount(String account) {
 		this.account = account;
-		setAttribute(CIMConstant.SESSION_KEY, account);
+
+		setAttribute(CIMConstant.KEY_ACCOUNT, account);
 	}
 
 	public Double getLongitude() {
@@ -118,19 +115,11 @@ public class CIMSession implements Serializable {
 		this.location = location;
 	}
 
-	public String getGid() {
-		return gid;
-	}
-
-	public void setGid(String gid) {
-		this.gid = gid;
-	}
-
-	public String getNid() {
+	public Long getNid() {
 		return nid;
 	}
 
-	public void setNid(String nid) {
+	public void setNid(Long nid) {
 		this.nid = nid;
 	}
 
@@ -186,162 +175,183 @@ public class CIMSession implements Serializable {
 		this.systemVersion = systemVersion;
 	}
 
-	public Long getHeartbeat() {
-		return heartbeat;
-	}
-
-	public void setHeartbeat(Long heartbeat) {
-		this.heartbeat = heartbeat;
-		setAttribute(CIMConstant.HEARTBEAT_KEY, heartbeat);
-	}
-
 	public void setHost(String host) {
 		this.host = host;
 	}
 
-	public void setChannel(Channel session) {
-		this.session = session;
+	public int getApns() {
+		return apns;
 	}
 
-	public int getApnsAble() {
-		return apnsAble;
+	public void setApns(int apns) {
+		this.apns = apns;
 	}
 
-	public void setApnsAble(int apnsAble) {
-		this.apnsAble = apnsAble;
+	public int getState() {
+		return state;
 	}
 
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
+	public void setState(int state) {
+		this.state = state;
 	}
 
 	public void setAttribute(String key, Object value) {
 		if (session != null)
-			session.attr(AttributeKey.valueOf(key)).set(value);
+			session.setAttribute(key, value);
 	}
 
 	public boolean containsAttribute(String key) {
 		if (session != null)
-			return session.hasAttr(AttributeKey.valueOf(key));
+			return session.containsAttribute(key);
 		return false;
 	}
 
 	public Object getAttribute(String key) {
 		if (session != null)
-			return session.attr(AttributeKey.valueOf(key)).get();
+			return session.getAttribute(key);
 		return null;
 	}
 
 	public void removeAttribute(String key) {
 		if (session != null)
-			session.attr(AttributeKey.valueOf(key)).set(null);
-		;
+			session.removeAttribute(key);
 	}
 
 	public SocketAddress getRemoteAddress() {
 		if (session != null)
-			return session.remoteAddress();
+			return session.getRemoteAddress();
 		return null;
 	}
 
 	public boolean write(Object msg) {
-		if (session != null && session.isActive()) {
-			return session.writeAndFlush(msg).awaitUninterruptibly(5000);
+		if (session != null) {
+			WriteFuture future = session.write(msg);
+			future.awaitUninterruptibly(10 * 1000);
+			return future.isWritten();
 		}
 
 		return false;
 	}
 
 	public boolean isConnected() {
-		if (session != null) {
-			return session.isActive();
-		}
-
-		if (!isLocalhost()) {
-			return status == STATUS_ENABLED;
-		}
-
-		return false;
-	}
-
-	public boolean isLocalhost() {
-
-		try {
-			String ip = InetAddress.getLocalHost().getHostAddress();
-			return ip.equals(host);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
-		return false;
-
+		return (session != null && session.isConnected()) || state == STATE_ENABLED;
 	}
 
 	public void closeNow() {
 		if (session != null)
-			session.close();
+			session.closeNow();
 	}
 
-	public void setPackageName(String packageName) {
-		this.packageName = packageName;
+	public void closeOnFlush() {
+		if (session != null)
+			session.closeOnFlush();
 	}
 
-	public String getPackageName() {
-		return packageName;
+	public boolean isIOSChannel() {
+		return Objects.equals(channel, CHANNEL_IOS);
 	}
 
+	public boolean isAndroidChannel() {
+		return Objects.equals(channel, CHANNEL_ANDROID);
+	}
+
+	public boolean isWindowsChannel() {
+		return Objects.equals(channel, CHANNEL_WINDOWS);
+	}
+
+	public boolean isApnsOpend() {
+		return Objects.equals(apns, APNS_ON);
+	}
+
+	@Override
 	public int hashCode() {
-
-		return (deviceId + nid + host).hashCode();
+		return getClass().hashCode();
 	}
 
+	@Override
 	public boolean equals(Object o) {
-
 		if (o instanceof CIMSession) {
-			return hashCode() == o.hashCode();
+			CIMSession target = (CIMSession) o;
+			return Objects.equals(target.deviceId, deviceId) && Objects.equals(target.nid, nid)
+					&& Objects.equals(target.host, host);
 		}
 		return false;
 	}
 
-	public boolean fromOtherDevice(Object o) {
+	public IoSession getSession() {
+		return session;
+	}
 
-		if (o instanceof CIMSession) {
+	public void setSession(IoSession session) {
+		this.session = session;
+	}
 
-			CIMSession t = (CIMSession) o;
-			if (t.deviceId != null && deviceId != null) {
-				return !t.deviceId.equals(deviceId);
-			}
+	public byte[] getProtobufBody() {
+		SessionProto.Model.Builder builder = SessionProto.Model.newBuilder();
+		if (account != null) {
+			builder.setAccount(account);
 		}
-		return false;
+		if (nid != null) {
+			builder.setNid(nid);
+		}
+		if (deviceId != null) {
+			builder.setDeviceId(deviceId);
+		}
+		if (host != null) {
+			builder.setHost(host);
+		}
+		if (channel != null) {
+			builder.setChannel(channel);
+		}
+		if (deviceModel != null) {
+			builder.setDeviceModel(deviceModel);
+		}
+		if (clientVersion != null) {
+			builder.setClientVersion(clientVersion);
+		}
+		if (systemVersion != null) {
+			builder.setSystemVersion(systemVersion);
+		}
+		if (bindTime != null) {
+			builder.setBindTime(bindTime);
+		}
+		if (longitude != null) {
+			builder.setLongitude(longitude);
+		}
+		if (latitude != null) {
+			builder.setLatitude(latitude);
+		}
+		if (location != null) {
+			builder.setLocation(location);
+		}
+		builder.setState(state);
+		builder.setApns(apns);
+		return builder.build().toByteArray();
 	}
-
-	public boolean fromCurrentDevice(Object o) {
-
-		return !fromOtherDevice(o);
+	
+	
+	public static CIMSession decode(byte[] protobufBody) throws InvalidProtocolBufferException {
+		if(protobufBody == null) {
+			return null;
+		}
+		SessionProto.Model proto = SessionProto.Model.parseFrom(protobufBody);
+		CIMSession session = new CIMSession();
+		session.setApns(proto.getApns());
+		session.setBindTime(proto.getBindTime());
+		session.setChannel(proto.getChannel());
+		session.setClientVersion(proto.getClientVersion());
+		session.setDeviceId(proto.getDeviceId());
+		session.setDeviceModel(proto.getDeviceModel());
+		session.setHost(proto.getHost());
+		session.setLatitude(proto.getLatitude());
+		session.setLongitude(proto.getLongitude());
+		session.setLocation(proto.getLocation());
+		session.setNid(proto.getNid());
+		session.setSystemVersion(proto.getSystemVersion());
+		session.setState(proto.getState());
+		session.setAccount(proto.getAccount());
+		return session;
 	}
-
-	public String toString() {
-		StringBuffer buffer = new StringBuffer();
-		buffer.append("{");
-
-		buffer.append("\"").append("gid").append("\":").append("\"").append(gid).append("\"").append(",");
-		buffer.append("\"").append("nid").append("\":").append(nid).append(",");
-		buffer.append("\"").append("deviceId").append("\":").append("\"").append(deviceId).append("\"").append(",");
-		buffer.append("\"").append("host").append("\":").append("\"").append(host).append("\"").append(",");
-		buffer.append("\"").append("account").append("\":").append("\"").append(account).append("\"").append(",");
-		buffer.append("\"").append("channel").append("\":").append("\"").append(channel).append("\"").append(",");
-		buffer.append("\"").append("deviceModel").append("\":").append("\"").append(deviceModel).append("\"")
-				.append(",");
-		buffer.append("\"").append("status").append("\":").append(status).append(",");
-		buffer.append("\"").append("apnsAble").append("\":").append(apnsAble).append(",");
-		buffer.append("\"").append("bindTime").append("\":").append(bindTime).append(",");
-		buffer.append("\"").append("heartbeat").append("\":").append(heartbeat);
-		buffer.append("}");
-		return buffer.toString();
-
-	}
+	
 
 }

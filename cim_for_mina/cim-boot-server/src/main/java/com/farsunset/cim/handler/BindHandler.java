@@ -30,14 +30,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.farsunset.cim.push.CIMMessagePusher;
 import com.farsunset.cim.sdk.server.constant.CIMConstant;
 import com.farsunset.cim.sdk.server.handler.CIMRequestHandler;
 import com.farsunset.cim.sdk.server.model.Message;
 import com.farsunset.cim.sdk.server.model.ReplyBody;
 import com.farsunset.cim.sdk.server.model.SentBody;
-import com.farsunset.cim.sdk.server.session.CIMSession;
-import com.farsunset.cim.service.impl.CIMSessionServiceImpl;
-import com.farsunset.cim.util.StringUtil;
+import com.farsunset.cim.sdk.server.model.CIMSession;
+import com.farsunset.cim.service.CIMSessionService;
 
 
 /**
@@ -51,57 +51,57 @@ public class BindHandler implements CIMRequestHandler {
 	protected final Logger logger = LoggerFactory.getLogger(BindHandler.class);
 
 	@Resource
-	private CIMSessionServiceImpl sessionManager;
+	private CIMSessionService memorySessionService;
 
 	@Value("${server.host}")
 	private String host;
 	
+	@Resource
+	private CIMMessagePusher defaultMessagePusher;
 	
-	public void process(CIMSession newSession, SentBody message) {
+	public void process(CIMSession newSession, SentBody body) {
 
 		ReplyBody reply = new ReplyBody();
-		reply.setKey(message.getKey());
+		reply.setKey(body.getKey());
 		reply.setCode(CIMConstant.ReturnCode.CODE_200);
+		reply.setTimestamp(System.currentTimeMillis());
+		
 		try {
 
-			String account = message.get("account");
-			newSession.setGid(StringUtil.getUUID());
+			String account = body.get("account");
 			newSession.setAccount(account);
-			newSession.setDeviceId(message.get("deviceId"));
+			newSession.setDeviceId(body.get("deviceId"));
 			newSession.setHost(host);
-			newSession.setChannel(message.get("channel"));
-			newSession.setDeviceModel(message.get("device"));
-			newSession.setClientVersion(message.get("version"));
-			newSession.setSystemVersion(message.get("osVersion"));
+			newSession.setChannel(body.get("channel"));
+			newSession.setDeviceModel(body.get("device"));
+			newSession.setClientVersion(body.get("version"));
+			newSession.setSystemVersion(body.get("osVersion"));
 			newSession.setBindTime(System.currentTimeMillis());
-			newSession.setPackageName(message.get("packageName"));
-			newSession.setHeartbeat(System.currentTimeMillis());
-
-			/**
+			/*
 			 * 由于客户端断线服务端可能会无法获知的情况，客户端重连时，需要关闭旧的连接
 			 */
-			CIMSession oldSession = sessionManager.get(account);
+			CIMSession oldSession = memorySessionService.get(account);
 
-			// 如果是账号已经在另一台终端登录。则让另一个终端下线
+			/*
+			 * 如果是账号已经在另一台终端登录。则让另一个终端下线
+			 */
 
 			if (oldSession != null && fromOtherDevice(newSession,oldSession) && oldSession.isConnected()) {
 				sendForceOfflineMessage(oldSession, account, newSession.getDeviceModel());
 			}
-
-			 
-			/**
+			
+			/*
 			 * 有可能是同一个设备重复连接，则关闭旧的链接，这种情况一般是客户端断网，联网又重新链接上来，之前的旧链接没有来得及通过心跳机制关闭，在这里手动关闭
 			 * 条件1，连接来自是同一个设备
 			 * 条件2.2个连接都是同一台服务器
 			 */
 			
 			if (oldSession != null && !fromOtherDevice(newSession,oldSession) && Objects.equals(oldSession.getHost(),host)) {
-				oldSession.removeAttribute(CIMConstant.SESSION_KEY);
-				oldSession.closeOnFlush();
+				closeQuietly(oldSession);
 			}
-			
 
-			sessionManager.add(newSession);
+			memorySessionService.save(newSession);
+			
 
 		} catch (Exception e) {
 			reply.setCode(CIMConstant.ReturnCode.CODE_500);
@@ -124,15 +124,17 @@ public class BindHandler implements CIMRequestHandler {
 		msg.setSender("system");
 		msg.setContent(deviceModel);
 		msg.setId(System.currentTimeMillis());
-		closeQuietly(oldSession,msg);
+		
+		defaultMessagePusher.push(msg);
+		
+		closeQuietly(oldSession);
 
 	}
 
 	// 不同设备同一账号登录时关闭旧的连接
-	private void closeQuietly(CIMSession oldSession,Message msg) {
+	private void closeQuietly(CIMSession oldSession) {
 		if (oldSession.isConnected() && Objects.equals(host, oldSession.getHost())) {
-			oldSession.write(msg);
-			oldSession.removeAttribute(CIMConstant.SESSION_KEY);
+			oldSession.setAttribute(CIMConstant.KEY_QUIETLY_CLOSE,true);
 			oldSession.closeOnFlush();
 		}
 	}

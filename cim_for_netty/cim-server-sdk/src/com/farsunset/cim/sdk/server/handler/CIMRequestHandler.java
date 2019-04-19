@@ -26,7 +26,7 @@ package com.farsunset.cim.sdk.server.handler;
  *  @author 3979434@qq.com
  */
 import com.farsunset.cim.sdk.server.model.SentBody;
-import com.farsunset.cim.sdk.server.session.CIMSession;
+import com.farsunset.cim.sdk.server.model.CIMSession;
 
 public interface CIMRequestHandler {
 

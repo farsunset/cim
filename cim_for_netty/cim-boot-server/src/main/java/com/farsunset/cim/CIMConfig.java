@@ -16,7 +16,7 @@ import com.farsunset.cim.handler.SessionClosedHandler;
 import com.farsunset.cim.sdk.server.handler.CIMNioSocketAcceptor;
 import com.farsunset.cim.sdk.server.handler.CIMRequestHandler;
 import com.farsunset.cim.sdk.server.model.SentBody;
-import com.farsunset.cim.sdk.server.session.CIMSession;
+import com.farsunset.cim.sdk.server.model.CIMSession;
 
 @Configuration
 public class CIMConfig implements CIMRequestHandler {
@@ -28,7 +28,7 @@ public class CIMConfig implements CIMRequestHandler {
 	
 	@Resource
 	private SessionClosedHandler closedHandler;
-
+	
 	@Resource
 	private ApplicationContext applicationContext;
 	
@@ -55,7 +55,6 @@ public class CIMConfig implements CIMRequestHandler {
 		return nioSocketAcceptor;
 	}
 
-	
 	@Override
 	public void process(CIMSession session, SentBody body) {
 		
@@ -74,7 +73,6 @@ public class CIMConfig implements CIMRequestHandler {
 		}
 		return applicationContext.getBean(handlerClass);
 	}
-	
 	
 
 }

@@ -30,7 +30,7 @@ import com.farsunset.cim.sdk.server.filter.ServerMessageDecoder;
 import com.farsunset.cim.sdk.server.filter.ServerMessageEncoder;
 import com.farsunset.cim.sdk.server.model.HeartbeatRequest;
 import com.farsunset.cim.sdk.server.model.SentBody;
-import com.farsunset.cim.sdk.server.session.CIMSession;
+import com.farsunset.cim.sdk.server.model.CIMSession;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -54,14 +54,6 @@ import io.netty.util.AttributeKey;
 @Sharable
 public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody> {
 
-	/**
-	 * websocket特有的握手处理handler
-	 */
-	public final static String WEBSOCKET_HANDLER_KEY = "client_websocket_handshake";
-	/**
-	 * 连接关闭处理handler
-	 */
-	public final static String CIMSESSION_CLOSED_HANDLER_KEY = "client_closed";
 
 	private HashMap<String, CIMRequestHandler> innerHandlerMap = new HashMap<String, CIMRequestHandler>();
 	private CIMRequestHandler outerRequestHandler;
@@ -81,8 +73,9 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody> 
 		/**
 		 * 预制websocket握手请求的处理
 		 */
-		innerHandlerMap.put(WEBSOCKET_HANDLER_KEY, new WebsocketHandler());
-
+		innerHandlerMap.put(CIMConstant.CLIENT_WEBSOCKET_HANDSHAKE, new WebsocketHandler());
+		innerHandlerMap.put(CIMConstant.CLIENT_HEARTBEAT, new HeartbeatHandler());
+		
 		ServerBootstrap bootstrap = new ServerBootstrap();
 		EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -123,7 +116,7 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody> 
 	}
 
 	@Override
-	protected void channelRead0(ChannelHandlerContext ctx, SentBody body) throws Exception {
+	protected void channelRead0(ChannelHandlerContext ctx, SentBody body) {
 
 		CIMSession session = new CIMSession(ctx.channel());
 
@@ -148,7 +141,7 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody> 
 		
 		CIMSession session = new CIMSession(ctx.channel());
 		SentBody body = new SentBody();
-		body.setKey(CIMSESSION_CLOSED_HANDLER_KEY);
+		body.setKey(CIMConstant.CLIENT_CONNECT_CLOSED);
 		outerRequestHandler.process(session, body);
 
 	}
@@ -188,4 +181,5 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody> 
 		}
 		return channelGroup.get(id);
 	}
+	 
 }

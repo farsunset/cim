@@ -32,7 +32,6 @@ import com.farsunset.cim.push.DefaultMessagePusher;
 import com.farsunset.cim.push.SystemMessagePusher;
 import com.farsunset.cim.sdk.server.model.Message;
 import com.farsunset.cim.util.Constants;
-import com.farsunset.cim.util.StringUtil;
 
 
 @RestController

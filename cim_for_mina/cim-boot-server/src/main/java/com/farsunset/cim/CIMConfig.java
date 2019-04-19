@@ -16,7 +16,7 @@ import com.farsunset.cim.handler.SessionClosedHandler;
 import com.farsunset.cim.sdk.server.handler.CIMNioSocketAcceptor;
 import com.farsunset.cim.sdk.server.handler.CIMRequestHandler;
 import com.farsunset.cim.sdk.server.model.SentBody;
-import com.farsunset.cim.sdk.server.session.CIMSession;
+import com.farsunset.cim.sdk.server.model.CIMSession;
 
 @Configuration
 public class CIMConfig implements CIMRequestHandler {

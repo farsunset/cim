@@ -21,11 +21,45 @@
  */
 package com.farsunset.cim.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.springframework.stereotype.Service;
 
-import com.farsunset.cim.sdk.server.session.DefaultSessionManager;
+import com.farsunset.cim.sdk.server.model.CIMSession;
+import com.farsunset.cim.service.CIMSessionService;
 
-@Service
-public class CIMSessionServiceImpl extends DefaultSessionManager {
+
+/**
+ * 单机，内存存储实现
+ *
+ */
+@Service("memorySessionService")
+public class MemorySessionServiceImpl implements CIMSessionService {
+
+	private ConcurrentHashMap<String, CIMSession> sessionMap = new ConcurrentHashMap<String, CIMSession>();
+	
+	@Override
+	public void save(CIMSession session) {
+		sessionMap.put(session.getAccount(), session);
+	}
+
+	@Override
+	public CIMSession get(String account) {
+		return sessionMap.get(account);
+	}
+ 
+	@Override
+	public void remove(String account) {
+		sessionMap.remove(account);
+	}
+
+	@Override
+	public List<CIMSession> list() {
+		List<CIMSession> onlineList = new ArrayList<>();
+		onlineList.addAll(sessionMap.values());
+		return onlineList;
+	}
 	 
 }
