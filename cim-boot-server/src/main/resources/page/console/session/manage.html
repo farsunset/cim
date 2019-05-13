@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title><@spring.message "module.common.html.title"/></title>
+<link rel="shortcut icon" href="/image/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="/bootstrap-3.3.7-dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/css/common.css" />
+<script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/common.js"></script>
+<script type="text/javascript" src="/js/jquery-ui.min.js"></script>
+
+<script>
+function showMessageDialog(account){
+  $('#messageDialog').modal('show');
+  $('#Saccount').val(account);
+}
+
+function doSendMessage(){
+    var message = $('#message').val();
+    var account = $('#Saccount').val();
+    if($.trim(message)=='')
+    {
+       return;
+    }
+    showProcess("<@spring.message 'module.console.cimsession.sending'/>");
+    $.post("/api/message/send", {content:message,action:2,sender:'system',receiver:account,format:'0'},
+	   function(data){
+	      hideProcess();
+	      showSTip("<@spring.message 'module.console.cimsession.send.success'/>");
+	      doHideDialog("messageDialog");
+     });
+}
+  
+</script>
+</head>
+<body class="web-app ui-selectable">
+
+<#include "/console/header.html">
+<#include "/console/nav.html">
+
+<div id="mainWrapper">
+
+	<div class="lay-main-toolbar"></div>
+	<div>
+		<form action="/console/session/list.action" method="post" id="searchForm" >
+			<input type="hidden" name="currentPage" id="currentPage" value="0"/>
+			<table style="width: 100%" class="utable">
+				<thead>
+					<tr class="tableHeader">
+						<th width="8%"><@spring.message 'module.console.cimsession.account'/></th>
+						<th width="6%"> <@spring.message 'module.console.cimsession.nid'/></th>
+						<th width="6%"><@spring.message 'module.console.cimsession.channel'/></th>
+						<th width="14%"><@spring.message 'module.console.cimsession.deviceid'/></th>
+						<th width="10%"><@spring.message 'module.console.cimsession.device.model'/></th>
+						<th width="6%"><@spring.message 'module.console.cimsession.app.version'/></th>
+						<th width="6%"><@spring.message 'module.console.cimsession.os.version'/></th>
+						<th width="6%"><@spring.message 'module.console.cimsession.online.time'/></th>
+						<th width="25%"><@spring.message 'module.common.location'/></th>
+						<th width="8%"><@spring.message "module.common.operation"/></th>
+					</tr>
+				</thead>
+				<tbody>
+               		<#list sessionList as cimsession>
+						<tr style="height: 50px;">
+						    <td>${cimsession.account! }</td>
+							<td><#if cimsession.nid??>${cimsession.nid}</#if></td>
+							<td>${cimsession.channel! }</td>
+							<td>${cimsession.deviceId! }</td>
+							<td>${cimsession.deviceModel! }</td>
+							<td>${cimsession.clientVersion! }</td>
+	                        <td>${cimsession.systemVersion! }</td>
+							<td>
+								<@spring.messageArgs  "module.console.cimsession.time.format",[((.now?long - cimsession.bindTime)/1000)?round?c]  />
+							</td>
+							<td>${cimsession.location!}</td>
+							<td>
+								<div class="btn-group btn-group-xs">
+									<button type="button" class="btn btn-primary" style="padding: 5px;" onclick="showMessageDialog('${cimsession.account!}')">
+										<span class="glyphicon glyphicon-send" style="top:2px;"></span>
+										<@spring.message 'module.console.cimsession.send.message'/>
+									</button>
+								</div>
+							</td>
+				 		</tr>
+					</#list>
+				</tbody>
+			</table>
+		</form>
+	</div>
+</div>
+<div class="modal fade" id="messageDialog" tabindex="-1" role="dialog" >
+	<div class="modal-dialog" style="width: 420px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><@spring.message 'module.console.cimsession.send.message'/></h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-groupBuy">
+					<label for="Amobile">
+						<@spring.message 'module.console.cimsession.receiver'/>
+					</label>
+					<input type="text" class="form-control" id="Saccount" name="account"
+						style="width: 100%; font-size: 20px; font-weight: bold;height:40px;"
+						disabled="disabled" />
+				</div>
+				<div class="form-groupBuy" style="margin-top: 20px;">
+					<label for="exampleInputFile">
+						<@spring.message 'module.console.cimsession.message'/>
+					</label>
+					<textarea rows="10" style="width: 100%; height: 200px;" id="message" name="message" class="form-control"></textarea>
+				</div>
+			</div>
+			<div class="modal-footer" style="padding: 5px 10px; text-align: center;">
+				<button type="button" class="btn btn-success btn-lg" style="width: 200px;" onclick="doSendMessage()">
+					<span class="glyphicon glyphicon-send" style="top:2px;"></span><@spring.message 'module.common.send'/>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+$('#sessionMenu').addClass('current');
+</script>
+</body>
+</html>

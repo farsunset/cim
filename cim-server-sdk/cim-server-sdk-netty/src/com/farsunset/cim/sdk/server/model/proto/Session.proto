@@ -1,0 +1,19 @@
+syntax = "proto3";
+package com.farsunset.cim.sdk.server.model.proto;
+option java_outer_classname="SessionProto";
+message Model {
+   string account = 1;
+   string nid = 2;
+   string deviceId = 3;
+   string host = 4;
+   string channel = 5;
+   string deviceModel = 6;
+   string clientVersion = 7;
+   string systemVersion = 8;
+   int64 bindTime = 9;
+   double longitude = 10;
+   double latitude = 11;
+   string location = 12;
+   int32 apns = 13;
+   int32 state = 14;
+}

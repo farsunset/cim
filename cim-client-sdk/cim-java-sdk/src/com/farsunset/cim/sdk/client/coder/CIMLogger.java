@@ -1,0 +1,116 @@
+/**
+ * Copyright 2013-2019 Xia Jun(3979434@qq.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ ***************************************************************************************
+ *                                                                                     *
+ *                        Website : http://www.farsunset.com                           *
+ *                                                                                     *
+ ***************************************************************************************
+ */
+package com.farsunset.cim.sdk.client.coder;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
+/**
+ * 日志打印，添加session 的id和ip address
+ */
+public class CIMLogger  {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CIMLogger.class);
+
+	public static CIMLogger getLogger() {
+		return LoggerHolder.logger;
+	}
+	
+	private CIMLogger() {
+		
+	}
+	
+	private static class LoggerHolder{
+		private static CIMLogger logger = new CIMLogger();
+	}
+	 
+
+	public void messageReceived(SocketChannel session, Object message)  {
+		LOGGER.info(String.format("RECEIVED" + getSessionInfo(session) + "\n%s", message));
+	}
+
+	public void messageSent(SocketChannel session, Object message)   {
+		LOGGER.info(String.format("SENT" + getSessionInfo(session) + "\n%s", message));
+	}
+
+	public void sessionCreated( SocketChannel session) throws Exception {
+		LOGGER.info("OPENED" + getSessionInfo(session));
+	}
+
+	public void sessionIdle( SocketChannel session)   {
+		LOGGER.debug("IDLE READ" + getSessionInfo(session));
+	}
+
+	public void sessionClosed( SocketChannel session)  {
+		LOGGER.warn("CLOSED ID = " + session.hashCode());
+
+	}
+
+	public void connectFailure(InetSocketAddress remoteAddress,long interval)  {
+		LOGGER.debug("CONNECT FAILURE TRY RECONNECT AFTER " + interval +"ms");
+	}
+	
+	public void startConnect(InetSocketAddress remoteAddress) {
+		LOGGER.info("START CONNECT REMOTE HOST: " + remoteAddress.toString());
+	}
+	
+	public void connectState(boolean isConnected)  {
+		LOGGER.debug("CONNECTED:" + isConnected);
+	}
+	 
+	public void connectState(boolean isConnected,boolean isManualStop,boolean isDestroyed)  {
+		LOGGER.debug("CONNECTED:" + isConnected + " STOPED:"+isManualStop+ " DESTROYED:"+isDestroyed);
+	}
+	private String getSessionInfo(SocketChannel session) {
+		StringBuilder builder = new StringBuilder();
+		if (session == null) {
+			return "";
+		}
+		builder.append(" [");
+		builder.append("id:").append(session.hashCode());
+		
+		try {
+			if (session.getLocalAddress() != null) {
+				builder.append(" L:").append(session.getLocalAddress().toString());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		
+		try {
+			if (session.getRemoteAddress() != null) {
+				builder.append(" R:").append(session.getRemoteAddress().toString());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		builder.append("]");
+		return builder.toString();
+	}
+	 
+	
+}

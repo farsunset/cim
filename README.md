@@ -1,5 +1,5 @@
 #### 项目介绍
-CIM是基于mina和netty框架下的推送系统，我们平常使用第三方的推送SDK，如极光推送，百度推送，小米推送，以及腾讯信鸽等来支撑自己的移动端的业务，或许有一些用户自己实现即时通讯系统的需求，那么CIM为您提供了一个解决方案或者思路，目前CIM支撑 websocket，android，ios，桌面应用，系统应用等多端接入支持，目前CIM服务端使用springboot搭建仅仅拥有消息推送的功能，关于数据缓存与持久化都需要使用者自己开发，但是配备了比较完整的使用文档。最后希望CIM能为您带来一些价值。
+CIM是基于mina或者netty框架下的推送系统，我们平常使用第三方的推送SDK，如极光推送，百度推送，小米推送，以及腾讯信鸽等来支撑自己的移动端的业务，或许有一些用户自己实现即时通讯系统的需求，那么CIM为您提供了一个解决方案或者思路，目前CIM支撑 websocket，android，ios，桌面应用，系统应用等多端接入支持，目前CIM服务端使用springboot搭建仅仅拥有消息推送的功能，关于数据缓存与持久化都需要使用者自己开发，但是配备了比较完整的使用文档。最后希望CIM能为您带来一些价值。
    
 ---
 ## 相关项目
@@ -14,16 +14,13 @@ CIM是基于mina和netty框架下的推送系统，我们平常使用第三方�
 ---  
 
 #### 目录说明
+1.cim-use-examples是各个客户端使用示例
+2.cim-client-sdk 是各个客户端的SDK源码
+3.cim-server-sdk 是服务端SDK源码,分为 mina和netty 两个版本，二者任选其一
+4.cim-boot-server是springboot服务端工程源码,使用Idea工具开发
 
-1. cim_for_mina目录下为mina版本实现
-2. cim_for_netty目录下为netty版本实现
-3. doc目录中是相关使用文档，以及protubuf结构体文件
-5. cim-android-sdk 是android客户端封装的的jar包
-6. cim-java-sdk 是java版客户端封装的的jar包
-7. cim-server-sdk 是cim-boot-server 用到的封装的jar
-8. cim-boot-server是springboot服务端工程，是intellij idea基于gradle构建
-9. cim-client-android 是android客户端  android studio工具
-10. 说明.txt是服务端环境搭建说明
+其中所有的sdk均为Eclipse工程，打包成jar导出引入到对应的客户端或服务端工程
+
 
 
 #### 建议反馈
@@ -59,7 +56,18 @@ CIM是基于mina和netty框架下的推送系统，我们平常使用第三方�
 3.消息的id字段名由mid修改为id，类型由String修改为long;
 
 
- 
+-------------------------------------------------------------------------------------------
+版本:3.7.0/时间:2019-05-13
+
+1.服务端cim-boot-server修改为idea maven工程
+
+2.android sdk优化升级，去除mina或netty相关包的依赖
+
+3.java sdk优化升级，去除mina或netty相关包的依赖
+
+4.新增web sdk，可以由index.html快速启动demo
+
+5.修正文档中一些疏漏
  
  
  
