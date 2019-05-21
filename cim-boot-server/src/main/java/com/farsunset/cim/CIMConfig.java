@@ -22,15 +22,10 @@ import com.farsunset.cim.sdk.server.model.CIMSession;
 
 @Configuration
 public class CIMConfig implements CIMRequestHandler {
+
 	@Value("${cim.server.port}")
 	private int port;
 
-	@Resource
-	private BindHandler bindHandler;
-	
-	@Resource
-	private SessionClosedHandler closedHandler;
-	
 	@Resource
 	private ApplicationContext applicationContext;
 	
@@ -63,8 +58,8 @@ public class CIMConfig implements CIMRequestHandler {
 	 * @return
 	 */
 	@Bean("cimSessionService") 
-	public CIMSessionService getCIMSessionService(@Qualifier("memorySessionService") CIMSessionService cimSessionService) {
-		return cimSessionService;
+	public CIMSessionService getCIMSessionService(@Qualifier("memorySessionService") CIMSessionService memorySessionService) {
+		return memorySessionService;
 		
 	}
 

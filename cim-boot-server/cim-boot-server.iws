@@ -18,8 +18,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="506">
-              <caret line="23" column="18" selection-start-line="23" selection-start-column="18" selection-end-line="23" selection-end-column="18" />
+            <state relative-caret-position="266">
+              <caret line="14" column="23" selection-start-line="14" selection-start-column="23" selection-end-line="14" selection-end-column="23" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/farsunset/cim/CIMConfig.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="569">
+              <caret line="77" column="55" selection-start-line="77" selection-start-column="43" selection-end-line="77" selection-end-column="55" />
             </state>
           </provider>
         </entry>
@@ -27,7 +36,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/farsunset/cim/api/controller/dto/BaseResult.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="264">
+            <state relative-caret-position="228">
               <caret line="34" selection-start-line="34" selection-end-line="34" />
             </state>
           </provider>
@@ -36,17 +45,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/farsunset/cim/ServerLauncher.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="396">
+            <state relative-caret-position="342">
               <caret line="49" column="41" selection-start-line="49" selection-start-column="41" selection-end-line="49" selection-end-column="41" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/resources/static/js/cim/cim.web.sdk.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="306">
-              <caret line="29" column="59" selection-start-line="29" selection-start-column="59" selection-end-line="29" selection-end-column="59" />
+              <caret line="29" column="60" selection-start-line="29" selection-start-column="60" selection-end-line="29" selection-end-column="60" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -71,6 +80,8 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/main/resources/static/js/cim/cim.web.sdk.js" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/com/farsunset/cim/CIMConfig.java" />
       </list>
     </option>
   </component>
@@ -85,8 +96,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -158,6 +167,8 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -224,16 +235,17 @@
       <workItem from="1557735150926" duration="502000" />
       <workItem from="1557738240090" duration="289000" />
       <workItem from="1557740865016" duration="686000" />
+      <workItem from="1558432401372" duration="91000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1573000" />
+    <option name="totallyTimeSpent" value="1664000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="0" y="23" width="1920" height="999" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2553305" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25828877" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="UI Designer" order="3" />
@@ -241,7 +253,7 @@
       <window_info id="Web" order="5" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32936078" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32845894" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -270,23 +282,16 @@
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="506">
-          <caret line="23" column="18" selection-start-line="23" selection-start-column="18" selection-end-line="23" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/farsunset/cim/api/controller/dto/BaseResult.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
+        <state relative-caret-position="228">
           <caret line="34" selection-start-line="34" selection-end-line="34" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/farsunset/cim/ServerLauncher.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
+        <state relative-caret-position="342">
           <caret line="49" column="41" selection-start-line="49" selection-start-column="41" selection-end-line="49" selection-end-column="41" />
         </state>
       </provider>
@@ -294,10 +299,24 @@
     <entry file="file://$PROJECT_DIR$/src/main/resources/static/js/cim/cim.web.sdk.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
-          <caret line="29" column="59" selection-start-line="29" selection-start-column="59" selection-end-line="29" selection-end-column="59" />
+          <caret line="29" column="60" selection-start-line="29" selection-start-column="60" selection-end-line="29" selection-end-column="60" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="14" column="23" selection-start-line="14" selection-start-column="23" selection-end-line="14" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/farsunset/cim/CIMConfig.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="569">
+          <caret line="77" column="55" selection-start-line="77" selection-start-column="43" selection-end-line="77" selection-end-column="55" />
         </state>
       </provider>
     </entry>
