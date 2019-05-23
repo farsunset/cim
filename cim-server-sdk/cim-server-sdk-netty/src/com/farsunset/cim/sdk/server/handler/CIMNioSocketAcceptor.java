@@ -94,8 +94,6 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody> 
 				ch.pipeline().addLast(CIMNioSocketAcceptor.this);
 			}
 		});
-
-		bootstrap.bind(port);
 		
 		ChannelFuture channelFuture = bootstrap.bind(port).syncUninterruptibly();
 		
