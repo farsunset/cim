@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2023 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2019 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ import org.apache.mina.transport.socket.DefaultSocketSessionConfig;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 
 import com.farsunset.cim.sdk.server.constant.CIMConstant;
+import com.farsunset.cim.sdk.server.exception.ServerSocketBindException;
 import com.farsunset.cim.sdk.server.filter.CIMLoggingFilter;
 import com.farsunset.cim.sdk.server.filter.ServerMessageCodecFactory;
 import com.farsunset.cim.sdk.server.model.HeartbeatRequest;
@@ -57,7 +58,7 @@ public class CIMNioSocketAcceptor extends IoHandlerAdapter implements KeepAliveM
 	private final int TIME_OUT = 10; // 秒
 	private final int READ_BUFFER_SIZE = 1024; // byte
 
-	public void bind() throws IOException {
+	public void bind()  {
 
 		/**
 		 * 预制websocket握手请求的处理
@@ -85,15 +86,22 @@ public class CIMNioSocketAcceptor extends IoHandlerAdapter implements KeepAliveM
 		acceptor.getFilterChain().addLast("heartbeat", keepAliveFilter);
 		acceptor.getFilterChain().addLast("executor", new ExecutorFilter(executor));
 		acceptor.setHandler(this);
-
-		acceptor.bind(new InetSocketAddress(port));
+		try {
+			acceptor.bind(new InetSocketAddress(port));
+		} catch (IOException ignore) {
+			throw new ServerSocketBindException(port,ignore);
+		}
 	}
-
-	public void unbind() {
-		acceptor.unbind();
-		acceptor.dispose();
-	}
-
+ 
+    public void destroy() {
+    	if(acceptor == null) {
+    		return;
+    	}
+    	try {
+    	   acceptor.unbind();
+    	   acceptor.dispose();
+    	}catch(Exception ignore) {}
+    }
 	/**
 	 * 设置应用层的sentbody处理handler
 	 * @param outerRequestHandler

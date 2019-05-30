@@ -22,7 +22,6 @@
 package com.farsunset.cim.sdk.client.coder;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 
 import org.slf4j.Logger;
@@ -56,7 +55,7 @@ public class CIMLogger  {
 		LOGGER.info(String.format("SENT" + getSessionInfo(session) + "\n%s", message));
 	}
 
-	public void sessionCreated( SocketChannel session) throws Exception {
+	public void sessionCreated( SocketChannel session) {
 		LOGGER.info("OPENED" + getSessionInfo(session));
 	}
 
@@ -69,12 +68,12 @@ public class CIMLogger  {
 
 	}
 
-	public void connectFailure(InetSocketAddress remoteAddress,long interval)  {
+	public void connectFailure(long interval)  {
 		LOGGER.debug("CONNECT FAILURE TRY RECONNECT AFTER " + interval +"ms");
 	}
 	
-	public void startConnect(InetSocketAddress remoteAddress) {
-		LOGGER.info("START CONNECT REMOTE HOST: " + remoteAddress.toString());
+	public void startConnect(String host , int port) {
+		LOGGER.info("START CONNECT REMOTE HOST:" + host + " PORT:" + port);
 	}
 	
 	public void connectState(boolean isConnected)  {

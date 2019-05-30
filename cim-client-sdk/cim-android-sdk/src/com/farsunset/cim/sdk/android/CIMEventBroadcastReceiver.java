@@ -41,10 +41,11 @@ public abstract class CIMEventBroadcastReceiver extends BroadcastReceiver {
 
 	protected Context context;
 
+	@SuppressWarnings("deprecation")
 	@Override
-	public void onReceive(Context ctx, Intent intent) {
+	public void onReceive(Context context, Intent intent) {
 
-		context = ctx;
+		this.context = context;
 
 		/*
 		 * 操作事件广播，用于提高service存活率

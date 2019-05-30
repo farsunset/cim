@@ -21,7 +21,6 @@
  */
 package com.farsunset.cim.sdk.server.handler;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -59,6 +58,10 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody> 
 	private CIMRequestHandler outerRequestHandler;
     private ConcurrentHashMap<String,Channel> channelGroup = new ConcurrentHashMap<String,Channel>();
 	private int port;
+	
+	private EventLoopGroup bossGroup;
+	private EventLoopGroup workerGroup;
+
 
 	// 连接空闲时间
 	public static final int READ_IDLE_TIME = 150;// 秒
@@ -68,7 +71,7 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody> 
 
 	public static final int PING_TIME_OUT = 30;// 心跳响应 超时为30秒
 
-	public void bind() throws IOException {
+	public void bind() {
 
 		/**
 		 * 预制websocket握手请求的处理
@@ -77,8 +80,8 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody> 
 		innerHandlerMap.put(CIMConstant.CLIENT_HEARTBEAT, new HeartbeatHandler());
 		
 		ServerBootstrap bootstrap = new ServerBootstrap();
-		EventLoopGroup bossGroup = new NioEventLoopGroup();
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+		bossGroup = new NioEventLoopGroup();
+        workerGroup = new NioEventLoopGroup();
         bootstrap.group(bossGroup, workerGroup);
 		bootstrap.childOption(ChannelOption.TCP_NODELAY, true);
 		bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
@@ -98,11 +101,24 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody> 
 		ChannelFuture channelFuture = bootstrap.bind(port).syncUninterruptibly();
 		
         channelFuture.channel().closeFuture().addListener(future -> {
-        	bossGroup.shutdownGracefully();
-            workerGroup.shutdownGracefully();
+        	destroy();
         });
         
 	}
+	
+    public void destroy() {
+    	
+    	if(bossGroup != null && !bossGroup.isShuttingDown() && !bossGroup.isShutdown() ) {
+    		try {bossGroup.shutdownGracefully();}catch(Exception ignore) {}
+    		return;
+    	}
+    	
+    	if(workerGroup != null && !workerGroup.isShuttingDown() && !workerGroup.isShutdown() ) {
+    		try {workerGroup.shutdownGracefully();}catch(Exception ignore) {}
+    		return;
+    	}
+    
+    }
 
 	/**
 	 * 设置应用层的sentbody处理handler

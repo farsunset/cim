@@ -211,7 +211,6 @@ public class CIMPushService extends Service {
 			IntentFilter intentFilter = new IntentFilter();
 			intentFilter.addAction(Intent.ACTION_POWER_CONNECTED);
 			intentFilter.addAction(Intent.ACTION_POWER_DISCONNECTED);
-			intentFilter.addAction(Intent.ACTION_SCREEN_ON);
 			intentFilter.addAction(Intent.ACTION_USER_PRESENT);
 			return intentFilter;
 		}

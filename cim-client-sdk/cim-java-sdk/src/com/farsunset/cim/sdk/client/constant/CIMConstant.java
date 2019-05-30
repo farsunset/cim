@@ -51,6 +51,7 @@ public interface CIMConstant {
 		public static String DEVICE_MODEL = "client.model";
 		public static String CLIENT_VERSION = "client.version";
 		public static String CLIENT_ACCOUNT = "client.account";
+		public static String CLIENT_DEVICEID = "client.deviceid";
 
 	}
 

@@ -21,8 +21,6 @@
  */
 package com.farsunset.cim.sdk.android.coder;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 
 import android.util.Log;
@@ -53,43 +51,49 @@ public class CIMLogger  {
 
 	public void messageReceived(SocketChannel session, Object message)  {
 		if(debug) {
-			Log.i(TAG,String.format("RECEIVED" + getSessionInfo(session) + "\n%s", message));
+			Log.i(TAG,String.format("[RECEIVED]" + getSessionInfo(session) + "\n%s", message));
 		}
 	}
 
 	public void messageSent(SocketChannel session, Object message)   {
 		if(debug) {
-			Log.i(TAG,String.format("SENT" + getSessionInfo(session) + "\n%s", message));
+			Log.i(TAG,String.format("[  SENT  ]" + getSessionInfo(session) + "\n%s", message));
 		}
 	}
 
-	public void sessionCreated( SocketChannel session) throws Exception {
+	public void sessionCreated( SocketChannel session) {
 		if(debug) {
-			Log.i(TAG,"OPENED" + getSessionInfo(session));
+			Log.i(TAG,"[ OPENED ]" + getSessionInfo(session));
 		}
 	}
 
 	public void sessionIdle( SocketChannel session)   {
 		if(debug) {
-			Log.d(TAG,"IDLE READ" + getSessionInfo(session));
+			Log.d(TAG,"[  IDLE  ]" + getSessionInfo(session));
 		}
 	}
 
 	public void sessionClosed( SocketChannel session)  {
 		if(debug) {
-			Log.w(TAG,"CLOSED ID = " + session.hashCode());
+			Log.w(TAG,"[ CLOSED ] ID = " + session.hashCode());
 		}
 	}
 
-	public void connectFailure(InetSocketAddress remoteAddress,long interval)  {
+	public void connectFailure(long interval)  {
 		if(debug) {
-			Log.d(TAG,"CONNECT FAILURE TRY RECONNECT AFTER " + interval +"ms");
+			Log.d(TAG,"CONNECT FAILURE, TRY RECONNECT AFTER " + interval +"ms");
 		}
 	}
 	
-	public void startConnect(InetSocketAddress remoteAddress) {
+	public void startConnect(String host , int port) {
 		if(debug) {
-			Log.i(TAG,"START CONNECT REMOTE HOST: " + remoteAddress.toString());
+			Log.i(TAG,"START CONNECT REMOTE HOST:" + host + " PORT:" + port);
+		} 
+	}
+	
+	public void invalidHostPort(String host , int port) {
+		if(debug) {
+			Log.d(TAG,"INVALID SOCKET ADDRESS -> HOST:" + host + " PORT:" + port);
 		} 
 	}
 	

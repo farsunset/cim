@@ -30,6 +30,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 import android.text.TextUtils;
 
+import com.farsunset.cim.sdk.android.coder.CIMLogger;
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
 import com.farsunset.cim.sdk.android.model.SentBody;
 
@@ -67,12 +68,17 @@ public class CIMPushManager {
 
 	}
 
-	private static void connect(Context context, String ip, int port, boolean autoBind, long delayedTime) {
+	private static void connect(Context context, String host, int port, boolean autoBind, long delayedTime) {
 
+		if(TextUtils.isEmpty(host) || port == 0) {
+			CIMLogger.getLogger().invalidHostPort(host, port);
+			return;
+		}
+		
 		CIMCacheManager.putBoolean(context, CIMCacheManager.KEY_CIM_DESTROYED, false);
 		CIMCacheManager.putBoolean(context, CIMCacheManager.KEY_MANUAL_STOP, false);
 
-		CIMCacheManager.putString(context, CIMCacheManager.KEY_CIM_SERVIER_HOST, ip);
+		CIMCacheManager.putString(context, CIMCacheManager.KEY_CIM_SERVIER_HOST, host);
 		CIMCacheManager.putInt(context, CIMCacheManager.KEY_CIM_SERVIER_PORT, port);
 
 		if (!autoBind) {
@@ -80,7 +86,7 @@ public class CIMPushManager {
 		}
 
 		Intent serviceIntent = new Intent(context, CIMPushService.class);
-		serviceIntent.putExtra(CIMCacheManager.KEY_CIM_SERVIER_HOST, ip);
+		serviceIntent.putExtra(CIMCacheManager.KEY_CIM_SERVIER_HOST, host);
 		serviceIntent.putExtra(CIMCacheManager.KEY_CIM_SERVIER_PORT, port);
 		serviceIntent.putExtra(CIMPushService.KEY_DELAYED_TIME, delayedTime);
 		serviceIntent.setAction(ACTION_CREATE_CIM_CONNECTION);
@@ -134,7 +140,7 @@ public class CIMPushManager {
 
 		String deviceId = CIMCacheManager.getString(context, CIMCacheManager.KEY_DEVICE_ID);
 		if (TextUtils.isEmpty(deviceId)) {
-			deviceId = UUID.randomUUID().toString().replaceAll("-", "");
+			deviceId = UUID.randomUUID().toString().replaceAll("-", "").toUpperCase();
 			CIMCacheManager.putString(context, CIMCacheManager.KEY_DEVICE_ID, deviceId);
 		}
 
@@ -245,7 +251,7 @@ public class CIMPushManager {
 		try {
 			PackageInfo mPackageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
 			versionName = mPackageInfo.versionName;
-		} catch (NameNotFoundException e) {
+		} catch (NameNotFoundException ignore) {
 		}
 		return versionName;
 	}

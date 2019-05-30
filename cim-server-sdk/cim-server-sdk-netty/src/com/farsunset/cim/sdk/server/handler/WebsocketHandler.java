@@ -44,9 +44,7 @@ public class WebsocketHandler implements CIMRequestHandler {
 			md.update(secKey.getBytes("iso-8859-1"), 0, secKey.length());
 			byte[] sha1Hash = md.digest();
 			secKey = new String(Base64.getEncoder().encode(sha1Hash));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} catch (Exception ignore) {}
 		session.write(new HandshakerResponse(secKey));
 	}
 }

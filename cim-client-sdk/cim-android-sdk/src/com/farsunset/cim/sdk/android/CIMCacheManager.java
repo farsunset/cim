@@ -79,7 +79,7 @@ class CIMCacheManager {
 		try {
 			if (cursor != null)
 				cursor.close();
-		} catch (Exception e) {
+		} catch (Exception ignore) {
 		}
 	}
 

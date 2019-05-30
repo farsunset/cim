@@ -1,6 +1,5 @@
 package com.farsunset.cim;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 import javax.annotation.PostConstruct;
@@ -8,7 +7,9 @@ import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,14 +22,11 @@ import com.farsunset.cim.service.CIMSessionService;
 import com.farsunset.cim.sdk.server.model.CIMSession;
 
 @Configuration
-public class CIMConfig implements CIMRequestHandler {
-
-	@Value("${cim.server.port}")
-	private int port;
+public class CIMConfig implements CIMRequestHandler, ApplicationListener<ApplicationStartedEvent> {
 
 	@Resource
 	private ApplicationContext applicationContext;
-	
+
 	private HashMap<String,Class<? extends CIMRequestHandler>> appHandlerMap = new HashMap<>();
 
 	@PostConstruct
@@ -43,12 +41,11 @@ public class CIMConfig implements CIMRequestHandler {
 		appHandlerMap.put("client_closed", SessionClosedHandler.class);
 	}
 
-	@Bean
-	public CIMNioSocketAcceptor getNioSocketAcceptor() throws IOException {
+	@Bean(destroyMethod = "destroy")
+	public CIMNioSocketAcceptor getNioSocketAcceptor(@Value("${cim.server.port}") int port) {
 		CIMNioSocketAcceptor nioSocketAcceptor = new CIMNioSocketAcceptor();
 		nioSocketAcceptor.setPort(port);
 		nioSocketAcceptor.setAppSentBodyHandler(this);
-		nioSocketAcceptor.bind();
 		return nioSocketAcceptor;
 	}
 	
@@ -57,7 +54,7 @@ public class CIMConfig implements CIMRequestHandler {
 	 * @param memorySessionService 默认使用内存管理方案
 	 * @return
 	 */
-	@Bean("cimSessionService") 
+	@Bean(value = "cimSessionService")
 	public CIMSessionService getCIMSessionService(@Qualifier("memorySessionService") CIMSessionService memorySessionService) {
 		return memorySessionService;
 		
@@ -81,6 +78,13 @@ public class CIMConfig implements CIMRequestHandler {
 		}
 		return applicationContext.getBean(handlerClass);
 	}
-	
 
+
+	/**
+	 * springboot启动完成之后再启动cim服务的，避免服务正在重启时，客户端会立即开始连接导致意外异常发生.
+	 */
+	@Override
+	public void onApplicationEvent(ApplicationStartedEvent applicationStartedEvent) {
+		applicationContext.getBean(CIMNioSocketAcceptor.class).bind();
+	}
 }

@@ -39,7 +39,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 public class ClientMessageDecoder {
 
 
-	public Object doDecode(ByteBuffer iobuffer) throws Exception {
+	public Object doDecode(ByteBuffer iobuffer)   {
 		
 		/**
 		 * 消息头3位
@@ -68,7 +68,11 @@ public class ClientMessageDecoder {
 
 		iobuffer.position(0);
 		
-		return mappingMessageObject(dataBytes, conetnType);
+		try {
+			return mappingMessageObject(dataBytes, conetnType);
+		} catch (InvalidProtocolBufferException e) {
+			 return null;
+		}
 		
 	}
 

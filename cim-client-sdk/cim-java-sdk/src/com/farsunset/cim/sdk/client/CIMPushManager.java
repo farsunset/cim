@@ -21,8 +21,6 @@
  */
 package com.farsunset.cim.sdk.client;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -106,8 +104,8 @@ public class CIMPushManager {
 		sent.setKey(CIMConstant.RequestKey.CLIENT_BIND);
 		sent.put("account", account);
 		sent.put("deviceId", getDeviceId());
-		sent.put("channel", sysPro.getProperty("os.name"));
-		sent.put("device", System.getenv().get("COMPUTERNAME"));
+		sent.put("channel", "java");
+		sent.put("device", sysPro.getProperty("os.name"));
 		sent.put("version", getClientVersion());
 		sent.put("osVersion", sysPro.getProperty("os.version"));
 		sendRequest(sent);
@@ -251,30 +249,13 @@ public class CIMPushManager {
 	}
  
 	private static String getDeviceId() {
-		InetAddress ia;
-		try {
-			ia = InetAddress.getLocalHost();
-			byte[] mac = NetworkInterface.getByInetAddress(ia).getHardwareAddress();
-			StringBuffer sb = new StringBuffer("");
-			for (int i = 0; i < mac.length; i++) {
-				if (i != 0) {
-					sb.append("-");
-				}
-				// 字节转换为整数
-				int temp = mac[i] & 0xff;
-				String str = Integer.toHexString(temp);
-				if (str.length() == 1) {
-					sb.append("0" + str);
-				} else {
-					sb.append(str);
-				}
-			}
-			return UUID.fromString(sb.toString()).toString().replaceAll("-", "").toUpperCase();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		
+		String deviceId = System.getProperties().getProperty(CIMConstant.ConfigKey.CLIENT_DEVICEID);
+		
+		if(deviceId == null) {
+			deviceId = UUID.randomUUID().toString().replaceAll("-", "").toUpperCase();
+			System.getProperties().put(CIMConstant.ConfigKey.CLIENT_DEVICEID, deviceId);
 		}
-
-		return null;
+		return deviceId;
 	}
 }

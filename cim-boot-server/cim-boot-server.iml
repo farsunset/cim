@@ -66,7 +66,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.farsunset:cim-server-sdk:3.7">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/cim-server-sdk-mina-3.7.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/cim-server-sdk-netty-3.7.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
