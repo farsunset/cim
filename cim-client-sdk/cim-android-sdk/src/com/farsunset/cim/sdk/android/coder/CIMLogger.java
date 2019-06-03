@@ -118,7 +118,7 @@ public class CIMLogger  {
 		
 		try {
 			if (session.socket().getLocalAddress() != null) {
-				builder.append(" L:").append(session.socket().getLocalAddress().toString());
+				builder.append(" L:").append(session.socket().getLocalAddress()+":"+session.socket().getLocalPort());
 			}
 		} catch (Exception ignore) {
 		}

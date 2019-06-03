@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.ClosedSelectorException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
@@ -197,12 +196,14 @@ class CIMConnectorManager{
  		            }
  					
 				}catch(ConnectException ignore){
+					IOLOCK.unlock();
 					handleConnectAbortedEvent();
 				}catch(IllegalArgumentException ignore){
+					IOLOCK.unlock();
 					handleConnectAbortedEvent();
 				}catch(IOException ignore) {
 					handelDisconnectedEvent();
-				}catch(ClosedSelectorException ignore) {}
+				}
 			}
 		});
 	}
@@ -407,11 +408,10 @@ class CIMConnectorManager{
 			}
 		}
 		
-	    if(result == -1) {
-	    	closeSession();
-	    	return;
-	    }
-	    
+		if(result == -1 && !readBuffer.hasRemaining()) {
+		    closeSession();
+		    return;
+		}
 	
 	    markLastReadTime();
 		
@@ -436,6 +436,11 @@ class CIMConnectorManager{
 		}
 		
 		this.messageReceived(message);
+		
+		if(result == -1) {
+		    closeSession();
+		    return;
+		}
 	}
 	
 	

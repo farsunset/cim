@@ -74,9 +74,6 @@ public interface CIMConstant {
 		// 消息广播action
 		String ACTION_MESSAGE_RECEIVED = "com.farsunset.cim.MESSAGE_RECEIVED";
 
-		// 发送sendbody失败广播
-		String ACTION_SENT_FAILED = "com.farsunset.cim.SENT_FAILED";
-
 		// 发送sendbody成功广播
 		String ACTION_SENT_SUCCESSED = "com.farsunset.cim.SENT_SUCCESSED";
 
