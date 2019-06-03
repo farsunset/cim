@@ -117,16 +117,16 @@ public class CIMLogger  {
 		builder.append("id:").append(session.hashCode());
 		
 		try {
-			if (session.getLocalAddress() != null) {
-				builder.append(" L:").append(session.getLocalAddress().toString());
+			if (session.socket().getLocalAddress() != null) {
+				builder.append(" L:").append(session.socket().getLocalAddress().toString());
 			}
 		} catch (Exception ignore) {
 		}
 		
 		
 		try {
-			if (session.getRemoteAddress() != null) {
-				builder.append(" R:").append(session.getRemoteAddress().toString());
+			if (session.socket().getRemoteSocketAddress() != null) {
+				builder.append(" R:").append(session.socket().getRemoteSocketAddress().toString());
 			}
 		} catch (Exception ignore) {
 		}

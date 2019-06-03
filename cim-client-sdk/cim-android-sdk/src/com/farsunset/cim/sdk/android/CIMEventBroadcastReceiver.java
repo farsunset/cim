@@ -22,7 +22,6 @@
 package com.farsunset.cim.sdk.android;
 
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
-import com.farsunset.cim.sdk.android.exception.SessionClosedException;
 import com.farsunset.cim.sdk.android.model.Message;
 import com.farsunset.cim.sdk.android.model.ReplyBody;
 import com.farsunset.cim.sdk.android.model.SentBody;
@@ -102,15 +101,7 @@ public abstract class CIMEventBroadcastReceiver extends BroadcastReceiver {
 		if (intent.getAction().equals(CIMConstant.IntentAction.ACTION_REPLY_RECEIVED)) {
 			onReplyReceived((ReplyBody) intent.getSerializableExtra(ReplyBody.class.getName()));
 		}
-
-		/*
-		 * 获取sendbody发送失败事件
-		 */
-		if (intent.getAction().equals(CIMConstant.IntentAction.ACTION_SENT_FAILED)) {
-			String exceptionName = intent.getStringExtra(Exception.class.getName());
-			SentBody sentBody = (SentBody) intent.getSerializableExtra(SentBody.class.getName());
-			onSentFailed(exceptionName, sentBody);
-		}
+ 
 
 		/*
 		 * 获取sendbody发送成功事件
@@ -142,7 +133,9 @@ public abstract class CIMEventBroadcastReceiver extends BroadcastReceiver {
 
 	private void onInnerConnectionClosed() {
 		CIMCacheManager.putBoolean(context, CIMCacheManager.KEY_CIM_CONNECTION_STATE, false);
-		if (CIMConnectorManager.isNetworkConnected(context)) {
+		boolean isNetworkConnected = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetwork() != null;
+
+		if (isNetworkConnected) {
 			CIMPushManager.connect(context, 0);
 		}
 
@@ -150,8 +143,9 @@ public abstract class CIMEventBroadcastReceiver extends BroadcastReceiver {
 	}
 
 	private void onConnectionFailed(long reinterval) {
+		boolean isNetworkConnected = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetwork() != null;
 
-		if (CIMConnectorManager.isNetworkConnected(context)) {
+		if (isNetworkConnected) {
 			onConnectionFailed();
 
 			CIMPushManager.connect(context, reinterval);
@@ -185,18 +179,7 @@ public abstract class CIMEventBroadcastReceiver extends BroadcastReceiver {
 	private boolean isForceOfflineMessage(String action) {
 		return CIMConstant.MessageAction.ACTION_999.equals(action);
 	}
-
-	private void onSentFailed(String exceptionName, SentBody body) {
-
-		// 与服务端端开链接，重新连接
-		if (SessionClosedException.class.getSimpleName().equals(exceptionName)) {
-			CIMPushManager.connect(context, 0);
-		} else {
-			// 发送失败 重新发送
-			CIMPushManager.sendRequest(context, body);
-		}
-
-	}
+ 
 
 	public abstract void onMessageReceived(com.farsunset.cim.sdk.android.model.Message message, Intent intent);
 
