@@ -24,17 +24,15 @@ package com.farsunset.cim.sdk.android;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.InetSocketAddress;
+import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.locks.ReentrantLock;
 
 import com.farsunset.cim.sdk.android.coder.CIMLogger;
 import com.farsunset.cim.sdk.android.coder.ClientMessageDecoder;
@@ -68,29 +66,38 @@ class CIMConnectorManager{
 
 	private final int READ_IDLE_TIME = 120 * 1000;
 	
+	private final int CONNECT_TIME_OUT = 10 * 1000;
+
+	
 	private final int CONNECT_ALIVE_TIME_OUT = 150 * 1000;
 	
     private final AtomicLong LAST_READ_TIME = new AtomicLong(0);
-
-    private final AtomicBoolean CONNECTING_FLAG = new AtomicBoolean(false) ;
     
     private final CIMLogger LOGGER = CIMLogger.getLogger();
     
     private static final HandlerThread IDLE_HANDLER_THREAD = new HandlerThread("READ-IDLE", Process.THREAD_PRIORITY_BACKGROUND);
     
-    private LinkedBlockingQueue<Protobufable> sendFailBodyQueue = new LinkedBlockingQueue<Protobufable>();
-    private final ReentrantLock IOLOCK = new ReentrantLock(); 
-    
-	private Selector selector;
+	private Semaphore semaphore = new Semaphore(1, true);
+	
 	private SocketChannel socketChannel ;
 	private Context context;
 	
 	
     private ByteBuffer readBuffer = ByteBuffer.allocate(READ_BUFFER_SIZE);
     
-	private ExecutorService workerExecutor = Executors.newFixedThreadPool(1);
-	private ExecutorService bossExecutor = Executors.newFixedThreadPool(1);
-
+	private ExecutorService workerExecutor = Executors.newFixedThreadPool(1,new ThreadFactory() {
+		@Override
+		public Thread newThread(Runnable r) {
+			return new Thread(r,"worker-");
+		}
+	});
+	
+	private ExecutorService bossExecutor = Executors.newFixedThreadPool(1,new ThreadFactory() {
+		@Override
+		public Thread newThread(Runnable r) {
+			return new Thread(r,"boss-");
+		}
+	});
 	
 	private ClientMessageEncoder messageEncoder = new  ClientMessageEncoder();
 	private ClientMessageDecoder messageDecoder = new  ClientMessageDecoder();
@@ -107,19 +114,11 @@ class CIMConnectorManager{
 		try {
 			 if(socketChannel == null || !socketChannel.isOpen()) {
 				 socketChannel = SocketChannel.open();
-		         socketChannel.configureBlocking(false);
 	             socketChannel.socket().setTcpNoDelay(true);
 	             socketChannel.socket().setKeepAlive(true);
 	             socketChannel.socket().setReceiveBufferSize(READ_BUFFER_SIZE);
 	             socketChannel.socket().setSendBufferSize(WRITE_BUFFER_SIZE);
 			 }
-			
-             if(selector == null || !selector.isOpen()) {
-            	 selector = Selector.open();
-             }
-             
-             selector.wakeup(); 
-		     socketChannel.register(selector, SelectionKey.OP_CONNECT);
 
 		}catch(Exception ignore) {}
 	 
@@ -148,22 +147,22 @@ class CIMConnectorManager{
 
 			return;
 		}
-		 
-		if (CONNECTING_FLAG.get() || isConnected()) {
+		
+		if (isConnected()) {
 			return;
 		}
 		
-		CONNECTING_FLAG.set(true);
-		
-		if(!socketChannel.isOpen() ||!selector.isOpen()) {
+		if(!socketChannel.isOpen()) {
 			makeNioConnector();
 		} 
 		
-		workerExecutor.execute(new Runnable() {
+		bossExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
 				
-				IOLOCK.lock();
+				if (isConnected()) {
+					return;
+				}
 				
 	            LOGGER.startConnect(host, port);
 				
@@ -171,38 +170,40 @@ class CIMConnectorManager{
 				
  				try {
  					
- 					socketChannel.connect(new InetSocketAddress(host, port));
+ 					semaphore.acquire();
  					
- 					while (socketChannel.isOpen()) {
- 						
- 						selector.select();
- 						
- 						if(!selector.isOpen()) {
- 							break;
- 						}
- 						
- 						for(SelectionKey key : selector.selectedKeys()){
- 							
- 							if((key.interestOps() & SelectionKey.OP_CONNECT) == SelectionKey.OP_CONNECT && socketChannel.finishConnect()) {
- 								IOLOCK.unlock();
- 								handelConnectedEvent();
- 		                		continue;
- 							}
- 							
- 							if((key.interestOps() & SelectionKey.OP_READ) == SelectionKey.OP_READ) {
- 								handelSocketReadEvent();
- 							}
- 						}
- 		            }
+ 					socketChannel.socket().connect(new InetSocketAddress(host, port),CONNECT_TIME_OUT);
  					
+ 					semaphore.release();
+ 					
+ 					handelConnectedEvent();
+ 					
+ 				
+ 					int result = -1;
+						
+					while((result = socketChannel.read(readBuffer)) > 0) {
+							
+						if(readBuffer.position() == readBuffer.capacity()) {
+							extendByteBuffer();
+						}
+							
+						handelSocketReadEvent(result);
+						
+					}
+					
+					handelSocketReadEvent(result);
+					
 				}catch(ConnectException ignore){
-					IOLOCK.unlock();
+					semaphore.release();
 					handleConnectAbortedEvent();
-				}catch(IllegalArgumentException ignore){
-					IOLOCK.unlock();
+				}catch(SocketTimeoutException ignore){
+					semaphore.release();
 					handleConnectAbortedEvent();
 				}catch(IOException ignore) {
+					semaphore.release();
 					handelDisconnectedEvent();
+				}catch(InterruptedException ignore) {
+					semaphore.release();
 				}
 			}
 		});
@@ -212,12 +213,16 @@ class CIMConnectorManager{
     public void destroy() {
 		
 		closeSession();
-		closeSelector();
 
 	}
 	
 
 	public void closeSession() {
+		
+		if(!isConnected()) {
+			return;
+		}
+		
 		try {
 			socketChannel.close();
 		} catch (IOException ignore) {
@@ -233,28 +238,31 @@ class CIMConnectorManager{
 	
 	public void send(final Protobufable body) {
 		
-		bossExecutor.execute(new Runnable() {
+		if(!isConnected()) {
+			return;
+		}
+		
+		workerExecutor.execute(new Runnable() {
 			
 			@Override
 			public void run() {
 				int result = 0;
 				try {
 					
-					IOLOCK.lock();
+					semaphore.acquire();
 					
 					ByteBuffer buffer =  messageEncoder.encode(body);
 					while(buffer.hasRemaining()){
 						result += socketChannel.write(buffer);   
 					}
 					 
-				} catch (IOException e) {
+				} catch (Exception e) {
 					result = -1;
 				}finally {
 					
-					IOLOCK.unlock();
+					semaphore.release();
 					
 					if(result <= 0) {
-						sendFailBodyQueue.offer(body);
 						closeSession();
 					}else {
 						messageSent(body);
@@ -264,18 +272,8 @@ class CIMConnectorManager{
 		});
 		
 	}
-
-   private void sendFaildQueueBody() {
-	   Protobufable body = sendFailBodyQueue.poll();
-	   if(body == null) {
-		   return;
-	   }
-	   
-	   send(body);
-	   
-	   sendFaildQueueBody();
-	   
-   }
+ 
+   
    private void sessionCreated() {
 		LOGGER.sessionCreated(socketChannel);
 		
@@ -286,8 +284,6 @@ class CIMConnectorManager{
 		intent.setAction(CIMConstant.IntentAction.ACTION_CONNECTION_SUCCESSED);
 		context.sendBroadcast(intent);
 		
-		sendFaildQueueBody();
-
 	}
 
 	private void sessionClosed() {
@@ -303,8 +299,6 @@ class CIMConnectorManager{
 		if(readBuffer.capacity() > READ_BUFFER_SIZE) {
 			readBuffer = ByteBuffer.allocate(READ_BUFFER_SIZE);
 		}
-		
-		closeSelector();
 		
 		Intent intent = new Intent();
 		intent.setPackage(context.getPackageName());
@@ -369,13 +363,10 @@ class CIMConnectorManager{
 	};
 	
 	private void handelDisconnectedEvent() {
-		CONNECTING_FLAG.set(false);
 		closeSession();
 	}
 	
     private void handleConnectAbortedEvent() {
-		
-		CONNECTING_FLAG.set(false);
 
 		long interval = CIMConstant.RECONN_INTERVAL_TIME - (5 * 1000 - new Random().nextInt(15 * 1000));
 		
@@ -389,32 +380,21 @@ class CIMConnectorManager{
 
 	}
 	 
-	private void handelConnectedEvent() throws IOException {
+	private void handelConnectedEvent()   {
 		
-		CONNECTING_FLAG.set(false);
- 		socketChannel.register(selector, SelectionKey.OP_READ);
 		sessionCreated();
 		
 		idleHandler.sendEmptyMessageDelayed(0, READ_IDLE_TIME);
 	}
 	
-	private void handelSocketReadEvent() throws IOException   {
-		
-		int result = 0;
-		
-		while((result = socketChannel.read(readBuffer)) > 0) {
-			if(readBuffer.position() == readBuffer.capacity()) {
-				extendByteBuffer();
-			}
-		}
-		
-		if(result == -1 && !readBuffer.hasRemaining()) {
+	private void handelSocketReadEvent(int result) throws IOException   {
+	 
+		if(result == -1) {
 		    closeSession();
 		    return;
 		}
 	
 	    markLastReadTime();
-		
 		
 	    readBuffer.position(0);
 	     
@@ -423,8 +403,6 @@ class CIMConnectorManager{
 		if(message == null) {
 			return;
 		}
-		
-		
 		
 		LOGGER.messageReceived(socketChannel,message);
 
@@ -436,11 +414,7 @@ class CIMConnectorManager{
 		}
 		
 		this.messageReceived(message);
-		
-		if(result == -1) {
-		    closeSession();
-		    return;
-		}
+	 
 	}
 	
 	
@@ -473,13 +447,6 @@ class CIMConnectorManager{
     private boolean isHeartbeatRequest(Object data) {
 		return data instanceof HeartbeatRequest;
 	}
-	
-
-
-	private void closeSelector() {
-		try {
-			selector.close();
-		} catch (IOException ignore) {}
-	}
+	 
 
 }

@@ -36,8 +36,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 
-import java.util.concurrent.Semaphore;
-
 import com.farsunset.cim.sdk.android.coder.CIMLogger;
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
 import com.farsunset.cim.sdk.android.model.SentBody;
@@ -48,14 +46,13 @@ import com.farsunset.cim.sdk.android.model.SentBody;
  * @author 3979434
  *
  */
-public class CIMPushService extends Service {
+public class CIMPushService extends Service  {
 	public final static String KEY_DELAYED_TIME = "KEY_DELAYED_TIME";
 	public final static String KEY_LOGGER_ENABLE = "KEY_LOGGER_ENABLE";
 
 	private CIMConnectorManager manager;
 	private KeepAliveBroadcastReceiver keepAliveReceiver;
-	private Semaphore semaphore = new Semaphore(1, true);
-
+    private ConnectivityManager connectivityManager;
 	@Override
 	public void onCreate() {
 		manager = CIMConnectorManager.getManager(this.getApplicationContext());
@@ -68,35 +65,37 @@ public class CIMPushService extends Service {
 		
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 
-			ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-			connectivityManager.registerDefaultNetworkCallback(new ConnectivityManager.NetworkCallback() {
-				@Override
-				public void onAvailable(Network network) {
-					Intent intent = new Intent();
-					intent.setPackage(getPackageName());
-					intent.setAction(CIMConstant.IntentAction.ACTION_NETWORK_CHANGED);
-					sendBroadcast(intent);
-				}
-				@Override
-				public void onUnavailable() {
-					Intent intent = new Intent();
-					intent.setPackage(getPackageName());
-					intent.setAction(CIMConstant.IntentAction.ACTION_NETWORK_CHANGED);
-					sendBroadcast(intent);
-				}
-				
-			});
+			connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+			
+			connectivityManager.registerDefaultNetworkCallback(networkCallback);
 
 		}
 	}
+	
+	ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
+		@Override
+		public void onAvailable(Network network) {
+			Intent intent = new Intent();
+			intent.setPackage(getPackageName());
+			intent.setAction(CIMConstant.IntentAction.ACTION_NETWORK_CHANGED);
+			sendBroadcast(intent);
+		}
+		@Override
+		public void onUnavailable() {
+			Intent intent = new Intent();
+			intent.setPackage(getPackageName());
+			intent.setAction(CIMConstant.IntentAction.ACTION_NETWORK_CHANGED);
+			sendBroadcast(intent);
+		}
+		
+	};
 
 	Handler connectionHandler = new Handler() {
 		@Override
 		public void handleMessage(android.os.Message message) {
 			String host = message.getData().getString(CIMCacheManager.KEY_CIM_SERVIER_HOST);
 			int port = message.getData().getInt(CIMCacheManager.KEY_CIM_SERVIER_PORT, 0);
-			manager.connect(host, port);
-			semaphore.release();
+			handleConnection(host, port);
 		}
 	};
 
@@ -118,7 +117,7 @@ public class CIMPushService extends Service {
 		String action = intent.getAction();
 
 		if (CIMPushManager.ACTION_CREATE_CIM_CONNECTION.equals(action)) {
-			handleConnection(intent);
+			handleDelayConnection(intent);
 		}
 
 		if (CIMPushManager.ACTION_SEND_REQUEST_BODY.equals(action)) {
@@ -127,11 +126,6 @@ public class CIMPushService extends Service {
 
 		if (CIMPushManager.ACTION_CLOSE_CIM_CONNECTION.equals(action)) {
 			manager.closeSession();
-		}
-
-		if (CIMPushManager.ACTION_DESTORY.equals(action)) {
-			manager.destroy();
-			this.stopSelf();
 		}
 
 		if (CIMPushManager.ACTION_ACTIVATE_PUSH_SERVICE.equals(action)) {
@@ -150,41 +144,47 @@ public class CIMPushService extends Service {
 		return super.onStartCommand(intent, flags, startId);
 	}
 
-	private void handleConnection(Intent intent) {
+	private void handleDelayConnection(Intent intent) {
 
 		long delayMillis = intent.getLongExtra(KEY_DELAYED_TIME, 0);
 
 		if (delayMillis <= 0) {
 			String host = intent.getStringExtra(CIMCacheManager.KEY_CIM_SERVIER_HOST);
 			int port = intent.getIntExtra(CIMCacheManager.KEY_CIM_SERVIER_PORT, 0);
-			manager.connect(host, port);
+			handleConnection(host, port);
 			return;
 		}
-
-		if (!semaphore.tryAcquire()) {
-			return;
-		}
+		
 
 		Message msg = connectionHandler.obtainMessage();
 		msg.what = 0;
 		msg.setData(intent.getExtras());
+		connectionHandler.removeMessages(0);
 		connectionHandler.sendMessageDelayed(msg, delayMillis);
 
 	}
 
+	private void handleConnection(String host,int port) {
+
+		boolean isManualStop = CIMCacheManager.getBoolean(getApplicationContext(), CIMCacheManager.KEY_MANUAL_STOP);
+		boolean isDestroyed = CIMCacheManager.getBoolean(getApplicationContext(), CIMCacheManager.KEY_CIM_DESTROYED);
+		if(isManualStop || isDestroyed) {
+			return;
+		}
+		manager.connect(host, port);
+	}
+	
 	private void handleKeepAlive() {
+		
 		if (manager.isConnected()) {
 			CIMLogger.getLogger().connectState(true);
 			return;
 		}
-
-		boolean isManualStop = CIMCacheManager.getBoolean(getApplicationContext(), CIMCacheManager.KEY_MANUAL_STOP);
-		boolean isDestroyed = CIMCacheManager.getBoolean(getApplicationContext(), CIMCacheManager.KEY_CIM_DESTROYED);
-
-		CIMLogger.getLogger().connectState(false, isManualStop, isDestroyed);
-
-		CIMPushManager.connect(this, 0);
-
+		
+		String host = CIMCacheManager.getString(this, CIMCacheManager.KEY_CIM_SERVIER_HOST);
+		int port = CIMCacheManager.getInt(this, CIMCacheManager.KEY_CIM_SERVIER_PORT);
+		 
+		handleConnection(host,port);
 	}
 
 	@Override
@@ -195,8 +195,14 @@ public class CIMPushService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		manager.destroy();
+		connectionHandler.removeMessages(0);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			unregisterReceiver(keepAliveReceiver);
+		}
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+			connectivityManager.unregisterNetworkCallback(networkCallback);
 		}
 	}
 

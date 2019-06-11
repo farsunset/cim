@@ -21,7 +21,6 @@
  */
 package com.farsunset.cim.sdk.client.coder;
 
-import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
 import org.slf4j.Logger;
@@ -83,6 +82,7 @@ public class CIMLogger  {
 	public void connectState(boolean isConnected,boolean isManualStop,boolean isDestroyed)  {
 		LOGGER.debug("CONNECTED:" + isConnected + " STOPED:"+isManualStop+ " DESTROYED:"+isDestroyed);
 	}
+	
 	private String getSessionInfo(SocketChannel session) {
 		StringBuilder builder = new StringBuilder();
 		if (session == null) {
@@ -92,24 +92,23 @@ public class CIMLogger  {
 		builder.append("id:").append(session.hashCode());
 		
 		try {
-			if (session.getLocalAddress() != null) {
-				builder.append(" L:").append(session.getLocalAddress().toString());
+			if (session.socket().getLocalAddress() != null) {
+				builder.append(" L:").append(session.socket().getLocalAddress()+":"+session.socket().getLocalPort());
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception ignore) {
 		}
 		
 		
 		try {
-			if (session.getRemoteAddress() != null) {
-				builder.append(" R:").append(session.getRemoteAddress().toString());
+			if (session.socket().getRemoteSocketAddress() != null) {
+				builder.append(" R:").append(session.socket().getRemoteSocketAddress().toString());
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception ignore) {
 		}
 		builder.append("]");
 		return builder.toString();
 	}
+	 
 	 
 	
 }

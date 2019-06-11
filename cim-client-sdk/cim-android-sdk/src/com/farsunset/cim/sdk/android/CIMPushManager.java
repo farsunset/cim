@@ -49,8 +49,6 @@ public class CIMPushManager {
 
 	static String ACTION_SET_LOGGER_EANABLE = "ACTION_SET_LOGGER_EANABLE";
 
-	static String ACTION_DESTORY = "ACTION_DESTORY";
-
 	static String KEY_SEND_BODY = "KEY_SEND_BODY";
 
 	static String KEY_CIM_CONNECTION_STATUS = "KEY_CIM_CONNECTION_STATUS";
@@ -221,9 +219,7 @@ public class CIMPushManager {
 		CIMCacheManager.putBoolean(context, CIMCacheManager.KEY_CIM_DESTROYED, true);
 		CIMCacheManager.putString(context, CIMCacheManager.KEY_ACCOUNT, null);
 
-		Intent serviceIntent = new Intent(context, CIMPushService.class);
-		serviceIntent.setAction(ACTION_DESTORY);
-		startServiceCompat(context,serviceIntent);
+		context.stopService(new Intent(context, CIMPushService.class));
 
 	}
 

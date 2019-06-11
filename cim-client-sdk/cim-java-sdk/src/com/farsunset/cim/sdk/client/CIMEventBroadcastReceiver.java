@@ -26,7 +26,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.farsunset.cim.sdk.client.constant.CIMConstant;
-import com.farsunset.cim.sdk.client.exception.SessionClosedException;
 import com.farsunset.cim.sdk.client.model.Intent;
 import com.farsunset.cim.sdk.client.model.Message;
 import com.farsunset.cim.sdk.client.model.ReplyBody;
@@ -91,14 +90,6 @@ public class CIMEventBroadcastReceiver {
 		}
 
 		/*
-		 * 获取sendbody发送失败事件
-		 */
-		if (intent.getAction().equals(CIMConstant.IntentAction.ACTION_SENT_FAILED)) {
-			onSentFailed((Exception) intent.getExtra(Exception.class.getName()),
-					(SentBody) intent.getExtra(SentBody.class.getName()));
-		}
-
-		/*
 		 * 获取sendbody发送成功事件
 		 */
 		if (intent.getAction().equals(CIMConstant.IntentAction.ACTION_SENT_SUCCESSED)) {
@@ -158,19 +149,7 @@ public class CIMEventBroadcastReceiver {
 	private boolean isForceOfflineMessage(String action) {
 		return CIMConstant.MessageAction.ACTION_999.equals(action);
 	}
-
-	private void onSentFailed(Exception e, SentBody body) {
-
-		e.printStackTrace();
-		// 与服务端端开链接，重新连接
-		if (e instanceof SessionClosedException) {
-			CIMPushManager.connect();
-		} else {
-			// 发送失败 重新发送
-			CIMPushManager.sendRequest(body);
-		}
-
-	}
+ 
 
 	private void onSentSucceed(SentBody body) {
 	}
