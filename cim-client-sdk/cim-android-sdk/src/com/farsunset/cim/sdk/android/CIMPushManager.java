@@ -27,6 +27,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.text.TextUtils;
 
@@ -241,7 +243,16 @@ public class CIMPushManager {
 	public static boolean isConnected(Context context) {
 		return CIMCacheManager.getBoolean(context, CIMCacheManager.KEY_CIM_CONNECTION_STATE);
 	}
+	
+	public static boolean isNetworkConnected(Context context) {
+		 NetworkInfo networkInfo =  getNetworkInfo(context);
+		 return networkInfo != null && networkInfo.isConnected();
+	}
 
+	public static NetworkInfo getNetworkInfo(Context context) {
+		 return ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+	}
+	
 	private static String getVersionName(Context context) {
 		String versionName = null;
 		try {
@@ -259,5 +270,7 @@ public class CIMPushManager {
         	context.startService(intent);
         }
 	}
+	
+	
 
 }

@@ -30,7 +30,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Build;
 
 /**
@@ -61,9 +60,7 @@ public abstract class CIMEventBroadcastReceiver extends BroadcastReceiver {
 		if (intent.getAction().equals(CIMConstant.IntentAction.ACTION_NETWORK_CHANGED)
 				||intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
 			
-			ConnectivityManager connectivityManager = (ConnectivityManager) context
-					.getSystemService(Context.CONNECTIVITY_SERVICE);
-			onDevicesNetworkChanged(connectivityManager.getActiveNetworkInfo());
+			onDevicesNetworkChanged();
 		}
 
 		/*
@@ -133,9 +130,8 @@ public abstract class CIMEventBroadcastReceiver extends BroadcastReceiver {
 
 	private void onInnerConnectionClosed() {
 		CIMCacheManager.putBoolean(context, CIMCacheManager.KEY_CIM_CONNECTION_STATE, false);
-		boolean isNetworkConnected = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetwork() != null;
 
-		if (isNetworkConnected) {
+		if (CIMPushManager.isNetworkConnected(context)) {
 			CIMPushManager.connect(context, 0);
 		}
 
@@ -143,9 +139,8 @@ public abstract class CIMEventBroadcastReceiver extends BroadcastReceiver {
 	}
 
 	private void onConnectionFailed(long reinterval) {
-		boolean isNetworkConnected = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetwork() != null;
 
-		if (isNetworkConnected) {
+		if (CIMPushManager.isNetworkConnected(context)) {
 			onConnectionFailed();
 
 			CIMPushManager.connect(context, reinterval);
@@ -159,13 +154,13 @@ public abstract class CIMEventBroadcastReceiver extends BroadcastReceiver {
 		onConnectionSuccessed(autoBind);
 	}
 
-	private void onDevicesNetworkChanged(NetworkInfo info) {
+	private void onDevicesNetworkChanged() {
 
-		if (info != null) {
+		if (CIMPushManager.isNetworkConnected(context)) {
 			CIMPushManager.connect(context, 0);
 		}
 
-		onNetworkChanged(info);
+		onNetworkChanged();
 	}
 
 	private void onInnerMessageReceived(com.farsunset.cim.sdk.android.model.Message message, Intent intent) {
@@ -183,8 +178,8 @@ public abstract class CIMEventBroadcastReceiver extends BroadcastReceiver {
 
 	public abstract void onMessageReceived(com.farsunset.cim.sdk.android.model.Message message, Intent intent);
 
-	public void onNetworkChanged(NetworkInfo info) {
-		CIMListenerManager.notifyOnNetworkChanged(info);
+	public void onNetworkChanged() {
+		CIMListenerManager.notifyOnNetworkChanged(CIMPushManager.getNetworkInfo(context));
 	}
 
 	public void onConnectionSuccessed(boolean hasAutoBind) {

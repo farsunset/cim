@@ -47,7 +47,6 @@ import com.farsunset.cim.sdk.android.model.SentBody;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Process;
@@ -136,9 +135,7 @@ class CIMConnectorManager{
 
 	public void connect(final String host, final int port) {
 
-		boolean isNetworkConnected = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetwork() != null;
-
-		if (!isNetworkConnected) {
+		if (!CIMPushManager.isNetworkConnected(context)) {
 
 			Intent intent = new Intent();
 			intent.setPackage(context.getPackageName());
