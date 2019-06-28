@@ -78,7 +78,8 @@ class CIMConnectorManager{
     
 	private Semaphore semaphore = new Semaphore(1, true);
 	
-	private SocketChannel socketChannel ;
+	private volatile SocketChannel socketChannel ;
+	
 	private Context context;
 	
 	
@@ -106,22 +107,8 @@ class CIMConnectorManager{
 	}
 	private CIMConnectorManager(Context context) {
 		this.context = context;
-		makeNioConnector();
 	}
-	
-	private void makeNioConnector() {
-		try {
-			 if(socketChannel == null || !socketChannel.isOpen()) {
-				 socketChannel = SocketChannel.open();
-	             socketChannel.socket().setTcpNoDelay(true);
-	             socketChannel.socket().setKeepAlive(true);
-	             socketChannel.socket().setReceiveBufferSize(READ_BUFFER_SIZE);
-	             socketChannel.socket().setSendBufferSize(WRITE_BUFFER_SIZE);
-			 }
-
-		}catch(Exception ignore) {}
 	 
-	}
 	
 	public synchronized static CIMConnectorManager getManager(Context context) {
 		
@@ -149,10 +136,6 @@ class CIMConnectorManager{
 			return;
 		}
 		
-		if(!socketChannel.isOpen()) {
-			makeNioConnector();
-		} 
-		
 		bossExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -169,6 +152,13 @@ class CIMConnectorManager{
  					
  					semaphore.acquire();
  					
+ 					socketChannel = SocketChannel.open();
+ 					socketChannel.configureBlocking(true);
+ 		            socketChannel.socket().setTcpNoDelay(true);
+ 		            socketChannel.socket().setKeepAlive(true);
+ 		            socketChannel.socket().setReceiveBufferSize(READ_BUFFER_SIZE);
+ 		            socketChannel.socket().setSendBufferSize(WRITE_BUFFER_SIZE);
+ 		             
  					socketChannel.socket().connect(new InetSocketAddress(host, port),CONNECT_TIME_OUT);
  					
  					semaphore.release();
