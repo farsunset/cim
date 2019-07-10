@@ -34,7 +34,6 @@ import android.net.Network;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 
 import com.farsunset.cim.sdk.android.coder.CIMLogger;
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
@@ -50,6 +49,8 @@ public class CIMPushService extends Service  {
 	public final static String KEY_DELAYED_TIME = "KEY_DELAYED_TIME";
 	public final static String KEY_LOGGER_ENABLE = "KEY_LOGGER_ENABLE";
 
+	private final static int NOTIFICATION_ID = Integer.MAX_VALUE;
+	
 	private CIMConnectorManager manager;
 	private KeepAliveBroadcastReceiver keepAliveReceiver;
     private ConnectivityManager connectivityManager;
@@ -90,15 +91,19 @@ public class CIMPushService extends Service  {
 		
 	};
 
-	Handler connectionHandler = new Handler() {
+	Handler connectHandler = new Handler() {
 		@Override
 		public void handleMessage(android.os.Message message) {
-			String host = message.getData().getString(CIMCacheManager.KEY_CIM_SERVIER_HOST);
-			int port = message.getData().getInt(CIMCacheManager.KEY_CIM_SERVIER_PORT, 0);
-			handleConnection(host, port);
+			connect();
 		}
 	};
 
+	Handler notificationHandler = new Handler() {
+		@Override
+		public void handleMessage(android.os.Message message) {
+			stopForeground(true);
+		}
+	};
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -107,9 +112,13 @@ public class CIMPushService extends Service  {
 			NotificationChannel channel = new NotificationChannel(getClass().getSimpleName(),getClass().getSimpleName(), NotificationManager.IMPORTANCE_LOW);
 			channel.enableLights(false);
 			channel.enableVibration(false);
+			channel.setSound(null, null);
 		    notificationManager.createNotificationChannel(channel);
-		    Notification notification = new Notification.Builder(this, channel.getId()).build();
-	        startForeground(this.hashCode(),notification);
+		    Notification notification = new Notification.Builder(this, channel.getId())
+		    		.setContentTitle("Push service")
+		    		.setContentText("Push service is running")
+		    		.build();
+	        startForeground(NOTIFICATION_ID,notification);
 		}
 
 		intent = (intent == null ? new Intent(CIMPushManager.ACTION_ACTIVATE_PUSH_SERVICE) : intent);
@@ -117,7 +126,7 @@ public class CIMPushService extends Service  {
 		String action = intent.getAction();
 
 		if (CIMPushManager.ACTION_CREATE_CIM_CONNECTION.equals(action)) {
-			handleDelayConnection(intent);
+			connect(intent.getLongExtra(KEY_DELAYED_TIME, 0));
 		}
 
 		if (CIMPushManager.ACTION_SEND_REQUEST_BODY.equals(action)) {
@@ -138,42 +147,36 @@ public class CIMPushService extends Service  {
 		}
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			stopForeground(true);
+			notificationHandler.sendEmptyMessageDelayed(0, 1000);
 		}
 
 		return super.onStartCommand(intent, flags, startId);
 	}
 
-	private void handleDelayConnection(Intent intent) {
+	private void connect(long delayMillis) {
 
-		long delayMillis = intent.getLongExtra(KEY_DELAYED_TIME, 0);
-
-		if (delayMillis <= 0) {
-			String host = intent.getStringExtra(CIMCacheManager.KEY_CIM_SERVIER_HOST);
-			int port = intent.getIntExtra(CIMCacheManager.KEY_CIM_SERVIER_PORT, 0);
-			handleConnection(host, port);
+		if(delayMillis <= 0) {
+			connect();
 			return;
 		}
 		
-
-		Message msg = connectionHandler.obtainMessage();
-		msg.what = 0;
-		msg.setData(intent.getExtras());
-		connectionHandler.removeMessages(0);
-		connectionHandler.sendMessageDelayed(msg, delayMillis);
+		connectHandler.sendEmptyMessageDelayed(0, delayMillis);
 
 	}
 
-	private void handleConnection(String host,int port) {
+	private void connect() {
 
-		boolean isManualStop = CIMCacheManager.getBoolean(getApplicationContext(), CIMCacheManager.KEY_MANUAL_STOP);
-		boolean isDestroyed = CIMCacheManager.getBoolean(getApplicationContext(), CIMCacheManager.KEY_CIM_DESTROYED);
-		if(isManualStop || isDestroyed) {
+		if(CIMPushManager.isDestoryed(this) || CIMPushManager.isStoped(this)) {
 			return;
 		}
-		manager.connect(host, port);
-	}
+		
+		String host = CIMCacheManager.getString(this, CIMCacheManager.KEY_CIM_SERVIER_HOST);
+		int port = CIMCacheManager.getInt(this, CIMCacheManager.KEY_CIM_SERVIER_PORT);
 	
+		manager.connect(host, port);
+
+	}
+ 
 	private void handleKeepAlive() {
 		
 		if (manager.isConnected()) {
@@ -181,10 +184,8 @@ public class CIMPushService extends Service  {
 			return;
 		}
 		
-		String host = CIMCacheManager.getString(this, CIMCacheManager.KEY_CIM_SERVIER_HOST);
-		int port = CIMCacheManager.getInt(this, CIMCacheManager.KEY_CIM_SERVIER_PORT);
-		 
-		handleConnection(host,port);
+		connect();
+		
 	}
 
 	@Override
@@ -196,9 +197,12 @@ public class CIMPushService extends Service  {
 	public void onDestroy() {
 		super.onDestroy();
 		manager.destroy();
-		connectionHandler.removeMessages(0);
+		connectHandler.removeMessages(0);
+		notificationHandler.removeMessages(0);
+		
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			unregisterReceiver(keepAliveReceiver);
+			
 		}
 		
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

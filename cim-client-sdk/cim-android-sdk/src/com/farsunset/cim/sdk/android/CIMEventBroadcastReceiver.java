@@ -111,7 +111,7 @@ public abstract class CIMEventBroadcastReceiver extends BroadcastReceiver {
 		 * 重新连接，如果断开的话
 		 */
 		if (intent.getAction().equals(CIMConstant.IntentAction.ACTION_CONNECTION_RECOVERY)) {
-			CIMPushManager.connect(context, 0);
+			connect(0);
 		}
 	}
 
@@ -132,7 +132,7 @@ public abstract class CIMEventBroadcastReceiver extends BroadcastReceiver {
 		CIMCacheManager.putBoolean(context, CIMCacheManager.KEY_CIM_CONNECTION_STATE, false);
 
 		if (CIMPushManager.isNetworkConnected(context)) {
-			CIMPushManager.connect(context, 0);
+			connect(0);
 		}
 
 		onConnectionClosed();
@@ -141,9 +141,10 @@ public abstract class CIMEventBroadcastReceiver extends BroadcastReceiver {
 	private void onConnectionFailed(long reinterval) {
 
 		if (CIMPushManager.isNetworkConnected(context)) {
+			
 			onConnectionFailed();
-
-			CIMPushManager.connect(context, reinterval);
+			
+			connect(reinterval);
 		}
 	}
 
@@ -157,10 +158,17 @@ public abstract class CIMEventBroadcastReceiver extends BroadcastReceiver {
 	private void onDevicesNetworkChanged() {
 
 		if (CIMPushManager.isNetworkConnected(context)) {
-			CIMPushManager.connect(context, 0);
+			connect(0);
 		}
 
 		onNetworkChanged();
+	}
+	
+	private void connect(long delay) {
+		Intent serviceIntent = new Intent(context, CIMPushService.class);
+		serviceIntent.putExtra(CIMPushService.KEY_DELAYED_TIME, delay);
+		serviceIntent.setAction(CIMPushManager.ACTION_CREATE_CIM_CONNECTION);
+		CIMPushManager.startService(context,serviceIntent);
 	}
 
 	private void onInnerMessageReceived(com.farsunset.cim.sdk.android.model.Message message, Intent intent) {

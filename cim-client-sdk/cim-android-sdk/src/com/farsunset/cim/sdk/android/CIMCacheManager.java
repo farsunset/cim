@@ -69,7 +69,6 @@ class CIMCacheManager {
 		Cursor cursor = resolver.query(Uri.parse(String.format(CONTENT_URI,context.getPackageName())), new String[] { key }, null, null, null);
 		if (cursor != null && cursor.moveToFirst()) {
 			value = cursor.getString(0);
-			cursor.close();
 		}
 		closeQuietly(cursor);
 		return value;

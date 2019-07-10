@@ -41,19 +41,19 @@ import com.farsunset.cim.sdk.android.model.SentBody;
  */
 public class CIMPushManager {
 
-	static String ACTION_ACTIVATE_PUSH_SERVICE = "ACTION_ACTIVATE_PUSH_SERVICE";
+	protected static String ACTION_ACTIVATE_PUSH_SERVICE = "ACTION_ACTIVATE_PUSH_SERVICE";
 
-	static String ACTION_CREATE_CIM_CONNECTION = "ACTION_CREATE_CIM_CONNECTION";
+	protected static String ACTION_CREATE_CIM_CONNECTION = "ACTION_CREATE_CIM_CONNECTION";
 
-	static String ACTION_SEND_REQUEST_BODY = "ACTION_SEND_REQUEST_BODY";
+	protected static String ACTION_SEND_REQUEST_BODY = "ACTION_SEND_REQUEST_BODY";
 
-	static String ACTION_CLOSE_CIM_CONNECTION = "ACTION_CLOSE_CIM_CONNECTION";
+	protected static String ACTION_CLOSE_CIM_CONNECTION = "ACTION_CLOSE_CIM_CONNECTION";
 
-	static String ACTION_SET_LOGGER_EANABLE = "ACTION_SET_LOGGER_EANABLE";
+	protected static String ACTION_SET_LOGGER_EANABLE = "ACTION_SET_LOGGER_EANABLE";
 
-	static String KEY_SEND_BODY = "KEY_SEND_BODY";
+	protected static String KEY_SEND_BODY = "KEY_SEND_BODY";
 
-	static String KEY_CIM_CONNECTION_STATUS = "KEY_CIM_CONNECTION_STATUS";
+	protected static String KEY_CIM_CONNECTION_STATUS = "KEY_CIM_CONNECTION_STATUS";
 
 	/**
 	 * 初始化,连接服务端，在程序启动页或者 在Application里调用
@@ -64,57 +64,34 @@ public class CIMPushManager {
 	 */
 	public static void connect(Context context, String host, int port) {
 
-		connect(context, host, port, false, 0);
-
-	}
-
-	private static void connect(Context context, String host, int port, boolean autoBind, long delayedTime) {
-
 		if(TextUtils.isEmpty(host) || port == 0) {
 			CIMLogger.getLogger().invalidHostPort(host, port);
 			return;
 		}
 		
-		CIMCacheManager.putBoolean(context, CIMCacheManager.KEY_CIM_DESTROYED, false);
-		CIMCacheManager.putBoolean(context, CIMCacheManager.KEY_MANUAL_STOP, false);
 
 		CIMCacheManager.putString(context, CIMCacheManager.KEY_CIM_SERVIER_HOST, host);
 		CIMCacheManager.putInt(context, CIMCacheManager.KEY_CIM_SERVIER_PORT, port);
-
-		if (!autoBind) {
-			CIMCacheManager.remove(context, CIMCacheManager.KEY_ACCOUNT);
-		}
+		
+		CIMCacheManager.putBoolean(context, CIMCacheManager.KEY_CIM_DESTROYED, false);
+		CIMCacheManager.putBoolean(context, CIMCacheManager.KEY_MANUAL_STOP, false);
+		
+		CIMCacheManager.remove(context, CIMCacheManager.KEY_ACCOUNT);
+ 
 
 		Intent serviceIntent = new Intent(context, CIMPushService.class);
-		serviceIntent.putExtra(CIMCacheManager.KEY_CIM_SERVIER_HOST, host);
-		serviceIntent.putExtra(CIMCacheManager.KEY_CIM_SERVIER_PORT, port);
-		serviceIntent.putExtra(CIMPushService.KEY_DELAYED_TIME, delayedTime);
 		serviceIntent.setAction(ACTION_CREATE_CIM_CONNECTION);
-		startServiceCompat(context,serviceIntent);
+		startService(context,serviceIntent);
+		
 	}
 
 	public static void setLoggerEnable(Context context,boolean enable) {
 		Intent serviceIntent = new Intent(context, CIMPushService.class);
 		serviceIntent.putExtra(CIMPushService.KEY_LOGGER_ENABLE, enable);
 		serviceIntent.setAction(ACTION_SET_LOGGER_EANABLE);
-		startServiceCompat(context,serviceIntent);
+		startService(context,serviceIntent);
 	}
 	
-	protected static void connect(Context context, long delayedTime) {
-
-		boolean isManualStop = CIMCacheManager.getBoolean(context, CIMCacheManager.KEY_MANUAL_STOP);
-		boolean isManualDestory = CIMCacheManager.getBoolean(context, CIMCacheManager.KEY_CIM_DESTROYED);
-
-		if (isManualStop || isManualDestory) {
-			return;
-		}
-
-		String host = CIMCacheManager.getString(context, CIMCacheManager.KEY_CIM_SERVIER_HOST);
-		int port = CIMCacheManager.getInt(context, CIMCacheManager.KEY_CIM_SERVIER_PORT);
-
-		connect(context, host, port, true, delayedTime);
-
-	}
 
 	/**
 	 * 设置一个账号登录到服务端
@@ -124,8 +101,7 @@ public class CIMPushManager {
 	 */
 	public static void bindAccount(Context context, String account) {
 
-		boolean isManualDestory = CIMCacheManager.getBoolean(context, CIMCacheManager.KEY_CIM_DESTROYED);
-		if (isManualDestory || account == null || account.trim().length() == 0) {
+		if (isDestoryed(context) || account == null || account.trim().length() == 0) {
 			return;
 		}
 
@@ -159,8 +135,7 @@ public class CIMPushManager {
 	protected static boolean autoBindAccount(Context context) {
 
 		String account = CIMCacheManager.getString(context, CIMCacheManager.KEY_ACCOUNT);
-		boolean isManualDestory = CIMCacheManager.getBoolean(context, CIMCacheManager.KEY_CIM_DESTROYED);
-		if (account == null || account.trim().length() == 0 || isManualDestory) {
+		if (account == null || account.trim().length() == 0 || isDestoryed(context)) {
 			return false;
 		}
 
@@ -177,17 +152,14 @@ public class CIMPushManager {
 	 */
 	public static void sendRequest(Context context, SentBody body) {
 
-		boolean isManualStop = CIMCacheManager.getBoolean(context, CIMCacheManager.KEY_MANUAL_STOP);
-		boolean isManualDestory = CIMCacheManager.getBoolean(context, CIMCacheManager.KEY_CIM_DESTROYED);
-
-		if (isManualStop || isManualDestory) {
+		if (isDestoryed(context) || isStoped(context)) {
 			return;
 		}
 
 		Intent serviceIntent = new Intent(context, CIMPushService.class);
 		serviceIntent.putExtra(KEY_SEND_BODY, body);
 		serviceIntent.setAction(ACTION_SEND_REQUEST_BODY);
-		startServiceCompat(context,serviceIntent);
+		startService(context,serviceIntent);
 
 	}
 
@@ -198,8 +170,7 @@ public class CIMPushManager {
 	 */
 	public static void stop(Context context) {
 
-		boolean isManualDestory = CIMCacheManager.getBoolean(context, CIMCacheManager.KEY_CIM_DESTROYED);
-		if (isManualDestory) {
+		if (isDestoryed(context)) {
 			return;
 		}
 
@@ -207,7 +178,7 @@ public class CIMPushManager {
 
 		Intent serviceIntent = new Intent(context, CIMPushService.class);
 		serviceIntent.setAction(ACTION_CLOSE_CIM_CONNECTION);
-		startServiceCompat(context,serviceIntent);
+		startService(context,serviceIntent);
 
 	}
 
@@ -232,14 +203,21 @@ public class CIMPushManager {
 	 */
 	public static void resume(Context context) {
 
-		boolean isManualDestory = CIMCacheManager.getBoolean(context, CIMCacheManager.KEY_CIM_DESTROYED);
-		if (isManualDestory) {
+		if (isDestoryed(context)) {
 			return;
 		}
 
 		autoBindAccount(context);
 	}
 
+	public static boolean isDestoryed(Context context) {
+		return CIMCacheManager.getBoolean(context, CIMCacheManager.KEY_CIM_DESTROYED);
+	}
+	
+	public static boolean isStoped(Context context) {
+		return CIMCacheManager.getBoolean(context, CIMCacheManager.KEY_MANUAL_STOP);
+	}
+	
 	public static boolean isConnected(Context context) {
 		return CIMCacheManager.getBoolean(context, CIMCacheManager.KEY_CIM_CONNECTION_STATE);
 	}
@@ -253,6 +231,17 @@ public class CIMPushManager {
 		 return ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
 	}
 	
+
+	public static void startService(Context context,Intent intent) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			context.startForegroundService(intent);
+        } else {
+        	context.startService(intent);
+        }
+	}
+	
+	
+	
 	private static String getVersionName(Context context) {
 		String versionName = null;
 		try {
@@ -261,14 +250,6 @@ public class CIMPushManager {
 		} catch (NameNotFoundException ignore) {
 		}
 		return versionName;
-	}
-	
-	private static void startServiceCompat(Context context,Intent intent) {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			context.startForegroundService(intent);
-        } else {
-        	context.startService(intent);
-        }
 	}
 	
 	
