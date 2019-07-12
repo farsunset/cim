@@ -22,19 +22,15 @@
 package com.farsunset.cim.handler;
 
 
-import java.util.Objects;
-
-import javax.annotation.Resource;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-
 import com.farsunset.cim.sdk.server.constant.CIMConstant;
 import com.farsunset.cim.sdk.server.handler.CIMRequestHandler;
-import com.farsunset.cim.sdk.server.model.SentBody;
 import com.farsunset.cim.sdk.server.model.CIMSession;
+import com.farsunset.cim.sdk.server.model.SentBody;
 import com.farsunset.cim.service.CIMSessionService;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.util.Objects;
 
 
 /**
@@ -44,8 +40,6 @@ import com.farsunset.cim.service.CIMSessionService;
 
 @Component
 public class SessionClosedHandler implements CIMRequestHandler {
-
-	protected final Logger logger = LoggerFactory.getLogger(SessionClosedHandler.class);
 
 	@Resource
 	private CIMSessionService cimSessionService;

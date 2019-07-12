@@ -34,6 +34,7 @@ import android.net.Network;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.farsunset.cim.sdk.android.coder.CIMLogger;
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
@@ -173,6 +174,11 @@ public class CIMPushService extends Service  {
 		String host = CIMCacheManager.getString(this, CIMCacheManager.KEY_CIM_SERVIER_HOST);
 		int port = CIMCacheManager.getInt(this, CIMCacheManager.KEY_CIM_SERVIER_PORT);
 	
+		if(host == null || host.trim().length() == 0 || port <= 0) {
+			Log.e(this.getClass().getSimpleName(), "Invalid hostname or port. host:" + host  + " port:" + port);
+			return;
+		}
+		
 		manager.connect(host, port);
 
 	}

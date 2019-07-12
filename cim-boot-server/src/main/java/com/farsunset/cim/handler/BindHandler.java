@@ -21,23 +21,21 @@
  */
 package com.farsunset.cim.handler;
 
-import java.util.Objects;
-
-import javax.annotation.Resource;
-
+import com.farsunset.cim.push.CIMMessagePusher;
+import com.farsunset.cim.sdk.server.constant.CIMConstant;
+import com.farsunset.cim.sdk.server.handler.CIMRequestHandler;
+import com.farsunset.cim.sdk.server.model.CIMSession;
+import com.farsunset.cim.sdk.server.model.Message;
+import com.farsunset.cim.sdk.server.model.ReplyBody;
+import com.farsunset.cim.sdk.server.model.SentBody;
+import com.farsunset.cim.service.CIMSessionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.farsunset.cim.push.CIMMessagePusher;
-import com.farsunset.cim.sdk.server.constant.CIMConstant;
-import com.farsunset.cim.sdk.server.handler.CIMRequestHandler;
-import com.farsunset.cim.sdk.server.model.Message;
-import com.farsunset.cim.sdk.server.model.ReplyBody;
-import com.farsunset.cim.sdk.server.model.SentBody;
-import com.farsunset.cim.sdk.server.model.CIMSession;
-import com.farsunset.cim.service.CIMSessionService;
+import javax.annotation.Resource;
+import java.util.Objects;
 
 
 /**
@@ -48,7 +46,7 @@ import com.farsunset.cim.service.CIMSessionService;
 @Component
 public class BindHandler implements CIMRequestHandler {
 
-	protected final Logger logger = LoggerFactory.getLogger(BindHandler.class);
+	private final Logger logger = LoggerFactory.getLogger(BindHandler.class);
 
 	@Resource
 	private CIMSessionService cimSessionService;
@@ -103,9 +101,9 @@ public class BindHandler implements CIMRequestHandler {
 			cimSessionService.save(newSession);
 			
 
-		} catch (Exception e) {
+		} catch (Exception exception) {
 			reply.setCode(CIMConstant.ReturnCode.CODE_500);
-			logger.error(e.getMessage());
+			logger.error("Bind has error",exception);
 		}
 	 
 		newSession.write(reply);

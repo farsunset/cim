@@ -25,7 +25,7 @@ import cn.teaey.apns4j.protocol.ApnsPayload;
 
 public class ApnsPayloadCompat extends ApnsPayload {
 
-	public static final String DATA = "{\"aps\": {\"message\": {\"action\":\"%s\",\"content\":\"%s\",\"sender\":\"%s\",\"receiver\":\"%s\",\"format\":\"%s\"},\"content-available\": 1}}";
+	private static final String DATA_FORMAT = "{\"aps\": {\"message\": {\"action\":\"%s\",\"content\":\"%s\",\"sender\":\"%s\",\"receiver\":\"%s\",\"format\":\"%s\"},\"content-available\": 1}}";
 
 	private String action;
 	private String content;
@@ -74,7 +74,8 @@ public class ApnsPayloadCompat extends ApnsPayload {
 		this.format = format;
 	}
 
+	@Override
 	public String toJsonString() {
-		return String.format(DATA, action, content, sender,receiver,format);
+		return String.format(DATA_FORMAT, action, content, sender,receiver,format);
 	}
 }

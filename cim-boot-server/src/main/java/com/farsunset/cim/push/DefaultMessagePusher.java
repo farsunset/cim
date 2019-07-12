@@ -21,17 +21,15 @@
  */
 package com.farsunset.cim.push;
 
-import java.util.Objects;
-
-import javax.annotation.Resource;
-
+import com.farsunset.cim.sdk.server.model.CIMSession;
+import com.farsunset.cim.sdk.server.model.Message;
+import com.farsunset.cim.service.ApnsService;
+import com.farsunset.cim.service.CIMSessionService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.farsunset.cim.sdk.server.model.Message;
-import com.farsunset.cim.sdk.server.model.CIMSession;
-import com.farsunset.cim.service.ApnsService;
-import com.farsunset.cim.service.CIMSessionService;
+import javax.annotation.Resource;
+import java.util.Objects;
 
 /**
  * 消息发送实现类
@@ -55,7 +53,7 @@ public class DefaultMessagePusher implements CIMMessagePusher {
 	/**
 	 * 向用户发送消息
 	 * 
-	 * @param msg
+	 * @param message
 	 */
 	public void push(Message message) {
 		CIMSession session = cimSessionService.get(message.getReceiver());

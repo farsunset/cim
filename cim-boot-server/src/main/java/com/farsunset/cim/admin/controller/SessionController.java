@@ -21,13 +21,12 @@
  */
 package com.farsunset.cim.admin.controller;
 
-import javax.annotation.Resource;
-
+import com.farsunset.cim.service.CIMSessionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.farsunset.cim.service.CIMSessionService;
+import javax.annotation.Resource;
 
 @Controller
 @RequestMapping("/console/session")

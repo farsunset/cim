@@ -1,11 +1,11 @@
-package com.farsunset.cim;
+package com.farsunset.cim.config;
 
-import java.util.HashMap;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.farsunset.cim.handler.BindHandler;
+import com.farsunset.cim.handler.SessionClosedHandler;
+import com.farsunset.cim.sdk.server.handler.CIMNioSocketAcceptor;
+import com.farsunset.cim.sdk.server.handler.CIMRequestHandler;
+import com.farsunset.cim.sdk.server.model.CIMSession;
+import com.farsunset.cim.sdk.server.model.SentBody;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationContext;
@@ -13,13 +13,9 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.farsunset.cim.handler.BindHandler;
-import com.farsunset.cim.handler.SessionClosedHandler;
-import com.farsunset.cim.sdk.server.handler.CIMNioSocketAcceptor;
-import com.farsunset.cim.sdk.server.handler.CIMRequestHandler;
-import com.farsunset.cim.sdk.server.model.SentBody;
-import com.farsunset.cim.service.CIMSessionService;
-import com.farsunset.cim.sdk.server.model.CIMSession;
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import java.util.HashMap;
 
 @Configuration
 public class CIMConfig implements CIMRequestHandler, ApplicationListener<ApplicationStartedEvent> {
@@ -47,17 +43,6 @@ public class CIMConfig implements CIMRequestHandler, ApplicationListener<Applica
 		nioSocketAcceptor.setPort(port);
 		nioSocketAcceptor.setAppSentBodyHandler(this);
 		return nioSocketAcceptor;
-	}
-	
-	/**
-	 *   
-	 * @param memorySessionService 默认使用内存管理方案
-	 * @return
-	 */
-	@Bean(value = "cimSessionService")
-	public CIMSessionService getCIMSessionService(@Qualifier("memorySessionService") CIMSessionService memorySessionService) {
-		return memorySessionService;
-		
 	}
 
 	@Override

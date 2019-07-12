@@ -21,32 +21,23 @@
  */
 package com.farsunset.cim.api.controller;
 
-import javax.annotation.Resource;
-
+import com.farsunset.cim.api.controller.dto.MessageResult;
+import com.farsunset.cim.push.DefaultMessagePusher;
+import com.farsunset.cim.sdk.server.model.Message;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.farsunset.cim.api.controller.dto.MessageResult;
-import com.farsunset.cim.push.DefaultMessagePusher;
-import com.farsunset.cim.push.SystemMessagePusher;
-import com.farsunset.cim.sdk.server.model.Message;
-import com.farsunset.cim.util.Constants;
+import javax.annotation.Resource;
 
 
 @RestController
 @RequestMapping("/api/message")
 public class MessageController  {
 
-
-	 
-	@Resource
-	private SystemMessagePusher systemMessagePusher;
-	
 	@Resource
 	private DefaultMessagePusher defaultMessagePusher;
 
-	 
 	/**
 	 * 此方法仅仅在集群时，通过服务器调用
 	 * 
@@ -65,11 +56,9 @@ public class MessageController  {
 		MessageResult result = new MessageResult();
 
 		message.setId(System.currentTimeMillis());
-		if (Constants.MessageType.TYPE_2.equals(message.getAction())) {
-			systemMessagePusher.push(message);
-		} else {
-			defaultMessagePusher.push(message);
-		}
+
+		defaultMessagePusher.push(message);
+
 		result.id = message.getId();
 		result.timestamp = message.getTimestamp();
 		return result;

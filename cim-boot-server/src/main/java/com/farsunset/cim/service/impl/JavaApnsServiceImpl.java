@@ -21,26 +21,27 @@
  */
 package com.farsunset.cim.service.impl;
 
-import java.io.InputStream;
-import java.util.logging.Logger;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import com.farsunset.cim.sdk.server.model.Message;
-import com.farsunset.cim.service.ApnsService;
-import com.farsunset.cim.util.ApnsPayloadCompat;
-
 import cn.teaey.apns4j.Apns4j;
 import cn.teaey.apns4j.network.ApnsChannel;
 import cn.teaey.apns4j.network.ApnsChannelFactory;
 import cn.teaey.apns4j.network.ApnsGateway;
+import com.farsunset.cim.sdk.server.model.Message;
+import com.farsunset.cim.service.ApnsService;
+import com.farsunset.cim.util.ApnsPayloadCompat;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.io.InputStream;
 
 @Service
 public class JavaApnsServiceImpl implements ApnsService {
-	private final Logger logger = Logger.getLogger(JavaApnsServiceImpl.class.getName());
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(JavaApnsServiceImpl.class);
+
 	@Value("${apple.apns.p12.password}")
 	private String password;
 	@Value("${apple.apns.p12.file}")
@@ -73,11 +74,10 @@ public class JavaApnsServiceImpl implements ApnsService {
 			apnsPayload.setFormat(message.getFormat());
 			apnsPayload.setReceiver(message.getReceiver());
 			apnsChannel.send(deviceToken, apnsPayload);
-			
-			logger.info(deviceToken +"\r\ndata:" +apnsPayload.toJsonString());
-		}catch(Exception e) {
-			e.printStackTrace();
-			logger.severe(e.getLocalizedMessage());
+
+			LOGGER.info(deviceToken +"\r\ndata: {}",apnsPayload.toJsonString());
+		}catch(Exception exception) {
+			LOGGER.error("Apns has error",exception);
 		}finally {
 			apnsChannel.close();
 			IOUtils.closeQuietly(stream);

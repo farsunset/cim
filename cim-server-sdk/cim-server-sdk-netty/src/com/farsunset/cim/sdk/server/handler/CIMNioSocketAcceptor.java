@@ -73,7 +73,7 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody> 
 
 	public void bind() {
 
-		/**
+		/*
 		 * 预制websocket握手请求的处理
 		 */
 		innerHandlerMap.put(CIMConstant.CLIENT_WEBSOCKET_HANDSHAKE, new WebsocketHandler());
@@ -135,7 +135,7 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody> 
 		CIMSession session = new CIMSession(ctx.channel());
 
 		CIMRequestHandler handler = innerHandlerMap.get(body.getKey());
-		/**
+		/*
 		 * 如果有内置的特殊handler需要处理，则使用内置的
 		 */
 		if (handler != null) {
@@ -143,7 +143,7 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody> 
 			return;
 		}
 
-		/**
+		/*
 		 * 有业务层去处理其他的sentbody
 		 */
 		outerRequestHandler.process(session, body);
@@ -172,7 +172,9 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody> 
 			ctx.channel().writeAndFlush(HeartbeatRequest.getInstance());
 		}
 
-		// 如果心跳请求发出30秒内没收到响应，则关闭连接
+		/*
+		 * 如果心跳请求发出30秒内没收到响应，则关闭连接
+		 */
 		if (evt instanceof IdleStateEvent && ((IdleStateEvent) evt).state().equals(IdleState.READER_IDLE)) {
 
 			Long lastTime = (Long) ctx.channel().attr(AttributeKey.valueOf(CIMConstant.HEARTBEAT_KEY)).get();
@@ -189,7 +191,7 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody> 
 	}
 
 	
-	public Channel getManagedChannel(String id) {
+	public Channel getManagedSession(String id) {
 		if (id == null) {
 			return null;
 		}

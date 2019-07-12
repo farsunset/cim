@@ -84,6 +84,12 @@ public class CIMSession implements Serializable {
 
 	}
 
+	
+	public void setSession(Channel session) {
+		this.session = session;
+	}
+
+
 	public String getAccount() {
 		return account;
 	}

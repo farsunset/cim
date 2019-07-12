@@ -21,9 +21,9 @@
  */
 package com.farsunset.cim.api.controller.dto;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
+
+import java.util.List;
 
 
 public class BaseResult {

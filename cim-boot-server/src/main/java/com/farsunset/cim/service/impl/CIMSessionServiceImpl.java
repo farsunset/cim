@@ -21,49 +21,56 @@
  */
 package com.farsunset.cim.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.stereotype.Service;
-
+import com.farsunset.cim.repository.SessionRepository;
+import com.farsunset.cim.sdk.server.handler.CIMNioSocketAcceptor;
 import com.farsunset.cim.sdk.server.model.CIMSession;
 import com.farsunset.cim.service.CIMSessionService;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 
-/**
- * 单机，内存存储实现
- *
- */
-@Service("memorySessionService")
-public class MemorySessionServiceImpl implements CIMSessionService {
+@Service
+public class CIMSessionServiceImpl implements CIMSessionService {
 
-	private ConcurrentHashMap<String, CIMSession> sessionMap = new ConcurrentHashMap<String, CIMSession>();
-	
+ 	@Resource
+ 	private CIMNioSocketAcceptor nioSocketAcceptor;
+
+ 	@Resource
+	private SessionRepository sessionRepository;
+
 	@Override
 	public void save(CIMSession session) {
-		if(session.getState() == CIMSession.STATE_DISABLED ) {
-			remove(session.getAccount());
-			return;
-		}
-		sessionMap.put(session.getAccount(), session);
+		sessionRepository.save(session);
 	}
 
+	/**
+	 *
+	 * @param account 用户id
+	 * @return
+	 */
 	@Override
 	public CIMSession get(String account) {
-		return sessionMap.get(account);
+		 
+		 CIMSession session = sessionRepository.get(account);
+
+		 if (session != null){
+			 session.setSession(nioSocketAcceptor.getManagedSession(session.getNid()));
+		 }
+
+		 return session;
 	}
  
 	@Override
 	public void remove(String account) {
-		sessionMap.remove(account);
+		sessionRepository.remove(account);
 	}
 
 	@Override
 	public List<CIMSession> list() {
-		List<CIMSession> onlineList = new ArrayList<>();
-		onlineList.addAll(sessionMap.values());
-		return onlineList;
+		return sessionRepository.findAll();
 	}
 	 
 }

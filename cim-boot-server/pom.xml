@@ -11,7 +11,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.5.RELEASE</version>
+        <version>2.1.6.RELEASE</version>
         <relativePath/>
     </parent>
 
@@ -39,10 +39,10 @@
         <dependency>
             <groupId>com.farsunset</groupId>
             <artifactId>cim-server-sdk</artifactId>
-            <version>3.7</version>
+            <version>3.7.0</version>
             <scope>system</scope>
-            <!-- mina 、netty版本 sdk任选其一-->
-            <systemPath>${project.basedir}/lib/cim-server-sdk-mina-3.7.0.jar</systemPath>
+            <!-- mina 、netty版本 sdk任选其一 -->
+            <systemPath>${project.basedir}/lib/cim-server-sdk-netty-3.7.0.jar</systemPath>
         </dependency>
 
 
