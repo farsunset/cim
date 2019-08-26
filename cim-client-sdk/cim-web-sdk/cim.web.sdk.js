@@ -24,6 +24,7 @@ CIMPushManager.connection = function(){
 	manualStop = false;
 	window.localStorage.account = '';
 	socket = new WebSocket(CIM_URI);
+	socket.cookieEnabled = false;
 	socket.binaryType = 'arraybuffer';
 	socket.onopen = CIMPushManager.innerOnConnectionSuccessed;
 	socket.onmessage = CIMPushManager.innerOnMessageReceived;

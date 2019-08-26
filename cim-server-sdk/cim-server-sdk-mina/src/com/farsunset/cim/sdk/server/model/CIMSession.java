@@ -57,20 +57,80 @@ public class CIMSession implements Serializable {
 
 	private transient IoSession session;
 
-	private String account;// session绑定的账号,主键，一个账号同一时间之内在一个设备在线
-	private String nid;// session在本台服务器上的ID
-	private String deviceId;// 客户端ID (设备号码+应用包名),ios为devicetoken
-	private String host;// session绑定的服务器IP
-	private String channel;// 终端设备类型
-	private String deviceModel;// 终端设备型号
-	private String clientVersion;// 终端应用版本
-	private String systemVersion;// 终端系统版本
-	private Long bindTime;// 登录时间
-	private Double longitude;// 经度
-	private Double latitude;// 维度
-	private String location;// 位置
-	private int apns;// apns推送状态
-	private int state;// 状态
+	/*
+	 * 数据库主键ID
+	 */
+	private Long id;
+	
+	/*
+	 *  session绑定的账号,主键，一个账号同一时间之内在一个设备在线
+	 */
+	private String account; 
+	
+	/*
+	 *   session在本台服务器上的ID
+	 */
+	private String nid; 
+	
+	/*
+	 *   客户端ID (设备号码+应用包名),ios为devicetoken
+	 */
+	private String deviceId; 
+	
+	/*
+	 *   session绑定的服务器IP
+	 */
+	private String host; 
+	
+	/*
+	 *   终端设备类型
+	 */
+	private String channel; 
+	
+	/*
+	 *   终端设备型号
+	 */
+	private String deviceModel; 
+	
+	/*
+	 *   终端应用版本
+	 */
+	private String clientVersion; 
+	
+	/*
+	 *   终端系统版本
+	 */
+	private String systemVersion; 
+	
+	/*
+	 *   登录时间
+	 */
+	private Long bindTime; 
+	
+	/*
+	 *   经度
+	 */
+	private Double longitude; 
+	
+	/*
+	 *   维度
+	 */
+	private Double latitude; 
+	
+	/*
+	 *   位置
+	 */
+	private String location; 
+	
+	/*
+	 *   apns推送状态
+	 */
+	private int apns; 
+	
+	/*
+	 *  状态
+	 */
+	private int state; 
 
 	public CIMSession(IoSession session) {
 		this.session = session;
@@ -79,6 +139,15 @@ public class CIMSession implements Serializable {
 
 	public CIMSession() {
 
+	}
+	
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getAccount() {
@@ -194,6 +263,15 @@ public class CIMSession implements Serializable {
 	public void setState(int state) {
 		this.state = state;
 	}
+	
+
+	public IoSession getSession() {
+		return session;
+	}
+
+	public void setSession(IoSession session) {
+		this.session = session;
+	}
 
 	public void setAttribute(String key, Object value) {
 		if (session != null)
@@ -278,16 +356,11 @@ public class CIMSession implements Serializable {
 		return false;
 	}
 
-	public IoSession getSession() {
-		return session;
-	}
-
-	public void setSession(IoSession session) {
-		this.session = session;
-	}
-
 	public byte[] getProtobufBody() {
 		SessionProto.Model.Builder builder = SessionProto.Model.newBuilder();
+		if (id != null) {
+			builder.setId(id);
+		}
 		if (account != null) {
 			builder.setAccount(account);
 		}
@@ -336,6 +409,7 @@ public class CIMSession implements Serializable {
 		}
 		SessionProto.Model proto = SessionProto.Model.parseFrom(protobufBody);
 		CIMSession session = new CIMSession();
+		session.setId(proto.getId());
 		session.setApns(proto.getApns());
 		session.setBindTime(proto.getBindTime());
 		session.setChannel(proto.getChannel());

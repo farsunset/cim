@@ -19,117 +19,122 @@ public final class SessionProto {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>string account = 1;</code>
+     * <code>int64 id = 1;</code>
+     */
+    long getId();
+
+    /**
+     * <code>string account = 2;</code>
      */
     java.lang.String getAccount();
     /**
-     * <code>string account = 1;</code>
+     * <code>string account = 2;</code>
      */
     com.google.protobuf.ByteString
         getAccountBytes();
 
     /**
-     * <code>string nid = 2;</code>
+     * <code>string nid = 3;</code>
      */
     java.lang.String getNid();
     /**
-     * <code>string nid = 2;</code>
+     * <code>string nid = 3;</code>
      */
     com.google.protobuf.ByteString
         getNidBytes();
 
     /**
-     * <code>string deviceId = 3;</code>
+     * <code>string deviceId = 4;</code>
      */
     java.lang.String getDeviceId();
     /**
-     * <code>string deviceId = 3;</code>
+     * <code>string deviceId = 4;</code>
      */
     com.google.protobuf.ByteString
         getDeviceIdBytes();
 
     /**
-     * <code>string host = 4;</code>
+     * <code>string host = 5;</code>
      */
     java.lang.String getHost();
     /**
-     * <code>string host = 4;</code>
+     * <code>string host = 5;</code>
      */
     com.google.protobuf.ByteString
         getHostBytes();
 
     /**
-     * <code>string channel = 5;</code>
+     * <code>string channel = 6;</code>
      */
     java.lang.String getChannel();
     /**
-     * <code>string channel = 5;</code>
+     * <code>string channel = 6;</code>
      */
     com.google.protobuf.ByteString
         getChannelBytes();
 
     /**
-     * <code>string deviceModel = 6;</code>
+     * <code>string deviceModel = 7;</code>
      */
     java.lang.String getDeviceModel();
     /**
-     * <code>string deviceModel = 6;</code>
+     * <code>string deviceModel = 7;</code>
      */
     com.google.protobuf.ByteString
         getDeviceModelBytes();
 
     /**
-     * <code>string clientVersion = 7;</code>
+     * <code>string clientVersion = 8;</code>
      */
     java.lang.String getClientVersion();
     /**
-     * <code>string clientVersion = 7;</code>
+     * <code>string clientVersion = 8;</code>
      */
     com.google.protobuf.ByteString
         getClientVersionBytes();
 
     /**
-     * <code>string systemVersion = 8;</code>
+     * <code>string systemVersion = 9;</code>
      */
     java.lang.String getSystemVersion();
     /**
-     * <code>string systemVersion = 8;</code>
+     * <code>string systemVersion = 9;</code>
      */
     com.google.protobuf.ByteString
         getSystemVersionBytes();
 
     /**
-     * <code>int64 bindTime = 9;</code>
+     * <code>int64 bindTime = 10;</code>
      */
     long getBindTime();
 
     /**
-     * <code>double longitude = 10;</code>
+     * <code>double longitude = 11;</code>
      */
     double getLongitude();
 
     /**
-     * <code>double latitude = 11;</code>
+     * <code>double latitude = 12;</code>
      */
     double getLatitude();
 
     /**
-     * <code>string location = 12;</code>
+     * <code>string location = 13;</code>
      */
     java.lang.String getLocation();
     /**
-     * <code>string location = 12;</code>
+     * <code>string location = 13;</code>
      */
     com.google.protobuf.ByteString
         getLocationBytes();
 
     /**
-     * <code>int32 apns = 13;</code>
+     * <code>int32 apns = 14;</code>
      */
     int getApns();
 
     /**
-     * <code>int32 state = 14;</code>
+     * <code>int32 state = 15;</code>
      */
     int getState();
   }
@@ -158,6 +163,13 @@ public final class SessionProto {
     }
 
     @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new Model();
+    }
+
+    @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
     getUnknownFields() {
       return this.unknownFields;
@@ -170,7 +182,6 @@ public final class SessionProto {
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
-      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -181,81 +192,86 @@ public final class SessionProto {
             case 0:
               done = true;
               break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
+            case 8: {
 
-              account_ = s;
+              id_ = input.readInt64();
               break;
             }
             case 18: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              nid_ = s;
+              account_ = s;
               break;
             }
             case 26: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              deviceId_ = s;
+              nid_ = s;
               break;
             }
             case 34: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              host_ = s;
+              deviceId_ = s;
               break;
             }
             case 42: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              channel_ = s;
+              host_ = s;
               break;
             }
             case 50: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              deviceModel_ = s;
+              channel_ = s;
               break;
             }
             case 58: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              clientVersion_ = s;
+              deviceModel_ = s;
               break;
             }
             case 66: {
               java.lang.String s = input.readStringRequireUtf8();
 
+              clientVersion_ = s;
+              break;
+            }
+            case 74: {
+              java.lang.String s = input.readStringRequireUtf8();
+
               systemVersion_ = s;
               break;
             }
-            case 72: {
+            case 80: {
 
               bindTime_ = input.readInt64();
               break;
             }
-            case 81: {
+            case 89: {
 
               longitude_ = input.readDouble();
               break;
             }
-            case 89: {
+            case 97: {
 
               latitude_ = input.readDouble();
               break;
             }
-            case 98: {
+            case 106: {
               java.lang.String s = input.readStringRequireUtf8();
 
               location_ = s;
               break;
             }
-            case 104: {
+            case 112: {
 
               apns_ = input.readInt32();
               break;
             }
-            case 112: {
+            case 120: {
 
               state_ = input.readInt32();
               break;
@@ -292,10 +308,19 @@ public final class SessionProto {
               com.farsunset.cim.sdk.server.model.proto.SessionProto.Model.class, com.farsunset.cim.sdk.server.model.proto.SessionProto.Model.Builder.class);
     }
 
-    public static final int ACCOUNT_FIELD_NUMBER = 1;
+    public static final int ID_FIELD_NUMBER = 1;
+    private long id_;
+    /**
+     * <code>int64 id = 1;</code>
+     */
+    public long getId() {
+      return id_;
+    }
+
+    public static final int ACCOUNT_FIELD_NUMBER = 2;
     private volatile java.lang.Object account_;
     /**
-     * <code>string account = 1;</code>
+     * <code>string account = 2;</code>
      */
     public java.lang.String getAccount() {
       java.lang.Object ref = account_;
@@ -310,7 +335,7 @@ public final class SessionProto {
       }
     }
     /**
-     * <code>string account = 1;</code>
+     * <code>string account = 2;</code>
      */
     public com.google.protobuf.ByteString
         getAccountBytes() {
@@ -326,10 +351,10 @@ public final class SessionProto {
       }
     }
 
-    public static final int NID_FIELD_NUMBER = 2;
+    public static final int NID_FIELD_NUMBER = 3;
     private volatile java.lang.Object nid_;
     /**
-     * <code>string nid = 2;</code>
+     * <code>string nid = 3;</code>
      */
     public java.lang.String getNid() {
       java.lang.Object ref = nid_;
@@ -344,7 +369,7 @@ public final class SessionProto {
       }
     }
     /**
-     * <code>string nid = 2;</code>
+     * <code>string nid = 3;</code>
      */
     public com.google.protobuf.ByteString
         getNidBytes() {
@@ -360,10 +385,10 @@ public final class SessionProto {
       }
     }
 
-    public static final int DEVICEID_FIELD_NUMBER = 3;
+    public static final int DEVICEID_FIELD_NUMBER = 4;
     private volatile java.lang.Object deviceId_;
     /**
-     * <code>string deviceId = 3;</code>
+     * <code>string deviceId = 4;</code>
      */
     public java.lang.String getDeviceId() {
       java.lang.Object ref = deviceId_;
@@ -378,7 +403,7 @@ public final class SessionProto {
       }
     }
     /**
-     * <code>string deviceId = 3;</code>
+     * <code>string deviceId = 4;</code>
      */
     public com.google.protobuf.ByteString
         getDeviceIdBytes() {
@@ -394,10 +419,10 @@ public final class SessionProto {
       }
     }
 
-    public static final int HOST_FIELD_NUMBER = 4;
+    public static final int HOST_FIELD_NUMBER = 5;
     private volatile java.lang.Object host_;
     /**
-     * <code>string host = 4;</code>
+     * <code>string host = 5;</code>
      */
     public java.lang.String getHost() {
       java.lang.Object ref = host_;
@@ -412,7 +437,7 @@ public final class SessionProto {
       }
     }
     /**
-     * <code>string host = 4;</code>
+     * <code>string host = 5;</code>
      */
     public com.google.protobuf.ByteString
         getHostBytes() {
@@ -428,10 +453,10 @@ public final class SessionProto {
       }
     }
 
-    public static final int CHANNEL_FIELD_NUMBER = 5;
+    public static final int CHANNEL_FIELD_NUMBER = 6;
     private volatile java.lang.Object channel_;
     /**
-     * <code>string channel = 5;</code>
+     * <code>string channel = 6;</code>
      */
     public java.lang.String getChannel() {
       java.lang.Object ref = channel_;
@@ -446,7 +471,7 @@ public final class SessionProto {
       }
     }
     /**
-     * <code>string channel = 5;</code>
+     * <code>string channel = 6;</code>
      */
     public com.google.protobuf.ByteString
         getChannelBytes() {
@@ -462,10 +487,10 @@ public final class SessionProto {
       }
     }
 
-    public static final int DEVICEMODEL_FIELD_NUMBER = 6;
+    public static final int DEVICEMODEL_FIELD_NUMBER = 7;
     private volatile java.lang.Object deviceModel_;
     /**
-     * <code>string deviceModel = 6;</code>
+     * <code>string deviceModel = 7;</code>
      */
     public java.lang.String getDeviceModel() {
       java.lang.Object ref = deviceModel_;
@@ -480,7 +505,7 @@ public final class SessionProto {
       }
     }
     /**
-     * <code>string deviceModel = 6;</code>
+     * <code>string deviceModel = 7;</code>
      */
     public com.google.protobuf.ByteString
         getDeviceModelBytes() {
@@ -496,10 +521,10 @@ public final class SessionProto {
       }
     }
 
-    public static final int CLIENTVERSION_FIELD_NUMBER = 7;
+    public static final int CLIENTVERSION_FIELD_NUMBER = 8;
     private volatile java.lang.Object clientVersion_;
     /**
-     * <code>string clientVersion = 7;</code>
+     * <code>string clientVersion = 8;</code>
      */
     public java.lang.String getClientVersion() {
       java.lang.Object ref = clientVersion_;
@@ -514,7 +539,7 @@ public final class SessionProto {
       }
     }
     /**
-     * <code>string clientVersion = 7;</code>
+     * <code>string clientVersion = 8;</code>
      */
     public com.google.protobuf.ByteString
         getClientVersionBytes() {
@@ -530,10 +555,10 @@ public final class SessionProto {
       }
     }
 
-    public static final int SYSTEMVERSION_FIELD_NUMBER = 8;
+    public static final int SYSTEMVERSION_FIELD_NUMBER = 9;
     private volatile java.lang.Object systemVersion_;
     /**
-     * <code>string systemVersion = 8;</code>
+     * <code>string systemVersion = 9;</code>
      */
     public java.lang.String getSystemVersion() {
       java.lang.Object ref = systemVersion_;
@@ -548,7 +573,7 @@ public final class SessionProto {
       }
     }
     /**
-     * <code>string systemVersion = 8;</code>
+     * <code>string systemVersion = 9;</code>
      */
     public com.google.protobuf.ByteString
         getSystemVersionBytes() {
@@ -564,37 +589,37 @@ public final class SessionProto {
       }
     }
 
-    public static final int BINDTIME_FIELD_NUMBER = 9;
+    public static final int BINDTIME_FIELD_NUMBER = 10;
     private long bindTime_;
     /**
-     * <code>int64 bindTime = 9;</code>
+     * <code>int64 bindTime = 10;</code>
      */
     public long getBindTime() {
       return bindTime_;
     }
 
-    public static final int LONGITUDE_FIELD_NUMBER = 10;
+    public static final int LONGITUDE_FIELD_NUMBER = 11;
     private double longitude_;
     /**
-     * <code>double longitude = 10;</code>
+     * <code>double longitude = 11;</code>
      */
     public double getLongitude() {
       return longitude_;
     }
 
-    public static final int LATITUDE_FIELD_NUMBER = 11;
+    public static final int LATITUDE_FIELD_NUMBER = 12;
     private double latitude_;
     /**
-     * <code>double latitude = 11;</code>
+     * <code>double latitude = 12;</code>
      */
     public double getLatitude() {
       return latitude_;
     }
 
-    public static final int LOCATION_FIELD_NUMBER = 12;
+    public static final int LOCATION_FIELD_NUMBER = 13;
     private volatile java.lang.Object location_;
     /**
-     * <code>string location = 12;</code>
+     * <code>string location = 13;</code>
      */
     public java.lang.String getLocation() {
       java.lang.Object ref = location_;
@@ -609,7 +634,7 @@ public final class SessionProto {
       }
     }
     /**
-     * <code>string location = 12;</code>
+     * <code>string location = 13;</code>
      */
     public com.google.protobuf.ByteString
         getLocationBytes() {
@@ -625,19 +650,19 @@ public final class SessionProto {
       }
     }
 
-    public static final int APNS_FIELD_NUMBER = 13;
+    public static final int APNS_FIELD_NUMBER = 14;
     private int apns_;
     /**
-     * <code>int32 apns = 13;</code>
+     * <code>int32 apns = 14;</code>
      */
     public int getApns() {
       return apns_;
     }
 
-    public static final int STATE_FIELD_NUMBER = 14;
+    public static final int STATE_FIELD_NUMBER = 15;
     private int state_;
     /**
-     * <code>int32 state = 14;</code>
+     * <code>int32 state = 15;</code>
      */
     public int getState() {
       return state_;
@@ -657,47 +682,50 @@ public final class SessionProto {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      if (id_ != 0L) {
+        output.writeInt64(1, id_);
+      }
       if (!getAccountBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, account_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, account_);
       }
       if (!getNidBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, nid_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, nid_);
       }
       if (!getDeviceIdBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, deviceId_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, deviceId_);
       }
       if (!getHostBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, host_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, host_);
       }
       if (!getChannelBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, channel_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, channel_);
       }
       if (!getDeviceModelBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, deviceModel_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, deviceModel_);
       }
       if (!getClientVersionBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, clientVersion_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 8, clientVersion_);
       }
       if (!getSystemVersionBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 8, systemVersion_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 9, systemVersion_);
       }
       if (bindTime_ != 0L) {
-        output.writeInt64(9, bindTime_);
+        output.writeInt64(10, bindTime_);
       }
       if (longitude_ != 0D) {
-        output.writeDouble(10, longitude_);
+        output.writeDouble(11, longitude_);
       }
       if (latitude_ != 0D) {
-        output.writeDouble(11, latitude_);
+        output.writeDouble(12, latitude_);
       }
       if (!getLocationBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 12, location_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 13, location_);
       }
       if (apns_ != 0) {
-        output.writeInt32(13, apns_);
+        output.writeInt32(14, apns_);
       }
       if (state_ != 0) {
-        output.writeInt32(14, state_);
+        output.writeInt32(15, state_);
       }
       unknownFields.writeTo(output);
     }
@@ -708,52 +736,56 @@ public final class SessionProto {
       if (size != -1) return size;
 
       size = 0;
+      if (id_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(1, id_);
+      }
       if (!getAccountBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, account_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, account_);
       }
       if (!getNidBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, nid_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, nid_);
       }
       if (!getDeviceIdBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, deviceId_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, deviceId_);
       }
       if (!getHostBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, host_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, host_);
       }
       if (!getChannelBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, channel_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, channel_);
       }
       if (!getDeviceModelBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, deviceModel_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, deviceModel_);
       }
       if (!getClientVersionBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, clientVersion_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, clientVersion_);
       }
       if (!getSystemVersionBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, systemVersion_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, systemVersion_);
       }
       if (bindTime_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(9, bindTime_);
+          .computeInt64Size(10, bindTime_);
       }
       if (longitude_ != 0D) {
         size += com.google.protobuf.CodedOutputStream
-          .computeDoubleSize(10, longitude_);
+          .computeDoubleSize(11, longitude_);
       }
       if (latitude_ != 0D) {
         size += com.google.protobuf.CodedOutputStream
-          .computeDoubleSize(11, latitude_);
+          .computeDoubleSize(12, latitude_);
       }
       if (!getLocationBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(12, location_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(13, location_);
       }
       if (apns_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(13, apns_);
+          .computeInt32Size(14, apns_);
       }
       if (state_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(14, state_);
+          .computeInt32Size(15, state_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -770,6 +802,8 @@ public final class SessionProto {
       }
       com.farsunset.cim.sdk.server.model.proto.SessionProto.Model other = (com.farsunset.cim.sdk.server.model.proto.SessionProto.Model) obj;
 
+      if (getId()
+          != other.getId()) return false;
       if (!getAccount()
           .equals(other.getAccount())) return false;
       if (!getNid()
@@ -811,6 +845,9 @@ public final class SessionProto {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + ID_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getId());
       hash = (37 * hash) + ACCOUNT_FIELD_NUMBER;
       hash = (53 * hash) + getAccount().hashCode();
       hash = (37 * hash) + NID_FIELD_NUMBER;
@@ -975,6 +1012,8 @@ public final class SessionProto {
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        id_ = 0L;
+
         account_ = "";
 
         nid_ = "";
@@ -1029,6 +1068,7 @@ public final class SessionProto {
       @java.lang.Override
       public com.farsunset.cim.sdk.server.model.proto.SessionProto.Model buildPartial() {
         com.farsunset.cim.sdk.server.model.proto.SessionProto.Model result = new com.farsunset.cim.sdk.server.model.proto.SessionProto.Model(this);
+        result.id_ = id_;
         result.account_ = account_;
         result.nid_ = nid_;
         result.deviceId_ = deviceId_;
@@ -1091,6 +1131,9 @@ public final class SessionProto {
 
       public Builder mergeFrom(com.farsunset.cim.sdk.server.model.proto.SessionProto.Model other) {
         if (other == com.farsunset.cim.sdk.server.model.proto.SessionProto.Model.getDefaultInstance()) return this;
+        if (other.getId() != 0L) {
+          setId(other.getId());
+        }
         if (!other.getAccount().isEmpty()) {
           account_ = other.account_;
           onChanged();
@@ -1171,9 +1214,35 @@ public final class SessionProto {
         return this;
       }
 
+      private long id_ ;
+      /**
+       * <code>int64 id = 1;</code>
+       */
+      public long getId() {
+        return id_;
+      }
+      /**
+       * <code>int64 id = 1;</code>
+       */
+      public Builder setId(long value) {
+        
+        id_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int64 id = 1;</code>
+       */
+      public Builder clearId() {
+        
+        id_ = 0L;
+        onChanged();
+        return this;
+      }
+
       private java.lang.Object account_ = "";
       /**
-       * <code>string account = 1;</code>
+       * <code>string account = 2;</code>
        */
       public java.lang.String getAccount() {
         java.lang.Object ref = account_;
@@ -1188,7 +1257,7 @@ public final class SessionProto {
         }
       }
       /**
-       * <code>string account = 1;</code>
+       * <code>string account = 2;</code>
        */
       public com.google.protobuf.ByteString
           getAccountBytes() {
@@ -1204,7 +1273,7 @@ public final class SessionProto {
         }
       }
       /**
-       * <code>string account = 1;</code>
+       * <code>string account = 2;</code>
        */
       public Builder setAccount(
           java.lang.String value) {
@@ -1217,7 +1286,7 @@ public final class SessionProto {
         return this;
       }
       /**
-       * <code>string account = 1;</code>
+       * <code>string account = 2;</code>
        */
       public Builder clearAccount() {
         
@@ -1226,7 +1295,7 @@ public final class SessionProto {
         return this;
       }
       /**
-       * <code>string account = 1;</code>
+       * <code>string account = 2;</code>
        */
       public Builder setAccountBytes(
           com.google.protobuf.ByteString value) {
@@ -1242,7 +1311,7 @@ public final class SessionProto {
 
       private java.lang.Object nid_ = "";
       /**
-       * <code>string nid = 2;</code>
+       * <code>string nid = 3;</code>
        */
       public java.lang.String getNid() {
         java.lang.Object ref = nid_;
@@ -1257,7 +1326,7 @@ public final class SessionProto {
         }
       }
       /**
-       * <code>string nid = 2;</code>
+       * <code>string nid = 3;</code>
        */
       public com.google.protobuf.ByteString
           getNidBytes() {
@@ -1273,7 +1342,7 @@ public final class SessionProto {
         }
       }
       /**
-       * <code>string nid = 2;</code>
+       * <code>string nid = 3;</code>
        */
       public Builder setNid(
           java.lang.String value) {
@@ -1286,7 +1355,7 @@ public final class SessionProto {
         return this;
       }
       /**
-       * <code>string nid = 2;</code>
+       * <code>string nid = 3;</code>
        */
       public Builder clearNid() {
         
@@ -1295,7 +1364,7 @@ public final class SessionProto {
         return this;
       }
       /**
-       * <code>string nid = 2;</code>
+       * <code>string nid = 3;</code>
        */
       public Builder setNidBytes(
           com.google.protobuf.ByteString value) {
@@ -1311,7 +1380,7 @@ public final class SessionProto {
 
       private java.lang.Object deviceId_ = "";
       /**
-       * <code>string deviceId = 3;</code>
+       * <code>string deviceId = 4;</code>
        */
       public java.lang.String getDeviceId() {
         java.lang.Object ref = deviceId_;
@@ -1326,7 +1395,7 @@ public final class SessionProto {
         }
       }
       /**
-       * <code>string deviceId = 3;</code>
+       * <code>string deviceId = 4;</code>
        */
       public com.google.protobuf.ByteString
           getDeviceIdBytes() {
@@ -1342,7 +1411,7 @@ public final class SessionProto {
         }
       }
       /**
-       * <code>string deviceId = 3;</code>
+       * <code>string deviceId = 4;</code>
        */
       public Builder setDeviceId(
           java.lang.String value) {
@@ -1355,7 +1424,7 @@ public final class SessionProto {
         return this;
       }
       /**
-       * <code>string deviceId = 3;</code>
+       * <code>string deviceId = 4;</code>
        */
       public Builder clearDeviceId() {
         
@@ -1364,7 +1433,7 @@ public final class SessionProto {
         return this;
       }
       /**
-       * <code>string deviceId = 3;</code>
+       * <code>string deviceId = 4;</code>
        */
       public Builder setDeviceIdBytes(
           com.google.protobuf.ByteString value) {
@@ -1380,7 +1449,7 @@ public final class SessionProto {
 
       private java.lang.Object host_ = "";
       /**
-       * <code>string host = 4;</code>
+       * <code>string host = 5;</code>
        */
       public java.lang.String getHost() {
         java.lang.Object ref = host_;
@@ -1395,7 +1464,7 @@ public final class SessionProto {
         }
       }
       /**
-       * <code>string host = 4;</code>
+       * <code>string host = 5;</code>
        */
       public com.google.protobuf.ByteString
           getHostBytes() {
@@ -1411,7 +1480,7 @@ public final class SessionProto {
         }
       }
       /**
-       * <code>string host = 4;</code>
+       * <code>string host = 5;</code>
        */
       public Builder setHost(
           java.lang.String value) {
@@ -1424,7 +1493,7 @@ public final class SessionProto {
         return this;
       }
       /**
-       * <code>string host = 4;</code>
+       * <code>string host = 5;</code>
        */
       public Builder clearHost() {
         
@@ -1433,7 +1502,7 @@ public final class SessionProto {
         return this;
       }
       /**
-       * <code>string host = 4;</code>
+       * <code>string host = 5;</code>
        */
       public Builder setHostBytes(
           com.google.protobuf.ByteString value) {
@@ -1449,7 +1518,7 @@ public final class SessionProto {
 
       private java.lang.Object channel_ = "";
       /**
-       * <code>string channel = 5;</code>
+       * <code>string channel = 6;</code>
        */
       public java.lang.String getChannel() {
         java.lang.Object ref = channel_;
@@ -1464,7 +1533,7 @@ public final class SessionProto {
         }
       }
       /**
-       * <code>string channel = 5;</code>
+       * <code>string channel = 6;</code>
        */
       public com.google.protobuf.ByteString
           getChannelBytes() {
@@ -1480,7 +1549,7 @@ public final class SessionProto {
         }
       }
       /**
-       * <code>string channel = 5;</code>
+       * <code>string channel = 6;</code>
        */
       public Builder setChannel(
           java.lang.String value) {
@@ -1493,7 +1562,7 @@ public final class SessionProto {
         return this;
       }
       /**
-       * <code>string channel = 5;</code>
+       * <code>string channel = 6;</code>
        */
       public Builder clearChannel() {
         
@@ -1502,7 +1571,7 @@ public final class SessionProto {
         return this;
       }
       /**
-       * <code>string channel = 5;</code>
+       * <code>string channel = 6;</code>
        */
       public Builder setChannelBytes(
           com.google.protobuf.ByteString value) {
@@ -1518,7 +1587,7 @@ public final class SessionProto {
 
       private java.lang.Object deviceModel_ = "";
       /**
-       * <code>string deviceModel = 6;</code>
+       * <code>string deviceModel = 7;</code>
        */
       public java.lang.String getDeviceModel() {
         java.lang.Object ref = deviceModel_;
@@ -1533,7 +1602,7 @@ public final class SessionProto {
         }
       }
       /**
-       * <code>string deviceModel = 6;</code>
+       * <code>string deviceModel = 7;</code>
        */
       public com.google.protobuf.ByteString
           getDeviceModelBytes() {
@@ -1549,7 +1618,7 @@ public final class SessionProto {
         }
       }
       /**
-       * <code>string deviceModel = 6;</code>
+       * <code>string deviceModel = 7;</code>
        */
       public Builder setDeviceModel(
           java.lang.String value) {
@@ -1562,7 +1631,7 @@ public final class SessionProto {
         return this;
       }
       /**
-       * <code>string deviceModel = 6;</code>
+       * <code>string deviceModel = 7;</code>
        */
       public Builder clearDeviceModel() {
         
@@ -1571,7 +1640,7 @@ public final class SessionProto {
         return this;
       }
       /**
-       * <code>string deviceModel = 6;</code>
+       * <code>string deviceModel = 7;</code>
        */
       public Builder setDeviceModelBytes(
           com.google.protobuf.ByteString value) {
@@ -1587,7 +1656,7 @@ public final class SessionProto {
 
       private java.lang.Object clientVersion_ = "";
       /**
-       * <code>string clientVersion = 7;</code>
+       * <code>string clientVersion = 8;</code>
        */
       public java.lang.String getClientVersion() {
         java.lang.Object ref = clientVersion_;
@@ -1602,7 +1671,7 @@ public final class SessionProto {
         }
       }
       /**
-       * <code>string clientVersion = 7;</code>
+       * <code>string clientVersion = 8;</code>
        */
       public com.google.protobuf.ByteString
           getClientVersionBytes() {
@@ -1618,7 +1687,7 @@ public final class SessionProto {
         }
       }
       /**
-       * <code>string clientVersion = 7;</code>
+       * <code>string clientVersion = 8;</code>
        */
       public Builder setClientVersion(
           java.lang.String value) {
@@ -1631,7 +1700,7 @@ public final class SessionProto {
         return this;
       }
       /**
-       * <code>string clientVersion = 7;</code>
+       * <code>string clientVersion = 8;</code>
        */
       public Builder clearClientVersion() {
         
@@ -1640,7 +1709,7 @@ public final class SessionProto {
         return this;
       }
       /**
-       * <code>string clientVersion = 7;</code>
+       * <code>string clientVersion = 8;</code>
        */
       public Builder setClientVersionBytes(
           com.google.protobuf.ByteString value) {
@@ -1656,7 +1725,7 @@ public final class SessionProto {
 
       private java.lang.Object systemVersion_ = "";
       /**
-       * <code>string systemVersion = 8;</code>
+       * <code>string systemVersion = 9;</code>
        */
       public java.lang.String getSystemVersion() {
         java.lang.Object ref = systemVersion_;
@@ -1671,7 +1740,7 @@ public final class SessionProto {
         }
       }
       /**
-       * <code>string systemVersion = 8;</code>
+       * <code>string systemVersion = 9;</code>
        */
       public com.google.protobuf.ByteString
           getSystemVersionBytes() {
@@ -1687,7 +1756,7 @@ public final class SessionProto {
         }
       }
       /**
-       * <code>string systemVersion = 8;</code>
+       * <code>string systemVersion = 9;</code>
        */
       public Builder setSystemVersion(
           java.lang.String value) {
@@ -1700,7 +1769,7 @@ public final class SessionProto {
         return this;
       }
       /**
-       * <code>string systemVersion = 8;</code>
+       * <code>string systemVersion = 9;</code>
        */
       public Builder clearSystemVersion() {
         
@@ -1709,7 +1778,7 @@ public final class SessionProto {
         return this;
       }
       /**
-       * <code>string systemVersion = 8;</code>
+       * <code>string systemVersion = 9;</code>
        */
       public Builder setSystemVersionBytes(
           com.google.protobuf.ByteString value) {
@@ -1725,13 +1794,13 @@ public final class SessionProto {
 
       private long bindTime_ ;
       /**
-       * <code>int64 bindTime = 9;</code>
+       * <code>int64 bindTime = 10;</code>
        */
       public long getBindTime() {
         return bindTime_;
       }
       /**
-       * <code>int64 bindTime = 9;</code>
+       * <code>int64 bindTime = 10;</code>
        */
       public Builder setBindTime(long value) {
         
@@ -1740,7 +1809,7 @@ public final class SessionProto {
         return this;
       }
       /**
-       * <code>int64 bindTime = 9;</code>
+       * <code>int64 bindTime = 10;</code>
        */
       public Builder clearBindTime() {
         
@@ -1751,13 +1820,13 @@ public final class SessionProto {
 
       private double longitude_ ;
       /**
-       * <code>double longitude = 10;</code>
+       * <code>double longitude = 11;</code>
        */
       public double getLongitude() {
         return longitude_;
       }
       /**
-       * <code>double longitude = 10;</code>
+       * <code>double longitude = 11;</code>
        */
       public Builder setLongitude(double value) {
         
@@ -1766,7 +1835,7 @@ public final class SessionProto {
         return this;
       }
       /**
-       * <code>double longitude = 10;</code>
+       * <code>double longitude = 11;</code>
        */
       public Builder clearLongitude() {
         
@@ -1777,13 +1846,13 @@ public final class SessionProto {
 
       private double latitude_ ;
       /**
-       * <code>double latitude = 11;</code>
+       * <code>double latitude = 12;</code>
        */
       public double getLatitude() {
         return latitude_;
       }
       /**
-       * <code>double latitude = 11;</code>
+       * <code>double latitude = 12;</code>
        */
       public Builder setLatitude(double value) {
         
@@ -1792,7 +1861,7 @@ public final class SessionProto {
         return this;
       }
       /**
-       * <code>double latitude = 11;</code>
+       * <code>double latitude = 12;</code>
        */
       public Builder clearLatitude() {
         
@@ -1803,7 +1872,7 @@ public final class SessionProto {
 
       private java.lang.Object location_ = "";
       /**
-       * <code>string location = 12;</code>
+       * <code>string location = 13;</code>
        */
       public java.lang.String getLocation() {
         java.lang.Object ref = location_;
@@ -1818,7 +1887,7 @@ public final class SessionProto {
         }
       }
       /**
-       * <code>string location = 12;</code>
+       * <code>string location = 13;</code>
        */
       public com.google.protobuf.ByteString
           getLocationBytes() {
@@ -1834,7 +1903,7 @@ public final class SessionProto {
         }
       }
       /**
-       * <code>string location = 12;</code>
+       * <code>string location = 13;</code>
        */
       public Builder setLocation(
           java.lang.String value) {
@@ -1847,7 +1916,7 @@ public final class SessionProto {
         return this;
       }
       /**
-       * <code>string location = 12;</code>
+       * <code>string location = 13;</code>
        */
       public Builder clearLocation() {
         
@@ -1856,7 +1925,7 @@ public final class SessionProto {
         return this;
       }
       /**
-       * <code>string location = 12;</code>
+       * <code>string location = 13;</code>
        */
       public Builder setLocationBytes(
           com.google.protobuf.ByteString value) {
@@ -1872,13 +1941,13 @@ public final class SessionProto {
 
       private int apns_ ;
       /**
-       * <code>int32 apns = 13;</code>
+       * <code>int32 apns = 14;</code>
        */
       public int getApns() {
         return apns_;
       }
       /**
-       * <code>int32 apns = 13;</code>
+       * <code>int32 apns = 14;</code>
        */
       public Builder setApns(int value) {
         
@@ -1887,7 +1956,7 @@ public final class SessionProto {
         return this;
       }
       /**
-       * <code>int32 apns = 13;</code>
+       * <code>int32 apns = 14;</code>
        */
       public Builder clearApns() {
         
@@ -1898,13 +1967,13 @@ public final class SessionProto {
 
       private int state_ ;
       /**
-       * <code>int32 state = 14;</code>
+       * <code>int32 state = 15;</code>
        */
       public int getState() {
         return state_;
       }
       /**
-       * <code>int32 state = 14;</code>
+       * <code>int32 state = 15;</code>
        */
       public Builder setState(int value) {
         
@@ -1913,7 +1982,7 @@ public final class SessionProto {
         return this;
       }
       /**
-       * <code>int32 state = 14;</code>
+       * <code>int32 state = 15;</code>
        */
       public Builder clearState() {
         
@@ -1989,33 +2058,25 @@ public final class SessionProto {
   static {
     java.lang.String[] descriptorData = {
       "\n\rSession.proto\022(com.farsunset.cim.sdk.s" +
-      "erver.model.proto\"\377\001\n\005Model\022\017\n\007account\030\001" +
-      " \001(\t\022\013\n\003nid\030\002 \001(\t\022\020\n\010deviceId\030\003 \001(\t\022\014\n\004h" +
-      "ost\030\004 \001(\t\022\017\n\007channel\030\005 \001(\t\022\023\n\013deviceMode" +
-      "l\030\006 \001(\t\022\025\n\rclientVersion\030\007 \001(\t\022\025\n\rsystem" +
-      "Version\030\010 \001(\t\022\020\n\010bindTime\030\t \001(\003\022\021\n\tlongi" +
-      "tude\030\n \001(\001\022\020\n\010latitude\030\013 \001(\001\022\020\n\010location" +
-      "\030\014 \001(\t\022\014\n\004apns\030\r \001(\005\022\r\n\005state\030\016 \001(\005B\016B\014S" +
-      "essionProtob\006proto3"
+      "erver.model.proto\"\213\002\n\005Model\022\n\n\002id\030\001 \001(\003\022" +
+      "\017\n\007account\030\002 \001(\t\022\013\n\003nid\030\003 \001(\t\022\020\n\010deviceI" +
+      "d\030\004 \001(\t\022\014\n\004host\030\005 \001(\t\022\017\n\007channel\030\006 \001(\t\022\023" +
+      "\n\013deviceModel\030\007 \001(\t\022\025\n\rclientVersion\030\010 \001" +
+      "(\t\022\025\n\rsystemVersion\030\t \001(\t\022\020\n\010bindTime\030\n " +
+      "\001(\003\022\021\n\tlongitude\030\013 \001(\001\022\020\n\010latitude\030\014 \001(\001" +
+      "\022\020\n\010location\030\r \001(\t\022\014\n\004apns\030\016 \001(\005\022\r\n\005stat" +
+      "e\030\017 \001(\005B\016B\014SessionProtob\006proto3"
     };
-    com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
-        new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
-          public com.google.protobuf.ExtensionRegistry assignDescriptors(
-              com.google.protobuf.Descriptors.FileDescriptor root) {
-            descriptor = root;
-            return null;
-          }
-        };
-    com.google.protobuf.Descriptors.FileDescriptor
+    descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-        }, assigner);
+        });
     internal_static_com_farsunset_cim_sdk_server_model_proto_Model_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_com_farsunset_cim_sdk_server_model_proto_Model_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_farsunset_cim_sdk_server_model_proto_Model_descriptor,
-        new java.lang.String[] { "Account", "Nid", "DeviceId", "Host", "Channel", "DeviceModel", "ClientVersion", "SystemVersion", "BindTime", "Longitude", "Latitude", "Location", "Apns", "State", });
+        new java.lang.String[] { "Id", "Account", "Nid", "DeviceId", "Host", "Channel", "DeviceModel", "ClientVersion", "SystemVersion", "BindTime", "Longitude", "Latitude", "Location", "Apns", "State", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
