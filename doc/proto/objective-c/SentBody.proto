@@ -1,0 +1,8 @@
+syntax = "proto3";
+message Model {
+   string key = 1;
+   int64 timestamp =2;
+   map<string,string> data =3;
+   
+}
+	 

@@ -1,0 +1,13 @@
+syntax = "proto3";
+message Model {
+   int64 id = 1;
+   string action = 2;
+   string content = 3;
+   string sender = 4;
+   string receiver = 5;
+   string extra = 6;
+   string title = 7;
+   string format = 8;
+   int64 timestamp = 9;
+}
+	 

@@ -52,7 +52,6 @@ public class CIMSession implements Serializable {
 	public transient static String CHANNEL_IOS = "ios";
 	public transient static String CHANNEL_ANDROID = "android";
 	public transient static String CHANNEL_WINDOWS = "windows";
-	public transient static String CHANNEL_WP = "wp";
 	public transient static String CHANNEL_BROWSER = "browser";
 
 	private transient IoSession session;
@@ -63,72 +62,72 @@ public class CIMSession implements Serializable {
 	private Long id;
 	
 	/*
-	 *  session绑定的账号,主键，一个账号同一时间之内在一个设备在线
+	 * session绑定的用户账号
 	 */
 	private String account; 
 	
 	/*
-	 *   session在本台服务器上的ID
+	 * session在本台服务器上的ID
 	 */
 	private String nid; 
 	
 	/*
-	 *   客户端ID (设备号码+应用包名),ios为devicetoken
+	 * 客户端ID (设备号码+应用包名),ios为devicetoken
 	 */
 	private String deviceId; 
 	
 	/*
-	 *   session绑定的服务器IP
+	 * session绑定的服务器IP
 	 */
 	private String host; 
 	
 	/*
-	 *   终端设备类型
+	 * 终端设备类型
 	 */
 	private String channel; 
 	
 	/*
-	 *   终端设备型号
+	 * 终端设备型号
 	 */
 	private String deviceModel; 
 	
 	/*
-	 *   终端应用版本
+	 * 终端应用版本
 	 */
 	private String clientVersion; 
 	
 	/*
-	 *   终端系统版本
+	 * 终端系统版本
 	 */
 	private String systemVersion; 
 	
 	/*
-	 *   登录时间
+	 * 登录时间
 	 */
 	private Long bindTime; 
 	
 	/*
-	 *   经度
+	 * 经度
 	 */
 	private Double longitude; 
 	
 	/*
-	 *   维度
+	 * 维度
 	 */
 	private Double latitude; 
 	
 	/*
-	 *   位置
+	 * 位置
 	 */
 	private String location; 
 	
 	/*
-	 *   apns推送状态
+	 * apns推送状态
 	 */
 	private int apns; 
 	
 	/*
-	 *  状态
+	 * 状态
 	 */
 	private int state; 
 

@@ -51,7 +51,7 @@ public class CIMLoggingFilter extends IoFilterAdapter {
 
 	@Override
 	public void messageSent(NextFilter nextFilter, IoSession session, WriteRequest writeRequest)   {
-		logger.info("SENT" + getSessionInfo(session) + "\n{}", writeRequest.getOriginalRequest().getMessage());
+		logger.info("SENT" + getSessionInfo(session) + "\n{}", writeRequest.getOriginalMessage());
 		nextFilter.messageSent(session, writeRequest);
 	}
 
