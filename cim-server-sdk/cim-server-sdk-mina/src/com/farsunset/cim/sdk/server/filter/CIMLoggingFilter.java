@@ -39,8 +39,8 @@ public class CIMLoggingFilter extends IoFilterAdapter {
 
 	@Override
 	public void exceptionCaught(NextFilter nextFilter, IoSession session, Throwable cause)   {
-		logger.info("EXCEPTION" + getSessionInfo(session) + "\n{}", cause.getClass().getName());
-		session.closeOnFlush();
+		logger.error("EXCEPTION" + getSessionInfo(session) + "\n{}", cause);
+		nextFilter.exceptionCaught(session, cause);
 	}
 
 	@Override

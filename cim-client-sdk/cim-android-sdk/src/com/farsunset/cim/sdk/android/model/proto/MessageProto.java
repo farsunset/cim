@@ -8,93 +8,87 @@ public final class MessageProto {
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistryLite registry) {
   }
-
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistry registry) {
-    registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
-  }
   public interface ModelOrBuilder extends
       // @@protoc_insertion_point(interface_extends:com.farsunset.cim.sdk.android.model.proto.Model)
-      com.google.protobuf.MessageOrBuilder {
+      com.google.protobuf.MessageLiteOrBuilder {
 
     /**
-     * <code>int64 id = 1;</code>
+     * <code>optional int64 id = 1;</code>
      */
     long getId();
 
     /**
-     * <code>string action = 2;</code>
+     * <code>optional string action = 2;</code>
      */
     java.lang.String getAction();
     /**
-     * <code>string action = 2;</code>
+     * <code>optional string action = 2;</code>
      */
     com.google.protobuf.ByteString
         getActionBytes();
 
     /**
-     * <code>string content = 3;</code>
+     * <code>optional string content = 3;</code>
      */
     java.lang.String getContent();
     /**
-     * <code>string content = 3;</code>
+     * <code>optional string content = 3;</code>
      */
     com.google.protobuf.ByteString
         getContentBytes();
 
     /**
-     * <code>string sender = 4;</code>
+     * <code>optional string sender = 4;</code>
      */
     java.lang.String getSender();
     /**
-     * <code>string sender = 4;</code>
+     * <code>optional string sender = 4;</code>
      */
     com.google.protobuf.ByteString
         getSenderBytes();
 
     /**
-     * <code>string receiver = 5;</code>
+     * <code>optional string receiver = 5;</code>
      */
     java.lang.String getReceiver();
     /**
-     * <code>string receiver = 5;</code>
+     * <code>optional string receiver = 5;</code>
      */
     com.google.protobuf.ByteString
         getReceiverBytes();
 
     /**
-     * <code>string extra = 6;</code>
+     * <code>optional string extra = 6;</code>
      */
     java.lang.String getExtra();
     /**
-     * <code>string extra = 6;</code>
+     * <code>optional string extra = 6;</code>
      */
     com.google.protobuf.ByteString
         getExtraBytes();
 
     /**
-     * <code>string title = 7;</code>
+     * <code>optional string title = 7;</code>
      */
     java.lang.String getTitle();
     /**
-     * <code>string title = 7;</code>
+     * <code>optional string title = 7;</code>
      */
     com.google.protobuf.ByteString
         getTitleBytes();
 
     /**
-     * <code>string format = 8;</code>
+     * <code>optional string format = 8;</code>
      */
     java.lang.String getFormat();
     /**
-     * <code>string format = 8;</code>
+     * <code>optional string format = 8;</code>
      */
     com.google.protobuf.ByteString
         getFormatBytes();
 
     /**
-     * <code>int64 timestamp = 9;</code>
+     * <code>optional int64 timestamp = 9;</code>
      */
     long getTimestamp();
   }
@@ -102,14 +96,10 @@ public final class MessageProto {
    * Protobuf type {@code com.farsunset.cim.sdk.android.model.proto.Model}
    */
   public  static final class Model extends
-      com.google.protobuf.GeneratedMessageV3 implements
+      com.google.protobuf.GeneratedMessageLite<
+          Model, Model.Builder> implements
       // @@protoc_insertion_point(message_implements:com.farsunset.cim.sdk.android.model.proto.Model)
       ModelOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use Model.newBuilder() to construct.
-    private Model(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
     private Model() {
       action_ = "";
       content_ = "";
@@ -119,418 +109,407 @@ public final class MessageProto {
       title_ = "";
       format_ = "";
     }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private Model(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 8: {
-
-              id_ = input.readInt64();
-              break;
-            }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              action_ = s;
-              break;
-            }
-            case 26: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              content_ = s;
-              break;
-            }
-            case 34: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              sender_ = s;
-              break;
-            }
-            case 42: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              receiver_ = s;
-              break;
-            }
-            case 50: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              extra_ = s;
-              break;
-            }
-            case 58: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              title_ = s;
-              break;
-            }
-            case 66: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              format_ = s;
-              break;
-            }
-            case 72: {
-
-              timestamp_ = input.readInt64();
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.farsunset.cim.sdk.android.model.proto.MessageProto.internal_static_com_farsunset_cim_sdk_android_model_proto_Model_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return com.farsunset.cim.sdk.android.model.proto.MessageProto.internal_static_com_farsunset_cim_sdk_android_model_proto_Model_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              com.farsunset.cim.sdk.android.model.proto.MessageProto.Model.class, com.farsunset.cim.sdk.android.model.proto.MessageProto.Model.Builder.class);
-    }
-
     public static final int ID_FIELD_NUMBER = 1;
     private long id_;
     /**
-     * <code>int64 id = 1;</code>
+     * <code>optional int64 id = 1;</code>
      */
     public long getId() {
       return id_;
     }
-
-    public static final int ACTION_FIELD_NUMBER = 2;
-    private volatile java.lang.Object action_;
     /**
-     * <code>string action = 2;</code>
+     * <code>optional int64 id = 1;</code>
      */
-    public java.lang.String getAction() {
-      java.lang.Object ref = action_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        action_ = s;
-        return s;
-      }
+    private void setId(long value) {
+      
+      id_ = value;
     }
     /**
-     * <code>string action = 2;</code>
+     * <code>optional int64 id = 1;</code>
+     */
+    private void clearId() {
+      
+      id_ = 0L;
+    }
+
+    public static final int ACTION_FIELD_NUMBER = 2;
+    private java.lang.String action_;
+    /**
+     * <code>optional string action = 2;</code>
+     */
+    public java.lang.String getAction() {
+      return action_;
+    }
+    /**
+     * <code>optional string action = 2;</code>
      */
     public com.google.protobuf.ByteString
         getActionBytes() {
-      java.lang.Object ref = action_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        action_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+      return com.google.protobuf.ByteString.copyFromUtf8(action_);
+    }
+    /**
+     * <code>optional string action = 2;</code>
+     */
+    private void setAction(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      action_ = value;
+    }
+    /**
+     * <code>optional string action = 2;</code>
+     */
+    private void clearAction() {
+      
+      action_ = getDefaultInstance().getAction();
+    }
+    /**
+     * <code>optional string action = 2;</code>
+     */
+    private void setActionBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      action_ = value.toStringUtf8();
     }
 
     public static final int CONTENT_FIELD_NUMBER = 3;
-    private volatile java.lang.Object content_;
+    private java.lang.String content_;
     /**
-     * <code>string content = 3;</code>
+     * <code>optional string content = 3;</code>
      */
     public java.lang.String getContent() {
-      java.lang.Object ref = content_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        content_ = s;
-        return s;
-      }
+      return content_;
     }
     /**
-     * <code>string content = 3;</code>
+     * <code>optional string content = 3;</code>
      */
     public com.google.protobuf.ByteString
         getContentBytes() {
-      java.lang.Object ref = content_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        content_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+      return com.google.protobuf.ByteString.copyFromUtf8(content_);
+    }
+    /**
+     * <code>optional string content = 3;</code>
+     */
+    private void setContent(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      content_ = value;
+    }
+    /**
+     * <code>optional string content = 3;</code>
+     */
+    private void clearContent() {
+      
+      content_ = getDefaultInstance().getContent();
+    }
+    /**
+     * <code>optional string content = 3;</code>
+     */
+    private void setContentBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      content_ = value.toStringUtf8();
     }
 
     public static final int SENDER_FIELD_NUMBER = 4;
-    private volatile java.lang.Object sender_;
+    private java.lang.String sender_;
     /**
-     * <code>string sender = 4;</code>
+     * <code>optional string sender = 4;</code>
      */
     public java.lang.String getSender() {
-      java.lang.Object ref = sender_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        sender_ = s;
-        return s;
-      }
+      return sender_;
     }
     /**
-     * <code>string sender = 4;</code>
+     * <code>optional string sender = 4;</code>
      */
     public com.google.protobuf.ByteString
         getSenderBytes() {
-      java.lang.Object ref = sender_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        sender_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+      return com.google.protobuf.ByteString.copyFromUtf8(sender_);
+    }
+    /**
+     * <code>optional string sender = 4;</code>
+     */
+    private void setSender(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      sender_ = value;
+    }
+    /**
+     * <code>optional string sender = 4;</code>
+     */
+    private void clearSender() {
+      
+      sender_ = getDefaultInstance().getSender();
+    }
+    /**
+     * <code>optional string sender = 4;</code>
+     */
+    private void setSenderBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      sender_ = value.toStringUtf8();
     }
 
     public static final int RECEIVER_FIELD_NUMBER = 5;
-    private volatile java.lang.Object receiver_;
+    private java.lang.String receiver_;
     /**
-     * <code>string receiver = 5;</code>
+     * <code>optional string receiver = 5;</code>
      */
     public java.lang.String getReceiver() {
-      java.lang.Object ref = receiver_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        receiver_ = s;
-        return s;
-      }
+      return receiver_;
     }
     /**
-     * <code>string receiver = 5;</code>
+     * <code>optional string receiver = 5;</code>
      */
     public com.google.protobuf.ByteString
         getReceiverBytes() {
-      java.lang.Object ref = receiver_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        receiver_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+      return com.google.protobuf.ByteString.copyFromUtf8(receiver_);
+    }
+    /**
+     * <code>optional string receiver = 5;</code>
+     */
+    private void setReceiver(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      receiver_ = value;
+    }
+    /**
+     * <code>optional string receiver = 5;</code>
+     */
+    private void clearReceiver() {
+      
+      receiver_ = getDefaultInstance().getReceiver();
+    }
+    /**
+     * <code>optional string receiver = 5;</code>
+     */
+    private void setReceiverBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      receiver_ = value.toStringUtf8();
     }
 
     public static final int EXTRA_FIELD_NUMBER = 6;
-    private volatile java.lang.Object extra_;
+    private java.lang.String extra_;
     /**
-     * <code>string extra = 6;</code>
+     * <code>optional string extra = 6;</code>
      */
     public java.lang.String getExtra() {
-      java.lang.Object ref = extra_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        extra_ = s;
-        return s;
-      }
+      return extra_;
     }
     /**
-     * <code>string extra = 6;</code>
+     * <code>optional string extra = 6;</code>
      */
     public com.google.protobuf.ByteString
         getExtraBytes() {
-      java.lang.Object ref = extra_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        extra_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+      return com.google.protobuf.ByteString.copyFromUtf8(extra_);
+    }
+    /**
+     * <code>optional string extra = 6;</code>
+     */
+    private void setExtra(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      extra_ = value;
+    }
+    /**
+     * <code>optional string extra = 6;</code>
+     */
+    private void clearExtra() {
+      
+      extra_ = getDefaultInstance().getExtra();
+    }
+    /**
+     * <code>optional string extra = 6;</code>
+     */
+    private void setExtraBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      extra_ = value.toStringUtf8();
     }
 
     public static final int TITLE_FIELD_NUMBER = 7;
-    private volatile java.lang.Object title_;
+    private java.lang.String title_;
     /**
-     * <code>string title = 7;</code>
+     * <code>optional string title = 7;</code>
      */
     public java.lang.String getTitle() {
-      java.lang.Object ref = title_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        title_ = s;
-        return s;
-      }
+      return title_;
     }
     /**
-     * <code>string title = 7;</code>
+     * <code>optional string title = 7;</code>
      */
     public com.google.protobuf.ByteString
         getTitleBytes() {
-      java.lang.Object ref = title_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        title_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+      return com.google.protobuf.ByteString.copyFromUtf8(title_);
+    }
+    /**
+     * <code>optional string title = 7;</code>
+     */
+    private void setTitle(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      title_ = value;
+    }
+    /**
+     * <code>optional string title = 7;</code>
+     */
+    private void clearTitle() {
+      
+      title_ = getDefaultInstance().getTitle();
+    }
+    /**
+     * <code>optional string title = 7;</code>
+     */
+    private void setTitleBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      title_ = value.toStringUtf8();
     }
 
     public static final int FORMAT_FIELD_NUMBER = 8;
-    private volatile java.lang.Object format_;
+    private java.lang.String format_;
     /**
-     * <code>string format = 8;</code>
+     * <code>optional string format = 8;</code>
      */
     public java.lang.String getFormat() {
-      java.lang.Object ref = format_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        format_ = s;
-        return s;
-      }
+      return format_;
     }
     /**
-     * <code>string format = 8;</code>
+     * <code>optional string format = 8;</code>
      */
     public com.google.protobuf.ByteString
         getFormatBytes() {
-      java.lang.Object ref = format_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        format_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+      return com.google.protobuf.ByteString.copyFromUtf8(format_);
+    }
+    /**
+     * <code>optional string format = 8;</code>
+     */
+    private void setFormat(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      format_ = value;
+    }
+    /**
+     * <code>optional string format = 8;</code>
+     */
+    private void clearFormat() {
+      
+      format_ = getDefaultInstance().getFormat();
+    }
+    /**
+     * <code>optional string format = 8;</code>
+     */
+    private void setFormatBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      format_ = value.toStringUtf8();
     }
 
     public static final int TIMESTAMP_FIELD_NUMBER = 9;
     private long timestamp_;
     /**
-     * <code>int64 timestamp = 9;</code>
+     * <code>optional int64 timestamp = 9;</code>
      */
     public long getTimestamp() {
       return timestamp_;
     }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
+    /**
+     * <code>optional int64 timestamp = 9;</code>
+     */
+    private void setTimestamp(long value) {
+      
+      timestamp_ = value;
+    }
+    /**
+     * <code>optional int64 timestamp = 9;</code>
+     */
+    private void clearTimestamp() {
+      
+      timestamp_ = 0L;
     }
 
-    @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (id_ != 0L) {
         output.writeInt64(1, id_);
       }
-      if (!getActionBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, action_);
+      if (!action_.isEmpty()) {
+        output.writeString(2, getAction());
       }
-      if (!getContentBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, content_);
+      if (!content_.isEmpty()) {
+        output.writeString(3, getContent());
       }
-      if (!getSenderBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, sender_);
+      if (!sender_.isEmpty()) {
+        output.writeString(4, getSender());
       }
-      if (!getReceiverBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, receiver_);
+      if (!receiver_.isEmpty()) {
+        output.writeString(5, getReceiver());
       }
-      if (!getExtraBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, extra_);
+      if (!extra_.isEmpty()) {
+        output.writeString(6, getExtra());
       }
-      if (!getTitleBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, title_);
+      if (!title_.isEmpty()) {
+        output.writeString(7, getTitle());
       }
-      if (!getFormatBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 8, format_);
+      if (!format_.isEmpty()) {
+        output.writeString(8, getFormat());
       }
       if (timestamp_ != 0L) {
         output.writeInt64(9, timestamp_);
       }
-      unknownFields.writeTo(output);
     }
 
-    @java.lang.Override
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
@@ -538,1018 +517,613 @@ public final class MessageProto {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(1, id_);
       }
-      if (!getActionBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, action_);
+      if (!action_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeStringSize(2, getAction());
       }
-      if (!getContentBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, content_);
+      if (!content_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeStringSize(3, getContent());
       }
-      if (!getSenderBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, sender_);
+      if (!sender_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeStringSize(4, getSender());
       }
-      if (!getReceiverBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, receiver_);
+      if (!receiver_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeStringSize(5, getReceiver());
       }
-      if (!getExtraBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, extra_);
+      if (!extra_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeStringSize(6, getExtra());
       }
-      if (!getTitleBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, title_);
+      if (!title_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeStringSize(7, getTitle());
       }
-      if (!getFormatBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, format_);
+      if (!format_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeStringSize(8, getFormat());
       }
       if (timestamp_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(9, timestamp_);
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      memoizedSerializedSize = size;
       return size;
     }
 
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof com.farsunset.cim.sdk.android.model.proto.MessageProto.Model)) {
-        return super.equals(obj);
-      }
-      com.farsunset.cim.sdk.android.model.proto.MessageProto.Model other = (com.farsunset.cim.sdk.android.model.proto.MessageProto.Model) obj;
-
-      if (getId()
-          != other.getId()) return false;
-      if (!getAction()
-          .equals(other.getAction())) return false;
-      if (!getContent()
-          .equals(other.getContent())) return false;
-      if (!getSender()
-          .equals(other.getSender())) return false;
-      if (!getReceiver()
-          .equals(other.getReceiver())) return false;
-      if (!getExtra()
-          .equals(other.getExtra())) return false;
-      if (!getTitle()
-          .equals(other.getTitle())) return false;
-      if (!getFormat()
-          .equals(other.getFormat())) return false;
-      if (getTimestamp()
-          != other.getTimestamp()) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
-      return true;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + ID_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getId());
-      hash = (37 * hash) + ACTION_FIELD_NUMBER;
-      hash = (53 * hash) + getAction().hashCode();
-      hash = (37 * hash) + CONTENT_FIELD_NUMBER;
-      hash = (53 * hash) + getContent().hashCode();
-      hash = (37 * hash) + SENDER_FIELD_NUMBER;
-      hash = (53 * hash) + getSender().hashCode();
-      hash = (37 * hash) + RECEIVER_FIELD_NUMBER;
-      hash = (53 * hash) + getReceiver().hashCode();
-      hash = (37 * hash) + EXTRA_FIELD_NUMBER;
-      hash = (53 * hash) + getExtra().hashCode();
-      hash = (37 * hash) + TITLE_FIELD_NUMBER;
-      hash = (53 * hash) + getTitle().hashCode();
-      hash = (37 * hash) + FORMAT_FIELD_NUMBER;
-      hash = (53 * hash) + getFormat().hashCode();
-      hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getTimestamp());
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static com.farsunset.cim.sdk.android.model.proto.MessageProto.Model parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.farsunset.cim.sdk.android.model.proto.MessageProto.Model parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
     public static com.farsunset.cim.sdk.android.model.proto.MessageProto.Model parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data);
     }
     public static com.farsunset.cim.sdk.android.model.proto.MessageProto.Model parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data, extensionRegistry);
     }
     public static com.farsunset.cim.sdk.android.model.proto.MessageProto.Model parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data);
     }
     public static com.farsunset.cim.sdk.android.model.proto.MessageProto.Model parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data, extensionRegistry);
     }
     public static com.farsunset.cim.sdk.android.model.proto.MessageProto.Model parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, input);
     }
     public static com.farsunset.cim.sdk.android.model.proto.MessageProto.Model parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, input, extensionRegistry);
     }
     public static com.farsunset.cim.sdk.android.model.proto.MessageProto.Model parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return parseDelimitedFrom(DEFAULT_INSTANCE, input);
     }
     public static com.farsunset.cim.sdk.android.model.proto.MessageProto.Model parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
     }
     public static com.farsunset.cim.sdk.android.model.proto.MessageProto.Model parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, input);
     }
     public static com.farsunset.cim.sdk.android.model.proto.MessageProto.Model parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, input, extensionRegistry);
     }
 
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
     public static Builder newBuilder(com.farsunset.cim.sdk.android.model.proto.MessageProto.Model prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
 
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
     /**
      * Protobuf type {@code com.farsunset.cim.sdk.android.model.proto.Model}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessageLite.Builder<
+          com.farsunset.cim.sdk.android.model.proto.MessageProto.Model, Builder> implements
         // @@protoc_insertion_point(builder_implements:com.farsunset.cim.sdk.android.model.proto.Model)
         com.farsunset.cim.sdk.android.model.proto.MessageProto.ModelOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.farsunset.cim.sdk.android.model.proto.MessageProto.internal_static_com_farsunset_cim_sdk_android_model_proto_Model_descriptor;
-      }
-
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.farsunset.cim.sdk.android.model.proto.MessageProto.internal_static_com_farsunset_cim_sdk_android_model_proto_Model_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                com.farsunset.cim.sdk.android.model.proto.MessageProto.Model.class, com.farsunset.cim.sdk.android.model.proto.MessageProto.Model.Builder.class);
-      }
-
       // Construct using com.farsunset.cim.sdk.android.model.proto.MessageProto.Model.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+        super(DEFAULT_INSTANCE);
       }
 
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        id_ = 0L;
 
-        action_ = "";
-
-        content_ = "";
-
-        sender_ = "";
-
-        receiver_ = "";
-
-        extra_ = "";
-
-        title_ = "";
-
-        format_ = "";
-
-        timestamp_ = 0L;
-
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return com.farsunset.cim.sdk.android.model.proto.MessageProto.internal_static_com_farsunset_cim_sdk_android_model_proto_Model_descriptor;
-      }
-
-      @java.lang.Override
-      public com.farsunset.cim.sdk.android.model.proto.MessageProto.Model getDefaultInstanceForType() {
-        return com.farsunset.cim.sdk.android.model.proto.MessageProto.Model.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public com.farsunset.cim.sdk.android.model.proto.MessageProto.Model build() {
-        com.farsunset.cim.sdk.android.model.proto.MessageProto.Model result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      @java.lang.Override
-      public com.farsunset.cim.sdk.android.model.proto.MessageProto.Model buildPartial() {
-        com.farsunset.cim.sdk.android.model.proto.MessageProto.Model result = new com.farsunset.cim.sdk.android.model.proto.MessageProto.Model(this);
-        result.id_ = id_;
-        result.action_ = action_;
-        result.content_ = content_;
-        result.sender_ = sender_;
-        result.receiver_ = receiver_;
-        result.extra_ = extra_;
-        result.title_ = title_;
-        result.format_ = format_;
-        result.timestamp_ = timestamp_;
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.farsunset.cim.sdk.android.model.proto.MessageProto.Model) {
-          return mergeFrom((com.farsunset.cim.sdk.android.model.proto.MessageProto.Model)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(com.farsunset.cim.sdk.android.model.proto.MessageProto.Model other) {
-        if (other == com.farsunset.cim.sdk.android.model.proto.MessageProto.Model.getDefaultInstance()) return this;
-        if (other.getId() != 0L) {
-          setId(other.getId());
-        }
-        if (!other.getAction().isEmpty()) {
-          action_ = other.action_;
-          onChanged();
-        }
-        if (!other.getContent().isEmpty()) {
-          content_ = other.content_;
-          onChanged();
-        }
-        if (!other.getSender().isEmpty()) {
-          sender_ = other.sender_;
-          onChanged();
-        }
-        if (!other.getReceiver().isEmpty()) {
-          receiver_ = other.receiver_;
-          onChanged();
-        }
-        if (!other.getExtra().isEmpty()) {
-          extra_ = other.extra_;
-          onChanged();
-        }
-        if (!other.getTitle().isEmpty()) {
-          title_ = other.title_;
-          onChanged();
-        }
-        if (!other.getFormat().isEmpty()) {
-          format_ = other.format_;
-          onChanged();
-        }
-        if (other.getTimestamp() != 0L) {
-          setTimestamp(other.getTimestamp());
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.farsunset.cim.sdk.android.model.proto.MessageProto.Model parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.farsunset.cim.sdk.android.model.proto.MessageProto.Model) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private long id_ ;
       /**
-       * <code>int64 id = 1;</code>
+       * <code>optional int64 id = 1;</code>
        */
       public long getId() {
-        return id_;
+        return instance.getId();
       }
       /**
-       * <code>int64 id = 1;</code>
+       * <code>optional int64 id = 1;</code>
        */
       public Builder setId(long value) {
-        
-        id_ = value;
-        onChanged();
+        copyOnWrite();
+        instance.setId(value);
         return this;
       }
       /**
-       * <code>int64 id = 1;</code>
+       * <code>optional int64 id = 1;</code>
        */
       public Builder clearId() {
-        
-        id_ = 0L;
-        onChanged();
+        copyOnWrite();
+        instance.clearId();
         return this;
       }
 
-      private java.lang.Object action_ = "";
       /**
-       * <code>string action = 2;</code>
+       * <code>optional string action = 2;</code>
        */
       public java.lang.String getAction() {
-        java.lang.Object ref = action_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          action_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
+        return instance.getAction();
       }
       /**
-       * <code>string action = 2;</code>
+       * <code>optional string action = 2;</code>
        */
       public com.google.protobuf.ByteString
           getActionBytes() {
-        java.lang.Object ref = action_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          action_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
+        return instance.getActionBytes();
       }
       /**
-       * <code>string action = 2;</code>
+       * <code>optional string action = 2;</code>
        */
       public Builder setAction(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        action_ = value;
-        onChanged();
+        copyOnWrite();
+        instance.setAction(value);
         return this;
       }
       /**
-       * <code>string action = 2;</code>
+       * <code>optional string action = 2;</code>
        */
       public Builder clearAction() {
-        
-        action_ = getDefaultInstance().getAction();
-        onChanged();
+        copyOnWrite();
+        instance.clearAction();
         return this;
       }
       /**
-       * <code>string action = 2;</code>
+       * <code>optional string action = 2;</code>
        */
       public Builder setActionBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        action_ = value;
-        onChanged();
+        copyOnWrite();
+        instance.setActionBytes(value);
         return this;
       }
 
-      private java.lang.Object content_ = "";
       /**
-       * <code>string content = 3;</code>
+       * <code>optional string content = 3;</code>
        */
       public java.lang.String getContent() {
-        java.lang.Object ref = content_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          content_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
+        return instance.getContent();
       }
       /**
-       * <code>string content = 3;</code>
+       * <code>optional string content = 3;</code>
        */
       public com.google.protobuf.ByteString
           getContentBytes() {
-        java.lang.Object ref = content_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          content_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
+        return instance.getContentBytes();
       }
       /**
-       * <code>string content = 3;</code>
+       * <code>optional string content = 3;</code>
        */
       public Builder setContent(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        content_ = value;
-        onChanged();
+        copyOnWrite();
+        instance.setContent(value);
         return this;
       }
       /**
-       * <code>string content = 3;</code>
+       * <code>optional string content = 3;</code>
        */
       public Builder clearContent() {
-        
-        content_ = getDefaultInstance().getContent();
-        onChanged();
+        copyOnWrite();
+        instance.clearContent();
         return this;
       }
       /**
-       * <code>string content = 3;</code>
+       * <code>optional string content = 3;</code>
        */
       public Builder setContentBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        content_ = value;
-        onChanged();
+        copyOnWrite();
+        instance.setContentBytes(value);
         return this;
       }
 
-      private java.lang.Object sender_ = "";
       /**
-       * <code>string sender = 4;</code>
+       * <code>optional string sender = 4;</code>
        */
       public java.lang.String getSender() {
-        java.lang.Object ref = sender_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          sender_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
+        return instance.getSender();
       }
       /**
-       * <code>string sender = 4;</code>
+       * <code>optional string sender = 4;</code>
        */
       public com.google.protobuf.ByteString
           getSenderBytes() {
-        java.lang.Object ref = sender_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          sender_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
+        return instance.getSenderBytes();
       }
       /**
-       * <code>string sender = 4;</code>
+       * <code>optional string sender = 4;</code>
        */
       public Builder setSender(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        sender_ = value;
-        onChanged();
+        copyOnWrite();
+        instance.setSender(value);
         return this;
       }
       /**
-       * <code>string sender = 4;</code>
+       * <code>optional string sender = 4;</code>
        */
       public Builder clearSender() {
-        
-        sender_ = getDefaultInstance().getSender();
-        onChanged();
+        copyOnWrite();
+        instance.clearSender();
         return this;
       }
       /**
-       * <code>string sender = 4;</code>
+       * <code>optional string sender = 4;</code>
        */
       public Builder setSenderBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        sender_ = value;
-        onChanged();
+        copyOnWrite();
+        instance.setSenderBytes(value);
         return this;
       }
 
-      private java.lang.Object receiver_ = "";
       /**
-       * <code>string receiver = 5;</code>
+       * <code>optional string receiver = 5;</code>
        */
       public java.lang.String getReceiver() {
-        java.lang.Object ref = receiver_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          receiver_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
+        return instance.getReceiver();
       }
       /**
-       * <code>string receiver = 5;</code>
+       * <code>optional string receiver = 5;</code>
        */
       public com.google.protobuf.ByteString
           getReceiverBytes() {
-        java.lang.Object ref = receiver_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          receiver_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
+        return instance.getReceiverBytes();
       }
       /**
-       * <code>string receiver = 5;</code>
+       * <code>optional string receiver = 5;</code>
        */
       public Builder setReceiver(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        receiver_ = value;
-        onChanged();
+        copyOnWrite();
+        instance.setReceiver(value);
         return this;
       }
       /**
-       * <code>string receiver = 5;</code>
+       * <code>optional string receiver = 5;</code>
        */
       public Builder clearReceiver() {
-        
-        receiver_ = getDefaultInstance().getReceiver();
-        onChanged();
+        copyOnWrite();
+        instance.clearReceiver();
         return this;
       }
       /**
-       * <code>string receiver = 5;</code>
+       * <code>optional string receiver = 5;</code>
        */
       public Builder setReceiverBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        receiver_ = value;
-        onChanged();
+        copyOnWrite();
+        instance.setReceiverBytes(value);
         return this;
       }
 
-      private java.lang.Object extra_ = "";
       /**
-       * <code>string extra = 6;</code>
+       * <code>optional string extra = 6;</code>
        */
       public java.lang.String getExtra() {
-        java.lang.Object ref = extra_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          extra_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
+        return instance.getExtra();
       }
       /**
-       * <code>string extra = 6;</code>
+       * <code>optional string extra = 6;</code>
        */
       public com.google.protobuf.ByteString
           getExtraBytes() {
-        java.lang.Object ref = extra_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          extra_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
+        return instance.getExtraBytes();
       }
       /**
-       * <code>string extra = 6;</code>
+       * <code>optional string extra = 6;</code>
        */
       public Builder setExtra(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        extra_ = value;
-        onChanged();
+        copyOnWrite();
+        instance.setExtra(value);
         return this;
       }
       /**
-       * <code>string extra = 6;</code>
+       * <code>optional string extra = 6;</code>
        */
       public Builder clearExtra() {
-        
-        extra_ = getDefaultInstance().getExtra();
-        onChanged();
+        copyOnWrite();
+        instance.clearExtra();
         return this;
       }
       /**
-       * <code>string extra = 6;</code>
+       * <code>optional string extra = 6;</code>
        */
       public Builder setExtraBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        extra_ = value;
-        onChanged();
+        copyOnWrite();
+        instance.setExtraBytes(value);
         return this;
       }
 
-      private java.lang.Object title_ = "";
       /**
-       * <code>string title = 7;</code>
+       * <code>optional string title = 7;</code>
        */
       public java.lang.String getTitle() {
-        java.lang.Object ref = title_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          title_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
+        return instance.getTitle();
       }
       /**
-       * <code>string title = 7;</code>
+       * <code>optional string title = 7;</code>
        */
       public com.google.protobuf.ByteString
           getTitleBytes() {
-        java.lang.Object ref = title_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          title_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
+        return instance.getTitleBytes();
       }
       /**
-       * <code>string title = 7;</code>
+       * <code>optional string title = 7;</code>
        */
       public Builder setTitle(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        title_ = value;
-        onChanged();
+        copyOnWrite();
+        instance.setTitle(value);
         return this;
       }
       /**
-       * <code>string title = 7;</code>
+       * <code>optional string title = 7;</code>
        */
       public Builder clearTitle() {
-        
-        title_ = getDefaultInstance().getTitle();
-        onChanged();
+        copyOnWrite();
+        instance.clearTitle();
         return this;
       }
       /**
-       * <code>string title = 7;</code>
+       * <code>optional string title = 7;</code>
        */
       public Builder setTitleBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        title_ = value;
-        onChanged();
+        copyOnWrite();
+        instance.setTitleBytes(value);
         return this;
       }
 
-      private java.lang.Object format_ = "";
       /**
-       * <code>string format = 8;</code>
+       * <code>optional string format = 8;</code>
        */
       public java.lang.String getFormat() {
-        java.lang.Object ref = format_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          format_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
+        return instance.getFormat();
       }
       /**
-       * <code>string format = 8;</code>
+       * <code>optional string format = 8;</code>
        */
       public com.google.protobuf.ByteString
           getFormatBytes() {
-        java.lang.Object ref = format_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          format_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
+        return instance.getFormatBytes();
       }
       /**
-       * <code>string format = 8;</code>
+       * <code>optional string format = 8;</code>
        */
       public Builder setFormat(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        format_ = value;
-        onChanged();
+        copyOnWrite();
+        instance.setFormat(value);
         return this;
       }
       /**
-       * <code>string format = 8;</code>
+       * <code>optional string format = 8;</code>
        */
       public Builder clearFormat() {
-        
-        format_ = getDefaultInstance().getFormat();
-        onChanged();
+        copyOnWrite();
+        instance.clearFormat();
         return this;
       }
       /**
-       * <code>string format = 8;</code>
+       * <code>optional string format = 8;</code>
        */
       public Builder setFormatBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        format_ = value;
-        onChanged();
+        copyOnWrite();
+        instance.setFormatBytes(value);
         return this;
       }
 
-      private long timestamp_ ;
       /**
-       * <code>int64 timestamp = 9;</code>
+       * <code>optional int64 timestamp = 9;</code>
        */
       public long getTimestamp() {
-        return timestamp_;
+        return instance.getTimestamp();
       }
       /**
-       * <code>int64 timestamp = 9;</code>
+       * <code>optional int64 timestamp = 9;</code>
        */
       public Builder setTimestamp(long value) {
-        
-        timestamp_ = value;
-        onChanged();
+        copyOnWrite();
+        instance.setTimestamp(value);
         return this;
       }
       /**
-       * <code>int64 timestamp = 9;</code>
+       * <code>optional int64 timestamp = 9;</code>
        */
       public Builder clearTimestamp() {
-        
-        timestamp_ = 0L;
-        onChanged();
+        copyOnWrite();
+        instance.clearTimestamp();
         return this;
       }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:com.farsunset.cim.sdk.android.model.proto.Model)
     }
+    protected final Object dynamicMethod(
+        com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
+        Object arg0, Object arg1) {
+      switch (method) {
+        case NEW_MUTABLE_INSTANCE: {
+          return new com.farsunset.cim.sdk.android.model.proto.MessageProto.Model();
+        }
+        case IS_INITIALIZED: {
+          return DEFAULT_INSTANCE;
+        }
+        case MAKE_IMMUTABLE: {
+          return null;
+        }
+        case NEW_BUILDER: {
+          return new Builder();
+        }
+        case VISIT: {
+          Visitor visitor = (Visitor) arg0;
+          com.farsunset.cim.sdk.android.model.proto.MessageProto.Model other = (com.farsunset.cim.sdk.android.model.proto.MessageProto.Model) arg1;
+          id_ = visitor.visitLong(id_ != 0L, id_,
+              other.id_ != 0L, other.id_);
+          action_ = visitor.visitString(!action_.isEmpty(), action_,
+              !other.action_.isEmpty(), other.action_);
+          content_ = visitor.visitString(!content_.isEmpty(), content_,
+              !other.content_.isEmpty(), other.content_);
+          sender_ = visitor.visitString(!sender_.isEmpty(), sender_,
+              !other.sender_.isEmpty(), other.sender_);
+          receiver_ = visitor.visitString(!receiver_.isEmpty(), receiver_,
+              !other.receiver_.isEmpty(), other.receiver_);
+          extra_ = visitor.visitString(!extra_.isEmpty(), extra_,
+              !other.extra_.isEmpty(), other.extra_);
+          title_ = visitor.visitString(!title_.isEmpty(), title_,
+              !other.title_.isEmpty(), other.title_);
+          format_ = visitor.visitString(!format_.isEmpty(), format_,
+              !other.format_.isEmpty(), other.format_);
+          timestamp_ = visitor.visitLong(timestamp_ != 0L, timestamp_,
+              other.timestamp_ != 0L, other.timestamp_);
+          if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
+              .INSTANCE) {
+          }
+          return this;
+        }
+        case MERGE_FROM_STREAM: {
+          com.google.protobuf.CodedInputStream input =
+              (com.google.protobuf.CodedInputStream) arg0;
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry =
+              (com.google.protobuf.ExtensionRegistryLite) arg1;
+          try {
+            boolean done = false;
+            while (!done) {
+              int tag = input.readTag();
+              switch (tag) {
+                case 0:
+                  done = true;
+                  break;
+                default: {
+                  if (!input.skipField(tag)) {
+                    done = true;
+                  }
+                  break;
+                }
+                case 8: {
+
+                  id_ = input.readInt64();
+                  break;
+                }
+                case 18: {
+                  String s = input.readStringRequireUtf8();
+
+                  action_ = s;
+                  break;
+                }
+                case 26: {
+                  String s = input.readStringRequireUtf8();
+
+                  content_ = s;
+                  break;
+                }
+                case 34: {
+                  String s = input.readStringRequireUtf8();
+
+                  sender_ = s;
+                  break;
+                }
+                case 42: {
+                  String s = input.readStringRequireUtf8();
+
+                  receiver_ = s;
+                  break;
+                }
+                case 50: {
+                  String s = input.readStringRequireUtf8();
+
+                  extra_ = s;
+                  break;
+                }
+                case 58: {
+                  String s = input.readStringRequireUtf8();
+
+                  title_ = s;
+                  break;
+                }
+                case 66: {
+                  String s = input.readStringRequireUtf8();
+
+                  format_ = s;
+                  break;
+                }
+                case 72: {
+
+                  timestamp_ = input.readInt64();
+                  break;
+                }
+              }
+            }
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            throw new RuntimeException(e.setUnfinishedMessage(this));
+          } catch (java.io.IOException e) {
+            throw new RuntimeException(
+                new com.google.protobuf.InvalidProtocolBufferException(
+                    e.getMessage()).setUnfinishedMessage(this));
+          } finally {
+          }
+        }
+        case GET_DEFAULT_INSTANCE: {
+          return DEFAULT_INSTANCE;
+        }
+        case GET_PARSER: {
+          if (PARSER == null) {    synchronized (com.farsunset.cim.sdk.android.model.proto.MessageProto.Model.class) {
+              if (PARSER == null) {
+                PARSER = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
+              }
+            }
+          }
+          return PARSER;
+        }
+      }
+      throw new UnsupportedOperationException();
+    }
+
 
     // @@protoc_insertion_point(class_scope:com.farsunset.cim.sdk.android.model.proto.Model)
     private static final com.farsunset.cim.sdk.android.model.proto.MessageProto.Model DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new com.farsunset.cim.sdk.android.model.proto.MessageProto.Model();
+      DEFAULT_INSTANCE = new Model();
+      DEFAULT_INSTANCE.makeImmutable();
     }
 
     public static com.farsunset.cim.sdk.android.model.proto.MessageProto.Model getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<Model>
-        PARSER = new com.google.protobuf.AbstractParser<Model>() {
-      @java.lang.Override
-      public Model parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Model(input, extensionRegistry);
-      }
-    };
+    private static volatile com.google.protobuf.Parser<Model> PARSER;
 
     public static com.google.protobuf.Parser<Model> parser() {
-      return PARSER;
+      return DEFAULT_INSTANCE.getParserForType();
     }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<Model> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.farsunset.cim.sdk.android.model.proto.MessageProto.Model getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
   }
 
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_farsunset_cim_sdk_android_model_proto_Model_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_com_farsunset_cim_sdk_android_model_proto_Model_fieldAccessorTable;
 
-  public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
-    return descriptor;
-  }
-  private static  com.google.protobuf.Descriptors.FileDescriptor
-      descriptor;
   static {
-    java.lang.String[] descriptorData = {
-      "\n\rMessage.proto\022)com.farsunset.cim.sdk.a" +
-      "ndroid.model.proto\"\227\001\n\005Model\022\n\n\002id\030\001 \001(\003" +
-      "\022\016\n\006action\030\002 \001(\t\022\017\n\007content\030\003 \001(\t\022\016\n\006sen" +
-      "der\030\004 \001(\t\022\020\n\010receiver\030\005 \001(\t\022\r\n\005extra\030\006 \001" +
-      "(\t\022\r\n\005title\030\007 \001(\t\022\016\n\006format\030\010 \001(\t\022\021\n\ttim" +
-      "estamp\030\t \001(\003B\016B\014MessageProtob\006proto3"
-    };
-    com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
-        new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
-          public com.google.protobuf.ExtensionRegistry assignDescriptors(
-              com.google.protobuf.Descriptors.FileDescriptor root) {
-            descriptor = root;
-            return null;
-          }
-        };
-    com.google.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new com.google.protobuf.Descriptors.FileDescriptor[] {
-        }, assigner);
-    internal_static_com_farsunset_cim_sdk_android_model_proto_Model_descriptor =
-      getDescriptor().getMessageTypes().get(0);
-    internal_static_com_farsunset_cim_sdk_android_model_proto_Model_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_com_farsunset_cim_sdk_android_model_proto_Model_descriptor,
-        new java.lang.String[] { "Id", "Action", "Content", "Sender", "Receiver", "Extra", "Title", "Format", "Timestamp", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

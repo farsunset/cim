@@ -54,9 +54,16 @@ public class CIMNioSocketAcceptor extends IoHandlerAdapter implements KeepAliveM
 	private CIMRequestHandler outerRequestHandler;
 	private IoAcceptor acceptor;
 	private int port;
-	private final int IDLE_TIME = 120; // 秒
-	private final int TIME_OUT = 10; // 秒
-	private final int READ_BUFFER_SIZE = 1024; // byte
+	/*
+	 * 读写空闲2分钟后 服务端 -> 客户端 发起心跳请求
+	 */
+	private final int IDLE_HEART_REQUEST_TIME = 120;
+	
+	/*
+	 * 发起心跳后等待客户端的心跳响应，超时10秒后断开连接
+	 */
+	private final int HEART_RESPONSE_TIME_OUT = 10;
+	private final int READ_BUFFER_SIZE = 1024; 
 
 	public void bind()  {
 
@@ -70,9 +77,9 @@ public class CIMNioSocketAcceptor extends IoHandlerAdapter implements KeepAliveM
 		((DefaultSocketSessionConfig) acceptor.getSessionConfig()).setKeepAlive(true);
 		((DefaultSocketSessionConfig) acceptor.getSessionConfig()).setTcpNoDelay(true);
 
-		KeepAliveFilter keepAliveFilter = new KeepAliveFilter(this, IdleStatus.WRITER_IDLE);
-		keepAliveFilter.setRequestInterval(IDLE_TIME);
-		keepAliveFilter.setRequestTimeout(TIME_OUT);
+		KeepAliveFilter keepAliveFilter = new KeepAliveFilter(this, IdleStatus.BOTH_IDLE);
+		keepAliveFilter.setRequestInterval(IDLE_HEART_REQUEST_TIME);
+		keepAliveFilter.setRequestTimeout(HEART_RESPONSE_TIME_OUT);
 		keepAliveFilter.setForwardEvent(true);
 
 		ExecutorService executor = Executors.newCachedThreadPool(runnable -> {
@@ -158,6 +165,12 @@ public class CIMNioSocketAcceptor extends IoHandlerAdapter implements KeepAliveM
 	@Override
 	public boolean isResponse(IoSession arg0, Object arg1) {
 		return arg1 instanceof HeartbeatResponse;
+	}
+	
+	
+	@Override
+	public void exceptionCaught(IoSession session, Throwable cause)   {
+		 
 	}
 
 	public Map<Long, IoSession> getManagedSessions() {

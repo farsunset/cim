@@ -8,28 +8,22 @@ public final class SentBodyProto {
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistryLite registry) {
   }
-
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistry registry) {
-    registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
-  }
   public interface ModelOrBuilder extends
       // @@protoc_insertion_point(interface_extends:com.farsunset.cim.sdk.android.model.proto.Model)
-      com.google.protobuf.MessageOrBuilder {
+      com.google.protobuf.MessageLiteOrBuilder {
 
     /**
-     * <code>string key = 1;</code>
+     * <code>optional string key = 1;</code>
      */
     java.lang.String getKey();
     /**
-     * <code>string key = 1;</code>
+     * <code>optional string key = 1;</code>
      */
     com.google.protobuf.ByteString
         getKeyBytes();
 
     /**
-     * <code>int64 timestamp = 2;</code>
+     * <code>optional int64 timestamp = 2;</code>
      */
     long getTimestamp();
 
@@ -71,179 +65,111 @@ public final class SentBodyProto {
    * Protobuf type {@code com.farsunset.cim.sdk.android.model.proto.Model}
    */
   public  static final class Model extends
-      com.google.protobuf.GeneratedMessageV3 implements
+      com.google.protobuf.GeneratedMessageLite<
+          Model, Model.Builder> implements
       // @@protoc_insertion_point(message_implements:com.farsunset.cim.sdk.android.model.proto.Model)
       ModelOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use Model.newBuilder() to construct.
-    private Model(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
     private Model() {
       key_ = "";
     }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private Model(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              key_ = s;
-              break;
-            }
-            case 16: {
-
-              timestamp_ = input.readInt64();
-              break;
-            }
-            case 26: {
-              if (!((mutable_bitField0_ & 0x00000004) != 0)) {
-                data_ = com.google.protobuf.MapField.newMapField(
-                    DataDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000004;
-              }
-              com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
-              data__ = input.readMessage(
-                  DataDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-              data_.getMutableMap().put(
-                  data__.getKey(), data__.getValue());
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.farsunset.cim.sdk.android.model.proto.SentBodyProto.internal_static_com_farsunset_cim_sdk_android_model_proto_Model_descriptor;
-    }
-
-    @SuppressWarnings({"rawtypes"})
-    @java.lang.Override
-    protected com.google.protobuf.MapField internalGetMapField(
-        int number) {
-      switch (number) {
-        case 3:
-          return internalGetData();
-        default:
-          throw new RuntimeException(
-              "Invalid map field number: " + number);
-      }
-    }
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return com.farsunset.cim.sdk.android.model.proto.SentBodyProto.internal_static_com_farsunset_cim_sdk_android_model_proto_Model_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model.class, com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model.Builder.class);
-    }
-
     private int bitField0_;
     public static final int KEY_FIELD_NUMBER = 1;
-    private volatile java.lang.Object key_;
+    private java.lang.String key_;
     /**
-     * <code>string key = 1;</code>
+     * <code>optional string key = 1;</code>
      */
     public java.lang.String getKey() {
-      java.lang.Object ref = key_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        key_ = s;
-        return s;
-      }
+      return key_;
     }
     /**
-     * <code>string key = 1;</code>
+     * <code>optional string key = 1;</code>
      */
     public com.google.protobuf.ByteString
         getKeyBytes() {
-      java.lang.Object ref = key_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        key_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+      return com.google.protobuf.ByteString.copyFromUtf8(key_);
+    }
+    /**
+     * <code>optional string key = 1;</code>
+     */
+    private void setKey(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      key_ = value;
+    }
+    /**
+     * <code>optional string key = 1;</code>
+     */
+    private void clearKey() {
+      
+      key_ = getDefaultInstance().getKey();
+    }
+    /**
+     * <code>optional string key = 1;</code>
+     */
+    private void setKeyBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      key_ = value.toStringUtf8();
     }
 
     public static final int TIMESTAMP_FIELD_NUMBER = 2;
     private long timestamp_;
     /**
-     * <code>int64 timestamp = 2;</code>
+     * <code>optional int64 timestamp = 2;</code>
      */
     public long getTimestamp() {
       return timestamp_;
     }
+    /**
+     * <code>optional int64 timestamp = 2;</code>
+     */
+    private void setTimestamp(long value) {
+      
+      timestamp_ = value;
+    }
+    /**
+     * <code>optional int64 timestamp = 2;</code>
+     */
+    private void clearTimestamp() {
+      
+      timestamp_ = 0L;
+    }
 
     public static final int DATA_FIELD_NUMBER = 3;
     private static final class DataDefaultEntryHolder {
-      static final com.google.protobuf.MapEntry<
+      static final com.google.protobuf.MapEntryLite<
           java.lang.String, java.lang.String> defaultEntry =
-              com.google.protobuf.MapEntry
+              com.google.protobuf.MapEntryLite
               .<java.lang.String, java.lang.String>newDefaultInstance(
-                  com.farsunset.cim.sdk.android.model.proto.SentBodyProto.internal_static_com_farsunset_cim_sdk_android_model_proto_Model_DataEntry_descriptor, 
                   com.google.protobuf.WireFormat.FieldType.STRING,
                   "",
                   com.google.protobuf.WireFormat.FieldType.STRING,
                   "");
     }
-    private com.google.protobuf.MapField<
-        java.lang.String, java.lang.String> data_;
-    private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+    private com.google.protobuf.MapFieldLite<
+        java.lang.String, java.lang.String> data_ =
+            com.google.protobuf.MapFieldLite.emptyMapField();
+    private com.google.protobuf.MapFieldLite<java.lang.String, java.lang.String>
     internalGetData() {
-      if (data_ == null) {
-        return com.google.protobuf.MapField.emptyMapField(
-            DataDefaultEntryHolder.defaultEntry);
+      return data_;
+    }
+    private com.google.protobuf.MapFieldLite<java.lang.String, java.lang.String>
+    internalGetMutableData() {
+      if (!data_.isMutable()) {
+        data_ = data_.mutableCopy();
       }
       return data_;
     }
 
     public int getDataCount() {
-      return internalGetData().getMap().size();
+      return internalGetData().size();
     }
     /**
      * <code>map&lt;string, string&gt; data = 3;</code>
@@ -252,7 +178,7 @@ public final class SentBodyProto {
     public boolean containsData(
         java.lang.String key) {
       if (key == null) { throw new java.lang.NullPointerException(); }
-      return internalGetData().getMap().containsKey(key);
+      return internalGetData().containsKey(key);
     }
     /**
      * Use {@link #getDataMap()} instead.
@@ -266,7 +192,8 @@ public final class SentBodyProto {
      */
 
     public java.util.Map<java.lang.String, java.lang.String> getDataMap() {
-      return internalGetData().getMap();
+      return java.util.Collections.unmodifiableMap(
+          internalGetData());
     }
     /**
      * <code>map&lt;string, string&gt; data = 3;</code>
@@ -277,7 +204,7 @@ public final class SentBodyProto {
         java.lang.String defaultValue) {
       if (key == null) { throw new java.lang.NullPointerException(); }
       java.util.Map<java.lang.String, java.lang.String> map =
-          internalGetData().getMap();
+          internalGetData();
       return map.containsKey(key) ? map.get(key) : defaultValue;
     }
     /**
@@ -288,506 +215,205 @@ public final class SentBodyProto {
         java.lang.String key) {
       if (key == null) { throw new java.lang.NullPointerException(); }
       java.util.Map<java.lang.String, java.lang.String> map =
-          internalGetData().getMap();
+          internalGetData();
       if (!map.containsKey(key)) {
         throw new java.lang.IllegalArgumentException();
       }
       return map.get(key);
     }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
+    /**
+     * <code>map&lt;string, string&gt; data = 3;</code>
+     */
+    private java.util.Map<java.lang.String, java.lang.String>
+    getMutableDataMap() {
+      return internalGetMutableData();
     }
 
-    @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (!getKeyBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, key_);
+      if (!key_.isEmpty()) {
+        output.writeString(1, getKey());
       }
       if (timestamp_ != 0L) {
         output.writeInt64(2, timestamp_);
       }
-      com.google.protobuf.GeneratedMessageV3
-        .serializeStringMapTo(
-          output,
-          internalGetData(),
-          DataDefaultEntryHolder.defaultEntry,
-          3);
-      unknownFields.writeTo(output);
+      for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
+           : internalGetData().entrySet()) {
+        DataDefaultEntryHolder.defaultEntry.serializeTo(
+            output, 3, entry.getKey(), entry.getValue());
+      }
     }
 
-    @java.lang.Override
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
-      if (!getKeyBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, key_);
+      if (!key_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeStringSize(1, getKey());
       }
       if (timestamp_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(2, timestamp_);
       }
       for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
-           : internalGetData().getMap().entrySet()) {
-        com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
-        data__ = DataDefaultEntryHolder.defaultEntry.newBuilderForType()
-            .setKey(entry.getKey())
-            .setValue(entry.getValue())
-            .build();
-        size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(3, data__);
+           : internalGetData().entrySet()) {
+        size += DataDefaultEntryHolder.defaultEntry.computeMessageSize(
+          3, entry.getKey(), entry.getValue());
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      memoizedSerializedSize = size;
       return size;
     }
 
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model)) {
-        return super.equals(obj);
-      }
-      com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model other = (com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model) obj;
-
-      if (!getKey()
-          .equals(other.getKey())) return false;
-      if (getTimestamp()
-          != other.getTimestamp()) return false;
-      if (!internalGetData().equals(
-          other.internalGetData())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
-      return true;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + KEY_FIELD_NUMBER;
-      hash = (53 * hash) + getKey().hashCode();
-      hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getTimestamp());
-      if (!internalGetData().getMap().isEmpty()) {
-        hash = (37 * hash) + DATA_FIELD_NUMBER;
-        hash = (53 * hash) + internalGetData().hashCode();
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
     public static com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data);
     }
     public static com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data, extensionRegistry);
     }
     public static com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data);
     }
     public static com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data, extensionRegistry);
     }
     public static com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, input);
     }
     public static com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, input, extensionRegistry);
     }
     public static com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return parseDelimitedFrom(DEFAULT_INSTANCE, input);
     }
     public static com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
     }
     public static com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, input);
     }
     public static com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, input, extensionRegistry);
     }
 
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
     public static Builder newBuilder(com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
 
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
     /**
      * Protobuf type {@code com.farsunset.cim.sdk.android.model.proto.Model}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessageLite.Builder<
+          com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model, Builder> implements
         // @@protoc_insertion_point(builder_implements:com.farsunset.cim.sdk.android.model.proto.Model)
         com.farsunset.cim.sdk.android.model.proto.SentBodyProto.ModelOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.farsunset.cim.sdk.android.model.proto.SentBodyProto.internal_static_com_farsunset_cim_sdk_android_model_proto_Model_descriptor;
-      }
-
-      @SuppressWarnings({"rawtypes"})
-      protected com.google.protobuf.MapField internalGetMapField(
-          int number) {
-        switch (number) {
-          case 3:
-            return internalGetData();
-          default:
-            throw new RuntimeException(
-                "Invalid map field number: " + number);
-        }
-      }
-      @SuppressWarnings({"rawtypes"})
-      protected com.google.protobuf.MapField internalGetMutableMapField(
-          int number) {
-        switch (number) {
-          case 3:
-            return internalGetMutableData();
-          default:
-            throw new RuntimeException(
-                "Invalid map field number: " + number);
-        }
-      }
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.farsunset.cim.sdk.android.model.proto.SentBodyProto.internal_static_com_farsunset_cim_sdk_android_model_proto_Model_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model.class, com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model.Builder.class);
-      }
-
       // Construct using com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+        super(DEFAULT_INSTANCE);
       }
 
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        key_ = "";
 
-        timestamp_ = 0L;
-
-        internalGetMutableData().clear();
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return com.farsunset.cim.sdk.android.model.proto.SentBodyProto.internal_static_com_farsunset_cim_sdk_android_model_proto_Model_descriptor;
-      }
-
-      @java.lang.Override
-      public com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model getDefaultInstanceForType() {
-        return com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model build() {
-        com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      @java.lang.Override
-      public com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model buildPartial() {
-        com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model result = new com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        result.key_ = key_;
-        result.timestamp_ = timestamp_;
-        result.data_ = internalGetData();
-        result.data_.makeImmutable();
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model) {
-          return mergeFrom((com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model other) {
-        if (other == com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model.getDefaultInstance()) return this;
-        if (!other.getKey().isEmpty()) {
-          key_ = other.key_;
-          onChanged();
-        }
-        if (other.getTimestamp() != 0L) {
-          setTimestamp(other.getTimestamp());
-        }
-        internalGetMutableData().mergeFrom(
-            other.internalGetData());
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      private java.lang.Object key_ = "";
       /**
-       * <code>string key = 1;</code>
+       * <code>optional string key = 1;</code>
        */
       public java.lang.String getKey() {
-        java.lang.Object ref = key_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          key_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
+        return instance.getKey();
       }
       /**
-       * <code>string key = 1;</code>
+       * <code>optional string key = 1;</code>
        */
       public com.google.protobuf.ByteString
           getKeyBytes() {
-        java.lang.Object ref = key_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          key_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
+        return instance.getKeyBytes();
       }
       /**
-       * <code>string key = 1;</code>
+       * <code>optional string key = 1;</code>
        */
       public Builder setKey(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        key_ = value;
-        onChanged();
+        copyOnWrite();
+        instance.setKey(value);
         return this;
       }
       /**
-       * <code>string key = 1;</code>
+       * <code>optional string key = 1;</code>
        */
       public Builder clearKey() {
-        
-        key_ = getDefaultInstance().getKey();
-        onChanged();
+        copyOnWrite();
+        instance.clearKey();
         return this;
       }
       /**
-       * <code>string key = 1;</code>
+       * <code>optional string key = 1;</code>
        */
       public Builder setKeyBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        key_ = value;
-        onChanged();
+        copyOnWrite();
+        instance.setKeyBytes(value);
         return this;
       }
 
-      private long timestamp_ ;
       /**
-       * <code>int64 timestamp = 2;</code>
+       * <code>optional int64 timestamp = 2;</code>
        */
       public long getTimestamp() {
-        return timestamp_;
+        return instance.getTimestamp();
       }
       /**
-       * <code>int64 timestamp = 2;</code>
+       * <code>optional int64 timestamp = 2;</code>
        */
       public Builder setTimestamp(long value) {
-        
-        timestamp_ = value;
-        onChanged();
+        copyOnWrite();
+        instance.setTimestamp(value);
         return this;
       }
       /**
-       * <code>int64 timestamp = 2;</code>
+       * <code>optional int64 timestamp = 2;</code>
        */
       public Builder clearTimestamp() {
-        
-        timestamp_ = 0L;
-        onChanged();
+        copyOnWrite();
+        instance.clearTimestamp();
         return this;
       }
 
-      private com.google.protobuf.MapField<
-          java.lang.String, java.lang.String> data_;
-      private com.google.protobuf.MapField<java.lang.String, java.lang.String>
-      internalGetData() {
-        if (data_ == null) {
-          return com.google.protobuf.MapField.emptyMapField(
-              DataDefaultEntryHolder.defaultEntry);
-        }
-        return data_;
-      }
-      private com.google.protobuf.MapField<java.lang.String, java.lang.String>
-      internalGetMutableData() {
-        onChanged();;
-        if (data_ == null) {
-          data_ = com.google.protobuf.MapField.newMapField(
-              DataDefaultEntryHolder.defaultEntry);
-        }
-        if (!data_.isMutable()) {
-          data_ = data_.copy();
-        }
-        return data_;
-      }
 
       public int getDataCount() {
-        return internalGetData().getMap().size();
+        return instance.getDataMap().size();
       }
       /**
        * <code>map&lt;string, string&gt; data = 3;</code>
@@ -796,7 +422,24 @@ public final class SentBodyProto {
       public boolean containsData(
           java.lang.String key) {
         if (key == null) { throw new java.lang.NullPointerException(); }
-        return internalGetData().getMap().containsKey(key);
+        return instance.getDataMap().containsKey(key);
+      }
+
+      public Builder clearData() {
+        copyOnWrite();
+        instance.getMutableDataMap().clear();
+        return this;
+      }
+      /**
+       * <code>map&lt;string, string&gt; data = 3;</code>
+       */
+
+      public Builder removeData(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        copyOnWrite();
+        instance.getMutableDataMap().remove(key);
+        return this;
       }
       /**
        * Use {@link #getDataMap()} instead.
@@ -808,9 +451,9 @@ public final class SentBodyProto {
       /**
        * <code>map&lt;string, string&gt; data = 3;</code>
        */
-
       public java.util.Map<java.lang.String, java.lang.String> getDataMap() {
-        return internalGetData().getMap();
+        return java.util.Collections.unmodifiableMap(
+            instance.getDataMap());
       }
       /**
        * <code>map&lt;string, string&gt; data = 3;</code>
@@ -821,7 +464,7 @@ public final class SentBodyProto {
           java.lang.String defaultValue) {
         if (key == null) { throw new java.lang.NullPointerException(); }
         java.util.Map<java.lang.String, java.lang.String> map =
-            internalGetData().getMap();
+            instance.getDataMap();
         return map.containsKey(key) ? map.get(key) : defaultValue;
       }
       /**
@@ -832,36 +475,11 @@ public final class SentBodyProto {
           java.lang.String key) {
         if (key == null) { throw new java.lang.NullPointerException(); }
         java.util.Map<java.lang.String, java.lang.String> map =
-            internalGetData().getMap();
+            instance.getDataMap();
         if (!map.containsKey(key)) {
           throw new java.lang.IllegalArgumentException();
         }
         return map.get(key);
-      }
-
-      public Builder clearData() {
-        internalGetMutableData().getMutableMap()
-            .clear();
-        return this;
-      }
-      /**
-       * <code>map&lt;string, string&gt; data = 3;</code>
-       */
-
-      public Builder removeData(
-          java.lang.String key) {
-        if (key == null) { throw new java.lang.NullPointerException(); }
-        internalGetMutableData().getMutableMap()
-            .remove(key);
-        return this;
-      }
-      /**
-       * Use alternate mutation accessors instead.
-       */
-      @java.lang.Deprecated
-      public java.util.Map<java.lang.String, java.lang.String>
-      getMutableData() {
-        return internalGetMutableData().getMutableMap();
       }
       /**
        * <code>map&lt;string, string&gt; data = 3;</code>
@@ -871,124 +489,138 @@ public final class SentBodyProto {
           java.lang.String value) {
         if (key == null) { throw new java.lang.NullPointerException(); }
         if (value == null) { throw new java.lang.NullPointerException(); }
-        internalGetMutableData().getMutableMap()
-            .put(key, value);
+        copyOnWrite();
+        instance.getMutableDataMap().put(key, value);
         return this;
       }
       /**
        * <code>map&lt;string, string&gt; data = 3;</code>
        */
-
       public Builder putAllData(
           java.util.Map<java.lang.String, java.lang.String> values) {
-        internalGetMutableData().getMutableMap()
-            .putAll(values);
+        copyOnWrite();
+        instance.getMutableDataMap().putAll(values);
         return this;
       }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:com.farsunset.cim.sdk.android.model.proto.Model)
     }
+    protected final Object dynamicMethod(
+        com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
+        Object arg0, Object arg1) {
+      switch (method) {
+        case NEW_MUTABLE_INSTANCE: {
+          return new com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model();
+        }
+        case IS_INITIALIZED: {
+          return DEFAULT_INSTANCE;
+        }
+        case MAKE_IMMUTABLE: {
+          data_.makeImmutable();
+          return null;
+        }
+        case NEW_BUILDER: {
+          return new Builder();
+        }
+        case VISIT: {
+          Visitor visitor = (Visitor) arg0;
+          com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model other = (com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model) arg1;
+          key_ = visitor.visitString(!key_.isEmpty(), key_,
+              !other.key_.isEmpty(), other.key_);
+          timestamp_ = visitor.visitLong(timestamp_ != 0L, timestamp_,
+              other.timestamp_ != 0L, other.timestamp_);
+          data_ = visitor.visitMap(
+              data_, other.internalGetData());
+          if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
+              .INSTANCE) {
+            bitField0_ |= other.bitField0_;
+          }
+          return this;
+        }
+        case MERGE_FROM_STREAM: {
+          com.google.protobuf.CodedInputStream input =
+              (com.google.protobuf.CodedInputStream) arg0;
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry =
+              (com.google.protobuf.ExtensionRegistryLite) arg1;
+          try {
+            boolean done = false;
+            while (!done) {
+              int tag = input.readTag();
+              switch (tag) {
+                case 0:
+                  done = true;
+                  break;
+                default: {
+                  if (!input.skipField(tag)) {
+                    done = true;
+                  }
+                  break;
+                }
+                case 10: {
+                  String s = input.readStringRequireUtf8();
+
+                  key_ = s;
+                  break;
+                }
+                case 16: {
+
+                  timestamp_ = input.readInt64();
+                  break;
+                }
+                case 26: {
+                  if (!data_.isMutable()) {
+                    data_ = data_.mutableCopy();
+                  }
+                  DataDefaultEntryHolder.defaultEntry.parseInto(data_, input, extensionRegistry);  break;
+                }
+              }
+            }
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            throw new RuntimeException(e.setUnfinishedMessage(this));
+          } catch (java.io.IOException e) {
+            throw new RuntimeException(
+                new com.google.protobuf.InvalidProtocolBufferException(
+                    e.getMessage()).setUnfinishedMessage(this));
+          } finally {
+          }
+        }
+        case GET_DEFAULT_INSTANCE: {
+          return DEFAULT_INSTANCE;
+        }
+        case GET_PARSER: {
+          if (PARSER == null) {    synchronized (com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model.class) {
+              if (PARSER == null) {
+                PARSER = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
+              }
+            }
+          }
+          return PARSER;
+        }
+      }
+      throw new UnsupportedOperationException();
+    }
+
 
     // @@protoc_insertion_point(class_scope:com.farsunset.cim.sdk.android.model.proto.Model)
     private static final com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model();
+      DEFAULT_INSTANCE = new Model();
+      DEFAULT_INSTANCE.makeImmutable();
     }
 
     public static com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<Model>
-        PARSER = new com.google.protobuf.AbstractParser<Model>() {
-      @java.lang.Override
-      public Model parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Model(input, extensionRegistry);
-      }
-    };
+    private static volatile com.google.protobuf.Parser<Model> PARSER;
 
     public static com.google.protobuf.Parser<Model> parser() {
-      return PARSER;
+      return DEFAULT_INSTANCE.getParserForType();
     }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<Model> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.farsunset.cim.sdk.android.model.proto.SentBodyProto.Model getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
   }
 
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_farsunset_cim_sdk_android_model_proto_Model_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_com_farsunset_cim_sdk_android_model_proto_Model_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_farsunset_cim_sdk_android_model_proto_Model_DataEntry_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_com_farsunset_cim_sdk_android_model_proto_Model_DataEntry_fieldAccessorTable;
 
-  public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
-    return descriptor;
-  }
-  private static  com.google.protobuf.Descriptors.FileDescriptor
-      descriptor;
   static {
-    java.lang.String[] descriptorData = {
-      "\n\016SentBody.proto\022)com.farsunset.cim.sdk." +
-      "android.model.proto\"\236\001\n\005Model\022\013\n\003key\030\001 \001" +
-      "(\t\022\021\n\ttimestamp\030\002 \001(\003\022H\n\004data\030\003 \003(\0132:.co" +
-      "m.farsunset.cim.sdk.android.model.proto." +
-      "Model.DataEntry\032+\n\tDataEntry\022\013\n\003key\030\001 \001(" +
-      "\t\022\r\n\005value\030\002 \001(\t:\0028\001B\017B\rSentBodyProtob\006p" +
-      "roto3"
-    };
-    com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
-        new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
-          public com.google.protobuf.ExtensionRegistry assignDescriptors(
-              com.google.protobuf.Descriptors.FileDescriptor root) {
-            descriptor = root;
-            return null;
-          }
-        };
-    com.google.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new com.google.protobuf.Descriptors.FileDescriptor[] {
-        }, assigner);
-    internal_static_com_farsunset_cim_sdk_android_model_proto_Model_descriptor =
-      getDescriptor().getMessageTypes().get(0);
-    internal_static_com_farsunset_cim_sdk_android_model_proto_Model_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_com_farsunset_cim_sdk_android_model_proto_Model_descriptor,
-        new java.lang.String[] { "Key", "Timestamp", "Data", });
-    internal_static_com_farsunset_cim_sdk_android_model_proto_Model_DataEntry_descriptor =
-      internal_static_com_farsunset_cim_sdk_android_model_proto_Model_descriptor.getNestedTypes().get(0);
-    internal_static_com_farsunset_cim_sdk_android_model_proto_Model_DataEntry_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_com_farsunset_cim_sdk_android_model_proto_Model_DataEntry_descriptor,
-        new java.lang.String[] { "Key", "Value", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

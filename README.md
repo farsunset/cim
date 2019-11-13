@@ -6,9 +6,9 @@ CIM是基于mina或者netty框架下的推送系统，我们平常使用第三�
 侣信专业版是基于CIM面向中小企业和者各类团队组织内部交流使用工具。具有丰富的功能，聊天，群组，部门组织，内部朋友圈等功能。它可以在局域网内使用保证沟通的信息安全，并且它是完全免费的，而且可以及时获得更新。
 ## [http://farsunset.com](http://farsunset.com)
 <div align="center">
-   <img src="https://images.gitee.com/uploads/images/2019/0403/110400_b83d0906_58912.jpeg" width="280px"  />
-   <img src="https://images.gitee.com/uploads/images/2019/0403/110400_6883aa1b_58912.jpeg" width="280px" />
-   <img src="https://images.gitee.com/uploads/images/2019/0403/110401_6d0679f4_58912.png" width="280px" />
+   <img src="http://staticres.oss-cn-hangzhou.aliyuncs.com/hoxin/session.jpg" width="280px"  />
+   <img src="http://staticres.oss-cn-hangzhou.aliyuncs.com/hoxin/contacts.jpg" width="280px" />
+   <img src="http://staticres.oss-cn-hangzhou.aliyuncs.com/hoxin/moment_timeline.jpg" width="280px" />
 </div>
 
 ---  
@@ -73,5 +73,10 @@ CIM是基于mina或者netty框架下的推送系统，我们平常使用第三�
 
 5.修正文档中一些疏漏
  
- 
+
+-------------------------------------------------------------------------------------------
+版本:3.7.5/时间:2019-11-13
+
+1.android sdk 优化，使用protobuf-lite版本替代较为臃肿的protobut-java版本
+
  
