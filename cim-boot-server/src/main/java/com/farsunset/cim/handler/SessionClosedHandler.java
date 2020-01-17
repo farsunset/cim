@@ -44,6 +44,7 @@ public class SessionClosedHandler implements CIMRequestHandler {
 	@Resource
 	private CIMSessionService cimSessionService;
 	
+	@Override
 	public void process(CIMSession ios, SentBody message) {
 		Object quietly = ios.getAttribute(CIMConstant.KEY_QUIETLY_CLOSE);
 		if (Objects.equals(quietly, true)) {
@@ -57,7 +58,7 @@ public class SessionClosedHandler implements CIMRequestHandler {
 
 		CIMSession oldSession = cimSessionService.get(account.toString());
 
-		if (oldSession == null || oldSession.isApnsOpend()) {
+		if (oldSession == null || oldSession.isApnsEnable()) {
 			return;
 		}
 

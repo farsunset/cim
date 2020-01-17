@@ -55,6 +55,7 @@ public class DefaultMessagePusher implements CIMMessagePusher {
 	 * 
 	 * @param message
 	 */
+	@Override
 	public void push(Message message) {
 		CIMSession session = cimSessionService.get(message.getReceiver());
 
@@ -65,7 +66,7 @@ public class DefaultMessagePusher implements CIMMessagePusher {
 		/*
 		 * IOS设备，如果开启了apns，则使用apns推送
 		 */
-		if (session.isIOSChannel() && session.isApnsOpend()) {
+		if (session.isIOSChannel() && session.isApnsEnable()) {
 			apnsService.push(message, session.getDeviceId());
 			return;
 		}

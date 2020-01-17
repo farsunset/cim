@@ -32,6 +32,7 @@ import com.farsunset.cim.service.CIMSessionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -57,11 +58,12 @@ public class BindHandler implements CIMRequestHandler {
 	@Resource
 	private CIMMessagePusher defaultMessagePusher;
 	
+	@Override
 	public void process(CIMSession newSession, SentBody body) {
 
 		ReplyBody reply = new ReplyBody();
 		reply.setKey(body.getKey());
-		reply.setCode(CIMConstant.ReturnCode.CODE_200);
+		reply.setCode(HttpStatus.OK.value());
 		reply.setTimestamp(System.currentTimeMillis());
 		
 		try {
@@ -72,7 +74,7 @@ public class BindHandler implements CIMRequestHandler {
 			newSession.setHost(host);
 			newSession.setChannel(body.get("channel"));
 			newSession.setDeviceModel(body.get("device"));
-			newSession.setClientVersion(body.get("version"));
+			newSession.setClientVersion(body.get("appVersion"));
 			newSession.setSystemVersion(body.get("osVersion"));
 			newSession.setBindTime(System.currentTimeMillis());
 			/*
@@ -102,7 +104,7 @@ public class BindHandler implements CIMRequestHandler {
 			
 
 		} catch (Exception exception) {
-			reply.setCode(CIMConstant.ReturnCode.CODE_500);
+			reply.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			logger.error("Bind has error",exception);
 		}
 	 
@@ -117,7 +119,7 @@ public class BindHandler implements CIMRequestHandler {
 	private void sendForceOfflineMessage(CIMSession oldSession, String account, String deviceModel) {
 
 		Message msg = new Message();
-		msg.setAction(CIMConstant.MessageAction.ACTION_999);// 强行下线消息类型
+		msg.setAction(CIMConstant.MessageAction.ACTION_OFFLINE);
 		msg.setReceiver(account);
 		msg.setSender("system");
 		msg.setContent(deviceModel);
@@ -129,7 +131,6 @@ public class BindHandler implements CIMRequestHandler {
 
 	}
 
-	// 不同设备同一账号登录时关闭旧的连接
 	private void closeQuietly(CIMSession oldSession) {
 		if (oldSession.isConnected() && Objects.equals(host, oldSession.getHost())) {
 			oldSession.setAttribute(CIMConstant.KEY_QUIETLY_CLOSE,true);

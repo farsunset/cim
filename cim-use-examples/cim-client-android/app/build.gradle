@@ -5,7 +5,7 @@ android {
     buildToolsVersion "28.0.3"
     defaultConfig {
         applicationId "com.farsunset.ichat.example"
-        minSdkVersion 14
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 31
         versionName "3.1.0"
@@ -21,10 +21,15 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.google.protobuf:protobuf-lite:3.0.0'    
+    implementation 'com.google.protobuf:protobuf-lite:3.0.1'
 }

@@ -20,7 +20,7 @@
    /***********************************推送配置开始**************************/
    
    /**  当socket连接成功回调 **/
-   function onConnectionSuccessed(){
+   function onConnectFinished(){
 	   CIMPushManager.bindAccount($('#account').val());
    }
    
@@ -74,7 +74,7 @@
 		    }
 		    showProcess('正在接入请稍后......');
 		    /**登录成功后创建连接****/
-		    CIMPushManager.connection();
+		    CIMPushManager.connect();
 	}
    
    

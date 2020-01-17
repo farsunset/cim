@@ -95,33 +95,4 @@ public final class CIMPushManagerReceiver extends CIMEventBroadcastReceiver {
     }
 
 
-    @Override
-    public void onNetworkChanged(NetworkInfo info) {
-        CIMListenerManager.notifyOnNetworkChanged(info);
-    }
-
-
-    @Override
-    public void onConnectionSuccessed(boolean hasAutoBind) {
-        CIMListenerManager.notifyOnConnectionSuccessed(hasAutoBind);
-    }
-
-    @Override
-    public void onConnectionClosed() {
-        CIMListenerManager.notifyOnConnectionClosed();
-    }
-
-
-    @Override
-    public void onReplyReceived(ReplyBody body) {
-        CIMListenerManager.notifyOnReplyReceived(body);
-    }
-
-
-    @Override
-    public void onConnectionFailed() {
-        // TODO Auto-generated method stub
-        CIMListenerManager.notifyOnConnectionFailed();
-    }
-
 }

@@ -24,6 +24,7 @@ package com.farsunset.cim.api.controller;
 import com.farsunset.cim.api.controller.dto.MessageResult;
 import com.farsunset.cim.push.DefaultMessagePusher;
 import com.farsunset.cim.sdk.server.model.Message;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,13 +45,13 @@ public class MessageController  {
 	 * @param message
 	 * @return
 	 */
-	@RequestMapping(value = "/dispatch",method=RequestMethod.POST)
+	@PostMapping(value = "/dispatch")
 	public MessageResult dispatchSend(Message message) {
 		return send(message);
 	}
 	
 	
-	@RequestMapping(value = "/send",method=RequestMethod.POST)
+	@PostMapping(value = "/send")
 	public MessageResult send(Message message)  {
 
 		MessageResult result = new MessageResult();

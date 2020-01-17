@@ -66,7 +66,7 @@ public class SplanshActivity extends CIMMonitorActivity {
     }
 
     @Override
-    public void onConnectionSuccessed(boolean autoBind) {
+    public void onConnectFinished(boolean autoBind) {
 
         Intent intent = new Intent(SplanshActivity.this, LoginActivity.class);
         startActivity(intent);
@@ -81,7 +81,7 @@ public class SplanshActivity extends CIMMonitorActivity {
     }
 
     @Override
-    public void onConnectionFailed() {
+    public void onConnectFailed() {
         Toast.makeText(this,"连接服务器失败，请检查当前设备是否能连接上服务器IP和端口",Toast.LENGTH_LONG).show();
     }
 }

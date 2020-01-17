@@ -38,11 +38,15 @@ public class CIMConfig implements CIMRequestHandler, ApplicationListener<Applica
 	}
 
 	@Bean(destroyMethod = "destroy")
-	public CIMNioSocketAcceptor getNioSocketAcceptor(@Value("${cim.server.port}") int port) {
-		CIMNioSocketAcceptor nioSocketAcceptor = new CIMNioSocketAcceptor();
-		nioSocketAcceptor.setPort(port);
-		nioSocketAcceptor.setAppSentBodyHandler(this);
-		return nioSocketAcceptor;
+	public CIMNioSocketAcceptor getNioSocketAcceptor(@Value("${cim.app.port}") int port,
+													 @Value("${cim.websocket.port}") int websocketPort) {
+
+		return new CIMNioSocketAcceptor.Builder()
+				.setAppPort(port)
+				.setWebsocketPort(websocketPort)
+				.setOuterRequestHandler(this)
+				.build();
+
 	}
 
 	@Override

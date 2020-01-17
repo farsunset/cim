@@ -22,6 +22,7 @@
 package com.farsunset.cim.admin.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -29,13 +30,13 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class NavigationController {
 
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@GetMapping(value = "/")
 	public ModelAndView index(ModelAndView model) {
 		model.setViewName("console/index");
 		return model;
 	}
 
-	@RequestMapping(value = "/webclient", method = RequestMethod.GET)
+	@GetMapping(value = "/webclient")
 	public ModelAndView webclient(ModelAndView model) {
 		model.setViewName("console/webclient/index");
 		return model;

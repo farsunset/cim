@@ -68,7 +68,7 @@ public abstract class CIMMonitorActivity extends Activity implements CIMEventLis
     }
 
     @Override
-    public void onConnectionFailed() {
+    public void onConnectFailed() {
 
     }
 
@@ -82,7 +82,7 @@ public abstract class CIMMonitorActivity extends Activity implements CIMEventLis
      */
 
     @Override
-    public void onConnectionSuccessed(boolean arg0) {
+    public void onConnectFinished(boolean arg0) {
     }
 
 
@@ -91,7 +91,7 @@ public abstract class CIMMonitorActivity extends Activity implements CIMEventLis
     }
 
     @Override
-    public void onSentSuccessed(SentBody sentBody) {
+    public void onSendFinished(SentBody sentBody) {
 
     }
 }

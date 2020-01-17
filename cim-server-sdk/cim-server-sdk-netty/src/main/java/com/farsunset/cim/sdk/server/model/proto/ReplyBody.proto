@@ -1,0 +1,13 @@
+syntax = "proto3";
+package com.farsunset.cim.sdk.server.model.proto;
+option java_outer_classname="ReplyBodyProto";
+
+message Model {
+   string key = 1;
+   string code = 2;
+   string message = 3;
+   int64 timestamp =4;
+   map<string,string> data =5;
+   
+}
+	 

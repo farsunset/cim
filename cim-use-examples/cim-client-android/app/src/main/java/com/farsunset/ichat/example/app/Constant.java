@@ -24,7 +24,7 @@ package com.farsunset.ichat.example.app;
 public interface Constant {
 
     //服务端IP地址
-    String CIM_SERVER_HOST = "192.168.50.80";
+    String CIM_SERVER_HOST = "192.168.1.88";
 
     //注意，这里的端口不是tomcat的端口，没改动就使用默认的23456
     int CIM_SERVER_PORT = 23456;

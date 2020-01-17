@@ -76,7 +76,7 @@ public class LoginActivity extends CIMMonitorActivity implements OnClickListener
     }
 
     @Override
-    public void onConnectionSuccessed(boolean autoBind) {
+    public void onConnectFinished(boolean autoBind) {
         if (!autoBind)
             CIMPushManager.bindAccount(this, accountEdit.getText().toString().trim());
     }
