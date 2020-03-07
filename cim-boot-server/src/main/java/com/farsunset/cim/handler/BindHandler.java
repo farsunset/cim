@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2013-2019 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,7 +39,7 @@ import javax.annotation.Resource;
 import java.util.Objects;
 
 
-/**
+/*
  * 账号绑定实现
  * 
  */

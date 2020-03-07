@@ -35,7 +35,7 @@ public class HeartbeatRequest implements Serializable, Protobufable {
 	private static final String TAG = "SERVER_HEARTBEAT_REQUEST";
 	private static final String CMD_HEARTBEAT_RESPONSE = "SR";
 
-	private static HeartbeatRequest object = new HeartbeatRequest();
+	private static final HeartbeatRequest object = new HeartbeatRequest();
 
 	private HeartbeatRequest() {
 

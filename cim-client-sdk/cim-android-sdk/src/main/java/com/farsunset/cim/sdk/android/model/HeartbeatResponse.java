@@ -30,33 +30,33 @@ import java.io.Serializable;
  */
 public class HeartbeatResponse implements Serializable, Protobufable {
 
-	private static final long serialVersionUID = 1L;
-	private static final String TAG = "CLIENT_HEARTBEAT_RESPONSE";
-	private static final String CMD_HEARTBEAT_RESPONSE = "CR";
+    private static final long serialVersionUID = 1L;
+    private static final String TAG = "CLIENT_HEARTBEAT_RESPONSE";
+    private static final String CMD_HEARTBEAT_RESPONSE = "CR";
 
-	private static HeartbeatResponse object = new HeartbeatResponse();
+    private static final HeartbeatResponse object = new HeartbeatResponse();
 
-	private HeartbeatResponse() {
+    private HeartbeatResponse() {
 
-	}
+    }
 
-	public static HeartbeatResponse getInstance() {
-		return object;
-	}
+    public static HeartbeatResponse getInstance() {
+        return object;
+    }
 
-	@Override
-	public byte[] getByteArray() {
-		return CMD_HEARTBEAT_RESPONSE.getBytes();
-	}
+    @Override
+    public byte[] getByteArray() {
+        return CMD_HEARTBEAT_RESPONSE.getBytes();
+    }
 
-	@Override
-	public String toString() {
-		return TAG;
-	}
+    @Override
+    public String toString() {
+        return TAG;
+    }
 
-	@Override
-	public byte getType() {
-		return CIMConstant.ProtobufType.C_H_RS;
-	}
+    @Override
+    public byte getType() {
+        return CIMConstant.ProtobufType.C_H_RS;
+    }
 
 }

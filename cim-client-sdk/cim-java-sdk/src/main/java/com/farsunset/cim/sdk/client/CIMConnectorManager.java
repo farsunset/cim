@@ -30,7 +30,6 @@ import java.nio.channels.SocketChannel;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Semaphore;
 
 import com.farsunset.cim.sdk.client.coder.CIMLogger;
 import com.farsunset.cim.sdk.client.coder.ClientMessageDecoder;
@@ -64,18 +63,17 @@ class CIMConnectorManager {
 	
     private ByteBuffer readBuffer = ByteBuffer.allocate(READ_BUFFER_SIZE);
 
-	private ExecutorService workerExecutor = Executors.newFixedThreadPool(1, r -> new Thread(r,"worker-"));
-	private ExecutorService bossExecutor = Executors.newFixedThreadPool(1, r -> new Thread(r,"boss-"));
-	private ExecutorService eventExecutor = Executors.newFixedThreadPool(1, r -> new Thread(r,"event-"));
+	private final ExecutorService workerExecutor = Executors.newFixedThreadPool(1, r -> new Thread(r,"worker-"));
+	private final ExecutorService bossExecutor = Executors.newFixedThreadPool(1, r -> new Thread(r,"boss-"));
+	private final ExecutorService eventExecutor = Executors.newFixedThreadPool(1, r -> new Thread(r,"event-"));
 	
-	private Semaphore semaphore = new Semaphore(1, true);
 
-	
-	private ClientMessageEncoder messageEncoder = new  ClientMessageEncoder();
-	private ClientMessageDecoder messageDecoder = new  ClientMessageDecoder();
-   
-	 
-	
+	private final ClientMessageEncoder messageEncoder = new  ClientMessageEncoder();
+	private final ClientMessageDecoder messageDecoder = new  ClientMessageDecoder();
+
+	private final ByteBuffer headerBuffer = ByteBuffer.allocate(CIMConstant.DATA_HEADER_LENGTH);
+
+
 	public synchronized static CIMConnectorManager getManager() {
 		
 		if (manager == null) {
@@ -105,8 +103,6 @@ class CIMConnectorManager {
 
 			 try {
 
-				 semaphore.acquire();
-
 				 socketChannel = SocketChannel.open();
 				 socketChannel.configureBlocking(true);
 				 socketChannel.socket().setTcpNoDelay(true);
@@ -116,40 +112,30 @@ class CIMConnectorManager {
 
 				 socketChannel.socket().connect(new InetSocketAddress(host, port),CONNECT_TIME_OUT);
 
-				 semaphore.release();
-
-				 handelConnectedEvent();
+				 handleConnectedEvent();
 
 
-				 int result = -1;
-
-				 while((result = socketChannel.read(readBuffer)) > 0) {
-
-					if(readBuffer.position() == readBuffer.capacity()) {
-						extendByteBuffer();
-					}
-
-					handelSocketReadEvent(result);
-
+				 /*
+				  *开始读取来自服务端的消息，先读取3个字节的消息头
+				  */
+				 while (socketChannel.read(headerBuffer) > 0) {
+					 handleSocketReadEvent();
 				 }
 
-				 handelSocketReadEvent(result);
+				 /*
+				  *read 返回 <= 0的情况，发生了意外需要断开重链
+				  */
+				 closeSession();
 
 			}catch(ConnectException | SocketTimeoutException ignore){
-				semaphore.release();
 				handleConnectAbortedEvent();
 			} catch(IOException ignore) {
-				semaphore.release();
-				handelDisconnectedEvent();
-			}catch (InterruptedException ignore) {
-				semaphore.release();
+				handleDisconnectedEvent();
 			}
 		});
 	}
-	 
- 
-	
-	private void handelDisconnectedEvent() {
+
+	private void handleDisconnectedEvent() {
 		closeSession();
 	}
 	
@@ -166,51 +152,27 @@ class CIMConnectorManager {
 
 	}
 	 
-	private void handelConnectedEvent() {
+	private void handleConnectedEvent() {
 		
 		sessionCreated();
 	}
-	
-	private void handelSocketReadEvent(int result) {
-		
-		if(result == -1) {
-		    closeSession();
-		    return;
-		}
-	
-		
-	    readBuffer.position(0);
-	     
-		Object message = messageDecoder.doDecode(readBuffer);
-		
-		if(message == null) {
+
+	private void handleSocketReadEvent() throws IOException {
+
+		Object message = messageDecoder.doDecode(headerBuffer,socketChannel);
+
+		LOGGER.messageReceived(socketChannel, message);
+
+		if (isHeartbeatRequest(message)) {
+			send(HeartbeatResponse.getInstance());
 			return;
 		}
-		
-		LOGGER.messageReceived(socketChannel,message);
 
-		if(isHeartbeatRequest(message)) {
-
-			send(getHeartbeatResponse());
-			
-			return;
-		}
-		
 		this.messageReceived(message);
+
 	}
-	
-	
-	private void extendByteBuffer() {
-		
-		ByteBuffer newBuffer = ByteBuffer.allocate(readBuffer.capacity() + READ_BUFFER_SIZE / 2);
-		readBuffer.position(0);
-		newBuffer.put(readBuffer);
-		
-		readBuffer.clear();
-		readBuffer = newBuffer;
-	}
-	
-	
+
+
    public void send(final Protobufable body) {
 		
 	   if(!isConnected()) {
@@ -221,8 +183,6 @@ class CIMConnectorManager {
 			int result = 0;
 			try {
 
-				semaphore.acquire();
-
 				ByteBuffer buffer =  messageEncoder.encode(body);
 				while(buffer.hasRemaining()){
 					result += socketChannel.write(buffer);
@@ -231,8 +191,6 @@ class CIMConnectorManager {
 			} catch (Exception e) {
 				result = -1;
 			}finally {
-
-				semaphore.release();
 
 				if(result <= 0) {
 					closeSession();
@@ -300,10 +258,6 @@ class CIMConnectorManager {
 			intent.putExtra(SentBody.class.getName(), data);
 			sendBroadcast(intent);
 		}
-	}
-
-	public HeartbeatResponse getHeartbeatResponse() {
-		return HeartbeatResponse.getInstance();
 	}
 
 	public boolean isHeartbeatRequest(Object data) {

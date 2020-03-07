@@ -65,11 +65,6 @@ public class SystemMsgListViewAdapter extends BaseAdapter {
         return 0;
     }
 
-    @Override
-    public void notifyDataSetChanged() {
-        //Collections.sort(list, new MessageTimeDescComparator());
-    }
-
     @SuppressLint("ViewHolder")
     @Override
     public View getView(int position, View chatItemView, ViewGroup parent) {

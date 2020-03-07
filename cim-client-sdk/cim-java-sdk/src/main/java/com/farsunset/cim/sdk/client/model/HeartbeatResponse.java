@@ -34,7 +34,7 @@ public class HeartbeatResponse implements Serializable, Protobufable {
 	private static final String TAG = "CLIENT_HEARTBEAT_RESPONSE";
 	private static final String CMD_HEARTBEAT_RESPONSE = "CR";
 
-	private static HeartbeatResponse object = new HeartbeatResponse();
+	private static final HeartbeatResponse object = new HeartbeatResponse();
 
 	private HeartbeatResponse() {
 

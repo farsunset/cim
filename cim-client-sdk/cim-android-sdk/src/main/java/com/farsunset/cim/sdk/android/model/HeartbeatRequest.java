@@ -27,37 +27,36 @@ import java.io.Serializable;
 
 /**
  * 服务端心跳请求
- *
  */
 public class HeartbeatRequest implements Serializable, Protobufable {
 
-	private static final long serialVersionUID = 1L;
-	private static final String TAG = "SERVER_HEARTBEAT_REQUEST";
-	private static final String CMD_HEARTBEAT_REQUEST = "SR";
+    private static final long serialVersionUID = 1L;
+    private static final String TAG = "SERVER_HEARTBEAT_REQUEST";
+    private static final String CMD_HEARTBEAT_REQUEST = "SR";
 
-	private static HeartbeatRequest object = new HeartbeatRequest();
+    private static final HeartbeatRequest object = new HeartbeatRequest();
 
-	private HeartbeatRequest() {
+    private HeartbeatRequest() {
 
-	}
+    }
 
-	public static HeartbeatRequest getInstance() {
-		return object;
-	}
+    public static HeartbeatRequest getInstance() {
+        return object;
+    }
 
-	@Override
-	public byte[] getByteArray() {
-		return CMD_HEARTBEAT_REQUEST.getBytes();
-	}
+    @Override
+    public byte[] getByteArray() {
+        return CMD_HEARTBEAT_REQUEST.getBytes();
+    }
 
-	@Override
-	public String toString() {
-		return TAG;
-	}
+    @Override
+    public String toString() {
+        return TAG;
+    }
 
-	@Override
-	public byte getType() {
-		return CIMConstant.ProtobufType.S_H_RQ;
-	}
+    @Override
+    public byte getType() {
+        return CIMConstant.ProtobufType.S_H_RQ;
+    }
 
 }

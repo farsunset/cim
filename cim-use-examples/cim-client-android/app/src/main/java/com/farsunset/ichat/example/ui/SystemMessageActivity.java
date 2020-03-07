@@ -87,9 +87,14 @@ public class SystemMessageActivity extends CIMMonitorActivity implements OnClick
             startActivity(intent);
             this.finish();
         } else {
-            list.add(message);
+            list.add(0,message);
             adapter.notifyDataSetChanged();
-            chatListView.setSelection(chatListView.getTop());
+            chatListView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    chatListView.setSelection(0);
+                }
+            },500);
         }
 
     }

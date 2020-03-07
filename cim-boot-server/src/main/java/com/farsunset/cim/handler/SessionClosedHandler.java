@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2013-2019 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,7 +33,7 @@ import javax.annotation.Resource;
 import java.util.Objects;
 
 
-/**
+/*
  * 断开连接，清除session
  * 
  */
@@ -56,15 +56,7 @@ public class SessionClosedHandler implements CIMRequestHandler {
 			return;
 		}
 
-		CIMSession oldSession = cimSessionService.get(account.toString());
-
-		if (oldSession == null || oldSession.isApnsEnable()) {
-			return;
-		}
-
-		oldSession.setState(CIMSession.STATE_DISABLED);
-		oldSession.setNid(null);
-		cimSessionService.save(oldSession);
+		cimSessionService.remove(account.toString());
 	}
 
 }

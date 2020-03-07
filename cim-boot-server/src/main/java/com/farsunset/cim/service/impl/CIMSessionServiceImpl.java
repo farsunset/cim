@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2013-2019 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,7 +46,7 @@ public class CIMSessionServiceImpl implements CIMSessionService {
 		sessionRepository.save(session);
 	}
 
-	/**
+	/*
 	 *
 	 * @param account 用户id
 	 * @return

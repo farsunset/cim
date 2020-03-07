@@ -26,7 +26,7 @@ package com.farsunset.cim.sdk.android.model;
  */
 public interface Protobufable {
 
-	byte[] getByteArray();
+    byte[] getByteArray();
 
-	byte getType();
+    byte getType();
 }

@@ -9,12 +9,12 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: com.google.protobuf:protobuf-lite:3.0.1" level="project" />
+    <orderEntry type="library" name="Maven: com.google.protobuf:protobuf-java:3.11.1" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.30" level="project" />
     <orderEntry type="module-library">
-      <library name="Maven: android:android:8.0.0">
+      <library name="Maven: com.farsunset:cim-java-sdk:3.8.0">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/android.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/cim-java-sdk-3.8.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

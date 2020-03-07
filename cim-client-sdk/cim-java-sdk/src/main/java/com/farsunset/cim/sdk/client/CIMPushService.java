@@ -29,7 +29,7 @@ import com.farsunset.cim.sdk.client.model.SentBody;
  */
 public class CIMPushService {
 
-	private CIMConnectorManager manager;
+	private final CIMConnectorManager manager;
 
 	private static CIMPushService service;
 

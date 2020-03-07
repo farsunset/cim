@@ -38,7 +38,7 @@ public class CIMEventBroadcastReceiver {
 	private static CIMEventBroadcastReceiver receiver;
 	private CIMEventListener listener;
 
-	private ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1, r -> {
+	private final ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1, r -> {
 		Thread thread = new Thread(r);
 		thread.setName("cim-reconnect-");
 		return thread;

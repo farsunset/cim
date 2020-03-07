@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2013-2019 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,12 +21,11 @@
  */
 package com.farsunset.cim.api.controller;
 
-import com.farsunset.cim.api.controller.dto.MessageResult;
 import com.farsunset.cim.push.DefaultMessagePusher;
 import com.farsunset.cim.sdk.server.model.Message;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -39,30 +38,15 @@ public class MessageController  {
 	@Resource
 	private DefaultMessagePusher defaultMessagePusher;
 
-	/**
-	 * 此方法仅仅在集群时，通过服务器调用
-	 * 
-	 * @param message
-	 * @return
-	 */
-	@PostMapping(value = "/dispatch")
-	public MessageResult dispatchSend(Message message) {
-		return send(message);
-	}
-	
-	
-	@PostMapping(value = "/send")
-	public MessageResult send(Message message)  {
 
-		MessageResult result = new MessageResult();
+	@PostMapping(value = "/send")
+	public ResponseEntity<Long> send(Message message)  {
 
 		message.setId(System.currentTimeMillis());
 
 		defaultMessagePusher.push(message);
 
-		result.id = message.getId();
-		result.timestamp = message.getTimestamp();
-		return result;
+		return ResponseEntity.ok(message.getId());
 	}
 
 }

@@ -88,7 +88,7 @@ public class LoginActivity extends CIMMonitorActivity implements OnClickListener
         /*
          * 收到code为200的回应 账号绑定成功
          */
-        if (reply.getKey().equals(CIMConstant.RequestKey.CLIENT_BIND) && reply.getCode().equals(CIMConstant.ReturnCode.CODE_200)) {
+        if (reply.getKey().equals(CIMConstant.RequestKey.CLIENT_BIND) && reply.getCode().equals("200")) {
                 Intent intent = new Intent(this, SystemMessageActivity.class);
                 intent.putExtra("account", accountEdit.getText().toString().trim());
                 startActivity(intent);

@@ -21,99 +21,89 @@
  */
 package com.farsunset.cim.sdk.android.constant;
 
-/**
- * 常量
- */
 public interface CIMConstant {
 
-	long RECONNECT_INTERVAL_TIME = 30 * 1000;
+    long RECONNECT_INTERVAL_TIME = 30 * 1000;
 
-	/**
-	 消息头长度为3个字节，第一个字节为消息类型，第二，第三字节 转换int后为消息长度
-	 */
-	int DATA_HEADER_LENGTH = 3;
+    /*
+     * 消息头长度为3个字节，第一个字节为消息类型，第二，第三字节 转换int后为消息长度
+     */
+    int DATA_HEADER_LENGTH = 3;
 
-	interface ReturnCode {
+    interface ProtobufType {
 
-		String CODE_404 = "404";
+        /*
+        客户端->服务端 发送的心跳响应
+        */
+        byte C_H_RS = 0;
 
-		String CODE_403 = "403";
+        /*
+        服务端->客户端 发送的心跳请求
+        */
+        byte S_H_RQ = 1;
 
-		String CODE_405 = "405";
+        byte MESSAGE = 2;
 
-		String CODE_200 = "200";
+        byte SENT_BODY = 3;
 
-		String CODE_206 = "206";
+        byte REPLY_BODY = 4;
+    }
 
-		String CODE_500 = "500";
+    interface RequestKey {
 
-	}
+        String CLIENT_BIND = "client_bind";
 
-	interface ProtobufType {
-		byte C_H_RS = 0;
-		byte S_H_RQ = 1;
-		byte MESSAGE = 2;
-		byte SENT_BODY = 3;
-		byte REPLY_BODY = 4;
-	}
+    }
 
-	interface RequestKey {
+    interface MessageAction {
 
-		String CLIENT_BIND = "client_bind";
+        /*
+        被其他设备登录挤下线消息
+         */
+        String ACTION_999 = "999";
+    }
 
-		String CLIENT_LOGOUT = "client_logout";
+    interface IntentAction {
 
-	}
+        /*
+         消息广播action
+         */
+        String ACTION_MESSAGE_RECEIVED = "com.farsunset.cim.MESSAGE_RECEIVED";
 
-	interface MessageAction {
+        /*
+         发送sendBody成功广播
+         */
+        String ACTION_SEND_FINISHED = "com.farsunset.cim.SEND_FINISHED";
 
-		/*
-		被其他设备登录挤下线消息
-		 */
-		String ACTION_999 = "999";
-	}
+        /*
+         链接意外关闭广播
+         */
+        String ACTION_CONNECTION_CLOSED = "com.farsunset.cim.CONNECTION_CLOSED";
 
-	interface IntentAction {
+        /*
+         链接失败广播
+         */
+        String ACTION_CONNECT_FAILED = "com.farsunset.cim.CONNECT_FAILED";
 
-		/*
-		 消息广播action
-		 */
-		String ACTION_MESSAGE_RECEIVED = "com.farsunset.cim.MESSAGE_RECEIVED";
+        /*
+         链接成功广播
+         */
+        String ACTION_CONNECT_FINISHED = "com.farsunset.cim.CONNECT_FINISHED";
 
-		/*
-		 发送sendBody成功广播
-		 */
-		String ACTION_SEND_FINISHED = "com.farsunset.cim.SEND_FINISHED";
+        /*
+         发送sendBody成功后获得replayBody回应广播
+         */
+        String ACTION_REPLY_RECEIVED = "com.farsunset.cim.REPLY_RECEIVED";
 
-		/*
-		 链接意外关闭广播
-		 */
-		String ACTION_CONNECTION_CLOSED = "com.farsunset.cim.CONNECTION_CLOSED";
+        /*
+         网络变化广播
+         */
+        String ACTION_NETWORK_CHANGED = "com.farsunset.cim.NETWORK_CHANGED";
 
-		/*
-		 链接失败广播
-		 */
-		String ACTION_CONNECT_FAILED = "com.farsunset.cim.CONNECT_FAILED";
-
-		/*
-		 链接成功广播
-		 */
-		String ACTION_CONNECT_FINISHED = "com.farsunset.cim.CONNECT_FINISHED";
-
-		/*
-		 发送sendBody成功后获得replayBody回应广播
-		 */
-		String ACTION_REPLY_RECEIVED = "com.farsunset.cim.REPLY_RECEIVED";
-	 
-		/*
-		 网络变化广播
-		 */
-		String ACTION_NETWORK_CHANGED = "com.farsunset.cim.NETWORK_CHANGED";
-
-		/*
-		 重试连接
-		 */
-		String ACTION_CONNECTION_RECOVERY = "com.farsunset.cim.CONNECTION_RECOVERY";
-	}
+        /*
+         重试连接
+         */
+        String ACTION_CONNECTION_RECOVERY = "com.farsunset.cim.CONNECTION_RECOVERY";
+    }
 
 }

@@ -27,26 +27,11 @@ package com.farsunset.cim.sdk.client.constant;
 public interface CIMConstant {
 
 	long RECONNECT_INTERVAL_TIME = 30 * 1000;
-	/**
+	/*
 	 * 	消息头长度为3个字节，第一个字节为消息类型，第二，第三字节 转换int后为消息长度
 	 */
 	int DATA_HEADER_LENGTH = 3;
 
-	interface ReturnCode {
-
-		String CODE_404 = "404";
-
-		String CODE_403 = "403";
-
-		String CODE_405 = "405";
-
-		String CODE_200 = "200";
-
-		String CODE_206 = "206";
-
-		String CODE_500 = "500";
-
-	}
 
 	interface ConfigKey {
 

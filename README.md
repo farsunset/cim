@@ -1,14 +1,14 @@
 #### 项目介绍
-CIM是基于mina或者netty框架下的推送系统，我们平常使用第三方的推送SDK，如极光推送，百度推送，小米推送，以及腾讯信鸽等来支撑自己的移动端的业务，或许有一些用户自己实现即时通讯系统的需求，那么CIM为您提供了一个解决方案或者思路，目前CIM支撑 websocket，android，ios，桌面应用，系统应用等多端接入支持，目前CIM服务端使用springboot搭建仅仅拥有消息推送的功能，关于数据缓存与持久化都需要使用者自己开发，但是配备了比较完整的使用文档。最后希望CIM能为您带来一些价值。
+CIM是基于mina或者netty框架下的推送系统，我们平常使用第三方的推送SDK，如极光推送，百度推送，小米推送，以及腾讯信鸽等来支撑自己的移动端的业务，或许有一些用户自己实现即时通讯系统的需求，那么CIM为您提供了一个解决方案或者思路，目前CIM支持 websocket，android，ios，桌面应用，系统应用等多端接入支持，目前CIM服务端使用springboot搭建仅仅拥有消息推送的功能，关于数据缓存与持久化都需要使用者自己开发，但是配备了比较完整的使用文档。最后希望CIM能为您带来一些价值。
    
 ---
 ## 相关项目
 侣信专业版是基于CIM面向中小企业和者各类团队组织内部交流使用工具。具有丰富的功能，聊天，群组，部门组织，内部朋友圈等功能。它可以在局域网内使用保证沟通的信息安全，并且它是完全免费的，而且可以及时获得更新。
 ## [http://farsunset.com](http://farsunset.com)
 <div align="center">
-   <img src="http://staticres.oss-cn-hangzhou.aliyuncs.com/hoxin/session.jpg" width="280px"  />
-   <img src="http://staticres.oss-cn-hangzhou.aliyuncs.com/hoxin/contacts.jpg" width="280px" />
-   <img src="http://staticres.oss-cn-hangzhou.aliyuncs.com/hoxin/moment_timeline.jpg" width="280px" />
+   <img src="https://images.gitee.com/uploads/images/2020/0302/161713_b52546d5_58912.jpeg" width="280px"  />
+   <img src="https://images.gitee.com/uploads/images/2020/0302/161713_bed16da0_58912.jpeg" width="280px" />
+   <img src="https://images.gitee.com/uploads/images/2020/0302/161713_966e177b_58912.jpeg" width="280px" />
 </div>
 
 ---  
@@ -23,7 +23,7 @@ CIM是基于mina或者netty框架下的推送系统，我们平常使用第三�
 
 4.cim-boot-server是springboot服务端工程源码,使用Idea工具开发
 
-其中所有的sdk均为Eclipse工程，打包成jar导出引入到对应的客户端或服务端工程
+其中所有的sdk均为IntelliJ IDEA工程，Maven打包成jar导出引入到对应的客户端或服务端工程
 
 
 
@@ -34,7 +34,7 @@ CIM是基于mina或者netty框架下的推送系统，我们平常使用第三�
 
 #### 功能预览
 
-1.控制台页面
+1.控制台页面[http://127.0.0.1:8080](http://127.0.0.1:8080)
 ![image](https://images.gitee.com/uploads/images/2019/0315/165050_9e269c1c_58912.png)
 2.Android客户端
 ![image](https://images.gitee.com/uploads/images/2019/0315/165050_6f20f69e_58912.png)

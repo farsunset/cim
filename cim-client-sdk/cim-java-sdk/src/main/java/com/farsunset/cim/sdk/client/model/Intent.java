@@ -34,7 +34,7 @@ public class Intent implements Serializable {
 
 	private String action;
 
-	private HashMap<String, Object> data = new HashMap<String, Object>();
+	private final HashMap<String, Object> data = new HashMap<String, Object>();
 
 	public Intent() {
 	}

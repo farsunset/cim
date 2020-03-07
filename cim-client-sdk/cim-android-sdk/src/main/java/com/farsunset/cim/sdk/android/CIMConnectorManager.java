@@ -26,7 +26,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Process;
-import com.farsunset.cim.sdk.android.coder.CIMLogger;
+import com.farsunset.cim.sdk.android.logger.CIMLogger;
 import com.farsunset.cim.sdk.android.coder.ClientMessageDecoder;
 import com.farsunset.cim.sdk.android.coder.ClientMessageEncoder;
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
@@ -41,368 +41,312 @@ import java.nio.channels.SocketChannel;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicLong;
 
-/**
+/*
  * 连接服务端管理，cim核心处理类，管理连接，以及消息处理
- * 
- * @author 3979434@qq.com
  */
-class CIMConnectorManager{
+class CIMConnectorManager {
 
-	private static CIMConnectorManager manager;
-	
-	private static final int READ_BUFFER_SIZE = 2048;
-	private static final int WRITE_BUFFER_SIZE = 1024;
+    private static CIMConnectorManager manager;
 
-	private static final int READ_IDLE_TIME = 120 * 1000;
-	
-	private static final int CONNECT_TIME_OUT = 10 * 1000;
+    private static final int READ_BUFFER_SIZE = 2048;
 
-	
-	private static final int CONNECT_ALIVE_TIME_OUT = 150 * 1000;
-	
+    private static final int WRITE_BUFFER_SIZE = 1024;
+
+    private static final int READ_IDLE_TIME = 120 * 1000;
+
+    private static final int CONNECT_TIME_OUT = 10 * 1000;
+
+    private static final int CONNECT_ALIVE_TIME_OUT = 150 * 1000;
+
     private static final AtomicLong LAST_READ_TIME = new AtomicLong(0);
-    
+
     private static final CIMLogger LOGGER = CIMLogger.getLogger();
-    
+
     private static final HandlerThread IDLE_HANDLER_THREAD = new HandlerThread("READ-IDLE", Process.THREAD_PRIORITY_BACKGROUND);
-    
-	private Semaphore semaphore = new Semaphore(1, true);
-	
-	private volatile SocketChannel socketChannel ;
-	
-	private Context context;
-	
-	
-    private ByteBuffer readBuffer = ByteBuffer.allocate(READ_BUFFER_SIZE);
-    
-	private ExecutorService workerExecutor = Executors.newFixedThreadPool(1, r -> new Thread(r,"worker-"));
-	
-	private ExecutorService bossExecutor = Executors.newFixedThreadPool(1, r -> new Thread(r,"boss-"));
-	
-	private ClientMessageEncoder messageEncoder = new  ClientMessageEncoder();
-	private ClientMessageDecoder messageDecoder = new  ClientMessageDecoder();
-    
-	static {
-		IDLE_HANDLER_THREAD.start();
-	}
-	private CIMConnectorManager(Context context) {
-		this.context = context;
-	}
-	 
-	
-	public synchronized static CIMConnectorManager getManager(Context context) {
-		
-		if (manager == null) {
-			manager = new CIMConnectorManager(context);
-		}
-		
-		return manager;
 
-	}
+    private volatile SocketChannel socketChannel;
 
-	public void connect(final String host, final int port) {
+    private final Context context;
 
-		if (!CIMPushManager.isNetworkConnected(context)) {
-
-			Intent intent = new Intent();
-			intent.setPackage(context.getPackageName());
-			intent.setAction(CIMConstant.IntentAction.ACTION_CONNECT_FAILED);
-			context.sendBroadcast(intent);
-
-			return;
-		}
-		
-		if (isConnected()) {
-			return;
-		}
-		
-		bossExecutor.execute(() -> {
-
-			if (isConnected()) {
-				return;
-			}
-
-			LOGGER.startConnect(host, port);
-
-			CIMCacheManager.putBoolean(context, CIMCacheManager.KEY_CIM_CONNECTION_STATE, false);
-
-			 try {
-
-				 semaphore.acquire();
-
-				 socketChannel = SocketChannel.open();
-				 socketChannel.configureBlocking(true);
-				 socketChannel.socket().setTcpNoDelay(true);
-				 socketChannel.socket().setKeepAlive(true);
-				 socketChannel.socket().setReceiveBufferSize(READ_BUFFER_SIZE);
-				 socketChannel.socket().setSendBufferSize(WRITE_BUFFER_SIZE);
-
-				 socketChannel.socket().connect(new InetSocketAddress(host, port),CONNECT_TIME_OUT);
-
-				 semaphore.release();
-
-				 handelConnectedEvent();
+    private final ByteBuffer headerBuffer = ByteBuffer.allocate(CIMConstant.DATA_HEADER_LENGTH);
 
 
-				 int result = -1;
+    private final ExecutorService workerExecutor = Executors.newFixedThreadPool(1, r -> new Thread(r, "worker-"));
 
-				while((result = socketChannel.read(readBuffer)) > 0) {
+    private final ExecutorService bossExecutor = Executors.newFixedThreadPool(1, r -> new Thread(r, "boss-"));
 
-					if(readBuffer.position() == readBuffer.capacity()) {
-						extendByteBuffer();
-					}
+    private final ClientMessageEncoder messageEncoder = new ClientMessageEncoder();
+    private final ClientMessageDecoder messageDecoder = new ClientMessageDecoder();
 
-					handelSocketReadEvent(result);
+    static {
+        IDLE_HANDLER_THREAD.start();
+    }
 
-				}
+    private CIMConnectorManager(Context context) {
+        this.context = context;
+    }
 
-				handelSocketReadEvent(result);
 
-			}catch(ConnectException | SocketTimeoutException ignore){
-				semaphore.release();
-				handleConnectAbortedEvent();
-			} catch(IOException ignore) {
-				semaphore.release();
-				handelDisconnectedEvent();
-			}catch(InterruptedException ignore) {
-				semaphore.release();
-			}
-		});
-	}
- 
- 
+    public synchronized static CIMConnectorManager getManager(Context context) {
+
+        if (manager == null) {
+            manager = new CIMConnectorManager(context);
+        }
+
+        return manager;
+
+    }
+
+    public void connect(final String host, final int port) {
+
+        if (!CIMPushManager.isNetworkConnected(context)) {
+
+            Intent intent = new Intent();
+            intent.setPackage(context.getPackageName());
+            intent.setAction(CIMConstant.IntentAction.ACTION_CONNECT_FAILED);
+            context.sendBroadcast(intent);
+
+            return;
+        }
+
+        if (isConnected()) {
+            return;
+        }
+
+        bossExecutor.execute(() -> {
+
+            if (isConnected()) {
+                return;
+            }
+
+            LOGGER.startConnect(host, port);
+
+            CIMCacheManager.putBoolean(context, CIMCacheManager.KEY_CIM_CONNECTION_STATE, false);
+
+            try {
+
+                socketChannel = SocketChannel.open();
+                socketChannel.configureBlocking(true);
+                socketChannel.socket().setTcpNoDelay(true);
+                socketChannel.socket().setKeepAlive(true);
+                socketChannel.socket().setReceiveBufferSize(READ_BUFFER_SIZE);
+                socketChannel.socket().setSendBufferSize(WRITE_BUFFER_SIZE);
+
+                socketChannel.socket().connect(new InetSocketAddress(host, port), CONNECT_TIME_OUT);
+
+                handleConnectedEvent();
+
+                /*
+                 *开始读取来自服务端的消息，先读取3个字节的消息头
+                 */
+                while (socketChannel.read(headerBuffer) > 0) {
+                    handleSocketReadEvent();
+                }
+
+                /*
+                 *read 返回 <= 0的情况，发生了意外需要断开重链
+                 */
+                closeSession();
+
+            } catch (ConnectException | SocketTimeoutException ignore) {
+                handleConnectAbortedEvent();
+            } catch (IOException ignore) {
+                handleDisconnectedEvent();
+            }
+        });
+    }
+
     public void destroy() {
-		
-		closeSession();
+        closeSession();
+    }
 
-	}
-	
+    public void closeSession() {
 
-	public void closeSession() {
-		
-		if(!isConnected()) {
-			return;
-		}
-		
-		try {
-			socketChannel.close();
-		} catch (IOException ignore) {
-		}finally {
-			 this.sessionClosed();
-		}
-	}
+        if (!isConnected()) {
+            return;
+        }
 
-	public boolean isConnected() {
-		return socketChannel != null && socketChannel.isConnected();
-	}
-	
-	
-	public void send(final Protobufable body) {
-		
-		if(!isConnected()) {
-			return;
-		}
-		
-		workerExecutor.execute(() -> {
-			int result = 0;
-			try {
+        try {
+            socketChannel.close();
+        } catch (IOException ignore) {
+        } finally {
+            this.sessionClosed();
+        }
+    }
 
-				semaphore.acquire();
-
-				ByteBuffer buffer =  messageEncoder.encode(body);
-				while(buffer.hasRemaining()){
-					result += socketChannel.write(buffer);
-				}
-
-			} catch (Exception e) {
-				result = -1;
-			}finally {
-
-				semaphore.release();
-
-				if(result <= 0) {
-					closeSession();
-				}else {
-					messageSent(body);
-				}
-			}
-		});
-		
-	}
- 
-   
-   private void sessionCreated() {
-		LOGGER.sessionCreated(socketChannel);
-		
-		LAST_READ_TIME.set(System.currentTimeMillis());
-
-		Intent intent = new Intent();
-		intent.setPackage(context.getPackageName());
-		intent.setAction(CIMConstant.IntentAction.ACTION_CONNECT_FINISHED);
-		context.sendBroadcast(intent);
-		
-	}
-
-	private void sessionClosed() {
-
-		idleHandler.removeMessages(0);
-
-		LAST_READ_TIME.set(0); 
-		
-		LOGGER.sessionClosed(socketChannel);
-
-		readBuffer.clear();
-		
-		if(readBuffer.capacity() > READ_BUFFER_SIZE) {
-			readBuffer = ByteBuffer.allocate(READ_BUFFER_SIZE);
-		}
-		
-		Intent intent = new Intent();
-		intent.setPackage(context.getPackageName());
-		intent.setAction(CIMConstant.IntentAction.ACTION_CONNECTION_CLOSED);
-		context.sendBroadcast(intent);
-		
-	}
-
-	private void sessionIdle() {
-
-		LOGGER.sessionIdle(socketChannel);
-
-		/*
-		 * 用于解决，wifi情况下。偶而路由器与服务器断开连接时，客户端并没及时收到关闭事件 导致这样的情况下当前连接无效也不会重连的问题
-		 */
-		if (System.currentTimeMillis() - LAST_READ_TIME.get() >= CONNECT_ALIVE_TIME_OUT) {
-			closeSession();
-		}
-	}
+    public boolean isConnected() {
+        return socketChannel != null && socketChannel.isConnected();
+    }
 
 
-	private void messageReceived(Object obj) {
+    public void send(final Protobufable body) {
 
-		if (obj instanceof Message) {
+        if (!isConnected()) {
+            return;
+        }
 
-			Intent intent = new Intent();
-			intent.setPackage(context.getPackageName());
-			intent.setAction(CIMConstant.IntentAction.ACTION_MESSAGE_RECEIVED);
-			intent.putExtra(Message.class.getName(), (Message) obj);
-			context.sendBroadcast(intent);
+        workerExecutor.execute(() -> {
+            int result = 0;
+            try {
 
-		}
-		if (obj instanceof ReplyBody) {
+                ByteBuffer buffer = messageEncoder.encode(body);
+                while (buffer.hasRemaining()) {
+                    result += socketChannel.write(buffer);
+                }
 
-			Intent intent = new Intent();
-			intent.setPackage(context.getPackageName());
-			intent.setAction(CIMConstant.IntentAction.ACTION_REPLY_RECEIVED);
-			intent.putExtra(ReplyBody.class.getName(), (ReplyBody) obj);
-			context.sendBroadcast(intent);
-		}
-	}
+            } catch (Exception e) {
+                result = -1;
+            } finally {
 
-	
-	private void messageSent(Object message) {
-		
-		LOGGER.messageSent(socketChannel, message);
-		
-		if (message instanceof SentBody) {
-			Intent intent = new Intent();
-			intent.setPackage(context.getPackageName());
-			intent.setAction(CIMConstant.IntentAction.ACTION_SEND_FINISHED);
-			intent.putExtra(SentBody.class.getName(), (SentBody) message);
-			context.sendBroadcast(intent);
-		}
-	}
+                if (result <= 0) {
+                    closeSession();
+                } else {
+                    messageSent(body);
+                }
+            }
+        });
 
-	private Handler idleHandler = new Handler(IDLE_HANDLER_THREAD.getLooper()) {
-		@Override
-		public void handleMessage(android.os.Message m) {
-			sessionIdle();
-		}
-	};
-	
-	private void handelDisconnectedEvent() {
-		closeSession();
-	}
-	
+    }
+
+
+    private void sessionCreated() {
+        LOGGER.sessionCreated(socketChannel);
+
+        LAST_READ_TIME.set(System.currentTimeMillis());
+
+        Intent intent = new Intent();
+        intent.setPackage(context.getPackageName());
+        intent.setAction(CIMConstant.IntentAction.ACTION_CONNECT_FINISHED);
+        context.sendBroadcast(intent);
+
+    }
+
+    private void sessionClosed() {
+
+        idleHandler.removeMessages(0);
+
+        LAST_READ_TIME.set(0);
+
+        LOGGER.sessionClosed(socketChannel);
+
+        Intent intent = new Intent();
+        intent.setPackage(context.getPackageName());
+        intent.setAction(CIMConstant.IntentAction.ACTION_CONNECTION_CLOSED);
+        context.sendBroadcast(intent);
+
+    }
+
+    private void sessionIdle() {
+
+        LOGGER.sessionIdle(socketChannel);
+
+        /*
+         * 用于解决，wifi情况下。偶而路由器与服务器断开连接时，客户端并没及时收到关闭事件 导致这样的情况下当前连接无效也不会重连的问题
+         */
+        if (System.currentTimeMillis() - LAST_READ_TIME.get() >= CONNECT_ALIVE_TIME_OUT) {
+            closeSession();
+        }
+    }
+
+
+    private void messageReceived(Object obj) {
+
+        if (obj instanceof Message) {
+
+            Intent intent = new Intent();
+            intent.setPackage(context.getPackageName());
+            intent.setAction(CIMConstant.IntentAction.ACTION_MESSAGE_RECEIVED);
+            intent.putExtra(Message.class.getName(), (Message) obj);
+            context.sendBroadcast(intent);
+
+        }
+        if (obj instanceof ReplyBody) {
+
+            Intent intent = new Intent();
+            intent.setPackage(context.getPackageName());
+            intent.setAction(CIMConstant.IntentAction.ACTION_REPLY_RECEIVED);
+            intent.putExtra(ReplyBody.class.getName(), (ReplyBody) obj);
+            context.sendBroadcast(intent);
+        }
+    }
+
+
+    private void messageSent(Object message) {
+
+        LOGGER.messageSent(socketChannel, message);
+
+        if (message instanceof SentBody) {
+            Intent intent = new Intent();
+            intent.setPackage(context.getPackageName());
+            intent.setAction(CIMConstant.IntentAction.ACTION_SEND_FINISHED);
+            intent.putExtra(SentBody.class.getName(), (SentBody) message);
+            context.sendBroadcast(intent);
+        }
+    }
+
+    private final Handler idleHandler = new Handler(IDLE_HANDLER_THREAD.getLooper()) {
+        @Override
+        public void handleMessage(android.os.Message m) {
+            sessionIdle();
+        }
+    };
+
+    private void handleDisconnectedEvent() {
+        closeSession();
+    }
+
     private void handleConnectAbortedEvent() {
 
-		long interval = CIMConstant.RECONNECT_INTERVAL_TIME - (5 * 1000 - new Random().nextInt(15 * 1000));
-		
-		LOGGER.connectFailure(interval);
-		
-		Intent intent = new Intent();
-		intent.setPackage(context.getPackageName());
-		intent.setAction(CIMConstant.IntentAction.ACTION_CONNECT_FAILED);
-		intent.putExtra("interval", interval);
-		context.sendBroadcast(intent);
+        long interval = CIMConstant.RECONNECT_INTERVAL_TIME - (5 * 1000 - new Random().nextInt(15 * 1000));
 
-	}
-	 
-	private void handelConnectedEvent()   {
-		
-		sessionCreated();
-		
-		idleHandler.sendEmptyMessageDelayed(0, READ_IDLE_TIME);
-	}
-	
-	private void handelSocketReadEvent(int result)  {
-	 
-		if(result == -1) {
-		    closeSession();
-		    return;
-		}
-	
-	    markLastReadTime();
-		
-	    readBuffer.position(0);
-	     
-		Object message = messageDecoder.doDecode(readBuffer);
-		
-		if(message == null) {
-			return;
-		}
-		
-		LOGGER.messageReceived(socketChannel,message);
+        LOGGER.connectFailure(interval);
 
-		if(isHeartbeatRequest(message)) {
+        Intent intent = new Intent();
+        intent.setPackage(context.getPackageName());
+        intent.setAction(CIMConstant.IntentAction.ACTION_CONNECT_FAILED);
+        intent.putExtra("interval", interval);
+        context.sendBroadcast(intent);
 
-			send(HeartbeatResponse.getInstance());
-			
-			return;
-		}
-		
-		this.messageReceived(message);
-	 
-	}
-	
-	
-	private void extendByteBuffer() {
-		
-		ByteBuffer newBuffer = ByteBuffer.allocate(readBuffer.capacity() + READ_BUFFER_SIZE / 2);
-		readBuffer.position(0);
-		newBuffer.put(readBuffer);
-		
-		readBuffer.clear();
-		readBuffer = newBuffer;
-	}
-	
-	
+    }
+
+    private void handleConnectedEvent() {
+
+        sessionCreated();
+
+        idleHandler.sendEmptyMessageDelayed(0, READ_IDLE_TIME);
+    }
+
+    private void handleSocketReadEvent() throws IOException {
+
+        onMessageDecodeFinished(messageDecoder.doDecode(headerBuffer,socketChannel));
+
+        markLastReadTime();
+
+    }
+
+    private void onMessageDecodeFinished(Object message){
+
+        LOGGER.messageReceived(socketChannel, message);
+
+        if (message instanceof HeartbeatRequest) {
+            send(HeartbeatResponse.getInstance());
+            return;
+        }
+
+        this.messageReceived(message);
+    }
+
+
     private void markLastReadTime() {
 
-    	LAST_READ_TIME.set(System.currentTimeMillis());
-    		
-    	idleHandler.removeMessages(0);
-    		
-    	idleHandler.sendEmptyMessageDelayed(0, READ_IDLE_TIME);
-    		
-	}
+        LAST_READ_TIME.set(System.currentTimeMillis());
 
+        idleHandler.removeMessages(0);
 
-    private boolean isHeartbeatRequest(Object data) {
-		return data instanceof HeartbeatRequest;
-	}
-	 
+        idleHandler.sendEmptyMessageDelayed(0, READ_IDLE_TIME);
+
+    }
 
 }

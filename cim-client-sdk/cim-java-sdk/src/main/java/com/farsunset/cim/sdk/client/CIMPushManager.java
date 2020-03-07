@@ -87,10 +87,10 @@ public class CIMPushManager {
 
 	protected static void connect() {
 
-		boolean isManualStop = CIMCacheManager.getInstance().getBoolean(CIMCacheManager.KEY_MANUAL_STOP);
-		boolean isManualDestroy = CIMCacheManager.getInstance().getBoolean(CIMCacheManager.KEY_CIM_DESTROYED);
+		boolean isManualStopped = CIMCacheManager.getInstance().getBoolean(CIMCacheManager.KEY_MANUAL_STOP);
+		boolean isManualDestroyed = CIMCacheManager.getInstance().getBoolean(CIMCacheManager.KEY_CIM_DESTROYED);
 
-		if (isManualStop || isManualDestroy) {
+		if (isManualStopped || isManualDestroyed) {
 			return;
 		}
 
@@ -124,8 +124,8 @@ public class CIMPushManager {
 	 */
 	public static void bindAccount(String account) {
 
-		boolean isManualDestroy = CIMCacheManager.getInstance().getBoolean(CIMCacheManager.KEY_CIM_DESTROYED);
-		if (isManualDestroy || account == null || account.trim().length() == 0) {
+		boolean isManualDestroyed = CIMCacheManager.getInstance().getBoolean(CIMCacheManager.KEY_CIM_DESTROYED);
+		if (isManualDestroyed || account == null || account.trim().length() == 0) {
 			return;
 		}
 		sendBindRequest(account);
@@ -136,9 +136,9 @@ public class CIMPushManager {
 
 		String account = getAccount();
 
-		boolean isManualDestory = CIMCacheManager.getInstance().getBoolean(CIMCacheManager.KEY_CIM_DESTROYED);
-		boolean isManualStoped = CIMCacheManager.getInstance().getBoolean(CIMCacheManager.KEY_MANUAL_STOP);
-		if (isManualStoped || account == null || account.trim().length() == 0 || isManualDestory) {
+		boolean isManualDestroyed = CIMCacheManager.getInstance().getBoolean(CIMCacheManager.KEY_CIM_DESTROYED);
+		boolean isManualStopped = CIMCacheManager.getInstance().getBoolean(CIMCacheManager.KEY_MANUAL_STOP);
+		if (isManualStopped || account == null || account.trim().length() == 0 || isManualDestroyed) {
 			return false;
 		}
 
@@ -154,10 +154,10 @@ public class CIMPushManager {
 	 */
 	public static void sendRequest(SentBody body) {
 
-		boolean isManualStop = CIMCacheManager.getInstance().getBoolean(CIMCacheManager.KEY_MANUAL_STOP);
-		boolean isManualDestroy = CIMCacheManager.getInstance().getBoolean(CIMCacheManager.KEY_CIM_DESTROYED);
+		boolean isManualStopped = CIMCacheManager.getInstance().getBoolean(CIMCacheManager.KEY_MANUAL_STOP);
+		boolean isManualDestroyed = CIMCacheManager.getInstance().getBoolean(CIMCacheManager.KEY_CIM_DESTROYED);
 
-		if (isManualStop || isManualDestroy) {
+		if (isManualStopped || isManualDestroyed) {
 			return;
 		}
 
@@ -174,8 +174,8 @@ public class CIMPushManager {
 	 */
 	public static void stop() {
 
-		boolean isManualDestroy = CIMCacheManager.getInstance().getBoolean(CIMCacheManager.KEY_CIM_DESTROYED);
-		if (isManualDestroy) {
+		boolean isManualDestroyed = CIMCacheManager.getInstance().getBoolean(CIMCacheManager.KEY_CIM_DESTROYED);
+		if (isManualDestroyed) {
 			return;
 		}
 
@@ -199,12 +199,12 @@ public class CIMPushManager {
 	}
 
 	/**
-	 * 重新恢复接收推送，重新连接服务端，并登录当前账号如果aotuBind == true
+	 * 重新恢复接收推送，重新连接服务端，并登录当前账号如果autoBind == true
 	 */
 	public static void resume() {
 
-		boolean isManualDestroy = CIMCacheManager.getInstance().getBoolean(CIMCacheManager.KEY_CIM_DESTROYED);
-		if (isManualDestroy) {
+		boolean isManualDestroyed = CIMCacheManager.getInstance().getBoolean(CIMCacheManager.KEY_CIM_DESTROYED);
+		if (isManualDestroyed) {
 			return;
 		}
 
@@ -216,13 +216,13 @@ public class CIMPushManager {
 	}
 
 	public static int getState() {
-		boolean isManualDestroy = CIMCacheManager.getInstance().getBoolean(CIMCacheManager.KEY_CIM_DESTROYED);
-		if (isManualDestroy) {
+		boolean isManualDestroyed = CIMCacheManager.getInstance().getBoolean(CIMCacheManager.KEY_CIM_DESTROYED);
+		if (isManualDestroyed) {
 			return STATE_DESTROYED;
 		}
 
-		boolean isManualStop = CIMCacheManager.getInstance().getBoolean(CIMCacheManager.KEY_MANUAL_STOP);
-		if (isManualStop) {
+		boolean isManualStopped = CIMCacheManager.getInstance().getBoolean(CIMCacheManager.KEY_MANUAL_STOP);
+		if (isManualStopped) {
 			return STATE_STOPPED;
 		}
 

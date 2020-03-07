@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2013-2019 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.Objects;
 
-/**
+/*
  * 消息发送实现类
  * 
  */
@@ -50,7 +50,7 @@ public class DefaultMessagePusher implements CIMMessagePusher {
 	private ApnsService apnsService;
 	
 	
-	/**
+	/*
 	 * 向用户发送消息
 	 * 
 	 * @param message
@@ -76,9 +76,10 @@ public class DefaultMessagePusher implements CIMMessagePusher {
 		 * 如果连接到了其他服务器则转发请求到目标服务器
 		 */
 		if (session.isConnected() && !Objects.equals(host, session.getHost())) {
-			/**
+			/*
 			 * @TODO
-			 * 在此调用目标服务器接口来发送
+			 * 在此调用目标服务器接口来发送，如session.host = 123.123.123.123
+			 * 调用目标服务器的消息发送接口http://123.123.123.123:8080/message/send
 			 */
 			return;
 		}

@@ -42,7 +42,7 @@ public class CIMLogger  {
 	}
 	
 	private static class LoggerHolder{
-		private static CIMLogger logger = new CIMLogger();
+		private static final CIMLogger logger = new CIMLogger();
 	}
 	 
 

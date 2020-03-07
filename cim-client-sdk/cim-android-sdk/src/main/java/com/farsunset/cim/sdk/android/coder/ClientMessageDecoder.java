@@ -28,98 +28,86 @@ import com.farsunset.cim.sdk.android.model.Message;
 import com.farsunset.cim.sdk.android.model.ReplyBody;
 import com.farsunset.cim.sdk.android.model.proto.MessageProto;
 import com.farsunset.cim.sdk.android.model.proto.ReplyBodyProto;
-import com.google.protobuf.InvalidProtocolBufferException;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 
-/**
- * 客户端消息解码
- */
 public class ClientMessageDecoder {
 
+    /**
+     *
+     * @param headerBuffer 读取到的消息头
+     * @param socketChannel
+     * @return
+     */
+    public Object doDecode(ByteBuffer headerBuffer , SocketChannel socketChannel) throws IOException {
 
-	public Object doDecode(ByteBuffer buffer)   {
-		
-		/*
-		 * 消息头3位
-		 */
-		if (buffer.remaining() < CIMConstant.DATA_HEADER_LENGTH) {
-			return null;
-		}
+        headerBuffer.position(0);
 
-		buffer.mark();
+        byte type = headerBuffer.get();
+        byte lv = headerBuffer.get();
+        byte hv = headerBuffer.get();
 
-		byte type = buffer.get();
+        headerBuffer.clear();
 
-		byte lv = buffer.get();
-		byte hv = buffer.get();
+        /*
+         * 先通过消息头拿到消息的长度，然后进行定长读取
+         * 解决消息的断包和粘包情况
+         */
 
-		int length = getContentLength(lv, hv);
+        int dataLength = getContentLength(lv, hv);
 
-		/*
-		 *如果消息体没有接收完整，则重置读取，等待下一次重新读取
-		 */
-		if (length > buffer.remaining()) {
-			buffer.reset();
-			return null;
-		}
+        ByteBuffer bodyBuffer = ByteBuffer.allocate(dataLength);
 
-		byte[] dataBytes = new byte[length];
-		buffer.get(dataBytes, 0, length);
+        /*
+         * 如果读取的消息长度不够，则进行等待后续消息到来
+         * 当读取的消息长度(bodyBuffer.position() == dataLength)时意味着一个完整的消息已经接收完成
+         */
+        do {
+            socketChannel.read(bodyBuffer);
+        } while (bodyBuffer.position() != dataLength);
 
-		buffer.position(0);
-		
-		try {
-			return mappingMessageObject(dataBytes, type);
-		} catch (InvalidProtocolBufferException e) {
-			 return null;
-		}
-		
-	}
 
-	private Object mappingMessageObject(byte[] bytes, byte type) throws InvalidProtocolBufferException {
+        /*
+         消息读取完成后，通过type来解析成对应的消息体
+         */
+        if (CIMConstant.ProtobufType.S_H_RQ == type) {
+            return HeartbeatRequest.getInstance();
+        }
 
-		if (CIMConstant.ProtobufType.S_H_RQ == type) {
-			return HeartbeatRequest.getInstance();
-		}
+        if (CIMConstant.ProtobufType.REPLY_BODY == type) {
+            ReplyBodyProto.Model bodyProto = ReplyBodyProto.Model.parseFrom(bodyBuffer.array());
+            ReplyBody body = new ReplyBody();
+            body.setKey(bodyProto.getKey());
+            body.setTimestamp(bodyProto.getTimestamp());
+            body.putAll(bodyProto.getDataMap());
+            body.setCode(bodyProto.getCode());
+            body.setMessage(bodyProto.getMessage());
+            return body;
+        }
 
-		if (CIMConstant.ProtobufType.REPLY_BODY == type) {
-			ReplyBodyProto.Model bodyProto = ReplyBodyProto.Model.parseFrom(bytes);
-			ReplyBody body = new ReplyBody();
-			body.setKey(bodyProto.getKey());
-			body.setTimestamp(bodyProto.getTimestamp());
-			body.putAll(bodyProto.getDataMap());
-			body.setCode(bodyProto.getCode());
-			body.setMessage(bodyProto.getMessage());
-			return body;
-		}
+        MessageProto.Model bodyProto = MessageProto.Model.parseFrom(bodyBuffer.array());
+        Message message = new Message();
+        message.setId(bodyProto.getId());
+        message.setAction(bodyProto.getAction());
+        message.setContent(bodyProto.getContent());
+        message.setSender(bodyProto.getSender());
+        message.setReceiver(bodyProto.getReceiver());
+        message.setTitle(bodyProto.getTitle());
+        message.setExtra(bodyProto.getExtra());
+        message.setTimestamp(bodyProto.getTimestamp());
+        message.setFormat(bodyProto.getFormat());
+        return message;
+    }
 
-		if (CIMConstant.ProtobufType.MESSAGE == type) {
-			MessageProto.Model bodyProto = MessageProto.Model.parseFrom(bytes);
-			Message message = new Message();
-			message.setId(bodyProto.getId());
-			message.setAction(bodyProto.getAction());
-			message.setContent(bodyProto.getContent());
-			message.setSender(bodyProto.getSender());
-			message.setReceiver(bodyProto.getReceiver());
-			message.setTitle(bodyProto.getTitle());
-			message.setExtra(bodyProto.getExtra());
-			message.setTimestamp(bodyProto.getTimestamp());
-			message.setFormat(bodyProto.getFormat());
-			return message;
-		}
-
-		return null;
-
-	}
-
-	/**
-	 * 解析消息体长度
-	 */
-	private int getContentLength(byte lv, byte hv) {
-		int l = (lv & 0xff);
-		int h = (hv & 0xff);
-		return (l | h << 8);
-	}
+    /**
+     * 解析消息体长度
+     */
+    private int getContentLength(byte lv, byte hv) {
+        int l = (lv & 0xff);
+        int h = (hv & 0xff);
+        return (l | h << 8);
+    }
 
 }

@@ -36,8 +36,8 @@ import com.farsunset.cim.sdk.client.model.ReplyBody;
  */
 public class CIMListenerManager {
 
-	private static ArrayList<CIMEventListener> cimListeners = new ArrayList<CIMEventListener>();
-	private static CIMMessageReceiveComparator comparator = new CIMMessageReceiveComparator();
+	private static final ArrayList<CIMEventListener> cimListeners = new ArrayList<CIMEventListener>();
+	private static final CIMMessageReceiveComparator comparator = new CIMMessageReceiveComparator();
     private static final Logger LOGGER = LoggerFactory.getLogger(CIMListenerManager.class);
 
 	public static void registerMessageListener(CIMEventListener listener) {
@@ -56,9 +56,9 @@ public class CIMListenerManager {
 		}
 	}
 
-	public static void notifyOnConnectionSuccessed(boolean antoBind) {
+	public static void notifyOnConnectFinished(boolean autoBind) {
 		for (CIMEventListener listener : cimListeners) {
-			listener.onConnectFinished(antoBind);
+			listener.onConnectFinished(autoBind);
 		}
 	}
 
@@ -80,13 +80,13 @@ public class CIMListenerManager {
 		}
 	}
 
-	public static void notifyOnConnectionFailed() {
+	public static void notifyOnConnectFailed() {
 		for (CIMEventListener listener : cimListeners) {
 			listener.onConnectFailed();
 		}
 	}
 
-	public static void destory() {
+	public static void destroy() {
 		cimListeners.clear();
 	}
 

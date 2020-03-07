@@ -32,15 +32,14 @@ import com.farsunset.cim.sdk.client.model.Protobufable;
  */
 public class ClientMessageEncoder  {
 
-	public ByteBuffer encode(Object object)  {
+	public ByteBuffer encode(Protobufable body)  {
 
-		Protobufable data = (Protobufable) object;
-		byte[] byteArray = data.getByteArray();
+		byte[] data = body.getByteArray();
 
-		ByteBuffer ioBuffer = ByteBuffer.allocate(byteArray.length + CIMConstant.DATA_HEADER_LENGTH);
+		ByteBuffer ioBuffer = ByteBuffer.allocate(data.length + CIMConstant.DATA_HEADER_LENGTH);
 
-		ioBuffer.put(createHeader(data.getType(), byteArray.length));
-		ioBuffer.put(byteArray);
+		ioBuffer.put(createHeader(body.getType(), data.length));
+		ioBuffer.put(data);
 		ioBuffer.flip();
 
 		return ioBuffer;

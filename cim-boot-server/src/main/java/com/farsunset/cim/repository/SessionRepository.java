@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
+/*
  * 正式场景下，使用redis或者数据库来存储session信息
  */
 @Repository

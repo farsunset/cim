@@ -23,38 +23,35 @@ package com.farsunset.cim.sdk.android.coder;
 
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
 import com.farsunset.cim.sdk.android.model.Protobufable;
+import com.farsunset.cim.sdk.android.model.SentBody;
 
 import java.nio.ByteBuffer;
 
-/**
- * 客户端消息发送前进行编码
- */
-public class ClientMessageEncoder  {
+public class ClientMessageEncoder {
 
-	public ByteBuffer encode(Object object)  {
+    public ByteBuffer encode(Protobufable body) {
 
-		Protobufable data = (Protobufable) object;
-		byte[] byteArray = data.getByteArray();
+        byte[] data = body.getByteArray();
 
-		ByteBuffer buffer = ByteBuffer.allocate(byteArray.length + CIMConstant.DATA_HEADER_LENGTH);
+        ByteBuffer buffer = ByteBuffer.allocate(data.length + CIMConstant.DATA_HEADER_LENGTH);
 
-		buffer.put(createHeader(data.getType(), byteArray.length));
-		buffer.put(byteArray);
-		buffer.flip();
+        buffer.put(createHeader(body.getType(), data.length));
+        buffer.put(data);
+        buffer.flip();
 
-		return buffer;
+        return buffer;
 
-	}
+    }
 
-	/**
-	 * 消息体最大为65535
-	 */
-	private byte[] createHeader(byte type, int length) {
-		byte[] header = new byte[CIMConstant.DATA_HEADER_LENGTH];
-		header[0] = type;
-		header[1] = (byte) (length & 0xff);
-		header[2] = (byte) ((length >> 8) & 0xff);
-		return header;
-	}
+    /**
+     * 消息体最大为65535
+     */
+    private byte[] createHeader(byte type, int length) {
+        byte[] header = new byte[CIMConstant.DATA_HEADER_LENGTH];
+        header[0] = type;
+        header[1] = (byte) (length & 0xff);
+        header[2] = (byte) ((length >> 8) & 0xff);
+        return header;
+    }
 
 }

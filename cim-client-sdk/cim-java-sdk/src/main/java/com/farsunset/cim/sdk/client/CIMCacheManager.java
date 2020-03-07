@@ -25,7 +25,7 @@ import java.util.HashMap;
 
 class CIMCacheManager {
 
-	private static HashMap<String, String> CIM_CONFIG_INFO = new HashMap<String, String>();
+	private static final HashMap<String, String> CIM_CONFIG_INFO = new HashMap<String, String>();
 
 	public static final String KEY_MANUAL_STOP = "KEY_MANUAL_STOP";
 
