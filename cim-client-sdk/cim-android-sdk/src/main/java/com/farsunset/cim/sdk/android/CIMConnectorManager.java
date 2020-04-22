@@ -41,7 +41,6 @@ import java.nio.channels.SocketChannel;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicLong;
 
 /*
  * 连接服务端管理，cim核心处理类，管理连接，以及消息处理
@@ -54,13 +53,12 @@ class CIMConnectorManager {
 
     private static final int WRITE_BUFFER_SIZE = 1024;
 
-    private static final int READ_IDLE_TIME = 120 * 1000;
-
     private static final int CONNECT_TIME_OUT = 10 * 1000;
 
+    /*
+     服务端在连接写空闲120秒的时候发送心跳请求给客户端，所以客户端在空闲150秒后都没有收到任何数据，则关闭链接，并重新创建
+     */
     private static final int CONNECT_ALIVE_TIME_OUT = 150 * 1000;
-
-    private static final AtomicLong LAST_READ_TIME = new AtomicLong(0);
 
     private static final CIMLogger LOGGER = CIMLogger.getLogger();
 
@@ -71,7 +69,6 @@ class CIMConnectorManager {
     private final Context context;
 
     private final ByteBuffer headerBuffer = ByteBuffer.allocate(CIMConstant.DATA_HEADER_LENGTH);
-
 
     private final ExecutorService workerExecutor = Executors.newFixedThreadPool(1, r -> new Thread(r, "worker-"));
 
@@ -87,7 +84,6 @@ class CIMConnectorManager {
     private CIMConnectorManager(Context context) {
         this.context = context;
     }
-
 
     public synchronized static CIMConnectorManager getManager(Context context) {
 
@@ -148,7 +144,7 @@ class CIMConnectorManager {
                 /*
                  *read 返回 <= 0的情况，发生了意外需要断开重链
                  */
-                closeSession();
+                close();
 
             } catch (ConnectException | SocketTimeoutException ignore) {
                 handleConnectAbortedEvent();
@@ -158,11 +154,7 @@ class CIMConnectorManager {
         });
     }
 
-    public void destroy() {
-        closeSession();
-    }
-
-    public void closeSession() {
+    public void close() {
 
         if (!isConnected()) {
             return;
@@ -172,7 +164,7 @@ class CIMConnectorManager {
             socketChannel.close();
         } catch (IOException ignore) {
         } finally {
-            this.sessionClosed();
+            this.onSessionClosed();
         }
     }
 
@@ -180,6 +172,9 @@ class CIMConnectorManager {
         return socketChannel != null && socketChannel.isConnected();
     }
 
+    public void sendHeartbeat() {
+        send(HeartbeatResponse.getInstance());
+    }
 
     public void send(final Protobufable body) {
 
@@ -201,9 +196,9 @@ class CIMConnectorManager {
             } finally {
 
                 if (result <= 0) {
-                    closeSession();
+                    close();
                 } else {
-                    messageSent(body);
+                    onMessageSent(body);
                 }
             }
         });
@@ -211,10 +206,8 @@ class CIMConnectorManager {
     }
 
 
-    private void sessionCreated() {
+    private void onSessionCreated() {
         LOGGER.sessionCreated(socketChannel);
-
-        LAST_READ_TIME.set(System.currentTimeMillis());
 
         Intent intent = new Intent();
         intent.setPackage(context.getPackageName());
@@ -223,11 +216,9 @@ class CIMConnectorManager {
 
     }
 
-    private void sessionClosed() {
+    private void onSessionClosed() {
 
         idleHandler.removeMessages(0);
-
-        LAST_READ_TIME.set(0);
 
         LOGGER.sessionClosed(socketChannel);
 
@@ -238,20 +229,15 @@ class CIMConnectorManager {
 
     }
 
-    private void sessionIdle() {
+    private void onSessionIdle() {
 
         LOGGER.sessionIdle(socketChannel);
 
-        /*
-         * 用于解决，wifi情况下。偶而路由器与服务器断开连接时，客户端并没及时收到关闭事件 导致这样的情况下当前连接无效也不会重连的问题
-         */
-        if (System.currentTimeMillis() - LAST_READ_TIME.get() >= CONNECT_ALIVE_TIME_OUT) {
-            closeSession();
-        }
+        close();
     }
 
 
-    private void messageReceived(Object obj) {
+    private void onMessageReceived(Object obj) {
 
         if (obj instanceof Message) {
 
@@ -273,7 +259,7 @@ class CIMConnectorManager {
     }
 
 
-    private void messageSent(Object message) {
+    private void onMessageSent(Object message) {
 
         LOGGER.messageSent(socketChannel, message);
 
@@ -289,12 +275,12 @@ class CIMConnectorManager {
     private final Handler idleHandler = new Handler(IDLE_HANDLER_THREAD.getLooper()) {
         @Override
         public void handleMessage(android.os.Message m) {
-            sessionIdle();
+            onSessionIdle();
         }
     };
 
     private void handleDisconnectedEvent() {
-        closeSession();
+        close();
     }
 
     private void handleConnectAbortedEvent() {
@@ -313,20 +299,17 @@ class CIMConnectorManager {
 
     private void handleConnectedEvent() {
 
-        sessionCreated();
+        closeCountDown();
 
-        idleHandler.sendEmptyMessageDelayed(0, READ_IDLE_TIME);
+        onSessionCreated();
+
     }
 
     private void handleSocketReadEvent() throws IOException {
 
-        onMessageDecodeFinished(messageDecoder.doDecode(headerBuffer,socketChannel));
+        closeCountDown();
 
-        markLastReadTime();
-
-    }
-
-    private void onMessageDecodeFinished(Object message){
+        Object message = messageDecoder.doDecode(headerBuffer,socketChannel);
 
         LOGGER.messageReceived(socketChannel, message);
 
@@ -335,18 +318,16 @@ class CIMConnectorManager {
             return;
         }
 
-        this.messageReceived(message);
+        this.onMessageReceived(message);
+
     }
 
 
-    private void markLastReadTime() {
-
-        LAST_READ_TIME.set(System.currentTimeMillis());
+    private void closeCountDown() {
 
         idleHandler.removeMessages(0);
 
-        idleHandler.sendEmptyMessageDelayed(0, READ_IDLE_TIME);
-
+        idleHandler.sendEmptyMessageDelayed(0, CONNECT_ALIVE_TIME_OUT);
     }
 
 }

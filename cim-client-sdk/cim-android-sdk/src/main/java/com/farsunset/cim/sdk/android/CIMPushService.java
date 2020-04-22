@@ -21,10 +21,7 @@
  */
 package com.farsunset.cim.sdk.android;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.Service;
+import android.app.*;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -35,8 +32,8 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
-import com.farsunset.cim.sdk.android.logger.CIMLogger;
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
+import com.farsunset.cim.sdk.android.logger.CIMLogger;
 import com.farsunset.cim.sdk.android.model.SentBody;
 
 /**
@@ -45,19 +42,21 @@ import com.farsunset.cim.sdk.android.model.SentBody;
  * @author 3979434
  */
 public class CIMPushService extends Service {
+
     public final static String KEY_DELAYED_TIME = "KEY_DELAYED_TIME";
     public final static String KEY_LOGGER_ENABLE = "KEY_LOGGER_ENABLE";
 
     private final static int NOTIFICATION_ID = Integer.MAX_VALUE;
 
-    private CIMConnectorManager manager;
+    private CIMConnectorManager connectorManager;
     private KeepAliveBroadcastReceiver keepAliveReceiver;
     private ConnectivityManager connectivityManager;
+    private NotificationManager notificationManager;
 
     @Override
     public void onCreate() {
-        manager = CIMConnectorManager.getManager(this.getApplicationContext());
-
+        connectorManager = CIMConnectorManager.getManager(this.getApplicationContext());
+        notificationManager = getSystemService(NotificationManager.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             keepAliveReceiver = new KeepAliveBroadcastReceiver();
@@ -66,14 +65,14 @@ public class CIMPushService extends Service {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 
-            connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            connectivityManager = getSystemService(ConnectivityManager.class);
 
             connectivityManager.registerDefaultNetworkCallback(networkCallback);
 
         }
     }
 
-    final ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
+    private final ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
         @Override
         public void onAvailable(Network network) {
             Intent intent = new Intent();
@@ -92,14 +91,14 @@ public class CIMPushService extends Service {
 
     };
 
-    final Handler connectHandler = new Handler() {
+    private final Handler connectHandler = new Handler() {
         @Override
         public void handleMessage(android.os.Message message) {
-            connect();
+            prepareConnect();
         }
     };
 
-    final Handler notificationHandler = new Handler() {
+    private final Handler notificationHandler = new Handler() {
         @Override
         public void handleMessage(android.os.Message message) {
             stopForeground(true);
@@ -109,32 +108,20 @@ public class CIMPushService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            NotificationChannel channel = new NotificationChannel(getClass().getSimpleName(), getClass().getSimpleName(), NotificationManager.IMPORTANCE_LOW);
-            channel.enableLights(false);
-            channel.enableVibration(false);
-            channel.setSound(null, null);
-            notificationManager.createNotificationChannel(channel);
-            Notification notification = new Notification.Builder(this, channel.getId())
-                    .setContentTitle("Push service")
-                    .setContentText("Push service is running")
-                    .build();
-            startForeground(NOTIFICATION_ID, notification);
-        }
+        createNotification();
 
         String action = intent == null ? CIMPushManager.ACTION_ACTIVATE_PUSH_SERVICE : intent.getAction();
 
         if (CIMPushManager.ACTION_CREATE_CIM_CONNECTION.equals(action)) {
-            connect(intent.getLongExtra(KEY_DELAYED_TIME, 0));
+            this.prepareConnect(intent.getLongExtra(KEY_DELAYED_TIME, 0));
         }
 
         if (CIMPushManager.ACTION_SEND_REQUEST_BODY.equals(action)) {
-            manager.send((SentBody) intent.getSerializableExtra(CIMPushManager.KEY_SEND_BODY));
+            connectorManager.send((SentBody) intent.getSerializableExtra(CIMPushManager.KEY_SEND_BODY));
         }
 
         if (CIMPushManager.ACTION_CLOSE_CIM_CONNECTION.equals(action)) {
-            manager.closeSession();
+            connectorManager.close();
         }
 
         if (CIMPushManager.ACTION_ACTIVATE_PUSH_SERVICE.equals(action)) {
@@ -147,29 +134,28 @@ public class CIMPushService extends Service {
         }
 
         if (CIMPushManager.ACTION_DESTROY_CIM_SERVICE.equals(action)) {
-            manager.destroy();
-            stopSelf();
+            connectorManager.close();
+            this.stopSelf();
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             notificationHandler.sendEmptyMessageDelayed(0, 1000);
         }
 
-        return super.onStartCommand(intent, flags, startId);
+        return super.onStartCommand(intent,flags,startId);
     }
 
-    private void connect(long delayMillis) {
+    private void prepareConnect(long delayMillis) {
 
         if (delayMillis <= 0) {
-            connect();
+            this.prepareConnect();
             return;
         }
 
         connectHandler.sendEmptyMessageDelayed(0, delayMillis);
-
     }
 
-    private void connect() {
+    private void prepareConnect() {
 
         if (CIMPushManager.isDestroyed(this) || CIMPushManager.isStopped(this)) {
             return;
@@ -183,19 +169,20 @@ public class CIMPushService extends Service {
             return;
         }
 
-        manager.connect(host, port);
+        connectorManager.connect(host, port);
 
     }
 
     private void handleKeepAlive() {
 
-        if (manager.isConnected()) {
-            CIMLogger.getLogger().connectState(true,CIMPushManager.isStopped(this),CIMPushManager.isDestroyed(this));
+        CIMLogger.getLogger().connectState(true, CIMPushManager.isStopped(this), CIMPushManager.isDestroyed(this));
+
+        if (connectorManager.isConnected()) {
+            connectorManager.sendHeartbeat();
             return;
         }
 
-        connect();
-
+        this.prepareConnect();
     }
 
     @Override
@@ -203,9 +190,16 @@ public class CIMPushService extends Service {
         return null;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        release();
+    }
 
-    public void release() {
+    private void release() {
+
         connectHandler.removeMessages(0);
+
         notificationHandler.removeMessages(0);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -217,18 +211,34 @@ public class CIMPushService extends Service {
         }
     }
 
+    private void createNotification() {
 
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            return;
+        }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        release();
+        String channelId = getClass().getName();
+
+        if (notificationManager.getNotificationChannel(channelId) == null) {
+            NotificationChannel channel = new NotificationChannel(channelId, getClass().getSimpleName(), NotificationManager.IMPORTANCE_LOW);
+            channel.enableLights(false);
+            channel.enableVibration(false);
+            channel.setSound(null, null);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        Notification notification = new Notification.Builder(this,channelId)
+                .setContentTitle(CIMPushService.class.getSimpleName())
+                .build();
+
+        startForeground(NOTIFICATION_ID, notification);
     }
 
-    public class KeepAliveBroadcastReceiver extends BroadcastReceiver {
+
+    private class KeepAliveBroadcastReceiver extends BroadcastReceiver {
 
         @Override
-        public void onReceive(Context arg0, Intent arg1) {
+        public void onReceive(Context context, Intent intent) {
             handleKeepAlive();
         }
 

@@ -22,11 +22,7 @@
 package com.farsunset.ichat.example.ui;
 
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkRequest;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -35,13 +31,12 @@ import android.view.animation.AlphaAnimation;
 import android.widget.Toast;
 
 import com.farsunset.cim.sdk.android.CIMPushManager;
-import com.farsunset.cim.sdk.android.constant.CIMConstant;
 import com.farsunset.ichat.example.BuildConfig;
 import com.farsunset.ichat.example.R;
 import com.farsunset.ichat.example.app.CIMMonitorActivity;
 import com.farsunset.ichat.example.app.Constant;
 
-public class SplanshActivity extends CIMMonitorActivity {
+public class SplashActivity extends CIMMonitorActivity {
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -53,7 +48,7 @@ public class SplanshActivity extends CIMMonitorActivity {
         CIMPushManager.setLoggerEnable(this, BuildConfig.DEBUG);
         //连接服务端
 
-        CIMPushManager.connect(SplanshActivity.this, Constant.CIM_SERVER_HOST, Constant.CIM_SERVER_PORT);
+        CIMPushManager.connect(SplashActivity.this, Constant.CIM_SERVER_HOST, Constant.CIM_SERVER_PORT);
 
 
         final View view = View.inflate(this, R.layout.activity_splansh, null);
@@ -68,7 +63,7 @@ public class SplanshActivity extends CIMMonitorActivity {
     @Override
     public void onConnectFinished(boolean autoBind) {
 
-        Intent intent = new Intent(SplanshActivity.this, LoginActivity.class);
+        Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
