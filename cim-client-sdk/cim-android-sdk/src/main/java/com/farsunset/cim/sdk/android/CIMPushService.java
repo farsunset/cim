@@ -56,7 +56,7 @@ public class CIMPushService extends Service {
     @Override
     public void onCreate() {
         connectorManager = CIMConnectorManager.getManager(this.getApplicationContext());
-        notificationManager = getSystemService(NotificationManager.class);
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             keepAliveReceiver = new KeepAliveBroadcastReceiver();

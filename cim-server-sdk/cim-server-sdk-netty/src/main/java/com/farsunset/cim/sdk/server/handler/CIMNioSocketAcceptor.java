@@ -54,8 +54,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CIMNioSocketAcceptor{
 	private static final Logger LOGGER = LoggerFactory.getLogger(CIMNioSocketAcceptor.class);
 
-	private HashMap<String, CIMRequestHandler> innerHandlerMap = new HashMap<>();
-    private ConcurrentHashMap<String,Channel> channelGroup = new ConcurrentHashMap<>();
+	private final HashMap<String, CIMRequestHandler> innerHandlerMap = new HashMap<>();
+    private final ConcurrentHashMap<String,Channel> channelGroup = new ConcurrentHashMap<>();
 
 
 	private EventLoopGroup appBossGroup;

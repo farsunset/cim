@@ -17,7 +17,7 @@ public class WebMessageDecoder extends SimpleChannelInboundHandler<Object> {
 
     private final static String URI = "ws://localhost:%d";
 
-    private static ConcurrentHashMap<String, WebSocketServerHandshaker> handShakerMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, WebSocketServerHandshaker> handShakerMap = new ConcurrentHashMap<>();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WebMessageDecoder.class);
 
