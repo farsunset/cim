@@ -36,6 +36,8 @@ import com.farsunset.cim.sdk.android.constant.CIMConstant;
 import com.farsunset.cim.sdk.android.logger.CIMLogger;
 import com.farsunset.cim.sdk.android.model.SentBody;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * 与服务端连接服务
  *
@@ -43,15 +45,26 @@ import com.farsunset.cim.sdk.android.model.SentBody;
  */
 public class CIMPushService extends Service {
 
-    public final static String KEY_DELAYED_TIME = "KEY_DELAYED_TIME";
-    public final static String KEY_LOGGER_ENABLE = "KEY_LOGGER_ENABLE";
+    static final String KEY_SEND_BODY = "KEY_SEND_BODY";
+    static final String KEY_DELAYED_TIME = "KEY_DELAYED_TIME";
+    static final String KEY_LOGGER_ENABLE = "KEY_LOGGER_ENABLE";
+    static final String KEY_NOTIFICATION_MESSAGE = "KEY_NOTIFICATION_MESSAGE";
+    static final String KEY_NOTIFICATION_CHANNEL = "KEY_NOTIFICATION_CHANNEL";
+    static final String KEY_NOTIFICATION_ICON = "KEY_NOTIFICATION_ICON";
+
+    private final  static String TRANSIENT_NTC_CHANNEL_ID = "CIM_PUSH_TRANSIENT_NTC_ID";
+    private final  static String PERSIST_NTC_CHANNEL_ID = "CIM_PUSH_PERSIST_NTC_ID";
 
     private final static int NOTIFICATION_ID = Integer.MAX_VALUE;
+
+    private final static int PERSIST_NOTIFICATION_ID = Integer.MIN_VALUE;
 
     private CIMConnectorManager connectorManager;
     private KeepAliveBroadcastReceiver keepAliveReceiver;
     private ConnectivityManager connectivityManager;
     private NotificationManager notificationManager;
+    private final AtomicBoolean persistHolder = new AtomicBoolean(false);
+
 
     @Override
     public void onCreate() {
@@ -101,6 +114,9 @@ public class CIMPushService extends Service {
     private final Handler notificationHandler = new Handler() {
         @Override
         public void handleMessage(android.os.Message message) {
+            if (persistHolder.get()){
+                return;
+            }
             stopForeground(true);
         }
     };
@@ -108,16 +124,18 @@ public class CIMPushService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        createNotification();
-
         String action = intent == null ? CIMPushManager.ACTION_ACTIVATE_PUSH_SERVICE : intent.getAction();
+
+        if (!persistHolder.get()) {
+            createNotification();
+        }
 
         if (CIMPushManager.ACTION_CREATE_CIM_CONNECTION.equals(action)) {
             this.prepareConnect(intent.getLongExtra(KEY_DELAYED_TIME, 0));
         }
 
         if (CIMPushManager.ACTION_SEND_REQUEST_BODY.equals(action)) {
-            connectorManager.send((SentBody) intent.getSerializableExtra(CIMPushManager.KEY_SEND_BODY));
+            connectorManager.send((SentBody) intent.getSerializableExtra(KEY_SEND_BODY));
         }
 
         if (CIMPushManager.ACTION_CLOSE_CIM_CONNECTION.equals(action)) {
@@ -138,8 +156,20 @@ public class CIMPushService extends Service {
             this.stopSelf();
         }
 
+        if (CIMPushManager.ACTION_SHOW_PERSIST_NOTIFICATION.equals(action)) {
+            createPersistNotification(intent.getStringExtra(KEY_NOTIFICATION_CHANNEL),
+                    intent.getStringExtra(KEY_NOTIFICATION_MESSAGE),
+                    intent.getIntExtra(KEY_NOTIFICATION_ICON,0));
+            persistHolder.set(true);
+        }
+
+        if (CIMPushManager.ACTION_HIDE_PERSIST_NOTIFICATION.equals(action)) {
+            stopForeground(true);
+            persistHolder.set(false);
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notificationHandler.sendEmptyMessageDelayed(0, 1000);
+            notificationHandler.sendEmptyMessageDelayed(0, 200);
         }
 
         return super.onStartCommand(intent,flags,startId);
@@ -200,7 +230,9 @@ public class CIMPushService extends Service {
 
         connectHandler.removeMessages(0);
 
-        notificationHandler.removeMessages(0);
+        stopForeground(true);
+
+        persistHolder.set(false);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             unregisterReceiver(keepAliveReceiver);
@@ -217,23 +249,54 @@ public class CIMPushService extends Service {
             return;
         }
 
-        String channelId = getClass().getName();
-
-        if (notificationManager.getNotificationChannel(channelId) == null) {
-            NotificationChannel channel = new NotificationChannel(channelId, getClass().getSimpleName(), NotificationManager.IMPORTANCE_LOW);
+        if (notificationManager.getNotificationChannel(TRANSIENT_NTC_CHANNEL_ID) == null) {
+            NotificationChannel channel = new NotificationChannel(TRANSIENT_NTC_CHANNEL_ID, getClass().getSimpleName(), NotificationManager.IMPORTANCE_LOW);
             channel.enableLights(false);
             channel.enableVibration(false);
             channel.setSound(null, null);
             notificationManager.createNotificationChannel(channel);
         }
 
-        Notification notification = new Notification.Builder(this,channelId)
+        Notification notification = new Notification.Builder(this,TRANSIENT_NTC_CHANNEL_ID)
                 .setContentTitle(CIMPushService.class.getSimpleName())
                 .build();
 
         startForeground(NOTIFICATION_ID, notification);
     }
 
+
+    private void createPersistNotification(String channelName ,String message,int icon) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && notificationManager.getNotificationChannel(PERSIST_NTC_CHANNEL_ID) == null) {
+            NotificationChannel channel = new NotificationChannel(PERSIST_NTC_CHANNEL_ID,channelName, NotificationManager.IMPORTANCE_DEFAULT);
+            channel.enableLights(false);
+            channel.setShowBadge(false);
+            channel.enableVibration(false);
+            channel.setSound(null, null);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.setPackage(getPackageName());
+
+        Notification.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            builder = new Notification.Builder(this,PERSIST_NTC_CHANNEL_ID);
+        }else {
+            builder = new Notification.Builder(this);
+        }
+
+        builder.setAutoCancel(false)
+                .setOngoing(false)
+                .setSmallIcon(icon)
+                .setWhen(System.currentTimeMillis())
+                .setContentIntent(PendingIntent.getActivity(this, 0, intent, 0))
+                .setContentTitle(channelName)
+                .setContentText(message);
+
+        startForeground(PERSIST_NOTIFICATION_ID, builder.build());
+    }
 
     private class KeepAliveBroadcastReceiver extends BroadcastReceiver {
 
