@@ -1,0 +1,1 @@
+集成方式请参考文档和cim-use-examples中对应的demo
