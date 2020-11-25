@@ -12,9 +12,10 @@ CIM项目是基于mina或者netty框架下的推送系统，我们平常使用�
 
 
 <div align="center">
-   <img src="http://staticres.oss-cn-hangzhou.aliyuncs.com/hoxin/single_chatting_dark.jpg" width="280px"  />
-   <img src="https://images.gitee.com/uploads/images/2020/0322/202140_f08c16ce_58912.jpeg" width="280px" />
-   <img src="https://images.gitee.com/uploads/images/2020/0302/161713_966e177b_58912.jpeg" width="280px" />
+   <img src="http://staticres.oss-cn-hangzhou.aliyuncs.com/hoxin/call_video_incoming.jpg" width="24%"  />
+   <img src="http://staticres.oss-cn-hangzhou.aliyuncs.com/hoxin/single_chatting_light.jpg" width="24%"  />
+   <img src="http://staticres.oss-cn-hangzhou.aliyuncs.com/hoxin/single_chatting_dark.jpg" width="24%"  />
+   <img src="http://staticres.oss-cn-hangzhou.aliyuncs.com/hoxin/moment_timeline_light.jpg" width="24%"  />
 </div>
 
 ---  
@@ -27,9 +28,7 @@ CIM项目是基于mina或者netty框架下的推送系统，我们平常使用�
 
 3.cim-server-sdk 是服务端SDK源码,分为 mina和netty 两个版本，二者任选其一
 
-4.cim-client-sdk-libs 是打包好的可直接引用的sdk目录
-
-5.cim-boot-server是springboot服务端工程源码,使用Idea工具开发
+4.cim-boot-server是springboot服务端工程源码,使用Idea工具开发
 
 其中所有的sdk均为IntelliJ IDEA工程，Maven打包成jar导出引入到对应的客户端或服务端工程
 
