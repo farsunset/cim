@@ -63,44 +63,55 @@ public class CIMListenerManager {
     }
 
     public static void notifyOnNetworkChanged(NetworkInfo info) {
-        for (CIMEventListener listener : cimListeners) {
-            listener.onNetworkChanged(info);
+        Iterator<CIMEventListener> iterable = cimListeners.iterator();
+        while (iterable.hasNext()) {
+            iterable.next().onNetworkChanged(info);
         }
     }
 
     public static void notifyOnConnectFinished(boolean hasAutoBind) {
-        for (CIMEventListener listener : cimListeners) {
-            listener.onConnectFinished(hasAutoBind);
+        Iterator<CIMEventListener> iterable = cimListeners.iterator();
+        while (iterable.hasNext()) {
+            iterable.next().onConnectFinished(hasAutoBind);
         }
     }
 
     public static void notifyOnMessageReceived(Message message) {
-        for (CIMEventListener listener : cimListeners) {
-            listener.onMessageReceived(message);
+        Iterator<CIMEventListener> iterable = cimListeners.iterator();
+        while (iterable.hasNext()) {
+            iterable.next().onMessageReceived(message);
         }
     }
 
     public static void notifyOnConnectionClosed() {
-        for (CIMEventListener listener : cimListeners) {
-            listener.onConnectionClosed();
+        Iterator<CIMEventListener> iterable = cimListeners.iterator();
+        while (iterable.hasNext()) {
+            iterable.next().onConnectionClosed();
         }
     }
 
     public static void notifyOnConnectFailed() {
-        for (CIMEventListener listener : cimListeners) {
-            listener.onConnectFailed();
+
+        Iterator<CIMEventListener> iterable = cimListeners.iterator();
+        while (iterable.hasNext()) {
+            iterable.next().onConnectFailed();
         }
+
     }
 
     public static void notifyOnReplyReceived(ReplyBody body) {
-        for (CIMEventListener listener : cimListeners) {
-            listener.onReplyReceived(body);
+
+        Iterator<CIMEventListener> iterable = cimListeners.iterator();
+        while (iterable.hasNext()) {
+            iterable.next().onReplyReceived(body);
         }
+
     }
 
     public static void notifyOnSendFinished(SentBody body) {
-        for (CIMEventListener listener : cimListeners) {
-            listener.onSendFinished(body);
+        Iterator<CIMEventListener> iterable = cimListeners.iterator();
+        while (iterable.hasNext()) {
+            iterable.next().onSendFinished(body);
         }
     }
 
@@ -109,8 +120,9 @@ public class CIMListenerManager {
     }
 
     public static void logListenersName() {
-        for (CIMEventListener listener : cimListeners) {
-            Log.i(CIMEventListener.class.getSimpleName(), "#######" + listener.getClass().getName() + "#######");
+        Iterator<CIMEventListener> iterable = cimListeners.iterator();
+        while (iterable.hasNext()) {
+            Log.i(CIMEventListener.class.getSimpleName(), "#######" + iterable.next().getClass().getName() + "#######");
         }
     }
 

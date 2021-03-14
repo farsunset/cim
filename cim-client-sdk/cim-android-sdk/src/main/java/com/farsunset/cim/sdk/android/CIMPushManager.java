@@ -40,21 +40,24 @@ import java.util.UUID;
  */
 public class CIMPushManager {
 
-    protected static final String ACTION_ACTIVATE_PUSH_SERVICE = "ACTION_ACTIVATE_PUSH_SERVICE";
 
     protected static final String ACTION_CREATE_CIM_CONNECTION = "ACTION_CREATE_CIM_CONNECTION";
+
+    protected static final String ACTION_DESTROY_CIM_SERVICE = "ACTION_DESTROY_CIM_SERVICE";
+
+    protected static final String ACTION_ACTIVATE_PUSH_SERVICE = "ACTION_ACTIVATE_PUSH_SERVICE";
 
     protected static final String ACTION_SEND_REQUEST_BODY = "ACTION_SEND_REQUEST_BODY";
 
     protected static final String ACTION_CLOSE_CIM_CONNECTION = "ACTION_CLOSE_CIM_CONNECTION";
-
-    protected static final String ACTION_DESTROY_CIM_SERVICE = "ACTION_DESTROY_CIM_SERVICE";
 
     protected static final String ACTION_SET_LOGGER_EATABLE = "ACTION_SET_LOGGER_EATABLE";
 
     protected static final String ACTION_SHOW_PERSIST_NOTIFICATION = "ACTION_SHOW_PERSIST_NOTIFICATION";
 
     protected static final String ACTION_HIDE_PERSIST_NOTIFICATION = "ACTION_HIDE_PERSIST_NOTIFICATION";
+
+    protected static final String ACTION_CIM_CONNECTION_PONG = "ACTION_CIM_CONNECTION_PONG";
 
     /**
      * 初始化,连接服务端，在程序启动页或者 在Application里调用
@@ -115,6 +118,16 @@ public class CIMPushManager {
 
         sendBindRequest(context, account);
 
+    }
+
+    public static void pong(Context context) {
+        if (isDestroyed(context) || isStopped(context)) {
+            return;
+        }
+
+        Intent serviceIntent = new Intent(context, CIMPushService.class);
+        serviceIntent.setAction(ACTION_CIM_CONNECTION_PONG);
+        startService(context, serviceIntent);
     }
 
     private static void sendBindRequest(Context context, String account) {
@@ -256,7 +269,7 @@ public class CIMPushManager {
             return currDeviceId;
         }
 
-        String deviceId = UUID.randomUUID().toString().replaceAll("-", "").toUpperCase();
+        String deviceId = UUID.randomUUID().toString().replace("-", "").toUpperCase();
 
         CIMCacheManager.putString(context, CIMCacheManager.KEY_DEVICE_ID, deviceId);
 

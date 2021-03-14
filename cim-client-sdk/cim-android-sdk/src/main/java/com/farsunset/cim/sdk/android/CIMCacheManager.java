@@ -62,11 +62,13 @@ class CIMCacheManager {
     }
 
     public static String getString(Context context, String key) {
-        String value = null;
+        String value;
         ContentResolver resolver = context.getContentResolver();
         Cursor cursor = resolver.query(Uri.parse(String.format(CONTENT_URI, context.getPackageName())), new String[]{key}, null, null, null);
         if (cursor != null && cursor.moveToFirst()) {
             value = cursor.getString(0);
+        }else {
+            value = null;
         }
         closeQuietly(cursor);
         return value;

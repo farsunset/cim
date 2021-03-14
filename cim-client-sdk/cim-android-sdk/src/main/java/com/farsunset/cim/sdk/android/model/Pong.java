@@ -21,12 +21,42 @@
  */
 package com.farsunset.cim.sdk.android.model;
 
+import com.farsunset.cim.sdk.android.constant.CIMConstant;
+
+import java.io.Serializable;
+
 /**
- * 需要向另一端发送的结构体
+ * 客户端心跳响应
  */
-public interface Protobufable {
+public class Pong implements Serializable, BinaryBody {
 
-    byte[] getByteArray();
+    private static final long serialVersionUID = 1L;
+    private static final String TAG = "CLIENT_HEARTBEAT_RESPONSE";
+    private static final String CMD_HEARTBEAT_RESPONSE = "CR";
 
-    byte getType();
+    private static final Pong object = new Pong();
+
+    private Pong() {
+
+    }
+
+    public static Pong getInstance() {
+        return object;
+    }
+
+    @Override
+    public byte[] getByteArray() {
+        return CMD_HEARTBEAT_RESPONSE.getBytes();
+    }
+
+    @Override
+    public String toString() {
+        return TAG;
+    }
+
+    @Override
+    public byte getType() {
+        return CIMConstant.ProtobufType.C_H_RS;
+    }
+
 }

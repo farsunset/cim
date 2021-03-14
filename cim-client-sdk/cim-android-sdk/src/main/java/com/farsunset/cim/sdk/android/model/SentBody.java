@@ -31,7 +31,7 @@ import java.util.Set;
 /**
  * java |android 客户端请求结构
  */
-public class SentBody implements Serializable, Protobufable {
+public class SentBody implements Serializable, BinaryBody {
 
     private static final long serialVersionUID = 1L;
 

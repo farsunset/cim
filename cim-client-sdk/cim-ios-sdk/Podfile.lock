@@ -1,0 +1,24 @@
+PODS:
+  - CocoaAsyncSocket (7.6.4)
+  - Protobuf (3.13.0)
+  - SocketRocket (0.5.1)
+
+DEPENDENCIES:
+  - CocoaAsyncSocket (~> 7.6.4)
+  - Protobuf (~> 3.13.0)
+  - SocketRocket (~> 0.5.1)
+
+SPEC REPOS:
+  trunk:
+    - CocoaAsyncSocket
+    - Protobuf
+    - SocketRocket
+
+SPEC CHECKSUMS:
+  CocoaAsyncSocket: 694058e7c0ed05a9e217d1b3c7ded962f4180845
+  Protobuf: 3dac39b34a08151c6d949560efe3f86134a3f748
+  SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
+
+PODFILE CHECKSUM: fe21b8def5ac502f6af111678a5b83f7c4803c28
+
+COCOAPODS: 1.9.3

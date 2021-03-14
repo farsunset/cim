@@ -22,14 +22,13 @@
 package com.farsunset.cim.sdk.android.coder;
 
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
-import com.farsunset.cim.sdk.android.model.Protobufable;
-import com.farsunset.cim.sdk.android.model.SentBody;
+import com.farsunset.cim.sdk.android.model.BinaryBody;
 
 import java.nio.ByteBuffer;
 
 public class ClientMessageEncoder {
 
-    public ByteBuffer encode(Protobufable body) {
+    public ByteBuffer encode(BinaryBody body) {
 
         byte[] data = body.getByteArray();
 

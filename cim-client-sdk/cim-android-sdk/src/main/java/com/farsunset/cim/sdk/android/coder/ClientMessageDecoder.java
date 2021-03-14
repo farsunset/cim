@@ -23,7 +23,7 @@ package com.farsunset.cim.sdk.android.coder;
 
 
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
-import com.farsunset.cim.sdk.android.model.HeartbeatRequest;
+import com.farsunset.cim.sdk.android.model.Ping;
 import com.farsunset.cim.sdk.android.model.Message;
 import com.farsunset.cim.sdk.android.model.ReplyBody;
 import com.farsunset.cim.sdk.android.model.proto.MessageProto;
@@ -73,7 +73,7 @@ public class ClientMessageDecoder {
          消息读取完成后，通过type来解析成对应的消息体
          */
         if (CIMConstant.ProtobufType.S_H_RQ == type) {
-            return HeartbeatRequest.getInstance();
+            return Ping.getInstance();
         }
 
         if (CIMConstant.ProtobufType.REPLY_BODY == type) {

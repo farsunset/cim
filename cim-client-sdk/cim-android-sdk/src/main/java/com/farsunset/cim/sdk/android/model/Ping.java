@@ -26,27 +26,27 @@ import com.farsunset.cim.sdk.android.constant.CIMConstant;
 import java.io.Serializable;
 
 /**
- * 客户端心跳响应
+ * 服务端心跳请求
  */
-public class HeartbeatResponse implements Serializable, Protobufable {
+public class Ping implements Serializable, BinaryBody {
 
     private static final long serialVersionUID = 1L;
-    private static final String TAG = "CLIENT_HEARTBEAT_RESPONSE";
-    private static final String CMD_HEARTBEAT_RESPONSE = "CR";
+    private static final String TAG = "SERVER_HEARTBEAT_REQUEST";
+    private static final String CMD_HEARTBEAT_REQUEST = "SR";
 
-    private static final HeartbeatResponse object = new HeartbeatResponse();
+    private static final Ping object = new Ping();
 
-    private HeartbeatResponse() {
+    private Ping() {
 
     }
 
-    public static HeartbeatResponse getInstance() {
+    public static Ping getInstance() {
         return object;
     }
 
     @Override
     public byte[] getByteArray() {
-        return CMD_HEARTBEAT_RESPONSE.getBytes();
+        return CMD_HEARTBEAT_REQUEST.getBytes();
     }
 
     @Override
@@ -56,7 +56,7 @@ public class HeartbeatResponse implements Serializable, Protobufable {
 
     @Override
     public byte getType() {
-        return CIMConstant.ProtobufType.C_H_RS;
+        return CIMConstant.ProtobufType.S_H_RQ;
     }
 
 }

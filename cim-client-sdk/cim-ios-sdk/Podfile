@@ -1,0 +1,31 @@
+# Uncomment the next line to define a global platform for your project
+# platform :ios, '9.0'
+
+target 'CIMKit' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  
+  # Pods for CIMKit
+  pod "SocketRocket", '~> 0.5.1'
+  pod "Protobuf", '~> 3.13.0'
+  pod "CocoaAsyncSocket", '~> 7.6.4'
+
+  target 'CimKit' do
+    pod "SocketRocket", '~> 0.5.1'
+    pod "Protobuf", '~> 3.13.0'
+    pod "CocoaAsyncSocket", '~> 7.6.4'
+
+  end
+
+
+  target 'CIMKitTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+  target 'CIMKitUITests' do
+    # Pods for testing
+  end
+
+end

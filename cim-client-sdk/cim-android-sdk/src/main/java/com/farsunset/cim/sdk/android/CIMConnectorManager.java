@@ -173,10 +173,10 @@ class CIMConnectorManager {
     }
 
     public void sendHeartbeat() {
-        send(HeartbeatResponse.getInstance());
+        send(Pong.getInstance());
     }
 
-    public void send(final Protobufable body) {
+    public void send(final BinaryBody body) {
 
         if (!isConnected()) {
             return;
@@ -313,8 +313,8 @@ class CIMConnectorManager {
 
         LOGGER.messageReceived(socketChannel, message);
 
-        if (message instanceof HeartbeatRequest) {
-            send(HeartbeatResponse.getInstance());
+        if (message instanceof Ping) {
+            send(Pong.getInstance());
             return;
         }
 
