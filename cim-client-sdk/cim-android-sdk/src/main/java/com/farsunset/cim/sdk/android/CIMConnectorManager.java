@@ -58,13 +58,11 @@ class CIMConnectorManager {
     /*
      服务端在连接写空闲120秒的时候发送心跳请求给客户端，所以客户端在空闲150秒后都没有收到任何数据，则关闭链接，并重新创建
      */
-    private static final int CONNECT_ALIVE_TIME_OUT = 150 * 1000;
+    private static final int CONNECT_ALIVE_TIME_OUT = 120 * 1000;
 
     private static final CIMLogger LOGGER = CIMLogger.getLogger();
 
-    private static final HandlerThread IDLE_HANDLER_THREAD = new HandlerThread("READ-IDLE", Process.THREAD_PRIORITY_BACKGROUND);
-
-    private volatile SocketChannel socketChannel;
+    private SocketChannel socketChannel;
 
     private final Context context;
 
@@ -77,15 +75,11 @@ class CIMConnectorManager {
     private final ClientMessageEncoder messageEncoder = new ClientMessageEncoder();
     private final ClientMessageDecoder messageDecoder = new ClientMessageDecoder();
 
-    static {
-        IDLE_HANDLER_THREAD.start();
-    }
-
     private CIMConnectorManager(Context context) {
         this.context = context;
     }
 
-    public synchronized static CIMConnectorManager getManager(Context context) {
+    public static synchronized CIMConnectorManager getManager(Context context) {
 
         if (manager == null) {
             manager = new CIMConnectorManager(context);
@@ -272,10 +266,10 @@ class CIMConnectorManager {
         }
     }
 
-    private final Handler idleHandler = new Handler(IDLE_HANDLER_THREAD.getLooper()) {
+    private final Handler idleHandler = new Handler() {
         @Override
         public void handleMessage(android.os.Message m) {
-            onSessionIdle();
+            workerExecutor.execute(() -> onSessionIdle());
         }
     };
 

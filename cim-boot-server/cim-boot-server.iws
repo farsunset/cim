@@ -3,8 +3,235 @@
   <component name="AnalysisUIOptions">
     <option name="GROUP_BY_SEVERITY" value="true" />
   </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="bed47126-03b3-4370-a6c1-08503492974f" name="Default Changelist" comment="" />
+    <list default="true" id="bed47126-03b3-4370-a6c1-08503492974f" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/jar.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jar.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/libs/cim-server-sdk-netty-4.0.0.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/run.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/run.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/BootApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/component/handler/BindHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/component/handler/annotation/CIMHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/component/message/BindMessageListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/component/message/PushMessageListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/component/redis/KeyValueRedisTemplate.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/component/redis/SignalRedisTemplate.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/config/RedisConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/config/SwaggerConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/mvc/controller/api/APNsController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/service/SessionService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/service/impl/SessionServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/apns/app.p12" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/logback-spring.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../3.8.0.VERSION" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cim-boot-server.iml" beforeDir="false" afterPath="$PROJECT_DIR$/cim-boot-server.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cim-boot-server.ipr" beforeDir="false" afterPath="$PROJECT_DIR$/cim-boot-server.ipr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cim-boot-server.iws" beforeDir="false" afterPath="$PROJECT_DIR$/cim-boot-server.iws" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/cim-server-sdk-mina-3.8.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/cim-server-sdk-netty-3.8.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/ServerLauncher.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/admin/controller/NavigationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/mvc/controller/admin/NavigationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/admin/controller/SessionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/mvc/controller/admin/SessionController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/api/controller/MessageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/mvc/controller/api/MessageController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/config/CIMConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/config/CIMConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/handler/BindHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/handler/SessionClosedHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/component/handler/ClosedHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/push/CIMMessagePusher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/component/push/CIMMessagePusher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/push/DefaultMessagePusher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/component/push/DefaultMessagePusher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/repository/SessionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/repository/SessionRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/service/ApnsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/service/APNsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/service/CIMSessionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/constants/Constants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/service/impl/CIMSessionServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/service/impl/JavaApnsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/farsunset/cim/service/impl/APNsServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/i18n/messages.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/i18n/messages.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/page/console/nav.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/page/console/nav.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/page/console/session/manage.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/page/console/session/manage.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/page/console/webclient/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/page/console/webclient/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/js/cim/cim.web.sdk.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/js/cim/cim.web.sdk.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk-libs/android/cim-android-sdk-3.8.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk-libs/java/cim-java-sdk-3.8.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk-libs/js/cim.web.sdk.js" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-client-sdk-libs/js/cim.web.sdk.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/src/main/java/com/farsunset/cim/sdk/android/CIMCacheManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/src/main/java/com/farsunset/cim/sdk/android/CIMCacheManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/src/main/java/com/farsunset/cim/sdk/android/CIMConnectorManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/src/main/java/com/farsunset/cim/sdk/android/CIMConnectorManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/src/main/java/com/farsunset/cim/sdk/android/CIMEventBroadcastReceiver.java" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/src/main/java/com/farsunset/cim/sdk/android/CIMEventBroadcastReceiver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/src/main/java/com/farsunset/cim/sdk/android/CIMEventListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/src/main/java/com/farsunset/cim/sdk/android/CIMEventListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/src/main/java/com/farsunset/cim/sdk/android/CIMListenerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/src/main/java/com/farsunset/cim/sdk/android/CIMListenerManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/src/main/java/com/farsunset/cim/sdk/android/CIMPushManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/src/main/java/com/farsunset/cim/sdk/android/CIMPushManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/src/main/java/com/farsunset/cim/sdk/android/coder/ClientMessageDecoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/src/main/java/com/farsunset/cim/sdk/android/coder/ClientMessageDecoder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/src/main/java/com/farsunset/cim/sdk/android/constant/CIMConstant.java" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/src/main/java/com/farsunset/cim/sdk/android/constant/CIMConstant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/src/main/java/com/farsunset/cim/sdk/android/logger/CIMLogger.java" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/src/main/java/com/farsunset/cim/sdk/android/logger/CIMLogger.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/src/main/java/com/farsunset/cim/sdk/android/model/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/src/main/java/com/farsunset/cim/sdk/android/model/Message.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/src/main/java/com/farsunset/cim/sdk/android/model/Ping.java" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/src/main/java/com/farsunset/cim/sdk/android/model/Ping.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/src/main/java/com/farsunset/cim/sdk/android/model/Pong.java" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/src/main/java/com/farsunset/cim/sdk/android/model/Pong.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/src/main/java/com/farsunset/cim/sdk/android/model/ReplyBody.java" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/src/main/java/com/farsunset/cim/sdk/android/model/ReplyBody.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/src/main/java/com/farsunset/cim/sdk/android/model/SentBody.java" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-client-sdk/cim-android-sdk/src/main/java/com/farsunset/cim/sdk/android/model/SentBody.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-ios-sdk/CIMKit/CIMKit/Handler/CIMSendMessageData.m" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-client-sdk/cim-ios-sdk/CIMKit/CIMKit/Handler/CIMSendMessageData.m" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/cim-java-sdk.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/jar.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/jar.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/src/main/java/com/farsunset/cim/sdk/client/CIMCacheManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/src/main/java/com/farsunset/cim/sdk/client/CIMConnectorManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/src/main/java/com/farsunset/cim/sdk/client/CIMEventBroadcastReceiver.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/src/main/java/com/farsunset/cim/sdk/client/CIMEventListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/src/main/java/com/farsunset/cim/sdk/client/CIMListenerManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/src/main/java/com/farsunset/cim/sdk/client/CIMPushManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/src/main/java/com/farsunset/cim/sdk/client/CIMPushService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/src/main/java/com/farsunset/cim/sdk/client/coder/CIMLogger.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/src/main/java/com/farsunset/cim/sdk/client/coder/ClientMessageDecoder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/src/main/java/com/farsunset/cim/sdk/client/coder/ClientMessageEncoder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/src/main/java/com/farsunset/cim/sdk/client/constant/CIMConstant.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/src/main/java/com/farsunset/cim/sdk/client/model/HeartbeatRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/src/main/java/com/farsunset/cim/sdk/client/model/HeartbeatResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/src/main/java/com/farsunset/cim/sdk/client/model/Intent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/src/main/java/com/farsunset/cim/sdk/client/model/Message.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/src/main/java/com/farsunset/cim/sdk/client/model/Protobufable.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/src/main/java/com/farsunset/cim/sdk/client/model/ReplyBody.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/src/main/java/com/farsunset/cim/sdk/client/model/SentBody.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/src/main/java/com/farsunset/cim/sdk/model/proto/Message.proto" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/src/main/java/com/farsunset/cim/sdk/model/proto/MessageProto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/src/main/java/com/farsunset/cim/sdk/model/proto/ReplyBody.proto" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/src/main/java/com/farsunset/cim/sdk/model/proto/ReplyBodyProto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/src/main/java/com/farsunset/cim/sdk/model/proto/SentBody.proto" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-sdk/cim-java-sdk/src/main/java/com/farsunset/cim/sdk/model/proto/SentBodyProto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-vue/Auto.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-vue/websocket/cim.web.sdk.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-vue/websocket/message.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-vue/websocket/replybody.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-client-vue/websocket/sentbody.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/cim-server-sdk-mina.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/jar.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/jar.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/src/main/java/com/farsunset/cim/sdk/server/coder/AppMessageCodecFactory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/src/main/java/com/farsunset/cim/sdk/server/coder/AppMessageDecoder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/src/main/java/com/farsunset/cim/sdk/server/coder/AppMessageEncoder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/src/main/java/com/farsunset/cim/sdk/server/coder/WebMessageCodecFactory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/src/main/java/com/farsunset/cim/sdk/server/coder/WebMessageDecoder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/src/main/java/com/farsunset/cim/sdk/server/coder/WebMessageEncoder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/src/main/java/com/farsunset/cim/sdk/server/constant/CIMConstant.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/src/main/java/com/farsunset/cim/sdk/server/handler/CIMNioSocketAcceptor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/src/main/java/com/farsunset/cim/sdk/server/handler/CIMRequestHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/src/main/java/com/farsunset/cim/sdk/server/handler/WebsocketHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/src/main/java/com/farsunset/cim/sdk/server/model/CIMSession.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/src/main/java/com/farsunset/cim/sdk/server/model/HandshakerResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/src/main/java/com/farsunset/cim/sdk/server/model/HeartbeatRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/src/main/java/com/farsunset/cim/sdk/server/model/HeartbeatResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/src/main/java/com/farsunset/cim/sdk/server/model/Message.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/src/main/java/com/farsunset/cim/sdk/server/model/ReplyBody.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/src/main/java/com/farsunset/cim/sdk/server/model/SentBody.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/src/main/java/com/farsunset/cim/sdk/server/model/Transportable.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/src/main/java/com/farsunset/cim/sdk/server/model/proto/Message.proto" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/src/main/java/com/farsunset/cim/sdk/server/model/proto/MessageProto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/src/main/java/com/farsunset/cim/sdk/server/model/proto/ReplyBody.proto" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/src/main/java/com/farsunset/cim/sdk/server/model/proto/ReplyBodyProto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/src/main/java/com/farsunset/cim/sdk/server/model/proto/SentBody.proto" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/src/main/java/com/farsunset/cim/sdk/server/model/proto/SentBodyProto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/src/main/java/com/farsunset/cim/sdk/server/model/proto/Session.proto" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-mina/src/main/java/com/farsunset/cim/sdk/server/model/proto/SessionProto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-netty/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-netty/cim-server-sdk-netty.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-netty/jar.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-netty/jar.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-netty/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-netty/src/main/java/com/farsunset/cim/sdk/server/coder/AppMessageDecoder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-netty/src/main/java/com/farsunset/cim/sdk/server/coder/AppMessageEncoder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-netty/src/main/java/com/farsunset/cim/sdk/server/coder/WebMessageDecoder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-netty/src/main/java/com/farsunset/cim/sdk/server/coder/WebMessageEncoder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-netty/src/main/java/com/farsunset/cim/sdk/server/constant/CIMConstant.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-netty/src/main/java/com/farsunset/cim/sdk/server/handler/CIMNioSocketAcceptor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-netty/src/main/java/com/farsunset/cim/sdk/server/handler/CIMRequestHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-netty/src/main/java/com/farsunset/cim/sdk/server/handler/HeartbeatHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-netty/src/main/java/com/farsunset/cim/sdk/server/model/CIMSession.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-netty/src/main/java/com/farsunset/cim/sdk/server/model/HeartbeatRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-netty/src/main/java/com/farsunset/cim/sdk/server/model/HeartbeatResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-netty/src/main/java/com/farsunset/cim/sdk/server/model/Message.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-netty/src/main/java/com/farsunset/cim/sdk/server/model/ReplyBody.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-netty/src/main/java/com/farsunset/cim/sdk/server/model/SentBody.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-netty/src/main/java/com/farsunset/cim/sdk/server/model/Transportable.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-netty/src/main/java/com/farsunset/cim/sdk/server/model/proto/Message.proto" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-netty/src/main/java/com/farsunset/cim/sdk/server/model/proto/MessageProto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-netty/src/main/java/com/farsunset/cim/sdk/server/model/proto/ReplyBody.proto" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-netty/src/main/java/com/farsunset/cim/sdk/server/model/proto/ReplyBodyProto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-netty/src/main/java/com/farsunset/cim/sdk/server/model/proto/SentBody.proto" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-netty/src/main/java/com/farsunset/cim/sdk/server/model/proto/SentBodyProto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-netty/src/main/java/com/farsunset/cim/sdk/server/model/proto/Session.proto" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-server-sdk/cim-server-sdk-netty/src/main/java/com/farsunset/cim/sdk/server/model/proto/SessionProto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/.idea/caches/build_file_checksums.ser" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/.idea/caches/gradle_models.ser" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/.idea/runConfigurations.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/libs/cim-android-sdk-3.8.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/proguard-rules.pro" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/proguard-rules.pro" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/java/com/farsunset/ichat/example/adapter/MessageTimeDescComparator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/java/com/farsunset/ichat/example/adapter/SystemMsgListViewAdapter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/java/com/farsunset/ichat/example/app/CIMMonitorActivity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/java/com/farsunset/ichat/example/app/Constant.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/java/com/farsunset/ichat/example/receiver/CIMPushManagerReceiver.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/java/com/farsunset/ichat/example/ui/LoginActivity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/java/com/farsunset/ichat/example/ui/SplashActivity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/java/com/farsunset/ichat/example/ui/SystemMessageActivity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/res/color/login_text_button_selector.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/res/drawable-hdpi/icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/res/drawable-hdpi/login_bg.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/res/drawable-hdpi/login_default_avatar.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/res/drawable-hdpi/login_input.9.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/res/drawable-hdpi/skin_common_btn_blue_bg_pressed.9.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/res/drawable-hdpi/skin_common_btn_blue_unpressed.9.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/res/drawable-hdpi/skin_header_bar_bg.9.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/res/drawable-hdpi/skin_header_btn_back_normal.9.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/res/drawable-hdpi/skin_header_btn_back_press.9.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/res/drawable-hdpi/skin_msgbox_bg_nor.9.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/res/drawable-hdpi/skin_msgbox_bg_pressed.9.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/res/drawable-hdpi/skin_msgbox_bg_top.9.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/res/drawable-hdpi/splash_bg.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/res/drawable/common_button_blue.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/res/drawable/common_msgbox_bg.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/res/drawable/top_back_left_selector.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/res/layout/activity_login.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/res/layout/activity_login.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/res/layout/activity_splansh.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/res/layout/activity_system_chat.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/res/layout/item_chat_sysmsg.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/res/layout/layout_global_top_header.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/res/values/colors.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/app/src/main/res/values/styles.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/gradle.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/gradlew" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/gradlew" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/gradlew.bat" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/gradlew.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-use-examples/cim-client-android/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-java/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-java/cim-client-java.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-java/cim-java-client.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-java/libs/cim-java-sdk-3.8.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-java/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-java/src/main/java/CIMJavaClient.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-web/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-use-examples/cim-client-web/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cim-use-examples/cim-client-web/js/cim/cim.web.sdk.js" beforeDir="false" afterPath="$PROJECT_DIR$/../cim-use-examples/cim-client-web/js/cim/cim.web.sdk.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../doc/AndroidSDK使用文档.doc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../doc/IOS或PC客户端等SDK开发文档.doc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../doc/JavaSDK使用文档.doc" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -20,7 +247,21 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
   <component name="ProjectId" id="1PxWQToGq56jcmMz176UjXWLSaU" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -30,6 +271,7 @@
     <property name="RequestMappingsPanelOrder1" value="1" />
     <property name="RequestMappingsPanelWidth0" value="75" />
     <property name="RequestMappingsPanelWidth1" value="75" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
@@ -42,19 +284,42 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
+  </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Administrator\Documents\gitee-cim\cim-boot-server\lib" />
-      <recent name="$PROJECT_DIR$/lib" />
-      <recent name="C:\Users\Administrator\Documents\cim\cim-boot-server\cim-boot-server\cim-boot-server" />
-      <recent name="C:\Users\Administrator\Documents\cim\cim-boot-server\cim-boot-server\cim-boot-server\src" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/libs" />
+      <recent name="$PROJECT_DIR$/src/main/resources" />
+      <recent name="$PROJECT_DIR$/src/main/java/com/farsunset/cim/component" />
+      <recent name="$PROJECT_DIR$/src/main/java/com/farsunset/cim/handler" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.farsunset.cim.config" />
+      <recent name="com.farsunset.cim.mvc.controller.admin" />
+      <recent name="com.farsunset.cim.constants" />
+      <recent name="com.farsunset.cim.component.redis" />
+      <recent name="com.farsunset.cim.service.impl" />
     </key>
   </component>
   <component name="RunManager">
-    <configuration name="ServerLauncher" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BootApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="cim-boot-server" />
       <extension name="coverage">
         <pattern>
@@ -62,17 +327,18 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.farsunset.cim.ServerLauncher" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.farsunset.cim.BootApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Spring Boot.ServerLauncher" />
+        <item itemvalue="Spring Boot.BootApplication" />
       </list>
     </recent_temporary>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -104,99 +370,16 @@
       <workItem from="1579226829168" duration="8852000" />
       <workItem from="1583472574255" duration="526000" />
       <workItem from="1583473153031" duration="15009000" />
+      <workItem from="1618489559220" duration="4137000" />
+      <workItem from="1619013470791" duration="41000" />
+      <workItem from="1619014134954" duration="548000" />
+      <workItem from="1619185841584" duration="14228000" />
+      <workItem from="1619619256370" duration="6445000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="2" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="609" y="345" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1583567210548">
-      <screen x="0" y="23" width="1920" height="1057" />
-    </state>
-    <state x="609" y="345" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1920.1057@0.23.1920.1057" timestamp="1583567210548" />
-    <state x="645" y="287" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1583472646530">
-      <screen x="0" y="23" width="1920" height="1057" />
-    </state>
-    <state x="645" y="287" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.23.1920.1057@0.23.1920.1057" timestamp="1583472646530" />
-    <state x="627" y="209" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1579149988674">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="627" y="209" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1579149988674" />
-    <state x="690" y="218" key="FileChooserDialogImpl" timestamp="1579230010253">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="690" y="218" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1579230010253" />
-    <state width="1870" height="403" key="GridCell.Tab.0.bottom" timestamp="1583567568644">
-      <screen x="0" y="23" width="1920" height="1057" />
-    </state>
-    <state width="1867" height="615" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1579243696749" />
-    <state width="1870" height="403" key="GridCell.Tab.0.bottom/0.23.1920.1057@0.23.1920.1057" timestamp="1583567568644" />
-    <state width="1870" height="403" key="GridCell.Tab.0.center" timestamp="1583567568644">
-      <screen x="0" y="23" width="1920" height="1057" />
-    </state>
-    <state width="1867" height="615" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1579243696749" />
-    <state width="1870" height="403" key="GridCell.Tab.0.center/0.23.1920.1057@0.23.1920.1057" timestamp="1583567568644" />
-    <state width="1870" height="403" key="GridCell.Tab.0.left" timestamp="1583567568643">
-      <screen x="0" y="23" width="1920" height="1057" />
-    </state>
-    <state width="1867" height="615" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1579243696749" />
-    <state width="1870" height="403" key="GridCell.Tab.0.left/0.23.1920.1057@0.23.1920.1057" timestamp="1583567568643" />
-    <state width="1870" height="403" key="GridCell.Tab.0.right" timestamp="1583567568644">
-      <screen x="0" y="23" width="1920" height="1057" />
-    </state>
-    <state width="1867" height="615" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1579243696749" />
-    <state width="1870" height="403" key="GridCell.Tab.0.right/0.23.1920.1057@0.23.1920.1057" timestamp="1583567568644" />
-    <state width="1870" height="565" key="GridCell.Tab.1.bottom" timestamp="1583567566487">
-      <screen x="0" y="23" width="1920" height="1057" />
-    </state>
-    <state width="1867" height="615" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1579243696751" />
-    <state width="1870" height="565" key="GridCell.Tab.1.bottom/0.23.1920.1057@0.23.1920.1057" timestamp="1583567566487" />
-    <state width="1870" height="565" key="GridCell.Tab.1.center" timestamp="1583567566486">
-      <screen x="0" y="23" width="1920" height="1057" />
-    </state>
-    <state width="1867" height="615" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1579243696750" />
-    <state width="1870" height="565" key="GridCell.Tab.1.center/0.23.1920.1057@0.23.1920.1057" timestamp="1583567566486" />
-    <state width="1870" height="565" key="GridCell.Tab.1.left" timestamp="1583567566486">
-      <screen x="0" y="23" width="1920" height="1057" />
-    </state>
-    <state width="1867" height="615" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1579243696749" />
-    <state width="1870" height="565" key="GridCell.Tab.1.left/0.23.1920.1057@0.23.1920.1057" timestamp="1583567566486" />
-    <state width="1870" height="565" key="GridCell.Tab.1.right" timestamp="1583567566486">
-      <screen x="0" y="23" width="1920" height="1057" />
-    </state>
-    <state width="1867" height="615" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1579243696751" />
-    <state width="1870" height="565" key="GridCell.Tab.1.right/0.23.1920.1057@0.23.1920.1057" timestamp="1583567566486" />
-    <state width="1867" height="386" key="GridCell.Tab.2.bottom" timestamp="1579156159339">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1867" height="386" key="GridCell.Tab.2.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1579156159339" />
-    <state width="1867" height="386" key="GridCell.Tab.2.center" timestamp="1579156159339">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1867" height="386" key="GridCell.Tab.2.center/0.0.1920.1040@0.0.1920.1040" timestamp="1579156159339" />
-    <state width="1867" height="386" key="GridCell.Tab.2.left" timestamp="1579156159339">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1867" height="386" key="GridCell.Tab.2.left/0.0.1920.1040@0.0.1920.1040" timestamp="1579156159339" />
-    <state width="1867" height="386" key="GridCell.Tab.2.right" timestamp="1579156159339">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1867" height="386" key="GridCell.Tab.2.right/0.0.1920.1040@0.0.1920.1040" timestamp="1579156159339" />
-    <state x="574" y="219" width="771" height="670" key="find.popup" timestamp="1583473246286">
-      <screen x="0" y="23" width="1920" height="1057" />
-    </state>
-    <state x="574" y="193" width="771" height="654" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1579242964438" />
-    <state x="574" y="219" width="771" height="670" key="find.popup/0.23.1920.1057@0.23.1920.1057" timestamp="1583473246286" />
-    <state x="161" y="163" key="new project wizard" timestamp="1579242569030">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="161" y="163" key="new project wizard/0.0.1920.1040@0.0.1920.1040" timestamp="1579242569030" />
-    <state x="539" y="28" width="840" height="1051" key="search.everywhere.popup" timestamp="1583567214095">
-      <screen x="0" y="23" width="1920" height="1057" />
-    </state>
-    <state x="539" y="5" width="840" height="1034" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1579235575382" />
-    <state x="539" y="28" width="840" height="1051" key="search.everywhere.popup/0.23.1920.1057@0.23.1920.1057" timestamp="1583567214095" />
+    <option name="version" value="3" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -212,9 +395,9 @@
           <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/farsunset/cim/handler/SessionClosedHandler.java</url>
-          <line>48</line>
-          <option name="timeStamp" value="12" />
+          <url>file://$PROJECT_DIR$/src/main/java/com/farsunset/cim/component/message/PushMessageListener.java</url>
+          <line>24</line>
+          <option name="timeStamp" value="16" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

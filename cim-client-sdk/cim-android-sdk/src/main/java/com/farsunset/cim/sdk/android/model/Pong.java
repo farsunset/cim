@@ -31,8 +31,8 @@ import java.io.Serializable;
 public class Pong implements Serializable, BinaryBody {
 
     private static final long serialVersionUID = 1L;
-    private static final String TAG = "CLIENT_HEARTBEAT_RESPONSE";
-    private static final String CMD_HEARTBEAT_RESPONSE = "CR";
+    private static final String TAG = "PONG";
+    private static final String CMD_PONG = "PONG";
 
     private static final Pong object = new Pong();
 
@@ -46,7 +46,7 @@ public class Pong implements Serializable, BinaryBody {
 
     @Override
     public byte[] getByteArray() {
-        return CMD_HEARTBEAT_RESPONSE.getBytes();
+        return CMD_PONG.getBytes();
     }
 
     @Override
@@ -56,7 +56,7 @@ public class Pong implements Serializable, BinaryBody {
 
     @Override
     public byte getType() {
-        return CIMConstant.ProtobufType.C_H_RS;
+        return CIMConstant.ProtobufType.PONG;
     }
 
 }

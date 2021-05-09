@@ -1,5 +1,5 @@
 /*CIM服务器IP*/
-const CIM_HOST = "127.0.0.1";
+const CIM_HOST = window.location.hostname;
 /*
  *服务端 websocket端口
  */
@@ -7,7 +7,7 @@ const CIM_PORT = 34567;
 const CIM_URI = "ws://" + CIM_HOST + ":" + CIM_PORT;
 
 const APP_VERSION = "1.0.0";
-const APP_CHANNEL = "browser";
+const APP_CHANNEL = "web";
 const APP_PACKAGE = "com.farsunset.cim";
 
 /*
@@ -18,6 +18,15 @@ const DATA_HEADER_LENGTH = 1;
 
 const MESSAGE = 2;
 const REPLY_BODY = 4;
+const SENT_BODY = 3;
+const PING = 1;
+const PONG = 0;
+/**
+ * PONG字符串转换后
+ * @type {Uint8Array}
+ */
+const PONG_BODY = new Uint8Array([80,79,78,71]);
+
 
 let socket;
 let manualStop = false;
@@ -33,12 +42,12 @@ CIMPushManager.connect = function () {
     socket.onclose = CIMPushManager.innerOnConnectionClosed;
 };
 
-CIMPushManager.bindAccount = function (account) {
+CIMPushManager.bind = function (account) {
 
     window.localStorage.account = account;
 
-    let deviceId = window.localStorage.deviceIddeviceId;
-    if (deviceId == '' || deviceId == undefined) {
+    let deviceId = window.localStorage.deviceId;
+    if (deviceId === '' || deviceId === undefined) {
         deviceId = generateUUID();
         window.localStorage.deviceId = deviceId;
     }
@@ -47,13 +56,13 @@ CIMPushManager.bindAccount = function (account) {
     let body = new proto.com.farsunset.cim.sdk.web.model.SentBody();
     body.setKey("client_bind");
     body.setTimestamp(new Date().getTime());
-    body.getDataMap().set("account", account);
+    body.getDataMap().set("uid", account);
     body.getDataMap().set("channel", APP_CHANNEL);
     body.getDataMap().set("appVersion", APP_VERSION);
     body.getDataMap().set("osVersion", browser.version);
     body.getDataMap().set("packageName", APP_PACKAGE);
     body.getDataMap().set("deviceId", deviceId);
-    body.getDataMap().set("device", browser.name);
+    body.getDataMap().set("deviceName", browser.name);
     CIMPushManager.sendRequest(body);
 };
 
@@ -83,13 +92,18 @@ CIMPushManager.innerOnMessageReceived = function (e) {
     let type = data[0];
     let body = data.subarray(DATA_HEADER_LENGTH, data.length);
 
-    if (type == MESSAGE) {
+    if (type === PING) {
+        CIMPushManager.pong();
+        return;
+    }
+
+    if (type === MESSAGE) {
         let message = proto.com.farsunset.cim.sdk.web.model.Message.deserializeBinary(body);
         onInterceptMessageReceived(message.toObject(false));
         return;
     }
 
-    if (type == REPLY_BODY) {
+    if (type === REPLY_BODY) {
         let message = proto.com.farsunset.cim.sdk.web.model.ReplyBody.deserializeBinary(body);
         /**
          * 将proto对象转换成json对象，去除无用信息
@@ -123,16 +137,24 @@ CIMPushManager.innerOnConnectionClosed = function (e) {
 
 CIMPushManager.sendRequest = function (body) {
     let data = body.serializeBinary();
-    let protobuf = new Uint8Array(data.length);
-    protobuf.set(data, 0);
+    let protobuf = new Uint8Array(data.length + 1);
+    protobuf[0] = SENT_BODY;
+    protobuf.set(data, 1);
     socket.send(protobuf);
+};
+
+CIMPushManager.pong = function () {
+    let pong =  new Uint8Array(PONG_BODY.byteLength + 1);
+    pong[0] = PONG;
+    pong.set(PONG_BODY,1);
+    socket.send(pong);
 };
 
 function onInterceptMessageReceived(message) {
     /*
      *被强制下线之后，不再继续连接服务端
      */
-    if (message.action == ACTION_999) {
+    if (message.action === ACTION_999) {
         manualStop = true;
     }
     /*
@@ -174,7 +196,7 @@ function generateUUID() {
     let uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         let r = (d + Math.random() * 16) % 16 | 0;
         d = Math.floor(d / 16);
-        return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
     });
     return uuid.replace(/-/g, '');
 }

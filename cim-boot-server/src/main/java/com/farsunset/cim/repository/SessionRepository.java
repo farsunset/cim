@@ -1,34 +1,55 @@
+/*
+ * Copyright 2013-2019 Xia Jun(3979434@qq.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ ***************************************************************************************
+ *                                                                                     *
+ *                        Website : http://www.farsunset.com                           *
+ *                                                                                     *
+ ***************************************************************************************
+ */
 package com.farsunset.cim.repository;
 
-import com.farsunset.cim.sdk.server.model.CIMSession;
+import com.farsunset.cim.entity.Session;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
-/*
- * 正式场景下，使用redis或者数据库来存储session信息
- */
 @Repository
-public class SessionRepository {
+@Transactional(rollbackFor = Exception.class)
+public interface SessionRepository extends JpaRepository<Session, Long> {
 
-    private ConcurrentHashMap<String, CIMSession> map = new ConcurrentHashMap<>();
+	@Modifying
+	@Query("delete from Session where uid = ?1 and nid = ?2")
+	void delete(String uid,String nid);
 
+	@Modifying
+	@Query("delete from Session where host = ?1 ")
+	void deleteAll(String host);
 
-    public void save(CIMSession session){
-        map.put(session.getAccount(),session);
-    }
+	@Modifying
+	@Query("update Session set state = ?3 where uid = ?1 and nid = ?2")
+	void updateState(String uid,String nid,int state);
 
-    public CIMSession get(String account){
-        return map.get(account);
-    }
+	@Modifying
+	@Query("update Session set state = " + Session.STATE_APNS + " where uid = ?1 and channel = ?2")
+	void openApns(String uid,String channel);
 
-    public void remove(String account){
-        map.remove(account);
-    }
-
-    public List<CIMSession> findAll(){
-        return new LinkedList<>(map.values());
-    }
+	@Modifying
+	@Query("update Session set state = " + Session.STATE_ACTIVE + " where uid = ?1 and channel = ?2")
+	void closeApns(String uid,String channel);
 }

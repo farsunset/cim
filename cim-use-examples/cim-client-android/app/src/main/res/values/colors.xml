@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="window_bg">#fefefe</color>
+    <color name="textColorPrimary">#333333</color>
+    <color name="textColorSecondary">#666666</color>
+    <color name="textColorTertiary">#999999</color>
+    <color name="item_divider_color">#e5e5e5</color>
 </resources>

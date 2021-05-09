@@ -21,23 +21,20 @@
  */
 package com.farsunset.cim.sdk.android.model;
 
-import com.farsunset.cim.sdk.android.constant.CIMConstant;
 
 import java.io.Serializable;
 
 /**
  * 服务端心跳请求
  */
-public class Ping implements Serializable, BinaryBody {
+public class Ping implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private static final String TAG = "SERVER_HEARTBEAT_REQUEST";
-    private static final String CMD_HEARTBEAT_REQUEST = "SR";
+    private static final String TAG = "PING";
 
     private static final Ping object = new Ping();
 
     private Ping() {
-
     }
 
     public static Ping getInstance() {
@@ -45,18 +42,8 @@ public class Ping implements Serializable, BinaryBody {
     }
 
     @Override
-    public byte[] getByteArray() {
-        return CMD_HEARTBEAT_REQUEST.getBytes();
-    }
-
-    @Override
     public String toString() {
         return TAG;
-    }
-
-    @Override
-    public byte getType() {
-        return CIMConstant.ProtobufType.S_H_RQ;
     }
 
 }

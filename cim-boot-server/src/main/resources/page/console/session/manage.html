@@ -20,8 +20,7 @@ function showMessageDialog(account){
 function doSendMessage(){
     var message = $('#message').val();
     var account = $('#Saccount').val();
-    if($.trim(message)=='')
-    {
+    if($.trim(message)===''){
        return;
     }
     showProcess("<@spring.message 'module.console.cimsession.sending'/>");
@@ -49,35 +48,33 @@ function doSendMessage(){
 			<table style="width: 100%" class="utable">
 				<thead>
 					<tr class="tableHeader">
-						<th width="8%"><@spring.message 'module.console.cimsession.account'/></th>
-						<th width="6%"> <@spring.message 'module.console.cimsession.nid'/></th>
-						<th width="6%"><@spring.message 'module.console.cimsession.channel'/></th>
-						<th width="14%"><@spring.message 'module.console.cimsession.deviceid'/></th>
-						<th width="10%"><@spring.message 'module.console.cimsession.device.model'/></th>
-						<th width="6%"><@spring.message 'module.console.cimsession.app.version'/></th>
-						<th width="6%"><@spring.message 'module.console.cimsession.os.version'/></th>
-						<th width="6%"><@spring.message 'module.console.cimsession.online.time'/></th>
-						<th width="25%"><@spring.message 'module.common.location'/></th>
-						<th width="8%"><@spring.message "module.common.operation"/></th>
+						<th width="10%"><@spring.message 'module.console.cimsession.account'/></th>
+						<th width="10%"><@spring.message 'module.console.cimsession.nid'/></th>
+						<th width="10%"><@spring.message 'module.console.cimsession.channel'/></th>
+						<th width="20%"><@spring.message 'module.console.cimsession.deviceid'/></th>
+						<th width="20%"><@spring.message 'module.console.cimsession.device.name'/></th>
+						<th width="10%"><@spring.message 'module.console.cimsession.app.version'/></th>
+						<th width="10%"><@spring.message 'module.console.cimsession.os.version'/></th>
+						<th width="10%"><@spring.message 'module.console.cimsession.online.time'/></th>
+						<th width="10%"><@spring.message "module.common.operation"/></th>
 					</tr>
 				</thead>
 				<tbody>
                		<#list sessionList as cimsession>
 						<tr style="height: 50px;">
-						    <td>${cimsession.account! }</td>
+						    <td>${cimsession.uid! }</td>
 							<td><#if cimsession.nid??>${cimsession.nid}</#if></td>
 							<td>${cimsession.channel! }</td>
 							<td>${cimsession.deviceId! }</td>
-							<td>${cimsession.deviceModel! }</td>
-							<td>${cimsession.clientVersion! }</td>
-	                        <td>${cimsession.systemVersion! }</td>
+							<td>${cimsession.deviceName! }</td>
+							<td>${cimsession.appVersion! }</td>
+	                        <td>${cimsession.osVersion! }</td>
 							<td>
 								<@spring.messageArgs  "module.console.cimsession.time.format",[((.now?long - cimsession.bindTime)/1000)?round?c]  />
 							</td>
-							<td>${cimsession.location!}</td>
 							<td>
 								<div class="btn-group btn-group-xs">
-									<button type="button" class="btn btn-primary" style="padding: 5px;" onclick="showMessageDialog('${cimsession.account!}')">
+									<button type="button" class="btn btn-primary" style="padding: 5px;" onclick="showMessageDialog('${cimsession.uid!}')">
 										<span class="glyphicon glyphicon-send" style="top:2px;"></span>
 										<@spring.message 'module.console.cimsession.send.message'/>
 									</button>

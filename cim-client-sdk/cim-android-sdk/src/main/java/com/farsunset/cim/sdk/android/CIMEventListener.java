@@ -82,4 +82,5 @@ public interface CIMEventListener {
      * @return 排序 值越大优先级越高
      */
     int getEventDispatchOrder();
+
 }

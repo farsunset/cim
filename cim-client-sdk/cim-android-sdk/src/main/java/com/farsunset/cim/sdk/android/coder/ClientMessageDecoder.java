@@ -72,7 +72,7 @@ public class ClientMessageDecoder {
         /*
          消息读取完成后，通过type来解析成对应的消息体
          */
-        if (CIMConstant.ProtobufType.S_H_RQ == type) {
+        if (CIMConstant.ProtobufType.PING == type) {
             return Ping.getInstance();
         }
 

@@ -29,7 +29,7 @@ import android.net.Uri;
 
 class CIMCacheManager {
 
-    public static final String KEY_ACCOUNT = "KEY_ACCOUNT";
+    public static final String KEY_UID = "KEY_UID";
 
     public static final String KEY_DEVICE_ID = "KEY_DEVICE_ID";
 
@@ -100,5 +100,4 @@ class CIMCacheManager {
         String value = getString(context, key);
         return value == null ? 0 : Integer.parseInt(value);
     }
-
 }

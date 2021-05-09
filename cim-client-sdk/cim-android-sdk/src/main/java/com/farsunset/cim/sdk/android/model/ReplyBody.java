@@ -21,8 +21,10 @@
  */
 package com.farsunset.cim.sdk.android.model;
 
+import android.util.ArrayMap;
+
 import java.io.Serializable;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -53,7 +55,7 @@ public class ReplyBody implements Serializable {
     /**
      * 返回数据集合
      */
-    private final Hashtable<String, String> data = new Hashtable<String, String>();
+    private final Map<String, String> data = new HashMap<>();
 
     public long getTimestamp() {
         return timestamp;

@@ -1,11 +1,13 @@
 package com.farsunset.cim.config;
 
-import com.farsunset.cim.handler.BindHandler;
-import com.farsunset.cim.handler.SessionClosedHandler;
+import com.farsunset.cim.component.handler.annotation.CIMHandler;
+import com.farsunset.cim.sdk.server.group.SessionGroup;
+import com.farsunset.cim.sdk.server.group.TagSessionGroup;
 import com.farsunset.cim.sdk.server.handler.CIMNioSocketAcceptor;
 import com.farsunset.cim.sdk.server.handler.CIMRequestHandler;
-import com.farsunset.cim.sdk.server.model.CIMSession;
 import com.farsunset.cim.sdk.server.model.SentBody;
+import com.farsunset.cim.service.SessionService;
+import io.netty.channel.Channel;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationContext;
@@ -15,6 +17,7 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 public class CIMConfig implements CIMRequestHandler, ApplicationListener<ApplicationStartedEvent> {
@@ -22,7 +25,20 @@ public class CIMConfig implements CIMRequestHandler, ApplicationListener<Applica
 	@Resource
 	private ApplicationContext applicationContext;
 
-	private final HashMap<String,CIMRequestHandler> appHandlerMap = new HashMap<>();
+	@Resource
+	private SessionService sessionService;
+
+	private final HashMap<String,CIMRequestHandler> handlerMap = new HashMap<>();
+
+	@Bean
+	public SessionGroup sessionGroup() {
+		return new SessionGroup();
+	}
+
+	@Bean
+	public TagSessionGroup tagSessionGroup() {
+		return new TagSessionGroup();
+	}
 
 
 	@Bean(destroyMethod = "destroy")
@@ -38,13 +54,13 @@ public class CIMConfig implements CIMRequestHandler, ApplicationListener<Applica
 	}
 
 	@Override
-	public void process(CIMSession session, SentBody body) {
+	public void process(Channel channel, SentBody body) {
 		
-        CIMRequestHandler handler = appHandlerMap.get(body.getKey());
+        CIMRequestHandler handler = handlerMap.get(body.getKey());
 		
 		if(handler == null) {return ;}
 		
-		handler.process(session, body);
+		handler.process(channel, body);
 		
 	}
 	/*
@@ -53,9 +69,22 @@ public class CIMConfig implements CIMRequestHandler, ApplicationListener<Applica
 	@Override
 	public void onApplicationEvent(ApplicationStartedEvent applicationStartedEvent) {
 
-		appHandlerMap.put("client_bind",applicationContext.getBean(BindHandler.class));
-		appHandlerMap.put("client_closed",applicationContext.getBean(SessionClosedHandler.class));
+		Map<String, CIMRequestHandler> beans =  applicationContext.getBeansOfType(CIMRequestHandler.class);
+
+		for (Map.Entry<String, CIMRequestHandler> entry : beans.entrySet()) {
+
+			CIMRequestHandler handler = entry.getValue();
+
+			CIMHandler annotation = handler.getClass().getAnnotation(CIMHandler.class);
+
+			if (annotation != null){
+				handlerMap.put(annotation.key(),handler);
+			}
+		}
+
 
 		applicationContext.getBean(CIMNioSocketAcceptor.class).bind();
+
+		sessionService.deleteLocalhost();
 	}
 }

@@ -184,7 +184,6 @@ public abstract class CIMEventBroadcastReceiver extends BroadcastReceiver {
         return CIMConstant.MessageAction.ACTION_999.equals(action);
     }
 
-
     /**
      * 接收消息实现方法
      *

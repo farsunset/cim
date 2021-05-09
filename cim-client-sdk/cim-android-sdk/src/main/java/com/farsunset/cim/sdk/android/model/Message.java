@@ -73,6 +73,15 @@ public class Message implements Serializable {
         timestamp = System.currentTimeMillis();
     }
 
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public long getTimestamp() {
         return timestamp;
     }
@@ -152,19 +161,6 @@ public class Message implements Serializable {
         buffer.append("format:").append(format).append("\n");
         buffer.append("timestamp:").append(timestamp);
         return buffer.toString();
-    }
-
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public boolean isNotEmpty(String txt) {
-        return txt != null && txt.trim().length() != 0;
     }
 
 }

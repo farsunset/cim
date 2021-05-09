@@ -23,7 +23,7 @@ package com.farsunset.cim.service;
 
 import com.farsunset.cim.sdk.server.model.Message;
 
-public interface ApnsService {
+public interface APNsService {
 
 	void push(Message message, String deviceToken);
 }

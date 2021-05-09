@@ -30,7 +30,7 @@ import java.nio.channels.SocketChannel;
  * 日志打印，添加session 的id和ip address
  */
 public class CIMLogger {
-    private final static String TAG = "CIM";
+    private static final String TAG = "CIM";
     private boolean debug = true;
 
     public static CIMLogger getLogger() {
@@ -51,13 +51,13 @@ public class CIMLogger {
 
     public void messageReceived(SocketChannel session, Object message) {
         if (debug) {
-            Log.i(TAG, String.format("[RECEIVED]" + getSessionInfo(session) + "\n%s", message));
+            Log.i(TAG, "[RECEIVED]" + getSessionInfo(session) + "\n" + message);
         }
     }
 
     public void messageSent(SocketChannel session, Object message) {
         if (debug) {
-            Log.i(TAG, String.format("[  SENT  ]" + getSessionInfo(session) + "\n%s", message));
+            Log.i(TAG,"[  SENT  ]" + getSessionInfo(session) + "\n" + message);
         }
     }
 
@@ -115,16 +115,13 @@ public class CIMLogger {
             if (session.socket().getLocalAddress() != null) {
                 builder.append(" L:").append(session.socket().getLocalAddress()).append(":").append(session.socket().getLocalPort());
             }
-        } catch (Exception ignore) {
-        }
-
+        } catch (Exception ignore) {}
 
         try {
             if (session.socket().getRemoteSocketAddress() != null) {
                 builder.append(" R:").append(session.socket().getRemoteSocketAddress().toString());
             }
-        } catch (Exception ignore) {
-        }
+        } catch (Exception ignore) {}
         builder.append("]");
         return builder.toString();
     }

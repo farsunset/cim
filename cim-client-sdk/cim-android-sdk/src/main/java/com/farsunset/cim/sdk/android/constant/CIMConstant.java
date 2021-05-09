@@ -35,12 +35,12 @@ public interface CIMConstant {
         /*
         客户端->服务端 发送的心跳响应
         */
-        byte C_H_RS = 0;
+        byte PONG = 0;
 
         /*
         服务端->客户端 发送的心跳请求
         */
-        byte S_H_RQ = 1;
+        byte PING = 1;
 
         byte MESSAGE = 2;
 
@@ -52,6 +52,10 @@ public interface CIMConstant {
     interface RequestKey {
 
         String CLIENT_BIND = "client_bind";
+
+        String CLIENT_SET_TAG = "client_set_tag";
+
+        String CLIENT_REMOVE_TAG = "client_remove_tag";
 
     }
 

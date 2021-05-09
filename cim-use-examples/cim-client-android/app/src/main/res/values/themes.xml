@@ -1,0 +1,17 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Primary brand color. -->
+
+        <item name="colorPrimary">#FFFFFF</item>
+        <item name="colorAccent">#0CB069</item>
+        <item name="android:listDivider">@color/item_divider_color</item>
+        <item name="android:statusBarColor" tools:targetApi="l">#393C3E</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="bigLogoRoundedStyle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+</resources>

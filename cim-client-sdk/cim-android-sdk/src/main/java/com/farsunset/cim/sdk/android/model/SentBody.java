@@ -21,11 +21,13 @@
  */
 package com.farsunset.cim.sdk.android.model;
 
+import android.util.ArrayMap;
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
 import com.farsunset.cim.sdk.android.model.proto.SentBodyProto;
 
 import java.io.Serializable;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -37,7 +39,7 @@ public class SentBody implements Serializable, BinaryBody {
 
     private String key;
 
-    private final Hashtable<String, String> data = new Hashtable<String, String>();
+    private final Map<String, String> data = new HashMap<>();
 
     private long timestamp;
 

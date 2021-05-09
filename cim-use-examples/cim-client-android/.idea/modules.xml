@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cim-client-android.iml" filepath="$PROJECT_DIR$/cim-client-android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/cim-client-android-app.iml" filepath="$PROJECT_DIR$/app/cim-client-android-app.iml" group="cim-client-android/app" />
-      <module fileurl="file://$PROJECT_DIR$/cim-use-examples-cim-client-android.iml" filepath="$PROJECT_DIR$/cim-use-examples-cim-client-android.iml" group="cim-client-android" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cim-client-android.iml" filepath="$PROJECT_DIR$/.idea/modules/cim-client-android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/cim-client-android.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/cim-client-android.app.iml" />
     </modules>
   </component>
 </project>

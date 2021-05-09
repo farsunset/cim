@@ -69,14 +69,11 @@ public class CIMPushManager {
             return;
         }
 
-
         CIMCacheManager.putString(context, CIMCacheManager.KEY_CIM_SERVER_HOST, host);
         CIMCacheManager.putInt(context, CIMCacheManager.KEY_CIM_SERVER_PORT, port);
-
         CIMCacheManager.putBoolean(context, CIMCacheManager.KEY_CIM_DESTROYED, false);
         CIMCacheManager.putBoolean(context, CIMCacheManager.KEY_MANUAL_STOP, false);
-
-        CIMCacheManager.remove(context, CIMCacheManager.KEY_ACCOUNT);
+        CIMCacheManager.remove(context, CIMCacheManager.KEY_UID);
 
 
         Intent serviceIntent = new Intent(context, CIMPushService.class);
@@ -110,13 +107,33 @@ public class CIMPushManager {
     /**
      * 设置一个账号登录到服务端
      */
-    public static void bindAccount(Context context, String account) {
 
-        if (isDestroyed(context) || account == null || account.trim().length() == 0) {
+    public static void bind(Context context, long uid) {
+        bind(context,String.valueOf(uid));
+    }
+    public static void bind(Context context, String uid) {
+
+        if (isDestroyed(context)) {
             return;
         }
 
-        sendBindRequest(context, account);
+        sendBindRequest(context, uid);
+    }
+
+    public static void setTag(Context context, String tag) {
+
+        SentBody sent = new SentBody();
+        sent.setKey(CIMConstant.RequestKey.CLIENT_SET_TAG);
+        sent.put("tag", tag);
+        sendRequest(context, sent);
+
+    }
+
+    public static void removeTag(Context context) {
+
+        SentBody sent = new SentBody();
+        sent.setKey(CIMConstant.RequestKey.CLIENT_REMOVE_TAG);
+        sendRequest(context, sent);
 
     }
 
@@ -130,18 +147,17 @@ public class CIMPushManager {
         startService(context, serviceIntent);
     }
 
-    private static void sendBindRequest(Context context, String account) {
+    private static void sendBindRequest(Context context, String uid) {
 
         CIMCacheManager.putBoolean(context, CIMCacheManager.KEY_MANUAL_STOP, false);
-        CIMCacheManager.putString(context, CIMCacheManager.KEY_ACCOUNT, account);
-
+        CIMCacheManager.putString(context, CIMCacheManager.KEY_UID, uid);
 
         SentBody sent = new SentBody();
         sent.setKey(CIMConstant.RequestKey.CLIENT_BIND);
-        sent.put("account", account);
-        sent.put("deviceId", getDeviceId(context));
+        sent.put("uid", String.valueOf(uid));
         sent.put("channel", "android");
-        sent.put("device", Build.MODEL);
+        sent.put("deviceId", getDeviceId(context));
+        sent.put("deviceName", Build.MODEL);
         sent.put("appVersion", getVersionName(context));
         sent.put("osVersion", Build.VERSION.RELEASE);
         sent.put("packageName", context.getPackageName());
@@ -151,12 +167,13 @@ public class CIMPushManager {
 
     protected static boolean autoBindAccount(Context context) {
 
-        String account = CIMCacheManager.getString(context, CIMCacheManager.KEY_ACCOUNT);
-        if (account == null || account.trim().length() == 0 || isDestroyed(context)) {
+        String uid = CIMCacheManager.getString(context, CIMCacheManager.KEY_UID);
+
+        if (uid == null || isDestroyed(context)) {
             return false;
         }
 
-        sendBindRequest(context, account);
+        sendBindRequest(context, uid);
 
         return true;
     }
@@ -200,7 +217,7 @@ public class CIMPushManager {
     public static void destroy(Context context) {
 
         CIMCacheManager.putBoolean(context, CIMCacheManager.KEY_CIM_DESTROYED, true);
-        CIMCacheManager.putString(context, CIMCacheManager.KEY_ACCOUNT, null);
+        CIMCacheManager.remove(context, CIMCacheManager.KEY_UID);
 
         Intent serviceIntent = new Intent(context, CIMPushService.class);
         serviceIntent.setAction(ACTION_DESTROY_CIM_SERVICE);
