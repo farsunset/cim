@@ -120,7 +120,7 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody>{
 	}
 
 	public void bind() {
- 
+
 		if (appPort != null){
 			bindAppPort();
 		}
@@ -147,8 +147,6 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody>{
 
 	private void bindAppPort(){
 		createAppEventGroup();
-		appBossGroup = new NioEventLoopGroup(bossThreadFactory);
-		appWorkerGroup = new NioEventLoopGroup(workerThreadFactory);
 		ServerBootstrap bootstrap = createServerBootstrap(appBossGroup,appWorkerGroup);
 		bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
 			@Override
@@ -178,8 +176,6 @@ public class CIMNioSocketAcceptor extends SimpleChannelInboundHandler<SentBody>{
 
 	private void bindWebPort(){
 		createWebEventGroup();
-		webBossGroup = new NioEventLoopGroup(bossThreadFactory);
-		webWorkerGroup = new NioEventLoopGroup(workerThreadFactory);
 		ServerBootstrap bootstrap = createServerBootstrap(webBossGroup,webWorkerGroup);
 		bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
 

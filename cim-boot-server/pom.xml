@@ -102,6 +102,13 @@
             <artifactId>netty-transport</artifactId>
             <version>${netty.version}</version>
         </dependency>
+        <!-- linux下有效. 其他linux平台自行修改对应的classifier -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-transport-native-epoll</artifactId>
+            <classifier>linux-x86_64</classifier>
+            <version>${netty.version}</version>
+        </dependency>
         <!--- ##################使用netty本SDK时的配置  end ##################-->
 
 

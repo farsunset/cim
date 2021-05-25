@@ -483,6 +483,28 @@
         <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-resolver/4.1.62.Final/netty-resolver-4.1.62.Final-sources.jar!/" />
       </SOURCES>
     </library>
+    <library name="Maven: io.netty:netty-transport-native-epoll:linux-x86_64:4.1.62.Final">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-transport-native-epoll/4.1.62.Final/netty-transport-native-epoll-4.1.62.Final-linux-x86_64.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-transport-native-epoll/4.1.62.Final/netty-transport-native-epoll-4.1.62.Final-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-transport-native-epoll/4.1.62.Final/netty-transport-native-epoll-4.1.62.Final-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: io.netty:netty-transport-native-unix-common:4.1.62.Final">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-transport-native-unix-common/4.1.62.Final/netty-transport-native-unix-common-4.1.62.Final.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-transport-native-unix-common/4.1.62.Final/netty-transport-native-unix-common-4.1.62.Final-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-transport-native-unix-common/4.1.62.Final/netty-transport-native-unix-common-4.1.62.Final-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="Maven: io.netty:netty-transport:4.1.62.Final">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-transport/4.1.62.Final/netty-transport-4.1.62.Final.jar!/" />

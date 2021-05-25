@@ -143,6 +143,8 @@
     <orderEntry type="library" name="Maven: io.netty:netty-codec-http:4.1.62.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-common:4.1.62.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-transport:4.1.62.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport-native-epoll:linux-x86_64:4.1.62.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport-native-unix-common:4.1.62.Final" level="project" />
     <orderEntry type="library" name="Maven: com.google.protobuf:protobuf-java:3.11.1" level="project" />
     <orderEntry type="library" name="Maven: cn.teaey.apns4j:apns4j:1.1.4" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.6" level="project" />
