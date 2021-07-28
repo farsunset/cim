@@ -20,9 +20,7 @@ public class SessionGroup extends ConcurrentHashMap<String, Collection<Channel>>
         @Override
         public void operationComplete(ChannelFuture future){
             future.removeListener(this);
-
             remove(future.channel());
-
         }
     };
 
@@ -33,6 +31,10 @@ public class SessionGroup extends ConcurrentHashMap<String, Collection<Channel>>
     public void remove(Channel channel){
 
         String uid = getKey(channel);
+
+        if(uid == null){
+            return;
+        }
 
         Collection<Channel> collections = getOrDefault(uid,EMPTY_LIST);
 

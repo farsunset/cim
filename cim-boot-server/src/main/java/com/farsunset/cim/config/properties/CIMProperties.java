@@ -19,20 +19,56 @@
  *                                                                                     *
  ***************************************************************************************
  */
-package com.farsunset.cim;
+package com.farsunset.cim.config.properties;
 
-import com.farsunset.cim.config.properties.APNsProperties;
-import com.farsunset.cim.config.properties.CIMProperties;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@SpringBootApplication
-@EnableConfigurationProperties({
-		APNsProperties.class,
-		CIMProperties.class})
-public class BootApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(BootApplication.class, args);
-	}
+
+@ConfigurationProperties(prefix = "cim")
+public class CIMProperties {
+
+    private final App app = new App();
+
+    private final Websocket websocket = new Websocket();
+
+    public App getApp() {
+        return app;
+    }
+
+    public Websocket getWebsocket() {
+        return websocket;
+    }
+
+    public static class App {
+
+        private Integer port;
+
+        public void setPort(Integer port) {
+            this.port = port;
+        }
+
+        public Integer getPort() {
+            return port;
+        }
+    }
+
+    public static class Websocket {
+        private Integer port;
+
+        public Integer getPort() {
+            return port;
+        }
+
+        public void setPort(Integer port) {
+            this.port = port;
+        }
+    }
+
+    public Integer getAppPort() {
+        return  app.port;
+    }
+
+    public Integer getWebsocketPort() {
+        return  websocket.port;
+    }
 }

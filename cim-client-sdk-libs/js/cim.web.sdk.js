@@ -63,6 +63,7 @@ CIMPushManager.bind = function (account) {
     body.getDataMap().set("packageName", APP_PACKAGE);
     body.getDataMap().set("deviceId", deviceId);
     body.getDataMap().set("deviceName", browser.name);
+    body.getDataMap().set("language", navigator.language);
     CIMPushManager.sendRequest(body);
 };
 
