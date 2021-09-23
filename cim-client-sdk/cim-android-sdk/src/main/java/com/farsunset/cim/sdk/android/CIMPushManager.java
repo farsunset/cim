@@ -28,11 +28,13 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.os.LocaleList;
 import android.text.TextUtils;
 import com.farsunset.cim.sdk.android.logger.CIMLogger;
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
 import com.farsunset.cim.sdk.android.model.SentBody;
 
+import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -161,6 +163,7 @@ public class CIMPushManager {
         sent.put("appVersion", getVersionName(context));
         sent.put("osVersion", Build.VERSION.RELEASE);
         sent.put("packageName", context.getPackageName());
+        sent.put("language", getLanguage());
         sent.setTimestamp(System.currentTimeMillis());
         sendRequest(context, sent);
     }
@@ -293,4 +296,10 @@ public class CIMPushManager {
         return deviceId;
     }
 
+    private static String getLanguage(){
+
+        Locale locale = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? LocaleList.getDefault().get(0) : Locale.getDefault();
+
+        return locale.getLanguage() + "-" + locale.getCountry();
+    }
 }
