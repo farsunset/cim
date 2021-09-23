@@ -19,20 +19,56 @@
  *                                                                                     *
  ***************************************************************************************
  */
-package com.farsunset.cim;
+package com.farsunset.cim.config.properties;
 
-import com.farsunset.cim.config.properties.APNsProperties;
-import com.farsunset.cim.config.properties.CIMProperties;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@SpringBootApplication
-@EnableConfigurationProperties({
-		APNsProperties.class,
-		CIMProperties.class})
-public class BootApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(BootApplication.class, args);
-	}
+@ConfigurationProperties(prefix = "cim.apns")
+public class APNsProperties {
+
+    private boolean debug;
+
+    private final P12 p12 = new P12();
+
+    public static class P12 {
+        private String file;
+        private String password;
+
+        public void setFile(String file) {
+            this.file = file;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+
+        public String getFile() {
+            return file;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+    }
+
+    public P12 getP12() {
+        return p12;
+    }
+
+    public boolean isDebug() {
+        return debug;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+
+    public String getP12File() {
+        return p12.file;
+    }
+
+
+    public String getP12Password() {
+        return p12.password;
+    }
 }

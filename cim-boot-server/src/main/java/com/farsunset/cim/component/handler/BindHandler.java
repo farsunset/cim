@@ -67,10 +67,12 @@ public class BindHandler implements CIMRequestHandler {
 		session.setDeviceName(body.get("deviceName"));
 		session.setAppVersion(body.get("appVersion"));
 		session.setOsVersion(body.get("osVersion"));
+		session.setLanguage(body.get("language"));
 
 		channel.attr(ChannelAttr.UID).set(uid);
 		channel.attr(ChannelAttr.CHANNEL).set(session.getChannel());
 		channel.attr(ChannelAttr.DEVICE_ID).set(session.getDeviceId());
+		channel.attr(ChannelAttr.LANGUAGE).set(session.getLanguage());
 
 		/*
 		 *存储到数据库

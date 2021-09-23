@@ -26,6 +26,7 @@ import cn.teaey.apns4j.network.ApnsChannel;
 import cn.teaey.apns4j.network.ApnsChannelFactory;
 import cn.teaey.apns4j.network.ApnsGateway;
 import cn.teaey.apns4j.protocol.ApnsPayload;
+import com.farsunset.cim.config.properties.APNsProperties;
 import com.farsunset.cim.sdk.server.model.Message;
 import com.farsunset.cim.service.APNsService;
 import org.apache.commons.io.IOUtils;
@@ -33,7 +34,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
@@ -46,14 +46,12 @@ public class APNsServiceImpl implements APNsService {
 	private final ApnsChannelFactory apnsChannelFactory;
 
 	@Autowired
-	public APNsServiceImpl(@Value("${apple.apns.p12.file}") String p12File,
-						   @Value("${apple.apns.p12.password}") String password,
-						   @Value("${apple.apns.debug}") boolean isDebug){
-		InputStream stream = getClass().getResourceAsStream(p12File);
+	public APNsServiceImpl(APNsProperties properties){
+		InputStream stream = getClass().getResourceAsStream(properties.getP12File());
 		apnsChannelFactory = Apns4j.newChannelFactoryBuilder()
 				.keyStoreMeta(stream)
-				.keyStorePwd(password)
-				.apnsGateway(isDebug ? ApnsGateway.DEVELOPMENT : ApnsGateway.PRODUCTION)
+				.keyStorePwd(properties.getP12Password())
+				.apnsGateway(properties.isDebug() ? ApnsGateway.DEVELOPMENT : ApnsGateway.PRODUCTION)
 				.build();
 	}
 

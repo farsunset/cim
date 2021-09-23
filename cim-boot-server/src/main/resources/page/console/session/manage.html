@@ -48,13 +48,14 @@ function doSendMessage(){
 			<table style="width: 100%" class="utable">
 				<thead>
 					<tr class="tableHeader">
-						<th width="10%"><@spring.message 'module.console.cimsession.account'/></th>
-						<th width="10%"><@spring.message 'module.console.cimsession.nid'/></th>
-						<th width="10%"><@spring.message 'module.console.cimsession.channel'/></th>
-						<th width="20%"><@spring.message 'module.console.cimsession.deviceid'/></th>
-						<th width="20%"><@spring.message 'module.console.cimsession.device.name'/></th>
-						<th width="10%"><@spring.message 'module.console.cimsession.app.version'/></th>
-						<th width="10%"><@spring.message 'module.console.cimsession.os.version'/></th>
+						<th width="8%"><@spring.message 'module.console.cimsession.account'/></th>
+						<th width="8%"><@spring.message 'module.console.cimsession.nid'/></th>
+						<th width="8%"><@spring.message 'module.console.cimsession.channel'/></th>
+						<th width="15%"><@spring.message 'module.console.cimsession.deviceid'/></th>
+						<th width="15%"><@spring.message 'module.console.cimsession.device.name'/></th>
+						<th width="8%"><@spring.message 'module.console.cimsession.app.version'/></th>
+						<th width="8%"><@spring.message 'module.console.cimsession.os.version'/></th>
+						<th width="10%"><@spring.message 'module.common.language'/></th>
 						<th width="10%"><@spring.message 'module.console.cimsession.online.time'/></th>
 						<th width="10%"><@spring.message "module.common.operation"/></th>
 					</tr>
@@ -69,6 +70,7 @@ function doSendMessage(){
 							<td>${cimsession.deviceName! }</td>
 							<td>${cimsession.appVersion! }</td>
 	                        <td>${cimsession.osVersion! }</td>
+							<td>${cimsession.language! }</td>
 							<td>
 								<@spring.messageArgs  "module.console.cimsession.time.format",[((.now?long - cimsession.bindTime)/1000)?round?c]  />
 							</td>

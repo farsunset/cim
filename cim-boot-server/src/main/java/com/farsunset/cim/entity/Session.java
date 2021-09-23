@@ -98,6 +98,12 @@ public class Session implements Serializable {
     private String osVersion;
 
     /**
+     * 终端语言
+     */
+    @Column(name = "language")
+    private String language;
+
+    /**
      * 登录时间
      */
     @Column(name = "bind_time")
@@ -228,6 +234,14 @@ public class Session implements Serializable {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     public int getState() {

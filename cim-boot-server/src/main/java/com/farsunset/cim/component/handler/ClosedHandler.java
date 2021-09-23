@@ -50,9 +50,9 @@ public class ClosedHandler implements CIMRequestHandler {
 
 		String uid = channel.attr(ChannelAttr.UID).get();
 
-		if(uid == null){
-            return;
-        }
+		if (uid == null){
+			return;
+		}
 
 		String nid = channel.attr(ChannelAttr.ID).get();
 
