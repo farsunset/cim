@@ -17,7 +17,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <netty.version>4.1.65.Final</netty.version>
+        <netty.version>4.1.68.Final</netty.version>
         <protobuf.version>3.17.0</protobuf.version>
         <mysql.jdbc.version>8.0.22</mysql.jdbc.version>
         <common.pool.version>2.8.0</common.pool.version>
