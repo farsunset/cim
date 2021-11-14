@@ -21,21 +21,23 @@
  */
 package com.farsunset.cim.service.impl;
 
-import cn.teaey.apns4j.Apns4j;
-import cn.teaey.apns4j.network.ApnsChannel;
-import cn.teaey.apns4j.network.ApnsChannelFactory;
-import cn.teaey.apns4j.network.ApnsGateway;
-import cn.teaey.apns4j.protocol.ApnsPayload;
+import com.eatthepath.pushy.apns.ApnsClient;
+import com.eatthepath.pushy.apns.ApnsClientBuilder;
+import com.eatthepath.pushy.apns.ApnsPushNotification;
+import com.eatthepath.pushy.apns.util.ApnsPayloadBuilder;
+import com.eatthepath.pushy.apns.util.SimpleApnsPayloadBuilder;
+import com.eatthepath.pushy.apns.util.SimpleApnsPushNotification;
+import com.eatthepath.pushy.apns.util.TokenUtil;
 import com.farsunset.cim.config.properties.APNsProperties;
 import com.farsunset.cim.sdk.server.model.Message;
 import com.farsunset.cim.service.APNsService;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 @Service
@@ -43,15 +45,19 @@ public class APNsServiceImpl implements APNsService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(APNsServiceImpl.class);
 
-	private final ApnsChannelFactory apnsChannelFactory;
+	private final ApnsClient apnsClient;
+
+	private final APNsProperties properties;
 
 	@Autowired
-	public APNsServiceImpl(APNsProperties properties){
+	public APNsServiceImpl(APNsProperties properties) throws IOException {
+		this.properties = properties;
+
 		InputStream stream = getClass().getResourceAsStream(properties.getP12File());
-		apnsChannelFactory = Apns4j.newChannelFactoryBuilder()
-				.keyStoreMeta(stream)
-				.keyStorePwd(properties.getP12Password())
-				.apnsGateway(properties.isDebug() ? ApnsGateway.DEVELOPMENT : ApnsGateway.PRODUCTION)
+
+		apnsClient = new ApnsClientBuilder()
+				.setApnsServer(properties.isDebug() ? ApnsClientBuilder.DEVELOPMENT_APNS_HOST : ApnsClientBuilder.PRODUCTION_APNS_HOST)
+				.setClientCredentials(stream, properties.getP12Password())
 				.build();
 	}
 
@@ -64,29 +70,33 @@ public class APNsServiceImpl implements APNsService {
 			return ;
 		}
 
-		ApnsChannel apnsChannel = apnsChannelFactory.newChannel();
-		ApnsPayload apnsPayload = new ApnsPayload();
+		ApnsPayloadBuilder payloadBuilder = new SimpleApnsPayloadBuilder();
 
-		apnsPayload.alert("您有一条新的消息");
+		payloadBuilder.setAlertTitle("您有一条新的消息");
 
-		apnsPayload.sound("default");
-		apnsPayload.badge(1);
-		apnsPayload.extend("id",message.getId());
-		apnsPayload.extend("action",message.getAction());
-		apnsPayload.extend("content",message.getContent());
-		apnsPayload.extend("sender",message.getSender());
-		apnsPayload.extend("receiver",message.getReceiver());
-		apnsPayload.extend("format",message.getFormat());
-		apnsPayload.extend("extra",message.getExtra());
-		apnsPayload.extend("timestamp",message.getTimestamp());
+		payloadBuilder.setSound("default");
+		payloadBuilder.setBadgeNumber(1);
+		payloadBuilder.addCustomProperty("id",message.getId());
+		payloadBuilder.addCustomProperty("action",message.getAction());
+		payloadBuilder.addCustomProperty("content",message.getContent());
+		payloadBuilder.addCustomProperty("sender",message.getSender());
+		payloadBuilder.addCustomProperty("receiver",message.getReceiver());
+		payloadBuilder.addCustomProperty("format",message.getFormat());
+		payloadBuilder.addCustomProperty("extra",message.getExtra());
+		payloadBuilder.addCustomProperty("timestamp",message.getTimestamp());
 
-		try {
-			apnsChannel.send(deviceToken, apnsPayload);
-			LOGGER.info("APNs push done.\ndeviceToken : {} \napnsPayload : {}",deviceToken,apnsPayload.toJsonString());
-		}catch(Exception exception) {
-			LOGGER.error("APNs push failed",exception);
-		}finally {
-			IOUtils.closeQuietly(apnsChannel);
-		}
+		String token = TokenUtil.sanitizeTokenString(deviceToken);
+
+		String payload = payloadBuilder.build();
+
+		ApnsPushNotification notification = new SimpleApnsPushNotification(token, properties.getAppId(), payload);
+
+		apnsClient.sendNotification(notification).whenComplete((response, cause) -> {
+			if (response != null) {
+				LOGGER.info("APNs push done.\ndeviceToken : {} \napnsPayload : {}",deviceToken,payload);
+			} else {
+				LOGGER.error("APNs push failed",cause);
+			}
+		});
 	}
 }

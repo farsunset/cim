@@ -28,6 +28,8 @@ public class APNsProperties {
 
     private boolean debug;
 
+    private String appId;
+
     private final P12 p12 = new P12();
 
     public static class P12 {
@@ -67,6 +69,13 @@ public class APNsProperties {
         return p12.file;
     }
 
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
 
     public String getP12Password() {
         return p12.password;

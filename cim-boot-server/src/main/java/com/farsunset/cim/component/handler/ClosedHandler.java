@@ -58,6 +58,9 @@ public class ClosedHandler implements CIMRequestHandler {
 
 		sessionGroup.remove(channel);
 
+		/*
+		 * ios开启了apns也需要显示在线，因此不删记录
+		 */
 		if (!Objects.equals(channel.attr(ChannelAttr.CHANNEL).get(), Session.CHANNEL_IOS)){
 			sessionService.delete(uid,nid);
 			return;
