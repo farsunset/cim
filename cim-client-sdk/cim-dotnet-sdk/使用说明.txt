@@ -1,0 +1,7 @@
+1、 CIM_SDK_Tests 基于NetCore3.1 是命令行测试用例;
+CIM_Standard 是sdk 基于NetStandard2.1
+这意味着你可以在任何基于Standard2.1的Net平台上运行 无论是mono NetCore NetFrameWork 
+
+2、使用时需要引入Google.Protobuf NuGet库 文件夹下Protobuf的model.cs 已经重新命名 可直接使用 否则有命名冲突 
+
+3、在项目中直接引入CIM_Standard项目即可

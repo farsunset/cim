@@ -1,0 +1,9 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\smeb\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\smeb\\.nuget\\packages",
+      "D:\\vs2019SDK\\NuGetPackages"
+    ]
+  }
+}
