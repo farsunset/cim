@@ -10,6 +10,7 @@ import io.netty.channel.ChannelFutureListener;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class SessionGroup extends ConcurrentHashMap<String, Collection<Channel>> {
@@ -69,6 +70,18 @@ public class SessionGroup extends ConcurrentHashMap<String, Collection<Channel>>
 
     public void write(String key,Message message){
         find(key).forEach(channel -> channel.writeAndFlush(message));
+    }
+
+    public void write(String key, Message message, Predicate<Channel> matcher){
+        find(key).stream().filter(matcher).forEach(channel -> channel.writeAndFlush(message));
+    }
+
+    public void write(String key, Message message, Collection<String> excludedSet){
+        find(key).stream().filter(channel -> excludedSet == null || !excludedSet.contains(channel.attr(ChannelAttr.UID).get())).forEach(channel -> channel.writeAndFlush(message));
+    }
+
+    public void write(Message message){
+        this.write(message.getReceiver(),message);
     }
 
     public Collection<Channel> find(String key){

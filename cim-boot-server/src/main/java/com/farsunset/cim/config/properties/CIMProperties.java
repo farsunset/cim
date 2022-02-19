@@ -54,6 +54,15 @@ public class CIMProperties {
 
     public static class Websocket {
         private Integer port;
+        private String path;
+
+        public String getPath() {
+            return path;
+        }
+
+        public void setPath(String path) {
+            this.path = path;
+        }
 
         public Integer getPort() {
             return port;
@@ -71,4 +80,9 @@ public class CIMProperties {
     public Integer getWebsocketPort() {
         return  websocket.port;
     }
+
+    public String getWebsocketPath() {
+        return  websocket.path;
+    }
+
 }

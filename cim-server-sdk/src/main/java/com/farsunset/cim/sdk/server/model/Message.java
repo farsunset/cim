@@ -29,7 +29,7 @@ import java.io.Serializable;
 /**
  * 消息对象
  */
-public class Message implements Serializable, Transportable {
+public class Message implements Serializable, Transportable,Cloneable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -172,29 +172,51 @@ public class Message implements Serializable, Transportable {
 	}
 
 	@Override
+	public Message clone(){
+		Message message = new Message();
+		message.id = id;
+		message.action = action;
+		message.title = title;
+		message.content = content;
+		message.sender = sender;
+		message.receiver = receiver;
+		message.extra = extra;
+		message.format = format;
+		message.timestamp = timestamp;
+		return message;
+	}
+	@Override
 	public byte[] getBody() {
 		MessageProto.Model.Builder builder = MessageProto.Model.newBuilder();
 		builder.setId(id);
 		builder.setAction(action);
 		builder.setSender(sender);
-		builder.setReceiver(receiver);
 		builder.setTimestamp(timestamp);
 
-		/**
+		/*
 		 * 下面字段可能为空
 		 */
+
+		if (receiver != null){
+			builder.setReceiver(receiver);
+		}
+
 		if (content != null) {
 			builder.setContent(content);
 		}
+
 		if (title != null) {
 			builder.setTitle(title);
 		}
+
 		if (extra != null) {
 			builder.setExtra(extra);
 		}
+
 		if (format != null) {
 			builder.setFormat(format);
 		}
+
 		return builder.build().toByteArray();
 	}
 

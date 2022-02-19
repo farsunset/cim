@@ -7,15 +7,19 @@
 
 ## 项目介绍
 
-CIM是一套完善的消息推送框架，可应用于信令推送，即时聊天，移动设备指令推送等领域。开发者可沉浸于业务开发，不用关心消息通道链接，消息编解码协议等繁杂处理。
+CIM是一套完善的消息推送框架，可应用于信令推送，即时聊天，移动设备指令推送等领域。开发者可沉浸于业务开发，不用关心消息通道长连接、消息编解码协议等繁杂处理。
 
 CIM采用业内主流开源技术构建，易于扩展和使用，并完美支持集群部署支持海量链接，目前支持websocket，android，ios，桌面应用，系统应用等多端接入持,可应用于移动应用，物联网，智能家居，嵌入式开发，桌面应用，WEB应用即时消服务。
 
-用时7年 基于CIM的项目已经运行在全国各个地方，包括上司公司，各地政务系统，警务系统等服务于上百家客户，希望CIM也能为您带来价值，如果您也希望加入项目成为贡献者，请联系我。
+用时7年 基于CIM的项目已经运行在全国各个地方，包括上市公司，各地政务系统，警务系统等服务于上百家客户，希望CIM也能为您带来价值，如果您也希望加入项目成为贡献者，请联系我。如果觉得有用欢迎打赏。
+
+<div align="center">
+   <img src="http://staticres.oss-cn-hangzhou.aliyuncs.com/qcode/ali_pay.jpg" width="30%"  />
+   <img src="http://staticres.oss-cn-hangzhou.aliyuncs.com/qcode/wechat_pay.jpg" width="30%"  />
+</div>
 
    
 ---
-
 ## [收费产品介绍](http://farsunset.com)
 
 #### 和信
@@ -26,7 +30,7 @@ CIM采用业内主流开源技术构建，易于扩展和使用，并完美支�
 
 
 <div align="center">
-   <img src="http://staticres.oss-cn-hangzhou.aliyuncs.com/hoxin/call_video_incoming.jpg" width="24%"  />
+   <img src="http://staticres.oss-cn-hangzhou.aliyuncs.com/hoxin/group_video_calling.jpg" width="24%"  />
    <img src="http://staticres.oss-cn-hangzhou.aliyuncs.com/hoxin/single_chatting_light.jpg" width="24%"  />
    <img src="http://staticres.oss-cn-hangzhou.aliyuncs.com/hoxin/single_chatting_dark.jpg" width="24%"  />
    <img src="http://staticres.oss-cn-hangzhou.aliyuncs.com/hoxin/moment_timeline_light.jpg" width="24%"  />
@@ -34,18 +38,36 @@ CIM采用业内主流开源技术构建，易于扩展和使用，并完美支�
 
 ---  
 
+---
+## WEB聊天室
 
-#### 功能预览
+#### [https://gitee.com/farsunset/web-chat-room](https://gitee.com/farsunset/web-chat-room)
+该项目是完全开源基于cim开发的一款web匿名聊天室，支持发送表情、图片、文字聊天，供学习使用
+
+<div align="center">
+   <img src="https://staticres.oss-cn-hangzhou.aliyuncs.com/chat-room/chat_window.png" width="45%"  />
+   <img src="https://staticres.oss-cn-hangzhou.aliyuncs.com/chat-room/room_members.png" width="45%"  />
+</div>
+
+---  
+
+## 功能预览
 
 1.控制台页面[http://127.0.0.1:8080](http://127.0.0.1:8080)
 ![image](https://images.gitee.com/uploads/images/2019/0315/165050_9e269c1c_58912.png)
+
 2.Android客户端
 ![image](https://images.gitee.com/uploads/images/2019/0315/165050_6f20f69e_58912.png)
+
 3.Web客户端
 ![image](https://images.gitee.com/uploads/images/2019/0315/165050_dfc33c18_58912.png)
 
 
-#### 更新日志
+## 相关用户
+-------------------------------------------------------------------------------------------
+[JFlow](https://gitee.com/opencc/JFlow)
+
+## 更新日志
 -------------------------------------------------------------------------------------------
 版本:3.5.0/时间:2018-08-22
 
@@ -114,4 +136,14 @@ CIM采用业内主流开源技术构建，易于扩展和使用，并完美支�
 
 5.文档放到语雀在线文档
 6.其他30多处多处代码优化
+
+-------------------------------------------------------------------------------------------
+版本:4.1.0/时间:2022-02-15
+
+1.websocket支持在握手时鉴权验证
+
+https://www.yuque.com/yuanfangxiyang/ma4ytb/vvy3iz#mmdUX
+
+2.支持自定义配置websocketPath
+
  

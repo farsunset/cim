@@ -6,7 +6,7 @@
 
     <groupId>com.farsunset</groupId>
     <artifactId>cim-boot-server</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -17,8 +17,8 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <netty.version>4.1.65.Final</netty.version>
-        <protobuf.version>3.17.0</protobuf.version>
+        <netty.version>4.1.70.Final</netty.version>
+        <protobuf.version>3.19.2</protobuf.version>
         <mysql.jdbc.version>8.0.22</mysql.jdbc.version>
         <common.pool.version>2.8.0</common.pool.version>
         <swagger.version>3.0.0</swagger.version>
@@ -62,10 +62,9 @@
         <dependency>
             <groupId>com.farsunset</groupId>
             <artifactId>cim-server-sdk</artifactId>
-            <version>4.0.0</version>
+            <version>4.1.0</version>
             <scope>system</scope>
-            <!-- mina 、netty版本 sdk任选其一 -->
-            <systemPath>${project.basedir}/libs/cim-server-sdk-netty-4.0.0.jar</systemPath>
+            <systemPath>${project.basedir}/libs/cim-server-sdk-netty-4.1.0.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
