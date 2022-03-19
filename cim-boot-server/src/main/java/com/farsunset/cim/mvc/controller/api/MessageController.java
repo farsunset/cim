@@ -22,7 +22,7 @@
 package com.farsunset.cim.mvc.controller.api;
 
 import com.farsunset.cim.component.push.DefaultMessagePusher;
-import com.farsunset.cim.sdk.server.model.Message;
+import com.farsunset.cim.model.Message;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

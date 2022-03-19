@@ -1,16 +1,23 @@
 package com.farsunset.cim.config;
 
+import com.farsunset.cim.acceptor.AppSocketAcceptor;
+import com.farsunset.cim.acceptor.WebsocketAcceptor;
+import com.farsunset.cim.acceptor.config.AppSocketConfig;
+import com.farsunset.cim.acceptor.config.WebsocketConfig;
 import com.farsunset.cim.component.handler.annotation.CIMHandler;
 import com.farsunset.cim.component.predicate.HandshakePredicate;
-import com.farsunset.cim.config.properties.CIMProperties;
-import com.farsunset.cim.sdk.server.group.SessionGroup;
-import com.farsunset.cim.sdk.server.group.TagSessionGroup;
-import com.farsunset.cim.sdk.server.handler.CIMNioSocketAcceptor;
-import com.farsunset.cim.sdk.server.handler.CIMRequestHandler;
-import com.farsunset.cim.sdk.server.model.SentBody;
+import com.farsunset.cim.config.properties.APNsProperties;
+import com.farsunset.cim.config.properties.CIMAppSocketProperties;
+import com.farsunset.cim.config.properties.CIMWebsocketProperties;
+import com.farsunset.cim.group.SessionGroup;
+import com.farsunset.cim.group.TagSessionGroup;
+import com.farsunset.cim.handler.CIMRequestHandler;
+import com.farsunset.cim.model.SentBody;
 import com.farsunset.cim.service.SessionService;
 import io.netty.channel.Channel;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +27,10 @@ import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
+@EnableConfigurationProperties({
+		APNsProperties.class,
+		CIMWebsocketProperties.class,
+		CIMAppSocketProperties.class})
 @Configuration
 public class CIMConfig implements CIMRequestHandler, ApplicationListener<ApplicationStartedEvent> {
 
@@ -42,17 +53,29 @@ public class CIMConfig implements CIMRequestHandler, ApplicationListener<Applica
 	}
 
 
-	@Bean(destroyMethod = "destroy")
-	public CIMNioSocketAcceptor getNioSocketAcceptor(CIMProperties properties, HandshakePredicate handshakePredicate) {
+	@Bean(destroyMethod = "destroy",initMethod = "bind")
+	@ConditionalOnProperty(name = {"cim.websocket.enable"},matchIfMissing = true)
+	public WebsocketAcceptor websocketAcceptor(CIMWebsocketProperties properties, HandshakePredicate handshakePredicate) {
+		WebsocketConfig config = new WebsocketConfig();
+		config.setHandshakePredicate(handshakePredicate);
+		config.setPath(properties.getPath());
+		config.setPort(properties.getPort());
+		config.setProtocol(properties.getProtocol());
+		config.setOuterRequestHandler(this);
+		config.setEnable(properties.isEnable());
+		return new WebsocketAcceptor(config);
+	}
 
-		return new CIMNioSocketAcceptor.Builder()
-				.setAppPort(properties.getAppPort())
-				.setWebsocketPort(properties.getWebsocketPort())
-				.setWebsocketPath(properties.getWebsocketPath())
-				.setHandshakePredicate(handshakePredicate)
-				.setOuterRequestHandler(this)
-				.build();
+	@Bean(destroyMethod = "destroy",initMethod = "bind")
+	@ConditionalOnProperty(name = {"cim.app.enable"},matchIfMissing = true)
+	public AppSocketAcceptor appSocketAcceptor(CIMAppSocketProperties properties) {
 
+		AppSocketConfig config = new AppSocketConfig();
+		config.setPort(properties.getPort());
+		config.setOuterRequestHandler(this);
+		config.setEnable(properties.isEnable());
+
+		return new AppSocketAcceptor(config);
 	}
 
 	@Override
@@ -83,9 +106,6 @@ public class CIMConfig implements CIMRequestHandler, ApplicationListener<Applica
 				handlerMap.put(annotation.key(),handler);
 			}
 		}
-
-
-		applicationContext.getBean(CIMNioSocketAcceptor.class).bind();
 
 		sessionService.deleteLocalhost();
 	}

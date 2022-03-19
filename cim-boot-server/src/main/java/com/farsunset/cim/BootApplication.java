@@ -21,16 +21,10 @@
  */
 package com.farsunset.cim;
 
-import com.farsunset.cim.config.properties.APNsProperties;
-import com.farsunset.cim.config.properties.CIMProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @SpringBootApplication
-@EnableConfigurationProperties({
-		APNsProperties.class,
-		CIMProperties.class})
 public class BootApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(BootApplication.class, args);

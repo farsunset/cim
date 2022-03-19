@@ -23,7 +23,7 @@ package com.farsunset.cim.component.push;
 
 import com.farsunset.cim.component.redis.KeyValueRedisTemplate;
 import com.farsunset.cim.component.redis.SignalRedisTemplate;
-import com.farsunset.cim.sdk.server.model.Message;
+import com.farsunset.cim.model.Message;
 import com.farsunset.cim.service.APNsService;
 import org.springframework.stereotype.Component;
 

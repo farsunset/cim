@@ -23,10 +23,10 @@ package com.farsunset.cim.component.handler;
 
 import com.farsunset.cim.component.handler.annotation.CIMHandler;
 import com.farsunset.cim.entity.Session;
-import com.farsunset.cim.sdk.server.constant.ChannelAttr;
-import com.farsunset.cim.sdk.server.group.SessionGroup;
-import com.farsunset.cim.sdk.server.handler.CIMRequestHandler;
-import com.farsunset.cim.sdk.server.model.SentBody;
+import com.farsunset.cim.constant.ChannelAttr;
+import com.farsunset.cim.group.SessionGroup;
+import com.farsunset.cim.handler.CIMRequestHandler;
+import com.farsunset.cim.model.SentBody;
 import com.farsunset.cim.service.SessionService;
 import io.netty.channel.Channel;
 

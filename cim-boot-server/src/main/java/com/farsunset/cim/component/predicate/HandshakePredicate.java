@@ -1,9 +1,10 @@
 package com.farsunset.cim.component.predicate;
 
-import com.farsunset.cim.sdk.server.handshake.HandshakeEvent;
+import com.farsunset.cim.handshake.HandshakeEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Predicate;
+
 
 /**
  * WS链接握手鉴权验证

@@ -21,7 +21,8 @@
  */
 package com.farsunset.cim.component.push;
 
-import com.farsunset.cim.sdk.server.model.Message;
+
+import com.farsunset.cim.model.Message;
 
 /*
  * 消息发送实接口

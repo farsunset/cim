@@ -146,4 +146,11 @@ https://www.yuque.com/yuanfangxiyang/ma4ytb/vvy3iz#mmdUX
 
 2.支持自定义配置websocketPath
 
- 
+-------------------------------------------------------------------------------------------
+版本:4.2.0/时间:2022-03-14
+
+1.websocket新增支持json序列化方式，助力于小程序开发
+https://www.yuque.com/yuanfangxiyang/ma4ytb/vvy3iz/edit#nnzKN
+
+2.服务端sdk优化包路径结构
+3.修改部分问题

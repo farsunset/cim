@@ -23,7 +23,7 @@ package com.farsunset.cim.component.redis;
 
 import com.farsunset.cim.constants.Constants;
 import com.farsunset.cim.entity.Session;
-import com.farsunset.cim.sdk.server.model.Message;
+import com.farsunset.cim.model.Message;
 import com.farsunset.cim.util.JSONUtils;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;

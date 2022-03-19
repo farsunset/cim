@@ -21,7 +21,8 @@
  */
 package com.farsunset.cim.service;
 
-import com.farsunset.cim.sdk.server.model.Message;
+
+import com.farsunset.cim.model.Message;
 
 public interface APNsService {
 

@@ -29,7 +29,7 @@ import com.eatthepath.pushy.apns.util.SimpleApnsPayloadBuilder;
 import com.eatthepath.pushy.apns.util.SimpleApnsPushNotification;
 import com.eatthepath.pushy.apns.util.TokenUtil;
 import com.farsunset.cim.config.properties.APNsProperties;
-import com.farsunset.cim.sdk.server.model.Message;
+import com.farsunset.cim.model.Message;
 import com.farsunset.cim.service.APNsService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

@@ -1,7 +1,7 @@
 package com.farsunset.cim.component.message;
 
-import com.farsunset.cim.sdk.server.group.SessionGroup;
-import com.farsunset.cim.sdk.server.model.Message;
+import com.farsunset.cim.group.SessionGroup;
+import com.farsunset.cim.model.Message;
 import com.farsunset.cim.util.JSONUtils;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
