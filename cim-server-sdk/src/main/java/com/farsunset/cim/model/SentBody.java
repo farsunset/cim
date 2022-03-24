@@ -55,6 +55,10 @@ public class SentBody implements Serializable {
 		return data.get(key);
 	}
 
+	public String get(String key,String defaultValue) {
+		return data.getOrDefault(key,defaultValue);
+	}
+
 	public long getTimestamp() {
 		return timestamp;
 	}

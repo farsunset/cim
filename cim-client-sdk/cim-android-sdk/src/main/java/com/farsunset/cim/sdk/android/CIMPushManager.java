@@ -30,8 +30,8 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.LocaleList;
 import android.text.TextUtils;
-import com.farsunset.cim.sdk.android.logger.CIMLogger;
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
+import com.farsunset.cim.sdk.android.logger.CIMLogger;
 import com.farsunset.cim.sdk.android.model.SentBody;
 
 import java.util.Locale;

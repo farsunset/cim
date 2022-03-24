@@ -21,7 +21,6 @@
  */
 package com.farsunset.cim.sdk.android.model;
 
-import android.util.ArrayMap;
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
 import com.farsunset.cim.sdk.android.model.proto.SentBodyProto;
 

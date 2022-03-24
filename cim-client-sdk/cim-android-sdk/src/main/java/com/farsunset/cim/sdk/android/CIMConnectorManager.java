@@ -24,12 +24,10 @@ package com.farsunset.cim.sdk.android;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Process;
-import com.farsunset.cim.sdk.android.logger.CIMLogger;
 import com.farsunset.cim.sdk.android.coder.ClientMessageDecoder;
 import com.farsunset.cim.sdk.android.coder.ClientMessageEncoder;
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
+import com.farsunset.cim.sdk.android.logger.CIMLogger;
 import com.farsunset.cim.sdk.android.model.*;
 
 import java.io.IOException;

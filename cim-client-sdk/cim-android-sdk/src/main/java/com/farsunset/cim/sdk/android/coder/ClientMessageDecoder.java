@@ -23,8 +23,8 @@ package com.farsunset.cim.sdk.android.coder;
 
 
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
-import com.farsunset.cim.sdk.android.model.Ping;
 import com.farsunset.cim.sdk.android.model.Message;
+import com.farsunset.cim.sdk.android.model.Ping;
 import com.farsunset.cim.sdk.android.model.ReplyBody;
 import com.farsunset.cim.sdk.android.model.proto.MessageProto;
 import com.farsunset.cim.sdk.android.model.proto.ReplyBodyProto;

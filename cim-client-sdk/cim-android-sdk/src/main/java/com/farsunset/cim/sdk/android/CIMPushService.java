@@ -283,6 +283,7 @@ public class CIMPushService extends Service {
 
 
         Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
         intent.setPackage(getPackageName());
 
         Notification.Builder builder;
@@ -296,7 +297,7 @@ public class CIMPushService extends Service {
                 .setOngoing(false)
                 .setSmallIcon(icon)
                 .setWhen(System.currentTimeMillis())
-                .setContentIntent(PendingIntent.getActivity(this, 0, intent, 0))
+                .setContentIntent(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE))
                 .setContentTitle(channelName)
                 .setContentText(message);
 
