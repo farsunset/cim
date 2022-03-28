@@ -187,6 +187,9 @@ public class CIMPushService extends Service {
             return;
         }
 
+
+        connectHandler.removeMessages(0);
+
         connectHandler.sendEmptyMessageDelayed(0, delayMillis);
     }
 

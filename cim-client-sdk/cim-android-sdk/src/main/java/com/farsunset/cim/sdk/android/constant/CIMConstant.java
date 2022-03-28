@@ -23,7 +23,7 @@ package com.farsunset.cim.sdk.android.constant;
 
 public interface CIMConstant {
 
-    long RECONNECT_INTERVAL_TIME = 30 * 1000;
+    long RECONNECT_INTERVAL_TIME = 5 * 1000;
 
     /*
      * 消息头长度为3个字节，第一个字节为消息类型，第二，第三字节 转换int后为消息长度

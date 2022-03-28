@@ -51,7 +51,7 @@ class CIMConnectorManager {
 
     private static final int WRITE_BUFFER_SIZE = 1024;
 
-    private static final int CONNECT_TIME_OUT = 10 * 1000;
+    private static final int CONNECT_TIME_OUT = 5 * 1000;
 
     /*
      服务端在连接写空闲120秒的时候发送心跳请求给客户端，所以客户端在空闲150秒后都没有收到任何数据，则关闭链接，并重新创建
@@ -72,6 +72,8 @@ class CIMConnectorManager {
 
     private final ClientMessageEncoder messageEncoder = new ClientMessageEncoder();
     private final ClientMessageDecoder messageDecoder = new ClientMessageDecoder();
+
+    private final Random random = new Random();
 
     private CIMConnectorManager(Context context) {
         this.context = context;
@@ -277,7 +279,10 @@ class CIMConnectorManager {
 
     private void handleConnectAbortedEvent() {
 
-        long interval = CIMConstant.RECONNECT_INTERVAL_TIME - (5 * 1000 - new Random().nextInt(15 * 1000));
+        /*
+         * 随机3-10秒后重连
+         */
+        long interval = 3000 + random.nextInt(7001) ;
 
         LOGGER.connectFailure(interval);
 
