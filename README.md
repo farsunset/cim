@@ -1,7 +1,7 @@
 
-## 1、[在线文档](https://www.yuque.com/yuanfangxiyang/ma4ytb)
+## 1、[在线文档](https://www.yuque.com/yuanfangxiyang/ma4ytb)(https://www.yuque.com/yuanfangxiyang/ma4ytb)
 
-## 2、[产品官网](http://farsunset.com)
+## 2、[产品官网](http://farsunset.com)(http://farsunset.com)
 
 ---
 
@@ -13,6 +13,8 @@ CIM采用业内主流开源技术构建，易于扩展和使用，并完美支�
 
 用时7年 基于CIM的项目已经运行在全国各个地方，包括上市公司，各地政务系统，警务系统等服务于上百家客户，希望CIM也能为您带来价值，如果您也希望加入项目成为贡献者，请联系我。如果觉得有用欢迎打赏。
 
+如果对您有价值，请送一个star和Fork喔~
+
 <div align="center">
    <img src="http://staticres.oss-cn-hangzhou.aliyuncs.com/qcode/ali_pay.jpg" width="30%"  />
    <img src="http://staticres.oss-cn-hangzhou.aliyuncs.com/qcode/wechat_pay.jpg" width="30%"  />
@@ -20,12 +22,12 @@ CIM采用业内主流开源技术构建，易于扩展和使用，并完美支�
 
    
 ---
-## [收费产品介绍](http://farsunset.com)
+## 收费产品介绍
 
-#### 和信
+#### 和信(http://farsunset.com)
 和信是基于CIM组件开发的一整套完整的产品,面向所有人开放注册的试用场景。具有丰富的功能，聊天、群组、好友列表、黑名单、公众号、朋友圈等功能。不依赖任何第三方服务，可以私有化部署。
 
-#### 侣信
+#### 侣信(http://farsunset.com/lvxin)
 侣信是基于CIM组件开发的一整套完整的产品,面向中小企业和者各类团队组织内部交流使用工具。具有丰富的功能，聊天、群组、部门组织、公众号、内部朋友圈等功能。不依赖任何第三方服务，可以私有化部署。
 
 
