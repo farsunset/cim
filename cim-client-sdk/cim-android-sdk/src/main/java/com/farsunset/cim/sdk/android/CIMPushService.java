@@ -96,7 +96,7 @@ public class CIMPushService extends Service {
         }
 
         @Override
-        public void onUnavailable() {
+        public void onLost(Network network) {
             Intent intent = new Intent();
             intent.setPackage(getPackageName());
             intent.setAction(CIMConstant.IntentAction.ACTION_NETWORK_CHANGED);

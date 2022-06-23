@@ -35,7 +35,7 @@ public class AppMessageEncoder extends MessageToByteEncoder<Transportable> {
 	@Override
 	protected void encode(final ChannelHandlerContext ctx, final Transportable data, ByteBuf out){
 		byte[] body = data.getBody();
-		byte[] header = createHeader(data.getType(), body.length);
+		byte[] header = createHeader(data.getType().getValue(), body.length);
 		out.writeBytes(header);
 		out.writeBytes(body);
 	}

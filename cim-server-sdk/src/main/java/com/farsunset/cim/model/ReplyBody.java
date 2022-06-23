@@ -21,7 +21,7 @@
  */
 package com.farsunset.cim.model;
 
-import com.farsunset.cim.constant.CIMConstant;
+import com.farsunset.cim.constant.DataType;
 import com.farsunset.cim.model.proto.ReplyBodyProto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -111,17 +111,21 @@ public class ReplyBody implements Serializable, Transportable {
 		this.code = code.toString();
 	}
 
+	public Map<String, String> getData() {
+		return data;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("[ReplyBody]").append("\n");
-		builder.append("key:").append(this.getKey()).append("\n");
-		builder.append("timestamp:").append(timestamp).append("\n");
-		builder.append("code:").append(code).append("\n");
-
-		builder.append("data:{");
+		builder.append("key       :").append(this.getKey()).append("\n");
+		builder.append("code      :").append(code).append("\n");
+		builder.append("message   :").append(message).append("\n");
+		builder.append("timestamp :").append(timestamp).append("\n");
+		builder.append("data      :").append("\n{");
 		data.forEach((k, v) -> builder.append("\n").append(k).append(":").append(v));
-		builder.append("\n}");
+		builder.append(data.isEmpty() ? "" : "\n").append("}");
 
 		return builder.toString();
 	}
@@ -145,8 +149,15 @@ public class ReplyBody implements Serializable, Transportable {
 
 	@JsonIgnore
 	@Override
-	public byte getType() {
-		return CIMConstant.DATA_TYPE_REPLY;
+	public DataType getType() {
+		return DataType.REPLY;
 	}
 
+	public static ReplyBody make(String key,int code,String message){
+		ReplyBody body = new ReplyBody();
+		body.key = key;
+		body.code = String.valueOf(code);
+		body.message = message;
+		return body;
+	}
 }

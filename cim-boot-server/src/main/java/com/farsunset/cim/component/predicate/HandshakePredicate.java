@@ -13,7 +13,7 @@ import java.util.function.Predicate;
 public class HandshakePredicate implements Predicate<HandshakeEvent> {
 
     /**
-     *
+     * 验证身份信息，本方法切勿进行耗时操作！！！
      * @param event
      * @return true验证通过 false验证失败
      */

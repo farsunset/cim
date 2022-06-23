@@ -106,7 +106,6 @@ public class WebsocketAcceptor extends NioSocketAcceptor {
 				ch.pipeline().addLast(loggingHandler);
 				ch.pipeline().addLast(WebsocketAcceptor.this);
 				ch.pipeline().addLast(illegalRequestHandler);
-
 			}
 
 		});

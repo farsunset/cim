@@ -21,6 +21,8 @@
  */
 package com.farsunset.cim.model;
 
+import com.farsunset.cim.constant.DataType;
+
 /**
  * 需要向另一端发送的结构体
  */
@@ -35,5 +37,5 @@ public interface Transportable {
 	 * 消息类型
 	 * @return
 	 */
-	byte getType();
+	DataType getType();
 }

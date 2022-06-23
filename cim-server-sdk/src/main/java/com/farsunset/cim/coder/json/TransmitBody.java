@@ -26,15 +26,15 @@ package com.farsunset.cim.coder.json;
  */
 class TransmitBody {
 
-    private int type;
+    private byte type;
 
     private String content;
 
-    public int getType() {
+    public byte getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(byte type) {
         this.type = type;
     }
 

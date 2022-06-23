@@ -71,13 +71,13 @@ abstract class NioSocketAcceptor extends SimpleChannelInboundHandler<SentBody>{
 
 		ThreadFactory bossThreadFactory = r -> {
 			Thread thread = new Thread(r);
-			thread.setName("nio-boss-");
+			thread.setName("nio-boss-" + thread.getId());
 			return thread;
 		};
 
 		ThreadFactory workerThreadFactory = r -> {
 			Thread thread = new Thread(r);
-			thread.setName("nio-worker-");
+			thread.setName("nio-worker-" + thread.getId());
 			return thread;
 		};
 
@@ -174,7 +174,7 @@ abstract class NioSocketAcceptor extends SimpleChannelInboundHandler<SentBody>{
 		}
 
 		/*
-		 * 如果心跳请求发出30秒内没收到响应，则关闭连接
+		 * 如果心跳请求发出（readIdle-writeIdle）秒内没收到响应，则关闭连接
 		 */
 		Integer pingCount = ctx.channel().attr(ChannelAttr.PING_COUNT).get();
 		if (idleEvent.state() == IdleState.READER_IDLE && pingCount != null && pingCount >= PONG_TIME_OUT_COUNT) {

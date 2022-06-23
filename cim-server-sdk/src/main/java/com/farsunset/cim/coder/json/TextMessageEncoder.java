@@ -45,7 +45,7 @@ public class TextMessageEncoder extends MessageToMessageEncoder<Transportable> {
 	protected void encode(ChannelHandlerContext ctx, Transportable data, List<Object> out) throws JsonProcessingException {
 
 		TransmitBody protocol = new TransmitBody();
-		protocol.setType(data.getType());
+		protocol.setType(data.getType().getValue());
 		protocol.setContent(getBody(data));
 
 		TextWebSocketFrame frame = new TextWebSocketFrame(OBJECT_MAPPER.writeValueAsString(protocol));

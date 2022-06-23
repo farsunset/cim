@@ -1,7 +1,8 @@
 package com.farsunset.cim.coder.json;
 
-import com.farsunset.cim.constant.CIMConstant;
 import com.farsunset.cim.constant.ChannelAttr;
+import com.farsunset.cim.constant.DataType;
+import com.farsunset.cim.exception.ReadInvalidTypeException;
 import com.farsunset.cim.model.Pong;
 import com.farsunset.cim.model.SentBody;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -35,14 +36,17 @@ public class TextMessageDecoder extends MessageToMessageDecoder<TextWebSocketFra
 
         TransmitBody protocol = OBJECT_MAPPER.readValue(text, TransmitBody.class);
 
-        if (protocol.getType() == CIMConstant.DATA_TYPE_PONG){
+        if (protocol.getType() == DataType.PONG.getValue()){
             list.add(Pong.getInstance());
             return;
         }
 
-        if (protocol.getType() == CIMConstant.DATA_TYPE_SENT){
+        if (protocol.getType() == DataType.SENT.getValue()){
             SentBody body = OBJECT_MAPPER.readValue(protocol.getContent(), SentBody.class);
             list.add(body);
+            return;
         }
+
+        throw new ReadInvalidTypeException(protocol.getType());
     }
 }

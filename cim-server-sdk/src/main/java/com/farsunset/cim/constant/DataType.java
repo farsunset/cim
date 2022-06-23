@@ -19,42 +19,45 @@
  *                                                                                     *
  ***************************************************************************************
  */
-package com.farsunset.cim.model;
-
-import com.farsunset.cim.constant.DataType;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import java.io.Serializable;
+package com.farsunset.cim.constant;
 
 /**
- * 服务端心跳请求
+ * 数据类型
  */
-public class Ping implements Serializable, Transportable {
+public enum DataType {
 
-	private static final long serialVersionUID = 1L;
-	private static final String TAG = "PING";
-	private static final String DATA = "PING";
-	private static final Ping INSTANCE = new Ping();
+    /**
+     * 客户端发送的的心跳响应
+     */
+    PONG    (0),
 
-	private Ping() {}
+    /**
+     * 服务端端发送的心跳响应
+     */
+    PING    (1),
 
-	public static Ping getInstance() {
-		return INSTANCE;
-	}
+    /**
+     * 服务端端发送的消息体
+     */
+    MESSAGE (2),
 
-	@Override
-	public String toString() {
-		return TAG;
-	}
+    /**
+     * 客户端发送的请求体
+     */
+    SENT    (3),
 
-	@Override
-	public byte[] getBody() {
-		return DATA.getBytes();
-	}
+    /**
+     * 服务端端发送的响应体
+     */
+    REPLY   (4);
 
-	@JsonIgnore
-	@Override
-	public DataType getType() {
-		return DataType.PING;
-	}
+    private final byte value;
+
+    DataType(int value) {
+        this.value = (byte) value;
+    }
+
+    public byte getValue() {
+        return value;
+    }
 }

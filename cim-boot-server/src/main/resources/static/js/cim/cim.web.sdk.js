@@ -21,6 +21,16 @@ const REPLY_BODY = 4;
 const SENT_BODY = 3;
 const PING = 1;
 const PONG = 0;
+
+/*
+ * 握手鉴权常量
+ */
+const KEY_HANDSHAKE = "client_handshake";
+const CODE_UNAUTHORIZED = "401";
+
+const CODE_OK = "200";
+const KEY_CLIENT_BIND = "client_bind";
+
 /**
  * PONG字符串转换后
  * @type {Uint8Array}
@@ -54,7 +64,7 @@ CIMPushManager.bind = function (account) {
 
     let browser = getBrowser();
     let body = new proto.com.farsunset.cim.sdk.web.model.SentBody();
-    body.setKey("client_bind");
+    body.setKey(KEY_CLIENT_BIND);
     body.setTimestamp(new Date().getTime());
     body.getDataMap().set("uid", account);
     body.getDataMap().set("channel", APP_CHANNEL);
@@ -106,7 +116,8 @@ CIMPushManager.innerOnMessageReceived = function (e) {
 
     if (type === REPLY_BODY) {
         let message = proto.com.farsunset.cim.sdk.web.model.ReplyBody.deserializeBinary(body);
-        /**
+
+        /*
          * 将proto对象转换成json对象，去除无用信息
          */
         let reply = {};
@@ -116,12 +127,20 @@ CIMPushManager.innerOnMessageReceived = function (e) {
         reply.timestamp = message.getTimestamp();
         reply.data = {};
 
-        /**
+        /*
          * 注意，遍历map这里的参数 value在前key在后
          */
         message.getDataMap().forEach(function (v, k) {
             reply.data[k] = v;
         });
+
+        /*
+         * 判断是否是握手鉴权失败
+         * 终止后续自动重连
+         */
+        if(reply.key === KEY_HANDSHAKE && reply.code === CODE_UNAUTHORIZED){
+            manualStop = true;
+        }
 
         onReplyReceived(reply);
     }

@@ -21,7 +21,7 @@
  */
 package com.farsunset.cim.model;
 
-import com.farsunset.cim.constant.CIMConstant;
+import com.farsunset.cim.constant.DataType;
 import com.farsunset.cim.model.proto.MessageProto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -156,14 +156,14 @@ public class Message implements Serializable, Transportable,Cloneable {
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("#Message#").append("\n");
-		buffer.append("id:").append(id).append("\n");
-		buffer.append("action:").append(action).append("\n");
-		buffer.append("title:").append(title).append("\n");
-		buffer.append("content:").append(content).append("\n");
-		buffer.append("extra:").append(extra).append("\n");
-		buffer.append("sender:").append(sender).append("\n");
-		buffer.append("receiver:").append(receiver).append("\n");
-		buffer.append("format:").append(format).append("\n");
+		buffer.append("id       :").append(id).append("\n");
+		buffer.append("sender   :").append(sender).append("\n");
+		buffer.append("receiver :").append(receiver).append("\n");
+		buffer.append("action   :").append(action).append("\n");
+		buffer.append("content  :").append(content).append("\n");
+		buffer.append("format   :").append(format).append("\n");
+		buffer.append("extra    :").append(extra).append("\n");
+		buffer.append("title    :").append(title).append("\n");
 		buffer.append("timestamp:").append(timestamp);
 		return buffer.toString();
 	}
@@ -221,7 +221,7 @@ public class Message implements Serializable, Transportable,Cloneable {
 
 	@JsonIgnore
 	@Override
-	public byte getType() {
-		return CIMConstant.DATA_TYPE_MESSAGE;
+	public DataType getType() {
+		return DataType.MESSAGE;
 	}
 }

@@ -1,3 +1,9 @@
+## 注意！！
+启动本本目录index.html 请确定服务端参数配置值为如下
+cim.websocket.protocol=json
+
+https://www.yuque.com/yuanfangxiyang/ma4ytb/vvy3iz#srHdB
+
 
 ## 客户端文档
 https://www.yuque.com/yuanfangxiyang/ma4ytb/zwkr3m#lE1R2

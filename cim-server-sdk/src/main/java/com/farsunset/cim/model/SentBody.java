@@ -23,6 +23,7 @@ package com.farsunset.cim.model;
 
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -35,7 +36,7 @@ public class SentBody implements Serializable {
 
 	private String key;
 
-	private Map<String, String> data;
+	private final Map<String, String> data = new HashMap<>();
 
 	private long timestamp;
 
@@ -44,7 +45,8 @@ public class SentBody implements Serializable {
 	}
 
 	public void setData(Map<String, String> data) {
-		this.data = data;
+		this.data.clear();
+		this.data.putAll(data);
 	}
 
 	public String getKey() {
@@ -75,13 +77,11 @@ public class SentBody implements Serializable {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("[SentBody]").append("\n");
-		builder.append("key:").append(key).append("\n");
-		builder.append("timestamp:").append(timestamp).append("\n");
-
-		builder.append("data:{");
+		builder.append("key       :").append(this.getKey()).append("\n");
+		builder.append("timestamp :").append(timestamp).append("\n");
+		builder.append("data      :").append("\n{");
 		data.forEach((k, v) -> builder.append("\n").append(k).append(":").append(v));
-		builder.append("\n}");
-
+		builder.append(data.isEmpty() ? "" : "\n").append("}");
 		return builder.toString();
 	}
 

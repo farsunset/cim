@@ -26,18 +26,24 @@
    function onReplyReceived(reply)
    {
 	 console.log(reply);
-     if(reply.key==='client_bind' && reply.code === "200" )
-     {
-        hideProcess();
-        
-        $('#LoginDialog').fadeOut();
+     if (reply.key === KEY_CLIENT_BIND && reply.code === CODE_OK) {
+		   hideProcess();
 
-        
-        $('#MessageDialog').fadeIn();
-        $('#MessageDialog').addClass("in");
-        $("#current_account").text($('#account').val());
-        
-     }
+		   $('#LoginDialog').fadeOut();
+
+		   $('#MessageDialog').fadeIn();
+		   $('#MessageDialog').addClass("in");
+		   $("#current_account").text($('#account').val());
+
+	   }
+
+	   /**
+		* 链接鉴权失败
+		*/
+	   if(reply.key === KEY_HANDSHAKE && reply.code === CODE_UNAUTHORIZED){
+		   hideProcess();
+		   showETip("鉴权失败");
+	   }
    }
    
    /** 当收到消息时候回调  **/

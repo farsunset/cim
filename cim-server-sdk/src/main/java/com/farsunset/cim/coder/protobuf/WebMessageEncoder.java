@@ -40,7 +40,7 @@ public class WebMessageEncoder extends MessageToMessageEncoder<Transportable> {
 		byte[] body = data.getBody();
 		ByteBufAllocator allocator = ctx.channel().config().getAllocator();
 		ByteBuf buffer = allocator.buffer(body.length + 1);
-		buffer.writeByte(data.getType());
+		buffer.writeByte(data.getType().getValue());
 		buffer.writeBytes(body);
 		out.add(new BinaryWebSocketFrame(buffer));
 	}

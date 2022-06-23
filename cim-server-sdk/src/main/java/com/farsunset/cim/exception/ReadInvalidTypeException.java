@@ -19,42 +19,11 @@
  *                                                                                     *
  ***************************************************************************************
  */
-package com.farsunset.cim.model;
+package com.farsunset.cim.exception;
 
-import com.farsunset.cim.constant.DataType;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+public class ReadInvalidTypeException extends RuntimeException{
 
-import java.io.Serializable;
-
-/**
- * 服务端心跳请求
- */
-public class Ping implements Serializable, Transportable {
-
-	private static final long serialVersionUID = 1L;
-	private static final String TAG = "PING";
-	private static final String DATA = "PING";
-	private static final Ping INSTANCE = new Ping();
-
-	private Ping() {}
-
-	public static Ping getInstance() {
-		return INSTANCE;
-	}
-
-	@Override
-	public String toString() {
-		return TAG;
-	}
-
-	@Override
-	public byte[] getBody() {
-		return DATA.getBytes();
-	}
-
-	@JsonIgnore
-	@Override
-	public DataType getType() {
-		return DataType.PING;
-	}
+    public ReadInvalidTypeException(byte type) {
+        super("Read invalid tag : " + type);
+    }
 }

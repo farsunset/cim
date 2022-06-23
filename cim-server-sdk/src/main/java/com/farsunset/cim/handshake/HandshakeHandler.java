@@ -21,12 +21,13 @@
  */
 package com.farsunset.cim.handshake;
 
+import com.farsunset.cim.constant.CIMConstant;
+import com.farsunset.cim.model.ReplyBody;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.HttpResponseStatus;
-import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 
 import java.util.function.Predicate;
@@ -36,12 +37,12 @@ import java.util.function.Predicate;
  */
 @ChannelHandler.Sharable
 public class HandshakeHandler extends ChannelInboundHandlerAdapter {
-
     /*
-    客户端接收到的CloseEvent事件类型
-    客户端可通过该code判断是握手鉴权失败
+     *认证失败，返回replyBody给客户端
      */
-    private static final int UNAUTHORIZED_CODE = 4001;
+    private final ReplyBody failedBody = ReplyBody.make(CIMConstant.CLIENT_HANDSHAKE,
+            HttpResponseStatus.UNAUTHORIZED.code(),
+            HttpResponseStatus.UNAUTHORIZED.reasonPhrase());
 
     private final Predicate<HandshakeEvent> handshakePredicate;
 
@@ -67,10 +68,10 @@ public class HandshakeHandler extends ChannelInboundHandlerAdapter {
         }
 
         /*
-         * 鉴权不通过，关闭链接
+         * 鉴权不通过，发送响应体并关闭链接
          */
         if (!handshakePredicate.test(HandshakeEvent.of(event))) {
-            context.channel().writeAndFlush(new CloseWebSocketFrame(UNAUTHORIZED_CODE,HttpResponseStatus.UNAUTHORIZED.reasonPhrase())).addListener(ChannelFutureListener.CLOSE);
+            context.channel().writeAndFlush(failedBody).addListener(ChannelFutureListener.CLOSE);
         }
     }
 }

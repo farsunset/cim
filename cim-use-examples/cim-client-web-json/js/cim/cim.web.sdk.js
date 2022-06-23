@@ -21,6 +21,16 @@ const REPLY_BODY = 4;
 const SENT_BODY = 3;
 const PING = 1;
 const PONG = 0;
+
+/*
+ * 握手鉴权常量
+ */
+const KEY_HANDSHAKE = "client_handshake";
+const CODE_UNAUTHORIZED = "401";
+
+const CODE_OK = "200";
+const KEY_CLIENT_BIND = "client_bind";
+
 /**
  * PONG字符串转换后
  * @type {Uint8Array}
@@ -53,7 +63,7 @@ CIMPushManager.bind = function (account) {
 
     let browser = getBrowser().name;
     let body = {};
-    body.key ="client_bind";
+    body.key = KEY_CLIENT_BIND;
     body.timestamp=new Date().getTime();
     body.data = {};
     body.data.uid = account;
@@ -107,6 +117,13 @@ CIMPushManager.innerOnMessageReceived = function (e) {
 
     if (type === REPLY_BODY) {
         let reply = JSON.parse(body);
+        /*
+         * 判断是否是握手鉴权失败
+         * 终止后续自动重连
+         */
+        if(reply.key === KEY_HANDSHAKE && reply.code === CODE_UNAUTHORIZED){
+            manualStop = true;
+        }
         onReplyReceived(reply);
     }
 };
