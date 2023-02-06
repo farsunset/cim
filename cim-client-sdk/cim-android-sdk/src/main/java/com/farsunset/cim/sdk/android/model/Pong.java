@@ -21,7 +21,7 @@
  */
 package com.farsunset.cim.sdk.android.model;
 
-import com.farsunset.cim.sdk.android.constant.CIMConstant;
+import com.farsunset.cim.sdk.android.constant.ProtobufType;
 
 import java.io.Serializable;
 
@@ -56,7 +56,7 @@ public class Pong implements Serializable, BinaryBody {
 
     @Override
     public byte getType() {
-        return CIMConstant.ProtobufType.PONG;
+        return ProtobufType.PONG;
     }
 
 }

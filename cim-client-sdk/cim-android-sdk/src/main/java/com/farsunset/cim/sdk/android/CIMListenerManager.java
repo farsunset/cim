@@ -27,16 +27,16 @@ import com.farsunset.cim.sdk.android.model.Message;
 import com.farsunset.cim.sdk.android.model.ReplyBody;
 import com.farsunset.cim.sdk.android.model.SentBody;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * CIM 消息监听器管理
  */
 public class CIMListenerManager {
 
-    private static final ArrayList<CIMEventListener> cimListeners = new ArrayList<>();
+    private static final List<CIMEventListener> cimListeners = new CopyOnWriteArrayList<>();
     private static final ReceiveComparator comparator = new ReceiveComparator();
 
     private CIMListenerManager() {
@@ -47,7 +47,7 @@ public class CIMListenerManager {
 
         if (!cimListeners.contains(listener)) {
             cimListeners.add(listener);
-            Collections.sort(cimListeners,comparator);
+            cimListeners.sort(comparator);
         }
     }
 

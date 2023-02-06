@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2022 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,9 @@ package com.farsunset.cim.component.handler;
 
 import com.farsunset.cim.component.handler.annotation.CIMHandler;
 import com.farsunset.cim.component.redis.SignalRedisTemplate;
-import com.farsunset.cim.entity.Session;
 import com.farsunset.cim.constant.ChannelAttr;
+import com.farsunset.cim.constants.Constants;
+import com.farsunset.cim.entity.Session;
 import com.farsunset.cim.group.SessionGroup;
 import com.farsunset.cim.handler.CIMRequestHandler;
 import com.farsunset.cim.model.ReplyBody;
@@ -53,6 +54,10 @@ public class BindHandler implements CIMRequestHandler {
 	@Override
 	public void process(Channel channel, SentBody body) {
 
+		if (sessionGroup.isManaged(channel)){
+			return;
+		}
+
 		ReplyBody reply = new ReplyBody();
 		reply.setKey(body.getKey());
 		reply.setCode(HttpStatus.OK.value());
@@ -78,6 +83,8 @@ public class BindHandler implements CIMRequestHandler {
 		 *存储到数据库
 		 */
 		sessionService.add(session);
+
+		channel.attr(Constants.SESSION_ID).set(session.getId());
 
 		/*
 		 * 添加到内存管理

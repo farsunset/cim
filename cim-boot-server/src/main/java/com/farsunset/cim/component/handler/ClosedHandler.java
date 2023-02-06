@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2022 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,9 @@
 package com.farsunset.cim.component.handler;
 
 import com.farsunset.cim.component.handler.annotation.CIMHandler;
-import com.farsunset.cim.entity.Session;
 import com.farsunset.cim.constant.ChannelAttr;
+import com.farsunset.cim.constants.Constants;
+import com.farsunset.cim.entity.Session;
 import com.farsunset.cim.group.SessionGroup;
 import com.farsunset.cim.handler.CIMRequestHandler;
 import com.farsunset.cim.model.SentBody;
@@ -42,31 +43,25 @@ public class ClosedHandler implements CIMRequestHandler {
 	@Resource
 	private SessionService sessionService;
 
-	@Resource
-	private SessionGroup sessionGroup;
-
 	@Override
 	public void process(Channel channel, SentBody message) {
 
-		String uid = channel.attr(ChannelAttr.UID).get();
+		Long sessionId = channel.attr(Constants.SESSION_ID).get();
 
-		if (uid == null){
+		if (sessionId == null){
 			return;
 		}
-
-		String nid = channel.attr(ChannelAttr.ID).get();
-
-		sessionGroup.remove(channel);
 
 		/*
 		 * ios开启了apns也需要显示在线，因此不删记录
 		 */
-		if (!Objects.equals(channel.attr(ChannelAttr.CHANNEL).get(), Session.CHANNEL_IOS)){
-			sessionService.delete(uid,nid);
+		if (Objects.equals(channel.attr(ChannelAttr.CHANNEL).get(), Session.CHANNEL_IOS)){
+			sessionService.updateState(sessionId, Session.STATE_INACTIVE);
 			return;
 		}
 
-		sessionService.updateState(uid,nid, Session.STATE_INACTIVE);
+		sessionService.delete(sessionId);
+
 	}
 
 }

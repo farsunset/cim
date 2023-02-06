@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2022 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,13 +21,16 @@
  */
 package com.farsunset.cim.constants;
 
+import io.netty.util.AttributeKey;
+
 public interface Constants {
 
 	String PUSH_MESSAGE_INNER_QUEUE = "signal/channel/PUSH_MESSAGE_INNER_QUEUE";
 
 	String BIND_MESSAGE_INNER_QUEUE = "signal/channel/BIND_MESSAGE_INNER_QUEUE";
 
-	String PING_MESSAGE_INNER_QUEUE = "signal/channel/PING_MESSAGE_INNER_QUEUE";
-
 	String APNS_DEVICE_TOKEN = "APNS_OPEN_%s";
+
+	AttributeKey<Long> SESSION_ID = AttributeKey.valueOf("session_id");
+
 }

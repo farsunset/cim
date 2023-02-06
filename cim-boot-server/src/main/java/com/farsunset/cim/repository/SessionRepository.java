@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2022 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,16 +34,12 @@ import org.springframework.transaction.annotation.Transactional;
 public interface SessionRepository extends JpaRepository<Session, Long> {
 
 	@Modifying
-	@Query("delete from Session where uid = ?1 and nid = ?2")
-	void delete(String uid,String nid);
-
-	@Modifying
 	@Query("delete from Session where host = ?1 ")
 	void deleteAll(String host);
 
 	@Modifying
-	@Query("update Session set state = ?3 where uid = ?1 and nid = ?2")
-	void updateState(String uid,String nid,int state);
+	@Query("update Session set state = :state where id = :id")
+	void updateState(long id,int state);
 
 	@Modifying
 	@Query("update Session set state = " + Session.STATE_APNS + " where uid = ?1 and channel = ?2")

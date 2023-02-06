@@ -23,91 +23,16 @@ package com.farsunset.cim.sdk.android.constant;
 
 public interface CIMConstant {
 
-    long RECONNECT_INTERVAL_TIME = 5 * 1000;
+    long RECONNECT_INTERVAL_TIME = 5000L;
 
     /*
      * 消息头长度为3个字节，第一个字节为消息类型，第二，第三字节 转换int后为消息长度
      */
     int DATA_HEADER_LENGTH = 3;
 
-    interface ProtobufType {
-
-        /*
-        客户端->服务端 发送的心跳响应
-        */
-        byte PONG = 0;
-
-        /*
-        服务端->客户端 发送的心跳请求
-        */
-        byte PING = 1;
-
-        byte MESSAGE = 2;
-
-        byte SENT_BODY = 3;
-
-        byte REPLY_BODY = 4;
-    }
-
-    interface RequestKey {
-
-        String CLIENT_BIND = "client_bind";
-
-        String CLIENT_SET_TAG = "client_set_tag";
-
-        String CLIENT_REMOVE_TAG = "client_remove_tag";
-
-    }
-
-    interface MessageAction {
-
-        /*
-        被其他设备登录挤下线消息
-         */
-        String ACTION_999 = "999";
-    }
-
-    interface IntentAction {
-
-        /*
-         消息广播action
-         */
-        String ACTION_MESSAGE_RECEIVED = "com.farsunset.cim.MESSAGE_RECEIVED";
-
-        /*
-         发送sendBody成功广播
-         */
-        String ACTION_SEND_FINISHED = "com.farsunset.cim.SEND_FINISHED";
-
-        /*
-         链接意外关闭广播
-         */
-        String ACTION_CONNECTION_CLOSED = "com.farsunset.cim.CONNECTION_CLOSED";
-
-        /*
-         链接失败广播
-         */
-        String ACTION_CONNECT_FAILED = "com.farsunset.cim.CONNECT_FAILED";
-
-        /*
-         链接成功广播
-         */
-        String ACTION_CONNECT_FINISHED = "com.farsunset.cim.CONNECT_FINISHED";
-
-        /*
-         发送sendBody成功后获得replayBody回应广播
-         */
-        String ACTION_REPLY_RECEIVED = "com.farsunset.cim.REPLY_RECEIVED";
-
-        /*
-         网络变化广播
-         */
-        String ACTION_NETWORK_CHANGED = "com.farsunset.cim.NETWORK_CHANGED";
-
-        /*
-         重试连接
-         */
-        String ACTION_CONNECTION_RECOVERY = "com.farsunset.cim.CONNECTION_RECOVERY";
-    }
+    /*
+      被其他设备登录挤下线消息
+     */
+    String ACTION_999 = "999";
 
 }

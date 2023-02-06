@@ -25,8 +25,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.os.Build;
+import com.farsunset.cim.sdk.android.constant.BundleKey;
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
+import com.farsunset.cim.sdk.android.constant.IntentAction;
+import com.farsunset.cim.sdk.android.constant.ServiceAction;
 import com.farsunset.cim.sdk.android.model.Message;
 import com.farsunset.cim.sdk.android.model.ReplyBody;
 import com.farsunset.cim.sdk.android.model.SentBody;
@@ -38,7 +40,6 @@ public abstract class CIMEventBroadcastReceiver extends BroadcastReceiver {
 
     protected Context context;
 
-    @SuppressWarnings("deprecation")
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -50,6 +51,7 @@ public abstract class CIMEventBroadcastReceiver extends BroadcastReceiver {
          * 操作事件广播，用于提高service存活率
          */
         if (Intent.ACTION_USER_PRESENT.equals(action)
+                || Intent.ACTION_BOOT_COMPLETED.equals(action)
                 || Intent.ACTION_POWER_CONNECTED.equals(action)
                 || Intent.ACTION_POWER_DISCONNECTED.equals(action)) {
             startPushService();
@@ -58,7 +60,7 @@ public abstract class CIMEventBroadcastReceiver extends BroadcastReceiver {
         /*
          * 设备网络状态变化事件
          */
-        if (CIMConstant.IntentAction.ACTION_NETWORK_CHANGED.equals(action)
+        if (IntentAction.ACTION_NETWORK_CHANGED.equals(action)
                 || ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
 
             onDevicesNetworkChanged();
@@ -67,36 +69,36 @@ public abstract class CIMEventBroadcastReceiver extends BroadcastReceiver {
         /*
          * cim断开服务器事件
          */
-        if (CIMConstant.IntentAction.ACTION_CONNECTION_CLOSED.equals(action)) {
+        if (IntentAction.ACTION_CONNECTION_CLOSED.equals(action)) {
             onInnerConnectionClosed();
         }
 
         /*
          * cim连接服务器失败事件
          */
-        if (CIMConstant.IntentAction.ACTION_CONNECT_FAILED.equals(action)) {
-            long interval = intent.getLongExtra("interval", CIMConstant.RECONNECT_INTERVAL_TIME);
+        if (IntentAction.ACTION_CONNECT_FAILED.equals(action)) {
+            long interval = intent.getLongExtra(BundleKey.KEY_RECONNECT_AFTER, CIMConstant.RECONNECT_INTERVAL_TIME);
             onInnerConnectFailed(interval);
         }
 
         /*
          * cim连接服务器成功事件
          */
-        if (CIMConstant.IntentAction.ACTION_CONNECT_FINISHED.equals(action)) {
+        if (IntentAction.ACTION_CONNECT_FINISHED.equals(action)) {
             onInnerConnectFinished();
         }
 
         /*
          * 收到推送消息事件
          */
-        if (CIMConstant.IntentAction.ACTION_MESSAGE_RECEIVED.equals(action)) {
+        if (IntentAction.ACTION_MESSAGE_RECEIVED.equals(action)) {
             onInnerMessageReceived((Message) intent.getSerializableExtra(Message.class.getName()), intent);
         }
 
         /*
          * 获取收到replyBody成功事件
          */
-        if (CIMConstant.IntentAction.ACTION_REPLY_RECEIVED.equals(action)) {
+        if (IntentAction.ACTION_REPLY_RECEIVED.equals(action)) {
             onReplyReceived((ReplyBody) intent.getSerializableExtra(ReplyBody.class.getName()));
         }
 
@@ -104,49 +106,36 @@ public abstract class CIMEventBroadcastReceiver extends BroadcastReceiver {
         /*
          * 获取sendBody发送成功事件
          */
-        if (CIMConstant.IntentAction.ACTION_SEND_FINISHED.equals(action)) {
+        if (IntentAction.ACTION_SEND_FINISHED.equals(action)) {
             onSentSucceed((SentBody) intent.getSerializableExtra(SentBody.class.getName()));
         }
 
         /*
          * 重新连接，如果断开的话
          */
-        if (CIMConstant.IntentAction.ACTION_CONNECTION_RECOVERY.equals(action)) {
+        if (IntentAction.ACTION_CONNECTION_RECOVERY.equals(action)) {
             connect(0);
         }
     }
 
     private void startPushService() {
-
         Intent intent = new Intent(context, CIMPushService.class);
-        intent.setAction(CIMPushManager.ACTION_ACTIVATE_PUSH_SERVICE);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.startForegroundService(intent);
-        } else {
-            context.startService(intent);
-        }
-
+        intent.setAction(ServiceAction.ACTION_ACTIVATE_PUSH_SERVICE);
+        CIMPushManager.startService(context,intent);
     }
 
     private void onInnerConnectionClosed() {
         CIMCacheManager.putBoolean(context, CIMCacheManager.KEY_CIM_CONNECTION_STATE, false);
-
-        if (CIMPushManager.isNetworkConnected(context)) {
-            connect(0);
-        }
-
+        connect(0L);
         onConnectionClosed();
     }
 
     private void onInnerConnectFailed(long interval) {
 
-        if (CIMPushManager.isNetworkConnected(context)) {
+        onConnectFailed();
 
-            onConnectFailed();
+        connect(interval);
 
-            connect(interval);
-        }
     }
 
     private void onInnerConnectFinished() {
@@ -157,18 +146,13 @@ public abstract class CIMEventBroadcastReceiver extends BroadcastReceiver {
     }
 
     private void onDevicesNetworkChanged() {
-
-        if (CIMPushManager.isNetworkConnected(context)) {
-            connect(0);
-        }
-
         onNetworkChanged();
     }
 
     private void connect(long delay) {
         Intent serviceIntent = new Intent(context, CIMPushService.class);
-        serviceIntent.putExtra(CIMPushService.KEY_DELAYED_TIME, delay);
-        serviceIntent.setAction(CIMPushManager.ACTION_CREATE_CIM_CONNECTION);
+        serviceIntent.putExtra(BundleKey.KEY_DELAYED_TIME, delay);
+        serviceIntent.setAction(ServiceAction.ACTION_CREATE_CIM_CONNECTION);
         CIMPushManager.startService(context, serviceIntent);
     }
 
@@ -181,12 +165,11 @@ public abstract class CIMEventBroadcastReceiver extends BroadcastReceiver {
     }
 
     private boolean isForceOfflineMessage(String action) {
-        return CIMConstant.MessageAction.ACTION_999.equals(action);
+        return CIMConstant.ACTION_999.equals(action);
     }
 
     /**
      * 接收消息实现方法
-     *
      * @param message
      * @param intent
      */

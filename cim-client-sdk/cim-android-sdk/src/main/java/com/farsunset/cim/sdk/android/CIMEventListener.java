@@ -33,35 +33,30 @@ public interface CIMEventListener {
 
     /**
      * 当收到服务端推送过来的消息时调用
-     *
      * @param message
      */
     void onMessageReceived(Message message);
 
     /**
-     * 当调用CIMPushManager.sendRequest()向服务端发送请求，获得相应时调用
-     *
+     * 当调用CIMPushManager.sendRequest()向服务端发送请求，获得服务端响应时调用
      * @param body
      */
     void onReplyReceived(ReplyBody body);
 
     /**
      * 当调用CIMPushManager.sendRequest()向服务端发送请求成功时
-     *
      * @param body
      */
     void onSendFinished(SentBody body);
 
     /**
      * 当手机网络发生变化时调用
-     *
      * @param info
      */
     void onNetworkChanged(NetworkInfo info);
 
     /**
      * 当连接服务器成功时回调
-     *
      * @param hasAutoBind true 已经自动绑定账号到服务器了，不需要再手动调用bindAccount
      */
     void onConnectFinished(boolean hasAutoBind);

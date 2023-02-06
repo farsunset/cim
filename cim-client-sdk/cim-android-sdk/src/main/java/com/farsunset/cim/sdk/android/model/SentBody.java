@@ -21,7 +21,7 @@
  */
 package com.farsunset.cim.sdk.android.model;
 
-import com.farsunset.cim.sdk.android.constant.CIMConstant;
+import com.farsunset.cim.sdk.android.constant.ProtobufType;
 import com.farsunset.cim.sdk.android.model.proto.SentBodyProto;
 
 import java.io.Serializable;
@@ -108,7 +108,7 @@ public class SentBody implements Serializable, BinaryBody {
 
     @Override
     public byte getType() {
-        return CIMConstant.ProtobufType.SENT_BODY;
+        return ProtobufType.SENT_BODY;
     }
 
 }

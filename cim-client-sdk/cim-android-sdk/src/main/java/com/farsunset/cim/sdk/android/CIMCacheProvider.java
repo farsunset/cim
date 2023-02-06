@@ -33,7 +33,7 @@ public class CIMCacheProvider extends ContentProvider {
 
     @Override
     public int delete(Uri arg0, String key, String[] arg2) {
-        getContext().getSharedPreferences(MODEL_KEY, Context.MODE_PRIVATE).edit().remove(key).apply();
+        getContext().getSharedPreferences(MODEL_KEY, Context.MODE_PRIVATE).edit().remove(key).commit();
         return 0;
     }
 
@@ -44,9 +44,9 @@ public class CIMCacheProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri arg0, ContentValues values) {
-        String key = values.getAsString("key");
-        String value = values.getAsString("value");
-        getContext().getSharedPreferences(MODEL_KEY, Context.MODE_PRIVATE).edit().putString(key, value).apply();
+        String key = values.getAsString(CIMCacheManager.COLUMN_KEY);
+        String value = values.getAsString(CIMCacheManager.COLUMN_VALUE);
+        getContext().getSharedPreferences(MODEL_KEY, Context.MODE_PRIVATE).edit().putString(key, value).commit();
         return null;
     }
 
@@ -57,7 +57,7 @@ public class CIMCacheProvider extends ContentProvider {
 
     @Override
     public Cursor query(Uri arg0, String[] arg1, String key, String[] arg3, String arg4) {
-        MatrixCursor cursor = new MatrixCursor(new String[]{"value"});
+        MatrixCursor cursor = new MatrixCursor(new String[]{CIMCacheManager.COLUMN_VALUE});
         String value = getContext().getSharedPreferences(MODEL_KEY, Context.MODE_PRIVATE).getString(arg1[0], null);
         cursor.addRow(new Object[]{value});
         return cursor;

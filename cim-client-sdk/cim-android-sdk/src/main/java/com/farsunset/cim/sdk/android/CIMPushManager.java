@@ -30,7 +30,10 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.LocaleList;
 import android.text.TextUtils;
-import com.farsunset.cim.sdk.android.constant.CIMConstant;
+import com.farsunset.cim.sdk.android.constant.BundleKey;
+import com.farsunset.cim.sdk.android.constant.IntentAction;
+import com.farsunset.cim.sdk.android.constant.RequestKey;
+import com.farsunset.cim.sdk.android.constant.ServiceAction;
 import com.farsunset.cim.sdk.android.logger.CIMLogger;
 import com.farsunset.cim.sdk.android.model.SentBody;
 
@@ -38,31 +41,16 @@ import java.util.Locale;
 import java.util.UUID;
 
 /**
- * CIM 功能接口
+ * CIM客户端sdk功能接口
  */
 public class CIMPushManager {
 
 
-    protected static final String ACTION_CREATE_CIM_CONNECTION = "ACTION_CREATE_CIM_CONNECTION";
-
-    protected static final String ACTION_DESTROY_CIM_SERVICE = "ACTION_DESTROY_CIM_SERVICE";
-
-    protected static final String ACTION_ACTIVATE_PUSH_SERVICE = "ACTION_ACTIVATE_PUSH_SERVICE";
-
-    protected static final String ACTION_SEND_REQUEST_BODY = "ACTION_SEND_REQUEST_BODY";
-
-    protected static final String ACTION_CLOSE_CIM_CONNECTION = "ACTION_CLOSE_CIM_CONNECTION";
-
-    protected static final String ACTION_SET_LOGGER_EATABLE = "ACTION_SET_LOGGER_EATABLE";
-
-    protected static final String ACTION_SHOW_PERSIST_NOTIFICATION = "ACTION_SHOW_PERSIST_NOTIFICATION";
-
-    protected static final String ACTION_HIDE_PERSIST_NOTIFICATION = "ACTION_HIDE_PERSIST_NOTIFICATION";
-
-    protected static final String ACTION_CIM_CONNECTION_PONG = "ACTION_CIM_CONNECTION_PONG";
-
     /**
      * 初始化,连接服务端，在程序启动页或者 在Application里调用
+     * @param context
+     * @param host cim服务端IP或者域名
+     * @param port cim服务端端口
      */
     public static void connect(Context context, String host, int port) {
 
@@ -79,40 +67,66 @@ public class CIMPushManager {
 
 
         Intent serviceIntent = new Intent(context, CIMPushService.class);
-        serviceIntent.setAction(ACTION_CREATE_CIM_CONNECTION);
+        serviceIntent.setAction(ServiceAction.ACTION_CREATE_CIM_CONNECTION);
         startService(context, serviceIntent);
 
     }
 
+    /**
+     * 设置SDK日志打印开关
+     * @param context
+     * @param enable
+     */
     public static void setLoggerEnable(Context context, boolean enable) {
         Intent serviceIntent = new Intent(context, CIMPushService.class);
-        serviceIntent.putExtra(CIMPushService.KEY_LOGGER_ENABLE, enable);
-        serviceIntent.setAction(ACTION_SET_LOGGER_EATABLE);
+        serviceIntent.putExtra(BundleKey.KEY_LOGGER_ENABLE, enable);
+        serviceIntent.setAction(ServiceAction.ACTION_SET_LOGGER_EATABLE);
         startService(context, serviceIntent);
     }
 
+
+    /**
+     * 开启常驻通知栏
+     * @param context
+     * @param icon 通知图标
+     * @param channel 通知channel
+     * @param message 显示内容
+     */
     public static void startForeground(Context context,int icon, String channel , String message) {
         Intent serviceIntent = new Intent(context, CIMPushService.class);
-        serviceIntent.putExtra(CIMPushService.KEY_NOTIFICATION_MESSAGE, message);
-        serviceIntent.putExtra(CIMPushService.KEY_NOTIFICATION_CHANNEL, channel);
-        serviceIntent.putExtra(CIMPushService.KEY_NOTIFICATION_ICON, icon);
-        serviceIntent.setAction(ACTION_SHOW_PERSIST_NOTIFICATION);
-        startService(context, serviceIntent);
-    }
-
-    public static void cancelForeground(Context context) {
-        Intent serviceIntent = new Intent(context, CIMPushService.class);
-        serviceIntent.setAction(ACTION_HIDE_PERSIST_NOTIFICATION);
+        serviceIntent.putExtra(BundleKey.KEY_NOTIFICATION_MESSAGE, message);
+        serviceIntent.putExtra(BundleKey.KEY_NOTIFICATION_CHANNEL, channel);
+        serviceIntent.putExtra(BundleKey.KEY_NOTIFICATION_ICON, icon);
+        serviceIntent.setAction(ServiceAction.ACTION_SHOW_PERSIST_NOTIFICATION);
         startService(context, serviceIntent);
     }
 
     /**
-     * 设置一个账号登录到服务端
+     * 关闭常驻通知栏
+     * @param context
      */
+    public static void cancelForeground(Context context) {
+        Intent serviceIntent = new Intent(context, CIMPushService.class);
+        serviceIntent.setAction(ServiceAction.ACTION_HIDE_PERSIST_NOTIFICATION);
+        startService(context, serviceIntent);
+    }
 
+    /**
+     * bind账户
+     * 通知服务端 长连接和uid进行关联
+     * @param context
+     * @param uid 用户标识
+     */
     public static void bind(Context context, long uid) {
         bind(context,String.valueOf(uid));
     }
+
+    /**
+     * bind账户
+     * 通知服务端 长连接和uid进行关联
+     * @param context
+     * @param uid 用户标识
+     */
     public static void bind(Context context, String uid) {
 
         if (isDestroyed(context)) {
@@ -122,32 +136,47 @@ public class CIMPushManager {
         sendBindRequest(context, uid);
     }
 
+    /**
+     * 通知服务端给当前长连接设置tag
+     * @param context
+     * @param tag 标识
+     */
     public static void setTag(Context context, String tag) {
 
         SentBody sent = new SentBody();
-        sent.setKey(CIMConstant.RequestKey.CLIENT_SET_TAG);
+        sent.setKey(RequestKey.CLIENT_SET_TAG);
         sent.put("tag", tag);
         sendRequest(context, sent);
 
     }
 
+    /**
+     * 通知服务端清除tag
+     * @param context
+     */
     public static void removeTag(Context context) {
 
         SentBody sent = new SentBody();
-        sent.setKey(CIMConstant.RequestKey.CLIENT_REMOVE_TAG);
+        sent.setKey(RequestKey.CLIENT_REMOVE_TAG);
         sendRequest(context, sent);
 
     }
 
+    /**
+     * 长连接发送一次心跳响应
+     * @param context
+     */
     public static void pong(Context context) {
         if (isDestroyed(context) || isStopped(context)) {
             return;
         }
 
         Intent serviceIntent = new Intent(context, CIMPushService.class);
-        serviceIntent.setAction(ACTION_CIM_CONNECTION_PONG);
+        serviceIntent.setAction(ServiceAction.ACTION_CIM_CONNECTION_PONG);
         startService(context, serviceIntent);
     }
+
+
 
     private static void sendBindRequest(Context context, String uid) {
 
@@ -155,7 +184,7 @@ public class CIMPushManager {
         CIMCacheManager.putString(context, CIMCacheManager.KEY_UID, uid);
 
         SentBody sent = new SentBody();
-        sent.setKey(CIMConstant.RequestKey.CLIENT_BIND);
+        sent.setKey(RequestKey.CLIENT_BIND);
         sent.put("uid", String.valueOf(uid));
         sent.put("channel", "android");
         sent.put("deviceId", getDeviceId(context));
@@ -182,7 +211,9 @@ public class CIMPushManager {
     }
 
     /**
-     * 发送一个CIM请求
+     * 向服务端发送一次自定义业务请求
+     * @param context
+     * @param body 请求体
      */
     public static void sendRequest(Context context, SentBody body) {
 
@@ -191,8 +222,8 @@ public class CIMPushManager {
         }
 
         Intent serviceIntent = new Intent(context, CIMPushService.class);
-        serviceIntent.putExtra(CIMPushService.KEY_SEND_BODY, body);
-        serviceIntent.setAction(ACTION_SEND_REQUEST_BODY);
+        serviceIntent.putExtra(BundleKey.KEY_SEND_BODY, body);
+        serviceIntent.setAction(ServiceAction.ACTION_SEND_REQUEST_BODY);
         startService(context, serviceIntent);
 
     }
@@ -209,7 +240,7 @@ public class CIMPushManager {
         CIMCacheManager.putBoolean(context, CIMCacheManager.KEY_MANUAL_STOP, true);
 
         Intent serviceIntent = new Intent(context, CIMPushService.class);
-        serviceIntent.setAction(ACTION_CLOSE_CIM_CONNECTION);
+        serviceIntent.setAction(ServiceAction.ACTION_CLOSE_CIM_CONNECTION);
         startService(context, serviceIntent);
 
     }
@@ -223,7 +254,7 @@ public class CIMPushManager {
         CIMCacheManager.remove(context, CIMCacheManager.KEY_UID);
 
         Intent serviceIntent = new Intent(context, CIMPushService.class);
-        serviceIntent.setAction(ACTION_DESTROY_CIM_SERVICE);
+        serviceIntent.setAction(ServiceAction.ACTION_DESTROY_CIM_SERVICE);
         startService(context, serviceIntent);
 
     }
@@ -240,33 +271,59 @@ public class CIMPushManager {
         autoBindAccount(context);
     }
 
+    /**
+     * 获取sdk是否已经销毁的
+     * @param context
+     * @return
+     */
     public static boolean isDestroyed(Context context) {
         return CIMCacheManager.getBoolean(context, CIMCacheManager.KEY_CIM_DESTROYED);
     }
 
+    /**
+     * 判断是否暂停接收消息
+     * @param context
+     * @return
+     */
     public static boolean isStopped(Context context) {
         return CIMCacheManager.getBoolean(context, CIMCacheManager.KEY_MANUAL_STOP);
     }
 
+    /**
+     * 判断于服务端连接是否正常
+     * @param context
+     */
     public static boolean isConnected(Context context) {
         return CIMCacheManager.getBoolean(context, CIMCacheManager.KEY_CIM_CONNECTION_STATE);
     }
 
+    /**
+     * 判断客户端网络连接是否正常
+     * @param context
+     */
     public static boolean isNetworkConnected(Context context) {
         NetworkInfo networkInfo = getNetworkInfo(context);
         return networkInfo != null && networkInfo.isConnected();
     }
 
+    /**
+     * 获取服务端网络信息
+     * @param context
+     */
     public static NetworkInfo getNetworkInfo(Context context) {
         return ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
     }
 
-
-    public static void startService(Context context, Intent intent) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.startForegroundService(intent);
-        } else {
+    protected static void startService(Context context, Intent intent) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             context.startService(intent);
+            return;
+        }
+
+        try {
+            context.startForegroundService(intent);
+        }catch (Exception ignore){
+            context.sendBroadcast(new Intent(IntentAction.ACTION_CONNECTION_RECOVERY));
         }
     }
 
@@ -276,8 +333,7 @@ public class CIMPushManager {
         try {
             PackageInfo mPackageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             return mPackageInfo.versionName;
-        } catch (NameNotFoundException ignore) {
-        }
+        } catch (NameNotFoundException ignore) {}
         return null;
     }
 

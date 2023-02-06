@@ -22,7 +22,7 @@
 package com.farsunset.cim.sdk.android.coder;
 
 
-import com.farsunset.cim.sdk.android.constant.CIMConstant;
+import com.farsunset.cim.sdk.android.constant.ProtobufType;
 import com.farsunset.cim.sdk.android.model.Message;
 import com.farsunset.cim.sdk.android.model.Ping;
 import com.farsunset.cim.sdk.android.model.ReplyBody;
@@ -72,11 +72,11 @@ public class ClientMessageDecoder {
         /*
          消息读取完成后，通过type来解析成对应的消息体
          */
-        if (CIMConstant.ProtobufType.PING == type) {
+        if (ProtobufType.PING == type) {
             return Ping.getInstance();
         }
 
-        if (CIMConstant.ProtobufType.REPLY_BODY == type) {
+        if (ProtobufType.REPLY_BODY == type) {
             ReplyBodyProto.Model bodyProto = ReplyBodyProto.Model.parseFrom(bodyBuffer.array());
             ReplyBody body = new ReplyBody();
             body.setKey(bodyProto.getKey());

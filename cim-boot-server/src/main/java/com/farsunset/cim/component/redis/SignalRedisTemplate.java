@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2022 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,16 +21,30 @@
  */
 package com.farsunset.cim.component.redis;
 
+import com.farsunset.cim.component.event.MessageEvent;
+import com.farsunset.cim.component.event.SessionEvent;
 import com.farsunset.cim.constants.Constants;
 import com.farsunset.cim.entity.Session;
 import com.farsunset.cim.model.Message;
 import com.farsunset.cim.util.JSONUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
+import java.util.Objects;
+
 @Component
 public class SignalRedisTemplate extends StringRedisTemplate {
+
+	@Value("${spring.profiles.active}")
+	private String env;
+
+	@Resource
+	private ApplicationContext applicationContext;
+
 
 	public SignalRedisTemplate(LettuceConnectionFactory connectionFactory) {
 		super(connectionFactory);
@@ -42,6 +56,10 @@ public class SignalRedisTemplate extends StringRedisTemplate {
 	 * @param message
 	 */
 	public void push(Message message) {
+		if (isDev()){
+			applicationContext.publishEvent(new MessageEvent(message));
+			return;
+		}
 		super.convertAndSend(Constants.PUSH_MESSAGE_INNER_QUEUE, JSONUtils.toJSONString(message));
 	}
 
@@ -50,6 +68,19 @@ public class SignalRedisTemplate extends StringRedisTemplate {
 	 * @param session
 	 */
 	public void bind(Session session) {
+		if (isDev()){
+			applicationContext.publishEvent(new SessionEvent(session));
+			return;
+		}
 		super.convertAndSend(Constants.BIND_MESSAGE_INNER_QUEUE, JSONUtils.toJSONString(session));
 	}
+
+	/**
+	 * 本地调试环境下不走redis，避免lettuce 经常command timeout。
+	 * @return
+	 */
+	private boolean isDev(){
+		return Objects.equals(env,"dev");
+	}
+
 }

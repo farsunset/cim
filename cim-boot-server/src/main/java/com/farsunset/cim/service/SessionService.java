@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2022 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,14 +33,14 @@ public interface SessionService {
 
 	void add(Session session);
 
-	void delete(String uid,String nid);
+	void delete(long id);
 
 	/**
 	 * 删除本机的连接记录
 	 */
 	void deleteLocalhost();
 
-	void updateState(String uid,String nid,int state);
+	void updateState(long id,int state);
 
 	void openApns(String uid,String deviceToken);
 

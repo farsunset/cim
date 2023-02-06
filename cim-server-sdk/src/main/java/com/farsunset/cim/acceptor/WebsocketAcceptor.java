@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2022 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,11 +74,15 @@ public class WebsocketAcceptor extends NioSocketAcceptor {
 	private final ChannelHandler illegalRequestHandler = new IllegalRequestHandler();
 
 	public WebsocketAcceptor(WebsocketConfig config){
-		super(config.getOuterRequestHandler());
+		super(config);
 		this.config = config;
 		this.handshakeHandler = new HandshakeHandler(config.getHandshakePredicate());
 	}
 
+	/**
+	 * bind基于websocket协议的socket端口
+	 */
+	@Override
 	public void bind(){
 
 		if (!config.isEnable()){
@@ -102,7 +106,7 @@ public class WebsocketAcceptor extends NioSocketAcceptor {
 					ch.pipeline().addLast(new WebMessageDecoder());
 					ch.pipeline().addLast(new WebMessageEncoder());
 				}
-				ch.pipeline().addLast(new IdleStateHandler(readIdle.getSeconds(), writeIdle.getSeconds(), 0, TimeUnit.SECONDS));
+				ch.pipeline().addLast(new IdleStateHandler(config.getReadIdle().getSeconds(), config.getWriteIdle().getSeconds(), 0, TimeUnit.SECONDS));
 				ch.pipeline().addLast(loggingHandler);
 				ch.pipeline().addLast(WebsocketAcceptor.this);
 				ch.pipeline().addLast(illegalRequestHandler);

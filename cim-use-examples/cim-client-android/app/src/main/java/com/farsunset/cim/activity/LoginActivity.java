@@ -19,6 +19,7 @@ import com.farsunset.cim.sdk.android.CIMEventListener;
 import com.farsunset.cim.sdk.android.CIMListenerManager;
 import com.farsunset.cim.sdk.android.CIMPushManager;
 import com.farsunset.cim.sdk.android.constant.CIMConstant;
+import com.farsunset.cim.sdk.android.constant.RequestKey;
 import com.farsunset.cim.sdk.android.model.Message;
 import com.farsunset.cim.sdk.android.model.ReplyBody;
 import com.farsunset.cim.sdk.android.model.SentBody;
@@ -96,7 +97,7 @@ public class LoginActivity extends AppCompatActivity implements CIMEventListener
         /*
          *第三步 用户id绑定成功，可以接收消息了
          */
-        if (replyBody.getKey().equals(CIMConstant.RequestKey.CLIENT_BIND)) {
+        if (replyBody.getKey().equals(RequestKey.CLIENT_BIND)) {
             ballsView.runaway();
             Intent intent = new Intent(this,MessageActivity.class);
             intent.putExtra("uid",uidEdit.getText().toString().trim());

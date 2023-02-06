@@ -43,7 +43,20 @@ class CIMCacheManager {
 
     public static final String KEY_CIM_CONNECTION_STATE = "KEY_CIM_CONNECTION_STATE";
 
+
+    public static final String KEY_NTC_CHANNEL_NAME = "KEY_NTC_CHANNEL_NAME";
+
+    public static final String KEY_NTC_CHANNEL_MESSAGE = "KEY_NTC_CHANNEL_MESSAGE";
+
+    public static final String KEY_NTC_CHANNEL_ICON = "KEY_NTC_CHANNEL_ICON";
+
+
     public static final String CONTENT_URI = "content://%s.cim.provider";
+
+    static final String COLUMN_KEY  = "key";
+
+    static final String COLUMN_VALUE  = "value";
+
 
 
     public static void remove(Context context, String key) {
@@ -55,8 +68,8 @@ class CIMCacheManager {
 
         ContentResolver resolver = context.getContentResolver();
         ContentValues values = new ContentValues();
-        values.put("value", value);
-        values.put("key", key);
+        values.put(COLUMN_KEY, key);
+        values.put(COLUMN_VALUE, value);
         resolver.insert(Uri.parse(String.format(CONTENT_URI, context.getPackageName())), values);
 
     }

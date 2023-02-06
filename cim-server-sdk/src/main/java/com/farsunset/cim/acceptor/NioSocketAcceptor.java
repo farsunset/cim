@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2022 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,9 @@
  */
 package com.farsunset.cim.acceptor;
 
+import com.farsunset.cim.acceptor.config.SocketConfig;
 import com.farsunset.cim.constant.CIMConstant;
 import com.farsunset.cim.constant.ChannelAttr;
-import com.farsunset.cim.handler.CIMRequestHandler;
 import com.farsunset.cim.handler.LoggingHandler;
 import com.farsunset.cim.model.Ping;
 import com.farsunset.cim.model.SentBody;
@@ -38,36 +38,22 @@ import io.netty.handler.timeout.IdleStateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.Duration;
 import java.util.concurrent.ThreadFactory;
 
 abstract class NioSocketAcceptor extends SimpleChannelInboundHandler<SentBody>{
-
-	private static final int PONG_TIME_OUT_COUNT = 3;
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
 	protected final ChannelHandler loggingHandler = new LoggingHandler();
 
+	protected final SocketConfig socketConfig;
+
 	private final EventLoopGroup bossGroup;
 	private final EventLoopGroup workerGroup;
 
-	private final CIMRequestHandler outerRequestHandler;
+	protected NioSocketAcceptor(SocketConfig socketConfig){
 
-	/**
-	 *  读空闲时间(秒)
-	 */
-	public final Duration writeIdle = Duration.ofSeconds(45);
-
-	/**
-	 *  写接空闲时间(秒)
-	 */
-	public final Duration readIdle = Duration.ofSeconds(60);
-
-
-	protected NioSocketAcceptor(CIMRequestHandler outerRequestHandler){
-
-		this.outerRequestHandler = outerRequestHandler;
+		this.socketConfig = socketConfig;
 
 		ThreadFactory bossThreadFactory = r -> {
 			Thread thread = new Thread(r);
@@ -91,6 +77,15 @@ abstract class NioSocketAcceptor extends SimpleChannelInboundHandler<SentBody>{
 
 	}
 
+	/**
+	 * 执行启动SOCKET服务
+	 */
+	public abstract void bind();
+
+
+	/**
+	 * 执行注销SOCKET服务
+	 */
 	public void destroy() {
 		if(bossGroup != null && !bossGroup.isShuttingDown() && !bossGroup.isShutdown() ) {
 			try {bossGroup.shutdownGracefully();}catch(Exception ignore) {}
@@ -115,8 +110,8 @@ abstract class NioSocketAcceptor extends SimpleChannelInboundHandler<SentBody>{
 		/*
 		 * 由业务层去处理其他的sentBody
 		 */
-		if (outerRequestHandler != null){
-			outerRequestHandler.process(ctx.channel(), body);
+		if (socketConfig.getOuterRequestHandler() != null){
+			socketConfig.getOuterRequestHandler().process(ctx.channel(), body);
 		}
 	}
 
@@ -132,13 +127,13 @@ abstract class NioSocketAcceptor extends SimpleChannelInboundHandler<SentBody>{
 			return;
 		}
 
-		if (outerRequestHandler == null){
+		if (socketConfig.getOuterRequestHandler() == null){
 			return;
 		}
 
 		SentBody body = new SentBody();
 		body.setKey(CIMConstant.CLIENT_CONNECT_CLOSED);
-		outerRequestHandler.process(ctx.channel(), body);
+		socketConfig.getOuterRequestHandler().process(ctx.channel(), body);
 	}
 
 	@Override
@@ -177,7 +172,7 @@ abstract class NioSocketAcceptor extends SimpleChannelInboundHandler<SentBody>{
 		 * 如果心跳请求发出（readIdle-writeIdle）秒内没收到响应，则关闭连接
 		 */
 		Integer pingCount = ctx.channel().attr(ChannelAttr.PING_COUNT).get();
-		if (idleEvent.state() == IdleState.READER_IDLE && pingCount != null && pingCount >= PONG_TIME_OUT_COUNT) {
+		if (idleEvent.state() == IdleState.READER_IDLE && pingCount != null && pingCount >= socketConfig.getMaxPongTimeout()) {
 			ctx.close();
 			logger.info("{} pong timeout.",ctx.channel());
 		}

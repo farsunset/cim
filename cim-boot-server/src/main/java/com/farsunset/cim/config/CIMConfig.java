@@ -1,8 +1,29 @@
+/*
+ * Copyright 2013-2022 Xia Jun(3979434@qq.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ ***************************************************************************************
+ *                                                                                     *
+ *                        Website : http://www.farsunset.com                           *
+ *                                                                                     *
+ ***************************************************************************************
+ */
 package com.farsunset.cim.config;
 
 import com.farsunset.cim.acceptor.AppSocketAcceptor;
 import com.farsunset.cim.acceptor.WebsocketAcceptor;
-import com.farsunset.cim.acceptor.config.AppSocketConfig;
+import com.farsunset.cim.acceptor.config.SocketConfig;
 import com.farsunset.cim.acceptor.config.WebsocketConfig;
 import com.farsunset.cim.component.handler.annotation.CIMHandler;
 import com.farsunset.cim.component.predicate.HandshakePredicate;
@@ -63,6 +84,11 @@ public class CIMConfig implements CIMRequestHandler, ApplicationListener<Applica
 		config.setProtocol(properties.getProtocol());
 		config.setOuterRequestHandler(this);
 		config.setEnable(properties.isEnable());
+
+		config.setWriteIdle(properties.getWriteIdle());
+		config.setReadIdle(properties.getReadIdle());
+		config.setMaxPongTimeout(properties.getMaxPongTimeout());
+
 		return new WebsocketAcceptor(config);
 	}
 
@@ -70,10 +96,14 @@ public class CIMConfig implements CIMRequestHandler, ApplicationListener<Applica
 	@ConditionalOnProperty(name = {"cim.app.enable"},matchIfMissing = true)
 	public AppSocketAcceptor appSocketAcceptor(CIMAppSocketProperties properties) {
 
-		AppSocketConfig config = new AppSocketConfig();
+		SocketConfig config = new SocketConfig();
 		config.setPort(properties.getPort());
 		config.setOuterRequestHandler(this);
 		config.setEnable(properties.isEnable());
+
+		config.setWriteIdle(properties.getWriteIdle());
+		config.setReadIdle(properties.getReadIdle());
+		config.setMaxPongTimeout(properties.getMaxPongTimeout());
 
 		return new AppSocketAcceptor(config);
 	}

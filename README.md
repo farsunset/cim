@@ -170,3 +170,24 @@ https://www.yuque.com/yuanfangxiyang/ma4ytb/vvy3iz/edit#nnzKN
 
 2.服务端sdk优化包路径结构
 3.修改部分问题
+
+
+## Maven Gradle
+
+服务端sdk引用
+
+```
+
+<dependency>
+   <groupId>com.farsunset</groupId>
+   <artifactId>cim-server-sdk-netty</artifactId>
+   <version>4.2.5</version>
+</dependency>
+
+```
+
+android端sdk引用
+
+```
+    implementation "com.farsunset:cim-android-sdk:4.2.8"
+```

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2022 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,22 +23,20 @@ package com.farsunset.cim.entity;
 
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "t_hoxin_session")
-public class Session implements Serializable {
+public class Session{
 
-    private static final transient long serialVersionUID = 1L;
-    public static final transient int STATE_ACTIVE = 0;
-    public static final transient int STATE_APNS = 1;
-    public static final transient int STATE_INACTIVE = 2;
+    public static final int STATE_ACTIVE = 0;
+    public static final int STATE_APNS = 1;
+    public static final int STATE_INACTIVE = 2;
 
-    public static final transient String CHANNEL_IOS = "ios";
-    public static final transient String CHANNEL_ANDROID = "android";
-    public static final transient String CHANNEL_WINDOWS = "windows";
-    public static final transient String CHANNEL_MAC = "mac";
-    public static final transient String CHANNEL_WEB = "web";
+    public static final String CHANNEL_IOS = "ios";
+    public static final String CHANNEL_ANDROID = "android";
+    public static final String CHANNEL_WINDOWS = "windows";
+    public static final String CHANNEL_MAC = "mac";
+    public static final String CHANNEL_WEB = "web";
 
     /**
      * 数据库主键ID

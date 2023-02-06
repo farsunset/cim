@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 Xia Jun(3979434@qq.com).
+ * Copyright 2013-2022 Xia Jun(3979434@qq.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import javax.annotation.Resource;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SessionServiceImpl implements SessionService {
@@ -56,9 +57,10 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public void delete(String uid, String nid) {
-        sessionRepository.delete(uid,nid);
+    public void delete(long id) {
+        sessionRepository.deleteById(id);
     }
+
 
     @Override
     public void deleteLocalhost() {
@@ -66,8 +68,8 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public void updateState(String uid, String nid, int state) {
-        sessionRepository.updateState(uid,nid,state);
+    public void updateState(long id, int state) {
+        sessionRepository.updateState(id,state);
     }
 
     @Override
@@ -84,6 +86,9 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public List<Session> findAll() {
-        return sessionRepository.findAll();
+        return sessionRepository.findAll()
+                .stream()
+                .filter(session -> session.getState() == Session.STATE_ACTIVE || session.getState() == Session.STATE_APNS)
+                .collect(Collectors.toList());
     }
 }
