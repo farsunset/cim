@@ -17,7 +17,7 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.farsunset.cim.activity.LoginActivity">
+            android:name="com.farsunset.cim.activity.LoginActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -32,8 +32,8 @@
         <!-- ****************************************CIM推送配置 begin*************************************** -->
         <service
             android:name="com.farsunset.cim.sdk.android.CIMPushService"
-            android:process=":cimpush"
             android:exported="false"
+            android:process=":cimpush"
             />
 
         <provider
@@ -44,7 +44,7 @@
 
 
         <!--消息接受广播注册-->
-        <receiver android:name="com.farsunset.cim.reveiver.CIMPushMessageReceiver">
+        <receiver android:name="com.farsunset.cim.reveiver.CIMPushMessageReceiver" android:exported="false">
             <intent-filter android:priority="0x7fffffff">
                 <!-- 网络变事件action targetVersion 24之前 -->
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />

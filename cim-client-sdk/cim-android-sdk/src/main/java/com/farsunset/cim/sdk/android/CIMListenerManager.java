@@ -22,21 +22,21 @@
 package com.farsunset.cim.sdk.android;
 
 import android.net.NetworkInfo;
-import android.util.Log;
 import com.farsunset.cim.sdk.android.model.Message;
 import com.farsunset.cim.sdk.android.model.ReplyBody;
 import com.farsunset.cim.sdk.android.model.SentBody;
 
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * CIM 消息监听器管理
  */
 public class CIMListenerManager {
 
-    private static final List<CIMEventListener> cimListeners = new CopyOnWriteArrayList<>();
+    private static final List<CIMEventListener> cimListeners = new LinkedList<>();
     private static final ReceiveComparator comparator = new ReceiveComparator();
 
     private CIMListenerManager() {
@@ -47,7 +47,7 @@ public class CIMListenerManager {
 
         if (!cimListeners.contains(listener)) {
             cimListeners.add(listener);
-            cimListeners.sort(comparator);
+            Collections.sort(cimListeners,comparator);
         }
     }
 
@@ -56,32 +56,32 @@ public class CIMListenerManager {
     }
 
     public static void notifyOnNetworkChanged(NetworkInfo info) {
-        for (CIMEventListener cimListener : cimListeners) {
+        for (CIMEventListener cimListener : getListeners()) {
             cimListener.onNetworkChanged(info);
         }
     }
 
     public static void notifyOnConnectFinished(boolean hasAutoBind) {
-        for (CIMEventListener cimListener : cimListeners) {
+        for (CIMEventListener cimListener : getListeners()) {
             cimListener.onConnectFinished(hasAutoBind);
         }
     }
 
     public static void notifyOnMessageReceived(Message message) {
-        for (CIMEventListener cimListener : cimListeners) {
+        for (CIMEventListener cimListener : getListeners()) {
             cimListener.onMessageReceived(message);
         }
     }
 
     public static void notifyOnConnectionClosed() {
-        for (CIMEventListener cimListener : cimListeners) {
+        for (CIMEventListener cimListener : getListeners()) {
             cimListener.onConnectionClosed();
         }
     }
 
     public static void notifyOnConnectFailed() {
 
-        for (CIMEventListener cimListener : cimListeners) {
+        for (CIMEventListener cimListener : getListeners()) {
             cimListener.onConnectFailed();
         }
 
@@ -89,14 +89,14 @@ public class CIMListenerManager {
 
     public static void notifyOnReplyReceived(ReplyBody body) {
 
-        for (CIMEventListener cimListener : cimListeners) {
+        for (CIMEventListener cimListener : getListeners()) {
             cimListener.onReplyReceived(body);
         }
 
     }
 
     public static void notifyOnSendFinished(SentBody body) {
-        for (CIMEventListener cimListener : cimListeners) {
+        for (CIMEventListener cimListener : getListeners()) {
             cimListener.onSendFinished(body);
         }
     }
@@ -105,10 +105,8 @@ public class CIMListenerManager {
         cimListeners.clear();
     }
 
-    public static void logListenersName() {
-        for (CIMEventListener cimListener : cimListeners) {
-            Log.i(CIMEventListener.class.getSimpleName(), "#######" + cimListener.getClass().getName() + "#######");
-        }
+    public static List<CIMEventListener> getListeners() {
+        return new LinkedList<>(cimListeners);
     }
 
     /**

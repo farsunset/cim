@@ -271,13 +271,11 @@ public class CIMPushService extends Service {
             channel.enableVibration(false);
             channel.setSound(null, null);
             notificationManager.createNotificationChannel(channel);
-
-            Notification notification = makeNotification(TRANSIENT_NTC_CHANNEL_ID,0,CIMPushService.class.getSimpleName(),null);
-
-            startForeground(NOTIFICATION_ID,  notification);
-
         }
 
+        Notification notification = makeNotification(TRANSIENT_NTC_CHANNEL_ID,0,CIMPushService.class.getSimpleName(),null);
+
+        startForeground(NOTIFICATION_ID,  notification);
 
     }
 

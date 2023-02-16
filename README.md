@@ -181,7 +181,7 @@ https://www.yuque.com/yuanfangxiyang/ma4ytb/vvy3iz/edit#nnzKN
 <dependency>
    <groupId>com.farsunset</groupId>
    <artifactId>cim-server-sdk-netty</artifactId>
-   <version>4.2.5</version>
+   <version>4.2.6</version>
 </dependency>
 
 ```
@@ -189,5 +189,5 @@ https://www.yuque.com/yuanfangxiyang/ma4ytb/vvy3iz/edit#nnzKN
 android端sdk引用
 
 ```
-    implementation "com.farsunset:cim-android-sdk:4.2.8"
+    implementation "com.farsunset:cim-android-sdk:4.2.10"
 ```
